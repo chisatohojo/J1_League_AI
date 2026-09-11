@@ -2,7 +2,7 @@
 
 ## 現在のフェーズ
 
-Phase 1: 試合データ読み込み・入力検証 — 完了（変更は未コミット）。
+Phase 1: 試合データ読み込み・入力検証 — 完了。コミット `21994d1` をローカルmainとorigin/mainで確認済み。
 
 ## 完了
 
@@ -20,16 +20,29 @@ Phase 1: 試合データ読み込み・入力検証 — 完了（変更は未コ
 - CSVのBOM・文字コード指定・列数・重複ヘッダーを扱い、原本と追加列・行列順・indexを保持
 - `tests/test_matches.py` の119件と既存1件、全120件のテストが成功
 - READMEの入力契約、CHANGELOG、設計判断、起動メッセージを更新
+- 正式リモートへのfetch接続とorigin/mainの参照、ローカルとの一致を確認
+- Gitの開始・同期・完了手順と禁止操作を開発手順書へ記録
 
 ## 作業中
 
-なし。ユーザーの指示に従い、実装・テスト結果を報告する段階で停止。Git add / commitは行っていない。
+機能の実装作業はなし。今回のGit接続確認・運用文書更新は未コミット。
+今回Git add / commit / pushは行っていない。
 Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
+
+## Git状態（2026-09-11確認）
+
+- 正式リモートorigin: `https://github.com/chisatohojo/J1_League_AI.git`（fetch / push共通）
+- 現在のブランチ: `main`、追跡先: `origin/main`
+- `git fetch origin`: 成功。GitHubからの取得接続を確認
+- `origin/main`: `21994d1447d8540ac6810103a882c5b91a89e309`
+- `HEAD...origin/main`: ローカルのみ0件 / リモートのみ0件。同期は不要
+- 作業開始時はクリーン。文書更新後はREADME.md、DEVELOPMENT_GUIDE.md、STATUS.md、CHANGELOG.mdの変更あり
+- リモートURLの変更、履歴変更、GitHubへの書き込みは行っていない
 
 ## 次にやること
 
-1. README.md、DEVELOPMENT_GUIDE.md、本ファイルを確認する。
-2. Phase 1の変更をレビューする。コミットの実施はユーザーの指示を待つ。
+1. Git状態・現在のブランチ・リモートとの差分と、README.md、DEVELOPMENT_GUIDE.md、本ファイルを確認する。
+2. 今回のGit運用文書の差分を確認し、次の作業でも未コミット変更を保持する。
 3. 過去J1試合データの取得方法を調査し、`docs/DATA_SOURCES.md` に記録する。
 4. 実データを入力仕様に合わせて読み込み、行数・日付範囲・チーム表記などを確認する。
 5. 次の機能開発はPhase 2: 試合開始前Eloとリーク防止テスト。別の作業単位で実装する。
@@ -45,6 +58,9 @@ Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 - 現在失敗しているテストや既知の実装不具合はない。
 
 ## 最終検証結果
+
+Git接続確認・運用文書更新時にも `python -m pytest` を実行し、全120件成功。
+`git diff` と `git status` を確認し、変更は運用文書4ファイルのみ。
 
 Phase 1の検証（Windows / Python 3.12.14）:
 
@@ -74,6 +90,9 @@ Phase 0で確認済みの環境検証:
 ## 次回の開始コマンド
 
 ```powershell
+git status
+git branch --show-current
+git rev-list --left-right --count HEAD...origin/main
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe -m src.main
 ```

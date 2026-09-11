@@ -10,6 +10,12 @@ Elo、特徴量生成、モデル学習、予測、UIは未実装です。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
 元の日本語仕様書・手順書は変更せず保存しています。
 
+## 正式リモートリポジトリ
+
+共有・バックアップ先は [chisatohojo/J1_League_AI](https://github.com/chisatohojo/J1_League_AI) です。
+`origin` は `https://github.com/chisatohojo/J1_League_AI.git`、基準ブランチは `main` とします。
+作業開始時のGit状態・リモート差分確認、同期、完了時の確認手順は `DEVELOPMENT_GUIDE.md` の第7・23節に従います。
+
 ## 開発環境のセットアップ（Windows / PowerShell）
 
 Python 3.12とGitを使用します。この作業フォルダではPython 3.12.14の `.venv` を作成済みです。

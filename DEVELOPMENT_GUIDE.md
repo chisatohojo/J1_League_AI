@@ -305,6 +305,20 @@ Notes:
 
 # 7. Codexが作業を開始するときのルール
 
+毎回、作業開始前にGitの作業ツリー、現在のブランチ、リモートとの差分を確認する。
+
+```powershell
+git status
+git branch --show-current
+git remote -v
+git rev-list --left-right --count HEAD...origin/main
+git diff --stat HEAD origin/main
+```
+
+接続確認やリモート情報の更新が必要な場合は `git fetch origin` を行い、差分を再確認する。
+`rev-list` の左はローカルだけ、右はリモートだけに存在するコミット数を示す。
+未コミット変更も含めて状態を把握し、新しいリモート変更との同期は第23節に従う。
+
 Codexはコード変更前に以下のファイルを確認する。
 
 ```text
@@ -426,15 +440,15 @@ J1予測AIを全部作って
 
 ↓
 
-9. ドキュメント更新
+9. ドキュメント・STATUS更新、git diff / git statusで変更内容確認
 
 ↓
 
-10. Git Commit
+10. Git Commit（コミットする場合。今回のユーザー指示を優先）
 
 ↓
 
-11. STATUS更新
+11. STATUSとGit状態の最終確認・報告
 ```
 
 ---
@@ -769,7 +783,26 @@ src/
 
 # 23. Git運用
 
-機能単位でCommitする。
+正式な共有・バックアップ先は `https://github.com/chisatohojo/J1_League_AI.git` とする。
+ローカルの `origin` はこのURL、基準ブランチは `main` とし、リモート設定は明示的な指示なく変更しない。
+
+作業中は依頼範囲に限定し、関係のないファイル変更、大規模な自動整形、不要なリファクタリングを行わない。
+既存のGit履歴を理由なく書き換えず、ローカル実装・文書・STATUS・Git履歴の整合性を維持する。
+
+リモートに新しい変更がある場合は、既存の変更を壊さずに同期できることを確認する。
+`main` で作業ツリーがクリーン、かつfast-forward可能であることを確認できた場合は
+`git merge --ff-only origin/main` で同期できる。未コミット変更や履歴の分岐がある場合は、
+差分と影響を調べ、既存変更を保持する方法で進める。
+
+作業完了時は以下を実施する。
+
+1. 対象のテストと全体テストを実行し、結果を確認する。
+2. `git diff`（ステージ済みの変更があれば `git diff --cached` も）で変更内容を確認する。
+3. `git status` で最終的な変更とブランチ状態を確認する。
+4. STATUS.mdを更新し、必要に応じてCHANGELOG.md等も更新する。
+5. 変更内容・テスト結果・Git状態を報告する。文書更新後も差分と状態を最終確認する。
+
+コミットする場合は機能単位で分かりやすいメッセージを使用し、ユーザーが指定した停止条件を優先する。
 
 良い例：
 
@@ -786,6 +819,18 @@ docs: update feature specification
 ```
 
 巨大なCommitは避ける。
+
+以下は明示的な指示なしに実行しない。
+
+- `git push --force`
+- `git reset --hard`
+- 公開済みコミットのrebase
+- ブランチ削除
+- Git履歴の大規模な書き換え
+- リモートリポジトリの変更
+- GitHub上の既存データ削除
+
+通常の `git fetch`、`git status`、`git diff` 等の確認操作は実施してよい。
 
 ---
 
