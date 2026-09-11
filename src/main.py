@@ -1,11 +1,11 @@
-"""Entry point for checking the initial development environment."""
+"""Entry point for checking the development environment."""
 
 
 def main() -> None:
     """Report the current development phase without running predictions."""
     print("J1 Match Predictor")
-    print("Phase 0: development environment ready.")
-    print("Match loading and prediction are not implemented yet.")
+    print("Phase 1: match CSV loading and validation available.")
+    print("Elo, feature generation, training, and prediction are not implemented yet.")
 
 
 if __name__ == "__main__":

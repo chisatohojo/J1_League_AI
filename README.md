@@ -4,7 +4,8 @@ J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を
 
 ## 現在の実装範囲
 
-現在は **Phase 0: 開発環境構築** です。試合データの読み込み、Elo、特徴量生成、モデル学習、予測、UIは未実装です。
+現在は **Phase 1: 試合データ読み込み・入力検証まで実装済み** です。
+Elo、特徴量生成、モデル学習、予測、UIは未実装です。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
 元の日本語仕様書・手順書は変更せず保存しています。
@@ -52,7 +53,8 @@ uvは環境構築用で、アプリケーションの依存には含めません
 
 ```text
 data/{raw,processed,master}/   # 生データ、加工データ、チーム名称マスター用
-src/{collect,features,model}/  # 後続フェーズの実装先（現在はパッケージのみ）
+src/collect/matches.py        # CSV読み込み・入力検証
+src/{features,model}/         # 後続フェーズの実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
 tests/                        # pytest
 docs/{DECISIONS,DATA_SOURCES,MODEL_HISTORY}.md
@@ -66,8 +68,8 @@ notebooks/                    # 将来の探索分析用
 
 ## 実装順序
 
-Phase 0の次はPhase 1として `matches.csv` の入力仕様・読み込み・検証のみを実装します。
-Elo、直近成績、Baselineの順に進み、時系列評価を用意してからLightGBMを導入します。
+Phase 1まで完了しています。次はPhase 2のElo、直近成績、Baselineの順に進み、
+時系列評価を用意してからLightGBMを導入します。実データの取得元は未決定です。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。
 
 ---
@@ -288,6 +290,47 @@ result
 ```text
 2026_001,2026,1,2026-02-14,FC東京,鹿島,味の素スタジアム,2,1,2
 ```
+
+## 5.3 読み込みAPIと入力検証（Phase 1）
+
+```python
+from src.collect.matches import load_matches, validate_matches
+
+matches = load_matches()  # プロジェクト内の data/raw/matches.csv
+# matches = load_matches("path/to/matches.csv")  # 取得元に合わせた別のファイル
+# matches = validate_matches(existing_dataframe)  # CSV以外から取得したデータ
+```
+
+`load_matches(path, *, encoding="utf-8-sig")` はローカルCSVを読み込んで検証し、
+型を統一したDataFrameを返します。既定パスは実行ディレクトリに依存しません。
+UTF-8はBOMあり・なしの両方に対応し、別の文字コードは `encoding` で明示します。
+`validate_matches(dataframe)` は同じ検証と型変換を行い、新しいDataFrameを返します。
+どちらも入力CSV・DataFrameを書き換えません。
+
+| 列 | 読み込み後の型・条件 |
+| --- | --- |
+| `match_id`, `home_team`, `away_team`, `stadium` | pandas `string`。前後の空白を除去し、空文字を拒否 |
+| `season`, `round` | `int64`。正の整数 |
+| `home_score`, `away_score` | `int64`。0以上の整数 |
+| `result` | `int64`。0=アウェイ勝利、1=引分、2=ホーム勝利。得点と一致すること |
+| `match_date` | `datetime64[ns]`。日付をタイムゾーンなしの午前0時として保持 |
+
+- 必須10列の欠落、必須値の欠損（空文字・空白のみを含む）、空データを拒否します。
+- 数値文字列や `2.0` など整数値は変換します。小数値、真偽値、非数、無限大、int64範囲外は拒否します。
+  CSVの `match_id` は先頭ゼロを保持します。`NA` などの文字列を自動的に欠損へ置換しません。
+- CSVの日付は `YYYY-MM-DD` とします。DataFrameでは `date` とタイムゾーンなし・午前0時の
+  `datetime` / `Timestamp` も許容します。不正日付、曖昧な月日順、時刻・タイムゾーン付きの値、
+  `datetime64[ns]` の範囲外は拒否します。
+- 空白除去後のID重複と同一ホーム・アウェイチームを拒否します。
+  IDが異なっても `(season, match_date, home_team, away_team)` が同一なら重複試合として拒否します。
+- 重複列名、CSVパーサーが検出した引用符の不整合、ヘッダーと列数が一致しないCSV行（空行を含む）を拒否します。
+- 追加列、行列の順序、DataFrameのindexは保持します。日付順への並べ替え、欠損補完、
+  resultの修正、チーム名称マスターによる変換は行いません。seasonと日付年の一致は要求しません。
+
+入力不正は `MatchValidationError`（`ValueError` の派生）で通知します。
+最初に検出した問題と、値に関するエラーでは対象列・1始まりのデータ行位置を示します。
+ファイル未存在・権限・文字コードのエラーはPython標準の例外を返します。
+試合結果が必要な入力仕様のため、未開催試合は今回の読み込み対象外です。
 
 ---
 

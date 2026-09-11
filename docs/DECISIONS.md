@@ -1,5 +1,33 @@
 # Design Decisions
 
+## 2026-09-11: 試合入力を検証済みDataFrameへ統一する
+
+Decision: `load_matches` をCSVの読込窓口、`validate_matches` をDataFrame共通の検証・正規化窓口とする。
+不正入力は `MatchValidationError(ValueError)` で通知し、入力原本の書き換え・行の除去・結果の自動修正を行わない。
+追加列、行列順、indexを保持し、必須列のみ文字列・int64・datetime64[ns]へ統一する。
+
+Reason: 取得元変更時に検証を再利用し、誤った結果を後続処理へ渡さず、取得原本との対応を保つため。
+専用の抽象基底クラスや外部Validationライブラリは追加しない。
+CSVは標準ライブラリの `csv.reader(strict=True)` で列数を確認してからDataFrame化する。
+これにより先頭ゼロのIDを保持し、重複ヘッダーや列過多による暗黙のindex化・値の脱落を防ぐ。
+数値はDecimal経由で整数性とint64の範囲を確認し、浮動小数点への変換による丸めを避ける。
+
+Status: 採用
+
+## 2026-09-11: Phase 1の日付・重複・欠損の境界を明示する
+
+Decision: CSVの日付は仕様例の `YYYY-MM-DD`、DataFrameではdateとタイムゾーンなし午前0時の
+datetime / Timestampも許容する。時刻を切り捨てず、日付以外の値は拒否する。
+重複判定は空白除去後の `match_id` と `(season, match_date, home_team, away_team)` の2種類とする。
+全必須列の欠損・空白を拒否し、seasonとroundは正、得点は非負、resultは得点との一致を要求する。
+
+Reason: 月日順の推測や時刻情報の暗黙の喪失を避けるため。
+異なるIDで同一試合が二重投入される場合も検出する一方、別日・別season・ホーム/アウェイが逆の対戦は許容する。
+シーズンが暦年をまたぐケースを妨げないよう、seasonと日付年の一致や現在日以前という追加制約は置かない。
+未開催試合の扱い・チーム名称統一は後続の入力仕様として検討し、今回先行実装しない。
+
+Status: 採用
+
 ## 2026-09-11: Phase 0から小さい単位で実装する
 
 Decision: 既存の仕様書・手順書を保存し、README.mdを現在の正式仕様、
