@@ -1,0 +1,8 @@
+* text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.py text eol=lf
+# Markdown uses trailing spaces for intentional hard line breaks.
+*.md text eol=lf whitespace=-blank-at-eol
+*.toml text eol=lf
+*.txt text eol=lf
