@@ -4,6 +4,8 @@
 
 ### Added
 
+- J.League Data Siteの2015年J1調査報告を追加。1ページから1st / 2nd計306試合を取得し、原本と来歴をローカル保存。
+- 保存HTMLを再利用するオフライン調査スクリプトを追加。既存Validationを使った正規化候補CSVと集計JSONの生成・再読込を確認。
 - Phase 1として `load_matches` / `validate_matches` と `MatchValidationError` を追加。
   必須列・欠損・日付・整数・ID/試合重複・同一チーム・得点/result整合性・CSV構造を検証する。
 - 実データに依存しないCSV/DataFrameの正常系・異常系テストを追加。
@@ -17,6 +19,7 @@
 
 ### Changed
 
+- J1試合結果の一次データ源をJ.League Data Siteとして記録。ステージを追加列で保持する正規化方針を文書化。
 - 正式リモートをGitHubの `chisatohojo/J1_League_AI` として文書化し、開発開始・同期・完了時のGit確認手順と禁止操作を追加。
 - STATUSのPhase 1未コミット表記を、Git履歴とorigin/mainで確認したコミット済みの状態に修正。
 - 起動確認メッセージをPhase 1の実装状況に合わせて更新。
