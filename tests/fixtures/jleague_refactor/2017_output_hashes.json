@@ -1,0 +1,22 @@
+{
+  "source_commit": "3116b12",
+  "description": "Captured with committed pre-2021 implementation and artificial 18-club HTML from tests/test_jleague_2021.py; do not regenerate from the implementation under test.",
+  "source_sha256": {
+    "src/collect/jleague.py": "7c3eb4db5238bcf711dbdefc727874c34de4c89be6ab5d43321a3780dd7ae85e",
+    "scripts/inspect_jleague.py": "c1ea9bff1efa92751a2b78d4484a4580caf14acedc89f1ea57061404173a1f5d"
+  },
+  "outputs": {
+    "2017_matches_probe.csv": {
+      "sha256_lf": "d12a427f58212aecb88d8808d9f15afb72931514bf772d62e5c2e02294d010f3",
+      "sha256_crlf": "cd7002cc755df1734ab157f67901c1fafc464d02d0f5714c64a1e511a7505d93"
+    },
+    "2017_matches_probe.review.md": {
+      "sha256_lf": "5b3b37f7efef7675494d5c15e390f7c21212e24bdd37a0e1af89ec0f58880abe",
+      "sha256_crlf": "cc423959d4c2dc6046f56313aa7bfca3aacdf13c1562284de5dbbeb1ab7464cd"
+    },
+    "2017_matches_probe.summary.json": {
+      "sha256_lf": "717fdb15527a48dde5641f1f58d2589a7f1d5a46c8cf4426c4cdbb1637c8c321",
+      "sha256_crlf": "54daf4b64927d95605ba04fd7e715ac168951c7487a4f4b55fbce09ef66fb2b4"
+    }
+  }
+}

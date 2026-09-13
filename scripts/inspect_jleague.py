@@ -3,6 +3,7 @@
 Run: python -m scripts.inspect_jleague --year 2015
      python -m scripts.inspect_jleague --year 2016
      python -m scripts.inspect_jleague --year 2017
+     python -m scripts.inspect_jleague --year 2021
 """
 
 import argparse
@@ -18,6 +19,7 @@ from src.collect.matches import load_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
+COMPARISON_SEASONS = {2016: 2015, 2017: 2016, 2021: 2017}
 
 
 def compare_years(
@@ -66,10 +68,13 @@ def render_review(summary: dict, comparison: dict, *, before_season: int = 2015)
     """Render complete review data, including deterministic sample records."""
     year = summary["season"]
     stage_names = list(summary["stages"])
+    matches_per_round = summary["club_count"] // 2
     round_note = (
-        "roundはステージ内の節番号。年間合計18試合は1stの9試合と2ndの9試合の合計。\n"
+        f"roundはステージ内の節番号。年間合計{matches_per_round * len(stage_names)}試合は"
+        + "と".join(f"{stage}の{matches_per_round}試合" for stage in stage_names) + "の合計。\n"
         if len(stage_names) == 2 else
-        "roundは通年の1～34節。full_seasonはステージ分割のない年間リーグ戦を表す。\n"
+        f"roundは通年の1～{max(summary['round_counts'])}節。"
+        "full_seasonはステージ分割のない年間リーグ戦を表す。\n"
     )
     parts = [
         f"# {year}年J1: 人間レビュー用サマリー\n",
@@ -123,9 +128,9 @@ def run_inspection(year: int, *, root: Path = ROOT, output_dir: Path | None = No
     output_dir = Path(output_dir) if output_dir is not None else root / "data/processed/jleague"
     raw_dir = root / "data/raw/jleague"
     matches, metadata = read_cached_matches(year, raw_dir=raw_dir)
-    # Comparison reports reuse only the already cached preceding season.
-    if year in (2016, 2017):
-        before_year = year - 1
+    # Compare explicitly verified caches, including nonconsecutive seasons.
+    if year in COMPARISON_SEASONS:
+        before_year = COMPARISON_SEASONS[year]
         before, before_metadata = read_cached_matches(before_year, raw_dir=raw_dir)
         summary = build_review_summary(matches, expected_season=year)
         comparison = compare_years(before, matches, before_season=before_year, after_season=year)
@@ -162,14 +167,20 @@ def run_inspection(year: int, *, root: Path = ROOT, output_dir: Path | None = No
         })
     summary_path = output_dir / f"{year}_matches_probe.summary.json"
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    if year in (2016, 2017):
+    if year in COMPARISON_SEASONS:
         review_path = output_dir / f"{year}_matches_probe.review.md"
         review_path.write_text(render_review(summary, comparison, before_season=before_year), encoding="utf-8")
-        stage_info = "153 per stage" if year == 2016 else "34 rounds in one full season"
-        print(f"{year} offline comparison: 306 matches, 18 clubs, {stage_info}; validation/CSV roundtrip passed.")
+        stages = summary["stages"]
+        stage_info = (
+            f"{next(iter(stages.values()))['matches']} per stage" if len(stages) == 2 else
+            f"{len(summary['round_counts'])} rounds in one full season"
+        )
+        print(f"{year} offline comparison: {summary['matches']} matches, {summary['club_count']} clubs, "
+              f"{stage_info}; validation/CSV roundtrip passed.")
         print(f"CSV: {csv_path}\nSummary: {summary_path}\nHuman review: {review_path}")
     else:
-        print(f"2015 offline probe: {len(matches)} matches; 153 per stage; CSV roundtrip passed.")
+        stage_matches = next(iter(summary["stages"].values()))["matches"]
+        print(f"2015 offline probe: {len(matches)} matches; {stage_matches} per stage; CSV roundtrip passed.")
         print(f"CSV: {csv_path}\nSummary: {summary_path}")
 
 

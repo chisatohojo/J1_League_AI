@@ -4,6 +4,7 @@ HTML parsing is independent of files; cache reads never perform network I/O.
 """
 
 from collections import Counter
+from dataclasses import dataclass
 from datetime import date, time
 import hashlib
 from html.parser import HTMLParser
@@ -17,14 +18,40 @@ import pandas as pd
 from src.collect.matches import REQUIRED_COLUMNS, validate_matches
 
 
-# Only formats verified against official competition rules and cached HTML.
-# Values are stage-local round counts; all three seasons have 18 clubs.
-SEASON_STAGES = {
-    2015: {"1st": 17, "2nd": 17},
-    2016: {"1st": 17, "2nd": 17},
-    2017: {"full_season": 34},
+@dataclass(frozen=True)
+class _SeasonFormat:
+    """Verified even-club formats with two annual meetings per club pair."""
+
+    club_count: int
+    stage_meetings: dict[str, int]
+
+    @property
+    def stage_rounds(self) -> dict[str, int]:
+        return {stage: (self.club_count - 1) * meetings
+                for stage, meetings in self.stage_meetings.items()}
+
+    @property
+    def matches_per_round(self) -> int:
+        return self.club_count // 2
+
+    @property
+    def club_pairs(self) -> int:
+        return self.club_count * (self.club_count - 1) // 2
+
+    @property
+    def annual_matches(self) -> int:
+        return self.club_pairs * sum(self.stage_meetings.values())
+
+
+# Official rules define expectations; incomplete input must not redefine them.
+SEASON_FORMATS = {
+    2015: _SeasonFormat(18, {"1st": 1, "2nd": 1}),
+    2016: _SeasonFormat(18, {"1st": 1, "2nd": 1}),
+    2017: _SeasonFormat(18, {"full_season": 2}),
+    2021: _SeasonFormat(20, {"full_season": 2}),
 }
-SUPPORTED_SEASONS = tuple(SEASON_STAGES)
+SEASON_STAGES = {year: format_.stage_rounds for year, format_ in SEASON_FORMATS.items()}
+SUPPORTED_SEASONS = tuple(SEASON_FORMATS)
 SOURCE_BASE = "https://data.j-league.or.jp"
 HEADERS = (
     "シーズン", "大会", "節", "試合日", "K/O時刻", "ホーム", "スコア",
@@ -162,9 +189,12 @@ def summarize_matches(matches: pd.DataFrame, *, expected_season: int) -> dict:
     """Reject incomplete coverage for the verified format of the selected year."""
     if expected_season not in SUPPORTED_SEASONS:
         raise ValueError(f"Unsupported season: {expected_season}; verified: {SUPPORTED_SEASONS}.")
-    expected_stages = SEASON_STAGES[expected_season]
-    if len(matches) != 306 or set(matches["season"]) != {expected_season}:
-        raise ValueError(f"Expected exactly 306 matches from season {expected_season}.")
+    season_format = SEASON_FORMATS[expected_season]
+    expected_stages = season_format.stage_rounds
+    expected_matches = season_format.annual_matches
+    matches_per_round = season_format.matches_per_round
+    if len(matches) != expected_matches or set(matches["season"]) != {expected_season}:
+        raise ValueError(f"Expected exactly {expected_matches} matches from season {expected_season}.")
     if set(matches["stage"]) != set(expected_stages):
         raise ValueError(f"Unexpected stages for season {expected_season}.")
     stages = {}
@@ -172,10 +202,16 @@ def summarize_matches(matches: pd.DataFrame, *, expected_season: int) -> dict:
         rounds = group["round"].value_counts().sort_index().to_dict()
         clubs = Counter(group["home_team"]) + Counter(group["away_team"])
         stage_rounds = expected_stages[stage]
-        if len(group) != stage_rounds * 9 or rounds != dict.fromkeys(range(1, stage_rounds + 1), 9):
+        if len(group) != stage_rounds * matches_per_round or rounds != dict.fromkeys(
+            range(1, stage_rounds + 1), matches_per_round
+        ):
             raise ValueError(f"Incomplete rounds in stage {stage}.")
-        if len(clubs) != 18 or set(clubs.values()) != {stage_rounds}:
+        if len(clubs) != season_format.club_count or set(clubs.values()) != {stage_rounds}:
             raise ValueError(f"Incomplete club appearances in stage {stage}.")
+        for number, round_group in group.groupby("round"):
+            appearances = Counter(round_group.home_team) + Counter(round_group.away_team)
+            if set(appearances) != set(clubs) or set(appearances.values()) != {1}:
+                raise ValueError(f"Incomplete club appearances in stage {stage}, round {number}.")
         stages[stage] = {
             "matches": len(group), "round_counts": rounds,
             "date_min": group["match_date"].min().date().isoformat(),
@@ -235,6 +271,7 @@ def build_review_summary(matches: pd.DataFrame, *, expected_season: int) -> dict
     if missing_columns:
         raise ValueError(f"Missing research columns: {', '.join(sorted(missing_columns))}")
     summary = summarize_matches(matches, expected_season=expected_season)
+    season_format = SEASON_FORMATS[expected_season]
     clubs = summary["clubs"]
     counts = {
         club: {
@@ -244,13 +281,20 @@ def build_review_summary(matches: pd.DataFrame, *, expected_season: int) -> dict
         }
         for club in clubs
     }
-    if any(count != {"total": 34, "home": 17, "away": 17} for count in counts.values()):
-        raise ValueError("Expected each club to play 34 matches: 17 home and 17 away.")
+    club_matches = sum(season_format.stage_rounds.values())
+    home_away = club_matches // 2
+    if any(count != {"total": club_matches, "home": home_away, "away": home_away}
+           for count in counts.values()):
+        raise ValueError(
+            f"Expected each club to play {club_matches} matches: {home_away} home and {home_away} away."
+        )
     for stage, group in matches.groupby("stage"):
         pairs = Counter(tuple(sorted(pair)) for pair in zip(group.home_team, group.away_team))
-        meetings = SEASON_STAGES[expected_season][stage] // 17
-        if len(pairs) != 153 or set(pairs.values()) != {meetings}:
-            raise ValueError(f"Stage {stage} must contain all 153 club pairs {meetings} time(s).")
+        meetings = season_format.stage_meetings[stage]
+        if len(pairs) != season_format.club_pairs or set(pairs.values()) != {meetings}:
+            raise ValueError(
+                f"Stage {stage} must contain all {season_format.club_pairs} club pairs {meetings} time(s)."
+            )
     if matches.duplicated(["home_team", "away_team"]).any():
         raise ValueError("Annual home/away matchups must each occur exactly once.")
 
