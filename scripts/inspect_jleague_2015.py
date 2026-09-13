@@ -2,6 +2,7 @@
 
 Run from the project root: python -m scripts.inspect_jleague_2015
 Outputs are normalization candidates, not the production matches.csv.
+Parsing helpers also support the explicitly verified 2016 season.
 """
 
 from collections import Counter
@@ -90,12 +91,14 @@ def _numeric_syntax(pattern: str, value: str) -> re.Match:
     # Normalize full-width syntax, never club/stadium names or source labels.
     match = re.fullmatch(pattern, unicodedata.normalize("NFKC", value))
     if match is None:
-        raise ValueError(f"Unexpected 2015 source value: {value!r}")
+        raise ValueError(f"Unexpected source value: {value!r}")
     return match
 
 
-def parse_matches_html(html: str) -> pd.DataFrame:
-    """Parse a saved 2015 results table without I/O or changing source order."""
+def parse_matches_html(html: str, *, expected_season: int = 2015) -> pd.DataFrame:
+    """Parse a saved, explicitly selected 2015/2016 table without I/O."""
+    if expected_season not in (2015, 2016):
+        raise ValueError("Only the verified 2015 and 2016 seasons are supported.")
     parser = _SearchTableParser()
     parser.feed(html)
     parser.close()
@@ -112,8 +115,8 @@ def parse_matches_html(html: str) -> pd.DataFrame:
             raise ValueError(f"Source row {position}: expected 11 data cells.")
         values = [cell[1] for cell in row]
         season, competition, round_label, date_label, kickoff = values[:5]
-        if season != "2015":
-            raise ValueError(f"Source row {position}: only season 2015 is allowed.")
+        if season != str(expected_season):
+            raise ValueError(f"Source row {position}: expected season {expected_season}.")
         stage = _numeric_syntax(r"J1\s+(1st|2nd)", competition)[1]
         round_parts = _numeric_syntax(r"第([0-9]+)節第([0-9]+)日", round_label)
         round_number, day_number = map(int, round_parts.groups())
@@ -124,9 +127,9 @@ def parse_matches_html(html: str) -> pd.DataFrame:
             date_label,
         )
         year_suffix, month, day = map(int, date_parts.groups())
-        if year_suffix != 15:
+        if year_suffix != expected_season % 100:
             raise ValueError(f"Source row {position}: date year differs from season.")
-        match_date = date(2015, month, day).isoformat()
+        match_date = date(expected_season, month, day).isoformat()
         if re.fullmatch(r"[0-9]{2}:[0-9]{2}", kickoff) is None:
             raise ValueError(f"Source row {position}: invalid kickoff time.")
         time.fromisoformat(kickoff)
@@ -139,7 +142,7 @@ def parse_matches_html(html: str) -> pd.DataFrame:
         if link is None:
             raise ValueError(f"Source row {position}: invalid score match-card link.")
         records.append({
-            "match_id": link[1], "season": 2015, "round": round_number,
+            "match_id": link[1], "season": expected_season, "round": round_number,
             "match_date": match_date, "home_team": values[5],
             "away_team": values[7], "stadium": values[8],
             "home_score": home_score, "away_score": away_score,
@@ -150,12 +153,14 @@ def parse_matches_html(html: str) -> pd.DataFrame:
     return validate_matches(pd.DataFrame(records))
 
 
-def summarize_matches(matches: pd.DataFrame) -> dict:
-    """Reject incomplete 2015 coverage and describe the inspected matches."""
-    if len(matches) != 306 or set(matches["season"]) != {2015}:
-        raise ValueError("Expected exactly 306 matches from season 2015.")
+def summarize_matches(matches: pd.DataFrame, *, expected_season: int = 2015) -> dict:
+    """Reject incomplete coverage for the verified 2015/2016 two-stage format."""
+    if expected_season not in (2015, 2016):
+        raise ValueError("Only the verified 2015 and 2016 seasons are supported.")
+    if len(matches) != 306 or set(matches["season"]) != {expected_season}:
+        raise ValueError(f"Expected exactly 306 matches from season {expected_season}.")
     if set(matches["stage"]) != {"1st", "2nd"}:
-        raise ValueError("Expected both 2015 stages only.")
+        raise ValueError(f"Expected both {expected_season} stages only.")
     stages = {}
     for stage, group in matches.groupby("stage", sort=True):
         rounds = group["round"].value_counts().sort_index().to_dict()
@@ -173,7 +178,7 @@ def summarize_matches(matches: pd.DataFrame) -> dict:
     if set(stages["1st"]["club_appearances"]) != set(stages["2nd"]["club_appearances"]):
         raise ValueError("The two stages have different clubs.")
     return {
-        "season": 2015, "matches": len(matches), "stages": stages,
+        "season": expected_season, "matches": len(matches), "stages": stages,
         "date_min": matches["match_date"].min().date().isoformat(),
         "date_max": matches["match_date"].max().date().isoformat(),
         "clubs": sorted(set(matches["home_team"]) | set(matches["away_team"])),

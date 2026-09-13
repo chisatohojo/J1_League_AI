@@ -63,15 +63,17 @@ src/collect/matches.py        # CSV読み込み・入力検証
 src/{features,model}/         # 後続フェーズの実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
 scripts/inspect_jleague_2015.py # 保存済み2015年HTMLのオフライン調査
+scripts/inspect_jleague_2016.py # 保存済み2016年HTMLの解析・2015年との差分検証
 tests/                        # pytest
 docs/{DECISIONS,DATA_SOURCES,MODEL_HISTORY}.md
 models/                       # 将来の学習済みモデル用
 notebooks/                    # 将来の探索分析用
 ```
 
-J1試合結果の一次データ源はJ.League Data Siteです。2015年の1st / 2nd計306試合のHTML原本と
+J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016年の各年1st / 2nd計306試合のHTML原本と
 正規化検証CSVを保存し、既存の入力検証に適合することを確認しました。
-取得方法・HTML構造・オフライン再現方法は [2015年調査報告](docs/JLEAGUE_2015_RESEARCH.md) を参照してください。
+取得方法・HTML構造・オフライン再現方法は [2015年調査報告](docs/JLEAGUE_2015_RESEARCH.md) と
+[2016年差分検証](docs/JLEAGUE_2016_RESEARCH.md) を参照してください。
 本格的な複数年取得と学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
 `data/raw/` の取得データは編集せず、加工結果は `data/processed/` へ出力します。
 名称統一用マスターは `data/master/teams.csv` に追加します（未作成）。
@@ -79,7 +81,7 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年の1st /
 ## 実装順序
 
 Phase 1まで完了しています。次はPhase 2のElo、直近成績、Baselineの順に進み、
-時系列評価を用意してからLightGBMを導入します。Data Siteの取得調査は2015年のみ完了し、
+時系列評価を用意してからLightGBMを導入します。Data Siteの取得調査は2015年・2016年まで完了し、
 複数年取得は調査結果と実装方針の報告後に別の作業単位で進めます。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。
 
