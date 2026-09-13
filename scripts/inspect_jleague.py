@@ -19,7 +19,9 @@ from src.collect.matches import load_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPARISON_SEASONS = {2016: 2015, 2017: 2016, 2021: 2017}
+COMPARISON_SEASONS = {
+    2016: 2015, 2017: 2016, 2018: 2017, 2019: 2018, 2020: 2019, 2021: 2017,
+}
 
 
 def compare_years(

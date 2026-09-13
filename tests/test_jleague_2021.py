@@ -1,4 +1,4 @@
-"""Offline format checks for the verified 20-club 2021 season.
+"""Shared full-season checks and the verified 20-club 2021 format.
 
 All schedules are artificial. Expected counts are written independently of the
 production format settings. The 2017 golden was captured from commit 3116b12.
@@ -119,7 +119,7 @@ def _write_cache(root, year, club_count):
 @pytest.fixture(autouse=True)
 def forbid_network(monkeypatch):
     def fail(*args, **kwargs):
-        pytest.fail("Cached 2021 inspection attempted network access.")
+        pytest.fail("Cached season inspection attempted network access.")
 
     monkeypatch.setattr(socket.socket, "connect", fail)
     monkeypatch.setattr(urllib.request, "urlopen", fail)
@@ -179,42 +179,57 @@ def test_2021_source_cells_take_precedence_over_broadcast_annotations(broadcast)
     assert matches.columns.tolist() == MATCH_COLUMNS
 
 
-def test_2021_complete_season_passes_existing_validation_and_review(season_2021):
-    original = season_2021.copy(deep=True)
-    pd.testing.assert_frame_equal(validate_matches(season_2021), original)
-    summary = build_review_summary(season_2021, expected_season=2021)
+@pytest.mark.parametrize("year, club_count, rounds, match_count", [
+    (2018, 18, 34, 306), (2019, 18, 34, 306), (2020, 18, 34, 306),
+    (2021, 20, 38, 380),
+])
+def test_full_season_passes_existing_validation_and_review(year, club_count, rounds, match_count):
+    matches = parse_matches_html(_season_html(year, club_count), expected_season=year)
+    original = matches.copy(deep=True)
+    pd.testing.assert_frame_equal(validate_matches(matches), original)
+    summary = build_review_summary(matches, expected_season=year)
     assert summary["columns"] == MATCH_COLUMNS
-    assert summary["matches"] == summary["match_id_count"] == 380
-    assert summary["club_count"] == 20
-    assert all(counts == {"total": 38, "home": 19, "away": 19}
+    assert summary["season"] == year
+    assert summary["matches"] == summary["match_id_count"] == match_count
+    assert summary["club_count"] == club_count
+    assert all(counts == {"total": rounds, "home": rounds // 2, "away": rounds // 2}
                for counts in summary["club_match_counts"].values())
-    assert summary["round_counts"] == dict.fromkeys(range(1, 39), 10)
+    assert summary["round_counts"] == dict.fromkeys(range(1, rounds + 1), club_count // 2)
     assert set(summary["stages"]) == {"full_season"}
+    assert set(matches.competition) == {"Ｊ１"}
     stage = summary["stages"]["full_season"]
-    assert stage["matches"] == 380
+    assert stage["matches"] == match_count
     assert stage["round_counts"] == summary["round_counts"]
-    assert set(stage["club_appearances"].values()) == {38}
-    assert summary["result_counts"] == {0: 152, 1: 114, 2: 114}
+    assert set(stage["club_appearances"].values()) == {rounds}
+    assert summary["result_counts"] == (
+        {0: 152, 1: 114, 2: 114} if club_count == 20 else {0: 102, 1: 102, 2: 102}
+    )
     assert summary["missing_counts"] == summary["blank_counts"] == dict.fromkeys(MATCH_COLUMNS, 0)
     for field in (
         "duplicate_rows", "duplicate_match_ids", "duplicate_matches", "same_team_rows",
         "score_result_mismatches", "negative_score_rows",
     ):
         assert summary[field] == 0
-    assert summary["date_min"] == "2021-02-27"
-    assert summary["date_max"] == "2021-11-13"
-    display = season_2021.copy(deep=True)
+    assert summary["date_min"] == f"{year}-02-27"
+    assert summary["date_max"] == (date(year, 2, 27) + timedelta(days=(rounds - 1) * 7)).isoformat()
+    display = matches.copy(deep=True)
     display["match_date"] = display["match_date"].dt.strftime("%Y-%m-%d")
     assert summary["first_five"] == display.head(5).to_dict("records")
     assert summary["last_five"] == display.tail(5).to_dict("records")
     assert summary["random_ten"] == display.sample(n=10, random_state=42).to_dict("records")
     assert summary["random_state"] == 42
     assert summary["adjacent_date_decreases"] == 1
-    assert season_2021.match_id.tolist() == (
-        [f"02021{number:04d}" for number in range(378, 381)]
-        + [f"02021{number:04d}" for number in range(1, 378)]
+    assert matches.match_id.tolist() == (
+        [f"0{year}{number:04d}" for number in range(match_count - 2, match_count + 1)]
+        + [f"0{year}{number:04d}" for number in range(1, match_count - 2)]
     )
-    pd.testing.assert_frame_equal(season_2021, original)
+    assert matches.source_url.tolist() == [
+        f"https://data.j-league.or.jp/SFMS02/?match_card_id={match_id}"
+        for match_id in matches.match_id
+    ]
+    assert {"人工Ｇ00", "人工Ｆ01"} <= set(summary["clubs"])
+    assert summary["stadiums"] == sorted(f"人工会場|{club}" for club in summary["clubs"])
+    pd.testing.assert_frame_equal(matches, original)
 
 
 def test_2021_does_not_infer_expected_club_count_from_incomplete_source():
@@ -312,13 +327,16 @@ def test_2021_comparison_uses_2017_without_assuming_adjacent_seasons(season_2021
     assert comparison["names_preserved"] is True
 
 
-def test_2021_reuses_verified_cache_without_changing_originals(offline_cache):
-    _, raw_dir = offline_cache
+@pytest.mark.parametrize("year, club_count", [(2018, 18), (2019, 18), (2020, 18), (2021, 20)])
+def test_full_season_reuses_verified_cache_without_changing_originals(tmp_path, year, club_count):
+    raw_dir = _write_cache(tmp_path, year, club_count)
     original = {path.name: path.read_bytes() for path in raw_dir.iterdir()}
-    matches, metadata = read_cached_matches(2021, raw_dir=raw_dir)
-    pd.testing.assert_frame_equal(matches, parse_matches_html(_season_html(2021), expected_season=2021))
-    assert metadata["sha256"] == hashlib.sha256(original["2021_j1_search.html"]).hexdigest()
-    assert metadata["bytes"] == len(original["2021_j1_search.html"])
+    matches, metadata = read_cached_matches(year, raw_dir=raw_dir)
+    pd.testing.assert_frame_equal(
+        matches, parse_matches_html(_season_html(year, club_count), expected_season=year)
+    )
+    assert metadata["sha256"] == hashlib.sha256(original[f"{year}_j1_search.html"]).hexdigest()
+    assert metadata["bytes"] == len(original[f"{year}_j1_search.html"])
     assert {path.name: path.read_bytes() for path in raw_dir.iterdir()} == original
 
 
@@ -353,36 +371,46 @@ def test_2021_missing_cache_stops_without_fetch(offline_cache, filename):
     assert not (root / "data/processed/jleague").exists()
 
 
-def test_2021_cli_preserves_2017_outputs_and_is_reproducible_without_2020(offline_cache, monkeypatch):
-    root, raw_dir = offline_cache
+@pytest.mark.parametrize("year, before_year, club_count", [
+    (2018, 2017, 18), (2019, 2018, 18), (2020, 2019, 18), (2021, 2017, 20),
+])
+def test_full_season_cli_preserves_baseline_outputs_and_is_reproducible(
+    tmp_path, monkeypatch, year, before_year, club_count,
+):
+    root = tmp_path
+    _write_cache(root, before_year, 18)
+    raw_dir = _write_cache(root, year, club_count)
     raw_original = {path.name: path.read_bytes() for path in raw_dir.iterdir()}
     output_dir = root / "data/processed/jleague"
     output_dir.mkdir(parents=True)
-    before = parse_matches_html(_season_html(2017, 18), expected_season=2017)
-    before.to_csv(output_dir / "2017_matches_probe.csv", index=False, date_format="%Y-%m-%d")
-    (output_dir / "2017_matches_probe.summary.json").write_text('{"preserve": true}\n', encoding="utf-8")
-    (output_dir / "2017_matches_probe.review.md").write_text("Preserve this prior review.\n", encoding="utf-8")
+    before = parse_matches_html(_season_html(before_year, 18), expected_season=before_year)
+    before.to_csv(output_dir / f"{before_year}_matches_probe.csv", index=False, date_format="%Y-%m-%d")
+    (output_dir / f"{before_year}_matches_probe.summary.json").write_text('{"preserve": true}\n', encoding="utf-8")
+    (output_dir / f"{before_year}_matches_probe.review.md").write_text("Preserve this prior review.\n", encoding="utf-8")
     old_outputs = {path.name: path.read_bytes() for path in output_dir.iterdir()}
     run_inspection = inspect_jleague.run_inspection
     monkeypatch.setattr(inspect_jleague, "run_inspection", lambda year: run_inspection(year, root=root))
-    monkeypatch.setattr(sys, "argv", ["inspect_jleague", "--year", "2021"])
+    monkeypatch.setattr(sys, "argv", ["inspect_jleague", "--year", str(year)])
     inspect_jleague.main()
-    expected = parse_matches_html(_season_html(2021), expected_season=2021)
-    pd.testing.assert_frame_equal(load_matches(output_dir / "2021_matches_probe.csv"), expected)
-    summary = json.loads((output_dir / "2021_matches_probe.summary.json").read_text(encoding="utf-8"))
-    assert summary["season"] == 2021
+    expected = parse_matches_html(_season_html(year, club_count), expected_season=year)
+    pd.testing.assert_frame_equal(load_matches(output_dir / f"{year}_matches_probe.csv"), expected)
+    summary = json.loads((output_dir / f"{year}_matches_probe.summary.json").read_text(encoding="utf-8"))
+    assert summary["season"] == year
     assert summary["network_requests"] == 0
     assert summary["csv_roundtrip_validated"] is True
     assert summary["metadata_sha256_verified"] is True
-    assert summary["baseline_2017_sha256"] == hashlib.sha256(raw_original["2017_j1_search.html"]).hexdigest()
-    assert summary["comparison"]["2017"]["matches"] == 306
-    assert summary["comparison"]["2021"]["matches"] == 380
-    review = (output_dir / "2021_matches_probe.review.md").read_text(encoding="utf-8")
-    for text in ("2021年J1", "2017年との差分", "full_season", "1～38節", "random_state=42", "人工会場\\|"):
+    assert summary[f"baseline_{before_year}_sha256"] == hashlib.sha256(
+        raw_original[f"{before_year}_j1_search.html"]
+    ).hexdigest()
+    assert summary["comparison"][str(before_year)]["matches"] == 306
+    assert summary["comparison"][str(year)]["matches"] == len(expected)
+    review = (output_dir / f"{year}_matches_probe.review.md").read_text(encoding="utf-8")
+    for text in (f"{year}年J1", f"{before_year}年との差分", "full_season",
+                 f"1～{(club_count - 1) * 2}節", "random_state=42", "人工会場\\|"):
         assert text in review
     outputs = {path.name: path.read_bytes() for path in output_dir.iterdir()}
     assert set(outputs) == set(old_outputs) | {
-        "2021_matches_probe.csv", "2021_matches_probe.summary.json", "2021_matches_probe.review.md",
+        f"{year}_matches_probe.csv", f"{year}_matches_probe.summary.json", f"{year}_matches_probe.review.md",
     }
     for filename, original in old_outputs.items():
         assert outputs[filename] == original

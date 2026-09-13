@@ -48,6 +48,9 @@ SEASON_FORMATS = {
     2015: _SeasonFormat(18, {"1st": 1, "2nd": 1}),
     2016: _SeasonFormat(18, {"1st": 1, "2nd": 1}),
     2017: _SeasonFormat(18, {"full_season": 2}),
+    2018: _SeasonFormat(18, {"full_season": 2}),
+    2019: _SeasonFormat(18, {"full_season": 2}),
+    2020: _SeasonFormat(18, {"full_season": 2}),
     2021: _SeasonFormat(20, {"full_season": 2}),
 }
 SEASON_STAGES = {year: format_.stage_rounds for year, format_ in SEASON_FORMATS.items()}

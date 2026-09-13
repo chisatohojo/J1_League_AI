@@ -76,39 +76,43 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016�
 正規化検証CSVを保存し、既存の入力検証に適合することを確認しました。
 2017年も1ステージ・34節・306試合を取得し、`stage=full_season` で検証済みです。
 2021年は20クラブ・38節・380試合を同じ15列・既存Validationで検証済みです。
+2018～2020年も各18クラブ・34節・306試合を共通処理で検証し、各年度のレビューを生成済みです。
 取得方法・HTML構造・オフライン再現方法は [2015年調査報告](docs/JLEAGUE_2015_RESEARCH.md) と
 [2016年差分検証](docs/JLEAGUE_2016_RESEARCH.md)、[2017年適用検証](docs/JLEAGUE_2017_RESEARCH.md)、
-[2021年大会構造検証](docs/JLEAGUE_2021_RESEARCH.md) を参照してください。
-本格的な複数年取得と学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
+[2021年大会構造検証](docs/JLEAGUE_2021_RESEARCH.md)、[2018～2020年共通検証](docs/JLEAGUE_2018_2020_RESEARCH.md) を参照してください。
+自動取得アダプターと学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
 `data/raw/` の取得データは編集せず、加工結果は `data/processed/` へ出力します。
 名称統一用マスターは `data/master/teams.csv` に追加します（未作成）。
 
 ## J.League Data Siteのオフライン解析
 
 保存済みHTMLとmetadataを使用し、対象年を明示して実行します。
-現在の対応年は、調査済みの2015年・2016年・2017年・2021年です。
+現在の対応年は、調査済みの2015～2021年です。
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2015
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2016
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2017
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2018
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2019
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2020
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2021
 ```
 
 入力は `data/raw/jleague/{年}_j1_search.html` と同名の `.metadata.json`、
 出力は従来どおり `data/processed/jleague/{年}_matches_probe.csv` と集計JSONです。
-2016年・2017年は、それぞれ前年のキャッシュとの比較と人間レビュー用Markdownも出力します。
-2017年実行には2016年のHTML・metadataも必要です。
+2016～2020年は、それぞれ前年のキャッシュとの比較と人間レビュー用Markdownも出力します。
+各年度の実行には、その前年のHTML・metadataも必要です。
 2021年は比較用に2017年のHTML・metadataを使用し、2020年のキャッシュは不要です。
-2021年もCSV・集計JSON・人間レビュー用Markdownを出力します。
+2021年もCSV・集計JSON・人間レビュー用Markdownを出力します。既存結果を維持するため比較対象は2017年のままです。
 従来の `python -m scripts.inspect_jleague_2015` / `inspect_jleague_2016` も利用できます。
-両年の既存15列、型、行列順、stage・round・match_id・名称表記、集計・レビューの形式を維持します。
-2017年も同じ15列を使い、大会名は原表記の `Ｊ１`、roundは1～34を保持します。
+各年の既存15列、型、行列順、stage・round・match_id・名称表記、集計・レビューの形式を維持します。
+2017～2020年は同じ15列を使い、大会名は原表記の `Ｊ１`、roundは1～34を保持します。
 `full_season` は通年リーグ戦を示す解析上のstage値です。年度と大会表記が矛盾するデータは拒否します。
 2021年も `full_season` とし、roundは1～38を保持します。`SEASON_FORMATS` の公式確認済みクラブ数と
 stageごとの総当たり回数から、節数・各節試合数・年間試合数・クラブ別試合数を計算します。
 取得結果から期待クラブ数を推測せず、各stage/roundで全クラブが1回ずつ出場することも検証します。
-現在の設定は偶数クラブ・年間ホーム＆アウェイ2回戦総当たりの確認済み4年度に限定します。
+現在の設定は偶数クラブ・年間ホーム＆アウェイ2回戦総当たりの確認済み7年度に限定します。
 
 共通APIは `src.collect.jleague` の `parse_matches_html(html, *, expected_season)`、
 `read_cached_matches(year, *, raw_dir)`、`summarize_matches(matches, *, expected_season)`、
@@ -121,8 +125,8 @@ stageごとの総当たり回数から、節数・各節試合数・年間試合
 ## 実装順序
 
 Phase 1まで完了しています。次はPhase 2のElo、直近成績、Baselineの順に進み、
-時系列評価を用意してからLightGBMを導入します。Data Siteの取得調査は2015～2017年と2021年が完了し、
-複数年取得は調査結果と実装方針の報告後に別の作業単位で進めます。
+時系列評価を用意してからLightGBMを導入します。Data Siteの取得・検証は2015～2021年が完了し、
+2022年以降と自動取得アダプターは別の作業単位で進めます。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。
 
 ---
