@@ -26,7 +26,10 @@
 
 取得結果、HTML構造、正規化案とアクセス回数は [2015年調査報告](JLEAGUE_2015_RESEARCH.md)、
 [2016年差分検証](JLEAGUE_2016_RESEARCH.md) を参照。
-`scripts/inspect_jleague_2015.py` は2015年、`scripts/inspect_jleague_2016.py` は2016年と2015年の比較をオフラインで実行する。
+`python -m scripts.inspect_jleague --year 2015` / `--year 2016` で、共通処理を年度指定で実行する。
+解析・キャッシュ照合・集計は `src/collect/jleague.py` に置く。
+旧 `scripts/inspect_jleague_2015.py` / `inspect_jleague_2016.py` は同じ処理を呼ぶ互換入口。
+2016年実行時は従来どおり2015年キャッシュも比較に使用する。
 検証CSVは `data/processed/jleague/{年}_matches_probe.csv`。
 両年とも既存Validationを変更せず全306件の受理とCSV再読込を確認した。
 
@@ -37,6 +40,11 @@ SHA-256は `e39d283c47667eb5f337b7d950c1da3c1a55f8ea7e76fc7a8827d3bd9d21472c`。
 共通15クラブの表記とstage/round構造は2015年と同じで、参加3クラブと会場表記の差分を記録した。
 名称の独自変換は行っていない。各年のキャッシュの要求URL・最終URL・status・バイト数・SHAを照合し、
 取得日時の存在を確認する。キャッシュ不備時に自動再取得しない。複数年取得器は未実装。
+
+2026-09-13の共通化で、両年ともHTMLとmetadataの組を必須に統一した。
+2015年旧CLIのみmetadata任意だったが、来歴を照合できない場合は共通読取で停止する。
+取得元・対象年・原本・出力形式・名称表記・共通CSV Validationに変更はない。
+両年のCSV・集計JSONと2016年レビューの計5ファイルが、共通化前の保存結果とバイト単位で一致した。
 
 ## チーム名称マスター（未作成）
 

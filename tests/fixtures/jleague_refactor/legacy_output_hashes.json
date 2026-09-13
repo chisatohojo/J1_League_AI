@@ -1,0 +1,35 @@
+{
+  "legacy_git_commit": "43efdcffd6bda39d4b3260c45f9cb6072f4dbb90",
+  "provenance": "Captured before refactoring from the committed 2015/2016 scripts using only synthetic_html/write_synthetic_cache in tests/test_jleague_common.py. Do not regenerate using the implementation under test.",
+  "line_endings": "The legacy writers use OS-native line endings. Each expected digest compares the complete output bytes for that platform.",
+  "legacy_source_sha256": {
+    "inspect_jleague_2015.py": "4da4e315e9bcddd22a7f275f4645cb99706bacd72e0a6f5622e4ad7deae1786a",
+    "inspect_jleague_2016.py": "fc4036a074911bd7377795a940a42085b712f834509bdf86b43f8ce7761dc489"
+  },
+  "synthetic_raw_sha256": {
+    "2015_j1_search.html": "c12f9d12d5165583817ed68f26b4d953442b2905d037d80f2098b08183b51bf6",
+    "2016_j1_search.html": "f9cb6acf031b901c902eef71207b02e12a9c389fa0eba7f7d74d6d0392961dd9"
+  },
+  "outputs": {
+    "2015_matches_probe.csv": {
+      "sha256_lf": "80ca8f645e32a79770cb3b74785af4027a95cb6e7e073714d27f41dbbcfe80f0",
+      "sha256_crlf": "389eb7ac34bb13100b2f28e68e76d6750f740313370a28bc9c2c8301302e2aed"
+    },
+    "2015_matches_probe.summary.json": {
+      "sha256_lf": "ad3ac4040893683eee28e95a64a873fd8a83e1a3f04c5d865d6613ac5511fc25",
+      "sha256_crlf": "0f4a0bfa4ea2182cab9155418f030ee616ca733a56e9d4707f5e7ffc5fbbc5e0"
+    },
+    "2016_matches_probe.csv": {
+      "sha256_lf": "943786a5b5cdd18b3a47dfd7a93189143778dc23901082c433bdf43364d549a0",
+      "sha256_crlf": "701893f953fa02726de8a867d33459c85ec94d55f2dedbec3c4b4e115fd90c7a"
+    },
+    "2016_matches_probe.review.md": {
+      "sha256_lf": "c5bf7e3133285e13a03475c9a92148d1cdc5d3eb7164e2ca0475cc4f94dc90db",
+      "sha256_crlf": "bf7f02e93d492306ba8b637da37b2a15bb04cc66f50214f51a7eb16ec087f98d"
+    },
+    "2016_matches_probe.summary.json": {
+      "sha256_lf": "e3ef24a5b5567b4f612edbd207265f95b305156d275c0c7c59a8cae7ba1918c9",
+      "sha256_crlf": "8a4e819526fc408a41203d68e0a5f277559805d3e51482908a18ab39ba80e54d"
+    }
+  }
+}

@@ -60,10 +60,12 @@ uvは環境構築用で、アプリケーションの依存には含めません
 ```text
 data/{raw,processed,master}/   # 生データ、加工データ、チーム名称マスター用
 src/collect/matches.py        # CSV読み込み・入力検証
+src/collect/jleague.py        # J.League Data Siteの共通解析・キャッシュ読取・集計
 src/{features,model}/         # 後続フェーズの実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
-scripts/inspect_jleague_2015.py # 保存済み2015年HTMLのオフライン調査
-scripts/inspect_jleague_2016.py # 保存済み2016年HTMLの解析・2015年との差分検証
+scripts/inspect_jleague.py    # 年度を指定するオフライン調査CLI
+scripts/inspect_jleague_2015.py # 2015年の既存コマンド用入口
+scripts/inspect_jleague_2016.py # 2016年の既存コマンド用入口
 tests/                        # pytest
 docs/{DECISIONS,DATA_SOURCES,MODEL_HISTORY}.md
 models/                       # 将来の学習済みモデル用
@@ -77,6 +79,30 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016�
 本格的な複数年取得と学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
 `data/raw/` の取得データは編集せず、加工結果は `data/processed/` へ出力します。
 名称統一用マスターは `data/master/teams.csv` に追加します（未作成）。
+
+## J.League Data Siteのオフライン解析
+
+保存済みHTMLとmetadataを使用し、対象年を明示して実行します。
+現在の対応年は、調査済みの2015年・2016年です。
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2015
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2016
+```
+
+入力は `data/raw/jleague/{年}_j1_search.html` と同名の `.metadata.json`、
+出力は従来どおり `data/processed/jleague/{年}_matches_probe.csv` と集計JSONです。
+2016年は2015年キャッシュとの比較と人間レビュー用Markdownも出力します。
+従来の `python -m scripts.inspect_jleague_2015` / `inspect_jleague_2016` も利用できます。
+両年の既存15列、型、行列順、stage・round・match_id・名称表記、集計・レビューの形式を維持します。
+
+共通APIは `src.collect.jleague` の `parse_matches_html(html, *, expected_season)`、
+`read_cached_matches(year, *, raw_dir)`、`summarize_matches(matches, *, expected_season)`、
+`build_review_summary(matches, *, expected_season)` です。HTML解析はファイル読取から分離しています。
+キャッシュ読取は要求URL・最終URL・HTTP status・バイト数・SHA-256・取得日時の存在を照合します。
+両年ともmetadataを必須とし、欠落・不一致なら停止します。ネットワーク取得・自動再取得は行いません。
+2015年だけmetadataを省略できた旧CLIの扱いは、この共通方針に統一しました。
+既存matches.csv Validationの契約は変更していません。
 
 ## 実装順序
 

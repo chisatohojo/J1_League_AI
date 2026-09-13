@@ -2,6 +2,11 @@
 
 調査日: 2026-09-11。今回の対象は2015年J1の1st / 2ndステージのみ。
 
+2026-09-13追記: 解析実装は `src/collect/jleague.py` へ移動した。
+`python -m scripts.inspect_jleague --year 2015` と従来の年度別コマンドが同じ処理を呼ぶ。
+CSV・集計JSONは共通化前とバイト単位で一致。キャッシュはHTML・metadataの両方を必須とする。
+現在の実行方法・APIは [README](../README.md) を参照。以下は取得調査時点の記録。
+
 ## 結論
 
 [2015年J1の検索結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2015&tv_relay_station_name=)

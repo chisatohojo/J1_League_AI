@@ -3,6 +3,11 @@
 原本取得日: 2026-09-11。再開・検証日: 2026-09-12。
 対象は2016年J1の通常リーグ戦。保存済みの2015年・2016年HTMLを使用した。
 
+2026-09-13追記: 解析・キャッシュ照合・集計は `src/collect/jleague.py` へ移動した。
+`python -m scripts.inspect_jleague --year 2016` と従来の年度別コマンドが同じ処理を呼ぶ。
+CSV・集計JSON・レビューは共通化前とバイト単位で一致。両年の原本は保存状態を維持した。
+現在の実行方法・APIは [README](../README.md) を参照。以下は差分調査時点の記録。
+
 ## 結論
 
 [2016年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2016&tv_relay_station_name=)
