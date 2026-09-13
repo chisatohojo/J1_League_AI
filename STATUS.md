@@ -5,7 +5,8 @@
 Phase 1: 試合データ読み込み・入力検証 — 完了（実装コミット `21994d1`）。
 J.League Data Siteの2015年J1取得調査 — 完了（commit・push済み `79ade3b`）。
 2016年J1の調査・2015年との差分検証 — 完了（commit・push済み `43efdcf`）。
-2015年・2016年の解析共通化 — 完了、未コミット。2017年以降と一括取得は未着手。
+2015年・2016年の解析共通化 — 完了（commit・push済み `9c165d0`）。
+2017年J1の取得・full_season対応・回帰検証 — 完了、未コミット。2018年以降と一括取得は未着手。
 
 ## 完了
 
@@ -36,13 +37,18 @@ J.League Data Siteの2015年J1取得調査 — 完了（commit・push済み `79a
 - `scripts/inspect_jleague.py --year` を追加し、旧年度別CLIを互換入口に整理
 - 両年CSV・集計JSONと2016年レビューの計5ファイルが変更前とバイト単位で完全一致
 - 共通化前のコードから人工データの期待出力を固定した25件の回帰テストを追加し、全207件成功
+- 2017年の公式大会方式と結果HTMLを確認し、1ステージ・34節・306試合を検証
+- 年度形式を明示し、2017年をfull_seasonとして既存15列へ正規化。共通CSV Validationを変更せず全件通過
+- 2017年のCSV・集計JSON・人間レビューを出力し、日程注記を調査報告へ記録
+- 2017年向け人工データテスト46件を追加して全253件成功。2015/2016年の既存5出力もバイト単位で一致
 
 ## 作業中
 
-今回は2015年・2016年の解析共通化まで完了。共通モジュール・CLI・回帰テスト・文書の変更は未コミット。
-2015年・2016年調査はユーザーがcommit・push済み。作業開始時は作業ツリーがクリーンだった。
+今回は2017年の取得・正規化・回帰テスト・調査報告まで完了。2017年対応のコード・テスト・文書は未コミット。
+2015/2016年調査と共通化はユーザーがcommit・push済み。
+2017年作業の開始時はクリーン。利用制限による中断からの再開時は変更4ファイル・新規テスト1ファイルがあり、保持して作業を再開した。
 今回Git add / commit / pushは行っていない。報告時点で停止する。
-2017年以降の結果や一括取得器は実装・取得していない。既存CSV Validationは変更していない。
+2018年以降の結果や一括取得器は実装・取得していない。既存CSV Validationは変更していない。
 Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 
 ## Git状態（2026-09-13確認）
@@ -50,39 +56,61 @@ Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 - 正式リモートorigin: `https://github.com/chisatohojo/J1_League_AI.git`（fetch / push共通）
 - 現在のブランチ: `main`、追跡先: `origin/main`
 - `git fetch origin`: 成功。GitHubからの取得接続を確認
-- `HEAD` / `origin/main`: `43efdcf`（2016年取得調査のコミット）。2015年調査は `79ade3b`、Phase 1実装は `21994d1`
+- `HEAD` / `origin/main`: `9c165d0`（解析共通化）。2016年調査は `43efdcf`、2015年調査は `79ade3b`
 - `HEAD...origin/main`: ローカルのみ0件 / リモートのみ0件。同期は不要
-- 開始時はクリーン。今回は共通モジュール・共通CLI・回帰テストと固定ハッシュの追加、年度別入口・README・STATUS・CHANGELOG・DATA_SOURCES・DECISIONS・両年調査資料の更新あり
+- 今回は共通モジュール・共通CLI・未対応年度テスト・README・STATUS・CHANGELOG・DATA_SOURCES・DECISIONSの更新、2017年調査報告と専用テストの追加あり
 - HTML原本・metadata・正規化検証CSV・集計JSON・人間レビュー用Markdownは既存設定によりGit対象外で、ローカルに保存
 - リモートURLの変更、履歴変更、GitHubへの書き込みは行っていない
 
 ## 次にやること
 
 1. Git状態・現在のブランチ・リモートとの差分と、README.md、DEVELOPMENT_GUIDE.md、本ファイルを確認する。
-2. READMEの共通解析API・年度指定CLI、今回の未コミット変更と出力一致テストを確認する。
-3. 2017年以降へ進む場合は別作業で対象年の大会方式・stage・期待試合数を少量調査する。
-   調査用の「306件・2stage・各17節」の条件を全年度に仮定しない。
+2. `docs/JLEAGUE_2017_RESEARCH.md` と人間レビュー、今回の未コミット変更・回帰テストを確認する。
+3. 2018年以降へ進む場合は別作業で対象年の大会方式・stage・期待試合数を少量調査する。
+   今回確認した3年度の形式を未調査年度に仮定しない。
 4. 一括取得の前に、キャッシュ優先の取得とHTML解析を分離し、失敗時の停止・訂正時の原本保存を決める。
    今回の調査用スクリプトにはネットワーク機能を追加していない。
 5. チーム・スタジアム略称の名称マスターは別途検討する。今回の原表記を直接変更しない。
 6. Elo Rating（Phase 2）はデータ取得と分けて実装する。
 
-今回の完全一致検証には変更前に退避した2015年・2016年の実出力を使用した。
+今回の完全一致検証には2017年対応前に退避した2015年・2016年の実出力を使用した。
 pytestは人工データと共通化前コードによる固定ハッシュで検証し、実データと通信を必要としない。
 
 ## 共通解析の構成と互換性
 
 - 共通処理: `src/collect/jleague.py`。HTML解析・キャッシュ読取・集計は明示的な年度引数を受け取る。
-- 共通CLI: `scripts/inspect_jleague.py --year 2015` / `--year 2016`。
+- 共通CLI: `scripts/inspect_jleague.py --year 2015` / `--year 2016` / `--year 2017`。
 - 旧 `scripts/inspect_jleague_2015.py` / `inspect_jleague_2016.py` は共通処理を呼ぶ互換入口。
 - 2015年はCSV・集計JSON、2016年はCSV・集計JSON・人間レビューを従来と同じ名前・内容で出力。
-- 2016年実行時の2015年キャッシュとの比較も維持。新しい年への自動巡回・取得機能は持たない。
+  2017年もCSV・集計JSON・人間レビューを出力する。
+- 2016年は2015年、2017年は2016年キャッシュと比較する。新しい年への自動巡回・取得機能は持たない。
+- `SEASON_STAGES` に2015/2016年の1st・2nd各17節、2017年のfull_season・34節を明示。
+  年度と大会表記が矛盾する入力は拒否し、元の大会名と節番号を保持する。
 - 既存のstage、round、match_id等の15列、型、名称、行列順、集計・レビュー形式を維持。
-- 両年ともHTMLとmetadataを必須とし、要求/最終URL、status、バイト数、SHA、取得日時の存在を照合。
+- 全対象年度でHTMLとmetadataを必須とし、要求/最終URL、status、バイト数、SHA、取得日時の存在を照合。
   2015年旧CLIのみmetadata任意だった扱いを統一した。欠落・不一致時は停止し、自動再取得しない。
 - 回帰テスト: `tests/test_jleague_common.py`、期待値と出所: `tests/fixtures/jleague_refactor/`。
   期待値は共通化前の `43efdcf` のコードから人工データで作成し、新コードから再生成していない。
-- 今回のData Siteへのアクセスは0回。HTML・metadataの原本4ファイルはバイト列も不変。
+- 2017年の初回取得でData SiteへのGETは1回。再開後は追加アクセス0回。
+  2015/2016年のHTML・metadata4ファイルはバイト列も不変。
+
+## 2017年調査成果物
+
+- 原本: `data/raw/jleague/2017_j1_search.html`（368,692 bytes）、同名metadata JSON
+- UTC取得日時: `2026-09-13T03:27:33.163161+00:00`（中断前の記録を保持）
+- SHA-256: `1a70a85456082b68c9802af7070d560bf5172e88ac4f361c6d72749f02c751ec`
+- 正規化候補: `data/processed/jleague/2017_matches_probe.csv`（306行・15列）
+- 集計・差分: `data/processed/jleague/2017_matches_probe.summary.json`
+- 人間レビュー: `data/processed/jleague/2017_matches_probe.review.md`
+- 再現処理: `scripts/inspect_jleague.py --year 2017`（2016年のキャッシュも比較に使用）
+- 報告: `docs/JLEAGUE_2017_RESEARCH.md`
+
+2017年は1ステージ制。全306試合をfull_season、round1～34として扱い、各節9試合・全18クラブの各1回出場を確認。
+各クラブ年間34試合（home17・away17）、開催期間2017-02-25～12-02。
+必須10列＋追加5列を維持し、既存ValidationとCSV再読込を通過。欠損・空白・重複・得点矛盾は0件。
+resultはAway Win107・Draw73・Home Win126、総得点793、会場24表記。
+第13節のACLに伴う開催日と第22節の浦和の日程に関する注記は原本に保持し、調査報告へ記録した。
+全クラブ・全節・先頭5・末尾5・seed42の10試合を含む人間レビューを出力済み。
 
 ## 2016年調査成果物
 
@@ -117,7 +145,7 @@ pytestは人工データと共通化前コードによる固定ハッシュで�
 ## 現在の問題
 
 - 端末の3.12登録先には実体がないため、`.tools/python/` 内のPython 3.12.14で対処済み。
-- Data Siteの2017年以降は未取得。年度別大会形式の一般化・一括取得・訂正データの更新方針は未実装。
+- Data Siteの2018年以降は未取得。確認した3年度以外の大会形式・一括取得・訂正データの更新運用は未実装。
 - 取得元のチーム名・スタジアム略称を保持しており、名称マスターによる統一はまだ行っていない。
 - 既定入力 `data/raw/matches.csv` は未作成。調査結果はprocessed側の検証CSVに分離した。
 - `.venv` が参照するため `.tools/python/` を保持する。再構築方法はREADME冒頭に記載。
@@ -125,6 +153,22 @@ pytestは人工データと共通化前コードによる固定ハッシュで�
 - 現在失敗しているテストや既知の実装不具合はない。
 
 ## 最終検証結果
+
+2017年対応の完了時（Windows / Python 3.12.14、2026-09-13）:
+
+| 確認 | 結果 |
+| --- | --- |
+| 2017年作業開始前 `python -m pytest` | 既存207件成功 |
+| `python -m scripts.inspect_jleague --year 2017` | 306件の正規化・既存Validation・CSV往復比較に成功。再解析の通信0回 |
+| 2017年の完全性 | full_season、1～34節各9試合、18クラブ各34/home17/away17、無向153組各2回・有向306組各1回 |
+| 2015/2016年の回帰 | 固定期待値テスト成功。退避した実出力5ファイルと再生成結果がバイト単位で完全一致 |
+| 原本保護 | 2015/2016年のHTML・metadata4ファイルは不変。2017年のSHA・来歴を照合して再利用 |
+| `python -m pytest` | 全253件成功（既存207件＋新規46件） |
+| 独立レビュー | 2017 CSVの原本再解析・summaryとの一致、旧9ファイルの不変、2018年以降の拒否を確認。重大な不足なし |
+| `git diff --check` | 問題なし |
+| Git確認 | main / origin/mainは `9c165d0`、差分0/0。未コミット変更を保持、add・commit・pushなし |
+
+未対応年を検証する既存テストの2017は2018へ置き換えた。固定ハッシュ・既存CSV Validation・そのテストに変更はない。
 
 共通解析へのリファクタリング後（Windows / Python 3.12.14、2026-09-13）:
 
@@ -202,6 +246,7 @@ git rev-list --left-right --count HEAD...origin/main
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2015
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2016
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2017
 ```
 
 ## TODO
@@ -213,9 +258,10 @@ git rev-list --left-right --count HEAD...origin/main
 - [x] 2016年J1の取得・2015年との差分検証・人間レビュー出力
 - [x] 人工HTML・人工シーズン・キャッシュ来歴のpytest
 - [x] 2015/2016共通解析・年度指定CLI・旧出力との完全一致テスト
+- [x] 2017年J1の取得・full_season対応・Validation・回帰テスト
 - [ ] キャッシュ優先のData Site取得アダプター（ネットワーク取得）
 - [ ] チーム・スタジアム名称マスター
-- [ ] 2017年以降の調査・取得（報告後の別作業）
+- [ ] 2018年以降の調査・取得（報告後の別作業）
 - [ ] Phase 2: 試合開始前Eloとリーク防止テスト
 - [ ] Phase 3: 直近5試合成績
 - [ ] Phase 4: Baselineと時系列評価

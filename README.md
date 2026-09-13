@@ -74,8 +74,9 @@ notebooks/                    # 将来の探索分析用
 
 J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016年の各年1st / 2nd計306試合のHTML原本と
 正規化検証CSVを保存し、既存の入力検証に適合することを確認しました。
+2017年も1ステージ・34節・306試合を取得し、`stage=full_season` で検証済みです。
 取得方法・HTML構造・オフライン再現方法は [2015年調査報告](docs/JLEAGUE_2015_RESEARCH.md) と
-[2016年差分検証](docs/JLEAGUE_2016_RESEARCH.md) を参照してください。
+[2016年差分検証](docs/JLEAGUE_2016_RESEARCH.md)、[2017年適用検証](docs/JLEAGUE_2017_RESEARCH.md) を参照してください。
 本格的な複数年取得と学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
 `data/raw/` の取得データは編集せず、加工結果は `data/processed/` へ出力します。
 名称統一用マスターは `data/master/teams.csv` に追加します（未作成）。
@@ -83,31 +84,35 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016�
 ## J.League Data Siteのオフライン解析
 
 保存済みHTMLとmetadataを使用し、対象年を明示して実行します。
-現在の対応年は、調査済みの2015年・2016年です。
+現在の対応年は、調査済みの2015年・2016年・2017年です。
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2015
 .\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2016
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague --year 2017
 ```
 
 入力は `data/raw/jleague/{年}_j1_search.html` と同名の `.metadata.json`、
 出力は従来どおり `data/processed/jleague/{年}_matches_probe.csv` と集計JSONです。
-2016年は2015年キャッシュとの比較と人間レビュー用Markdownも出力します。
+2016年・2017年は、それぞれ前年のキャッシュとの比較と人間レビュー用Markdownも出力します。
+2017年実行には2016年のHTML・metadataも必要です。
 従来の `python -m scripts.inspect_jleague_2015` / `inspect_jleague_2016` も利用できます。
 両年の既存15列、型、行列順、stage・round・match_id・名称表記、集計・レビューの形式を維持します。
+2017年も同じ15列を使い、大会名は原表記の `Ｊ１`、roundは1～34を保持します。
+`full_season` は通年リーグ戦を示す解析上のstage値です。年度と大会表記が矛盾するデータは拒否します。
 
 共通APIは `src.collect.jleague` の `parse_matches_html(html, *, expected_season)`、
 `read_cached_matches(year, *, raw_dir)`、`summarize_matches(matches, *, expected_season)`、
 `build_review_summary(matches, *, expected_season)` です。HTML解析はファイル読取から分離しています。
 キャッシュ読取は要求URL・最終URL・HTTP status・バイト数・SHA-256・取得日時の存在を照合します。
-両年ともmetadataを必須とし、欠落・不一致なら停止します。ネットワーク取得・自動再取得は行いません。
+全対象年度でmetadataを必須とし、欠落・不一致なら停止します。ネットワーク取得・自動再取得は行いません。
 2015年だけmetadataを省略できた旧CLIの扱いは、この共通方針に統一しました。
 既存matches.csv Validationの契約は変更していません。
 
 ## 実装順序
 
 Phase 1まで完了しています。次はPhase 2のElo、直近成績、Baselineの順に進み、
-時系列評価を用意してからLightGBMを導入します。Data Siteの取得調査は2015年・2016年まで完了し、
+時系列評価を用意してからLightGBMを導入します。Data Siteの取得調査は2015～2017年まで完了し、
 複数年取得は調査結果と実装方針の報告後に別の作業単位で進めます。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。
 

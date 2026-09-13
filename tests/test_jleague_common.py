@@ -162,7 +162,7 @@ def test_common_cli_year_argument_preserves_both_legacy_results(offline_cache, m
     assert {path.name: path.read_bytes() for path in raw_dir.iterdir()} == originals
 
 
-@pytest.mark.parametrize("args", [[], ["--year", "2017"], ["--year", "invalid"]])
+@pytest.mark.parametrize("args", [[], ["--year", "2018"], ["--year", "invalid"]])
 def test_common_cli_rejects_missing_or_unsupported_year_before_inspection(monkeypatch, args):
     from scripts import inspect_jleague
 
@@ -250,7 +250,7 @@ def test_2015_uses_complete_metadata_checks_shared_with_2016(offline_cache, fiel
     assert {path.name: path.read_bytes() for path in raw_dir.iterdir()} == before
 
 
-@pytest.mark.parametrize("year", [2014, 2017, 2026])
+@pytest.mark.parametrize("year", [2014, 2018, 2026])
 def test_common_entry_points_reject_unverified_years_without_io(tmp_path, year):
     from scripts.inspect_jleague import run_inspection
     from src.collect.jleague import parse_matches_html, read_cached_matches, summarize_matches

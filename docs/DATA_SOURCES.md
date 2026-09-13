@@ -5,10 +5,11 @@
 - データ名: 過去J1リーグ戦試合結果
 - 取得元: J.League Data Site（Ｊリーグ公式）。2026-09-11、ユーザー指示により採用
 - URL: [2015年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2015&tv_relay_station_name=)、
-  [2016年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2016&tv_relay_station_name=)
-- 対象期間: 2015年・2016年の取得・検証を完了。両年とも1st / 2nd各153試合、年間306試合。2017年以降は未取得
-- 取得方法: `/SFMS01/search` へ `competition_years=2015` または `2016`、`competition_frame_ids=1` を指定してGET。
-  各年1ページに両ステージが含まれる。原本は `data/raw/jleague/{年}_j1_search.html` に保存
+  [2016年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2016&tv_relay_station_name=)、
+  [2017年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2017&tv_relay_station_name=)
+- 対象期間: 2015～2017年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017年は通年34節306試合。2018年以降は未取得
+- 取得方法: `/SFMS01/search` へ対象の `competition_years`（2015・2016・2017）、`competition_frame_ids=1` を指定してGET。
+  各年1ページに年間306試合が含まれる。原本は `data/raw/jleague/{年}_j1_search.html` に保存
 - 更新方法: 取得済み原本とmetadataを再利用する。今回の再解析は通信なし。
   今後の取得器はキャッシュ優先とし、原本の更新・訂正反映方式は本番化時に決定する
 - 利用する列: `match_id`, `season`, `round`, `match_date`, `home_team`,
@@ -18,6 +19,7 @@
 - 追加保存列: `stage`、`competition`、`round_label`、`kickoff_time`、`source_url`（試合詳細リンク）
 - 原本metadata: 要求URL・最終URL・HTTP status・UTC取得日時・Content-Type・バイト数・SHA-256を同名JSONへ保存
 - 注意事項: 2ndの節番号は1～17のまま保持し、`stage` で区別する。
+  2017年の大会原表記は `Ｊ１`、解析上のstageは `full_season`、roundは通年1～34を保持する。
   チーム名とスタジアム略称は原表記を保持し、名称統一マスターは未作成。
   試合日は曜日・祝日表記を除去する。節順と実施日順を混同しない。
   今回は通常リーグ戦のみで、チャンピオンシップ等は含まれない。
@@ -25,13 +27,13 @@
   原本を直接編集せず、既存Git除外設定を維持する
 
 取得結果、HTML構造、正規化案とアクセス回数は [2015年調査報告](JLEAGUE_2015_RESEARCH.md)、
-[2016年差分検証](JLEAGUE_2016_RESEARCH.md) を参照。
-`python -m scripts.inspect_jleague --year 2015` / `--year 2016` で、共通処理を年度指定で実行する。
+[2016年差分検証](JLEAGUE_2016_RESEARCH.md)、[2017年適用検証](JLEAGUE_2017_RESEARCH.md) を参照。
+`python -m scripts.inspect_jleague --year 2015` / `--year 2016` / `--year 2017` で、共通処理を年度指定で実行する。
 解析・キャッシュ照合・集計は `src/collect/jleague.py` に置く。
 旧 `scripts/inspect_jleague_2015.py` / `inspect_jleague_2016.py` は同じ処理を呼ぶ互換入口。
-2016年実行時は従来どおり2015年キャッシュも比較に使用する。
+2016年実行時は2015年、2017年実行時は2016年のキャッシュも比較に使用する。
 検証CSVは `data/processed/jleague/{年}_matches_probe.csv`。
-両年とも既存Validationを変更せず全306件の受理とCSV再読込を確認した。
+全対象年で既存Validationを変更せず各306件の受理とCSV再読込を確認した。
 
 2016年の取得日時は `2026-09-11T09:06:09.249866+00:00`、385,420 bytes。
 SHA-256は `e39d283c47667eb5f337b7d950c1da3c1a55f8ea7e76fc7a8827d3bd9d21472c`。
@@ -45,6 +47,14 @@ SHA-256は `e39d283c47667eb5f337b7d950c1da3c1a55f8ea7e76fc7a8827d3bd9d21472c`。
 2015年旧CLIのみmetadata任意だったが、来歴を照合できない場合は共通読取で停止する。
 取得元・対象年・原本・出力形式・名称表記・共通CSV Validationに変更はない。
 両年のCSV・集計JSONと2016年レビューの計5ファイルが、共通化前の保存結果とバイト単位で一致した。
+
+2017年の取得日時は `2026-09-13T03:27:33.163161+00:00`、368,692 bytes。
+SHA-256は `1a70a85456082b68c9802af7070d560bf5172e88ac4f361c6d72749f02c751ec`。
+初回GETは1回、中断からの再開後は取得済みキャッシュのみ使用し追加アクセス0回。
+1ステージ制への変更は [Ｊリーグ公式の大会方式発表](https://www.jleague.jp/news/article/7829/)で確認した。
+結果表の11列・IDリンク構造は2015/2016年と同じ。開催日は2017-02-25～12-02。
+原表には第13節のACLに伴う開催日と、第22節の浦和の日程について注記があり、本文は原本に保持する。
+2017年対応後も2015/2016年の原本・metadata・既存5出力はバイト単位で不変。
 
 ## チーム名称マスター（未作成）
 
