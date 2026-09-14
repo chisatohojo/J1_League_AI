@@ -1,5 +1,32 @@
 # Data Sources
 
+## 2026年J1百年構想リーグ（通常J1とは別大会）
+
+- 取得元: J.League Data Site。[対象一覧](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=35&competition_years=20261&tv_relay_station_name=)
+- 識別: `competition_years=20261`（2026特別）、`competition_frame_ids=35`。
+  通常2026/27の`2026`・通常J1の`1`とは区別する。内部大会キーは`j1_hyakunen_2026`。
+- 方式: [公式大会実施要項](https://aboutj.jleague.jp/corporate/assets/pdf/regulation/jleague/myjleague_100year_vision_league_match_regulations_revision.pdf)
+  に基づくEAST/WEST各10クラブの地域2回戦総当たり180試合と、同順位同士2戦制のプレーオフ20試合。
+- 原本: `data/raw/jleague/2026_hyakunen/`。2026-09-14 UTCに一覧1、地域PK詳細1、PO第2戦詳細10、
+  大会ID確認JSON1、検索フォーム1の計14応答を保存。各metadataに要求/最終URL、status、UTC日時、Content-Type、bytes、SHA-256を記録。
+  大会ID確認JSONには通常2026/27の大会識別子だけが含まれ、通常J1の試合結果は取得していない。
+- 2026-09-15の実装・再検証は保存済み原本を再利用し、追加取得0回。詳細の不足やmetadata不整合時は自動取得せず停止。
+- 全200試合、20クラブ各20試合（home10／away10）。地域PK51、PO延長1、PO PK0。
+  90分結果はAway65／Draw58／Home77。
+- 一覧スコアには延長込みの値がある。33017町田－名古屋は表示2-1、90分0-0、延長増分2-1。
+  PO第2戦は全詳細の前後半・延長内訳を使い、地域／第1戦は延長なしの公式規則と一覧を照合する。
+- 保存モデル: 試合単位の90分得点/result、延長・PKの有無と得点、単一試合の勝者／決着方法に加え、
+  2戦全体の勝者／決着方法を別テーブルに保存。POのPKは対戦全体を決める情報として扱う。
+  地域のroundとPOのleg、EAST/WEST、放送列内の順位決定枠、原名称・原日付表記・ID・source URLを保持する。
+- 再現: `python -m scripts.inspect_jleague_hyakunen`。
+  `data/processed/jleague/2026_hyakunen/` に `matches.csv`、`playoff_ties.csv`、`summary.json`、`review.md`を出力する。
+- 既存matches.csvとは別の大会検証を使用。既存Validation・2015～2025出力・原本は変更しない。
+  PO PKの実データは0件のため、解析と勝者判定は人工fixtureでも検証する。
+
+取得URL・日時・SHA-256の全一覧と列の意味は
+[百年構想リーグ調査・実装報告](JLEAGUE_2026_HYAKUNEN_RESEARCH.md)を参照。
+原本・加工成果物は既存設定のままGit対象外。
+
 ## J1試合結果: J.League Data Site（一次データ源として採用）
 
 - データ名: 過去J1リーグ戦試合結果
@@ -15,7 +42,7 @@
   [2023年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2023&tv_relay_station_name=)、
   [2024年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2024&tv_relay_station_name=)、
   [2025年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2025&tv_relay_station_name=)
-- 対象期間: 2015～2025年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017～2020年・2022/2023年は通年34節306試合、2021年・2024/2025年は通年38節380試合。2026年以降は未取得
+- 対象期間: 2015～2025年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017～2020年・2022/2023年は通年34節306試合、2021年・2024/2025年は通年38節380試合。通常2026/27以降は未取得
 - 取得方法: `/SFMS01/search` へ対象の `competition_years`（確認済み2015～2025年）、`competition_frame_ids=1` を指定してGET。
   各年1ページに年間の全試合が含まれる。原本は `data/raw/jleague/{年}_j1_search.html` に保存
 - 更新方法: 取得済み原本とmetadataを再利用する。今回の再解析は通信なし。

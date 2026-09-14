@@ -79,6 +79,8 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016�
 2018～2020年も各18クラブ・34節・306試合を共通処理で検証し、各年度のレビューを生成済みです。
 2022・2023年も各18クラブ・34節・306試合を同じ共通処理で検証済みです。
 2024・2025年は各20クラブ・38節・380試合を検証し、全対戦カードと各クラブhome19・away19を確認済みです。
+2026年J1百年構想リーグは、地域180試合とプレーオフ20試合を別の大会として扱います。
+90分得点・延長・PKと、プレーオフ2試合全体の勝者を分離します（下記の専用オフライン解析を参照）。
 取得方法・HTML構造・オフライン再現方法は [2015年調査報告](docs/JLEAGUE_2015_RESEARCH.md) と
 [2016年差分検証](docs/JLEAGUE_2016_RESEARCH.md)、[2017年適用検証](docs/JLEAGUE_2017_RESEARCH.md)、
 [2021年大会構造検証](docs/JLEAGUE_2021_RESEARCH.md)、[2018～2020年共通検証](docs/JLEAGUE_2018_2020_RESEARCH.md)、
@@ -129,11 +131,33 @@ stageごとの総当たり回数から、節数・各節試合数・年間試合
 2015年だけmetadataを省略できた旧CLIの扱いは、この共通方針に統一しました。
 既存matches.csv Validationの契約は変更していません。
 
+## J1百年構想リーグのオフライン解析
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.inspect_jleague_hyakunen
+```
+
+`data/raw/jleague/2026_hyakunen/` の保存済み一覧・詳細HTMLとmetadataを照合して解析します。
+不足・不整合時は停止し、ネットワーク取得は行いません。
+出力先は `data/processed/jleague/2026_hyakunen/`、成果物は `matches.csv`、
+`playoff_ties.csv`、`summary.json`、`review.md` です。
+
+試合CSVの`home_score`・`away_score`・`result`は90分結果（0=Away、1=Draw、2=Home）です。
+延長の増分・PK得点・実施有無、単一試合の勝者と決着方法を追加列に保持します。
+`stage=regional/playoff`、地域の`group=EAST/WEST`と両チームの所属を区別します。
+地域の`round`は1～18、プレーオフでは`round`をnull、`leg`を1／2にし、原表記も保持します。
+プレーオフ2試合全体の結果は別CSVとし、第1戦時点で既知の情報として扱いません。
+
+この専用CSVは、round必須の既存matches.csvへの直接投入用ではありません。
+大会固有の検証を別に行い、2015～2025年の15列・Validation・共通CLIは維持します。
+通常2026/27 J1は対象外です。列定義・特殊ケースは
+[百年構想リーグ調査・実装報告](docs/JLEAGUE_2026_HYAKUNEN_RESEARCH.md)を参照してください。
+
 ## 実装順序
 
 Phase 1まで完了しています。次はPhase 2のElo、直近成績、Baselineの順に進み、
 時系列評価を用意してからLightGBMを導入します。Data Siteの取得・検証は2015～2025年が完了し、
-2026年以降と自動取得アダプターは別の作業単位で進めます。
+2026年百年構想リーグは別大会として扱い、通常2026/27 J1と自動取得アダプターは別の作業単位で進めます。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。
 
 ---
