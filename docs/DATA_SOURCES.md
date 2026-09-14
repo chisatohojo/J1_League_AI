@@ -12,9 +12,11 @@
   [2020年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2020&tv_relay_station_name=)、
   [2021年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2021&tv_relay_station_name=)、
   [2022年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2022&tv_relay_station_name=)、
-  [2023年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2023&tv_relay_station_name=)
-- 対象期間: 2015～2023年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017～2020年・2022/2023年は通年34節306試合、2021年は通年38節380試合。2024年以降は未取得
-- 取得方法: `/SFMS01/search` へ対象の `competition_years`（確認済み2015～2023年）、`competition_frame_ids=1` を指定してGET。
+  [2023年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2023&tv_relay_station_name=)、
+  [2024年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2024&tv_relay_station_name=)、
+  [2025年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2025&tv_relay_station_name=)
+- 対象期間: 2015～2025年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017～2020年・2022/2023年は通年34節306試合、2021年・2024/2025年は通年38節380試合。2026年以降は未取得
+- 取得方法: `/SFMS01/search` へ対象の `competition_years`（確認済み2015～2025年）、`competition_frame_ids=1` を指定してGET。
   各年1ページに年間の全試合が含まれる。原本は `data/raw/jleague/{年}_j1_search.html` に保存
 - 更新方法: 取得済み原本とmetadataを再利用する。今回の再解析は通信なし。
   今後の取得器はキャッシュ優先とし、原本の更新・訂正反映方式は本番化時に決定する
@@ -26,7 +28,7 @@
 - 原本metadata: 要求URL・最終URL・HTTP status・UTC取得日時・Content-Type・バイト数・SHA-256を同名JSONへ保存
 - 注意事項: 2ndの節番号は1～17のまま保持し、`stage` で区別する。
   2017～2020年・2022/2023年の大会原表記は `Ｊ１`、解析上のstageは `full_season`、roundは通年1～34を保持する。
-  2021年も同じ大会表記・stageで、roundは通年1～38を保持する。
+  2021年・2024/2025年も同じ大会表記・stageで、roundは通年1～38を保持する。
   チーム名とスタジアム略称は原表記を保持し、名称統一マスターは未作成。
   試合日は曜日・祝日表記を除去する。節順と実施日順を混同しない。
   今回は通常リーグ戦のみで、チャンピオンシップ等は含まれない。
@@ -36,15 +38,15 @@
 取得結果、HTML構造、正規化案とアクセス回数は [2015年調査報告](JLEAGUE_2015_RESEARCH.md)、
 [2016年差分検証](JLEAGUE_2016_RESEARCH.md)、[2017年適用検証](JLEAGUE_2017_RESEARCH.md)、
 [2021年大会構造検証](JLEAGUE_2021_RESEARCH.md)、[2018～2020年共通検証](JLEAGUE_2018_2020_RESEARCH.md)、
-[2022・2023年共通検証](JLEAGUE_2022_2023_RESEARCH.md) を参照。
-`python -m scripts.inspect_jleague --year <年>` で、2015～2023年の共通処理を年度指定で実行する。
+[2022・2023年共通検証](JLEAGUE_2022_2023_RESEARCH.md)、[2024・2025年共通検証](JLEAGUE_2024_2025_RESEARCH.md) を参照。
+`python -m scripts.inspect_jleague --year <年>` で、2015～2025年の共通処理を年度指定で実行する。
 解析・キャッシュ照合・集計は `src/collect/jleague.py` に置く。
 旧 `scripts/inspect_jleague_2015.py` / `inspect_jleague_2016.py` は同じ処理を呼ぶ互換入口。
-2016～2020年・2022/2023年実行時は、それぞれ前年のキャッシュも比較に使用する。
+2016～2020年・2022～2025年実行時は、それぞれ前年のキャッシュも比較に使用する。
 2021年実行時は確認済みの2017年キャッシュと比較し、`baseline_2017_sha256` を記録する。
 2021年の既存出力を維持するため比較対象は変更せず、前年との差分とは表現しない。
 検証CSVは `data/processed/jleague/{年}_matches_probe.csv`。
-既存Validationを変更せず、2015～2020年・2022/2023年は各306件、2021年は380件の受理とCSV再読込を確認した。
+既存Validationを変更せず、2015～2020年・2022/2023年は各306件、2021年・2024/2025年は各380件の受理とCSV再読込を確認した。
 
 2016年の取得日時は `2026-09-11T09:06:09.249866+00:00`、385,420 bytes。
 SHA-256は `e39d283c47667eb5f337b7d950c1da3c1a55f8ea7e76fc7a8827d3bd9d21472c`。
@@ -113,6 +115,28 @@ SHA-256は `911725c42e8e7efaa39af9faa0ee1e47517c1115ac620701c822519f22d792ba`。
 2015～2021年の既存20出力とHTML・metadata14ファイルはバイト単位で不変。
 日程・開始時刻・会場の差分は原表記を保持して調査報告へ記録し、独自補正や専用解析は追加していない。
 2024年以降は取得していない。
+
+2026-09-14（日本時間）、2024・2025年の未保存を確認し、年度一覧を各GET 1回、計2回で取得した。
+HTTP 200、`text/html;charset=UTF-8`、要求URL・最終URLは上記の年度URLと同一。
+応答バイト列をそのままHTMLに保存し、同名 `.metadata.json` に来歴を記録した。
+
+| 年度 | UTC取得日時 | bytes | SHA-256 |
+| --- | --- | --- | --- |
+| 2024 | `2026-09-14T04:38:33.694939+00:00` | 432,597 | `b2d76c5f2a10828b37e7bf1f0334d6382007832fe2135ec4cf0955fbe56c4af6` |
+| 2025 | `2026-09-14T04:38:36.028921+00:00` | 433,011 | `c04b32fef0547fa10e73a527bd6588c2c8687209ee399f22e8458f4006cee732` |
+
+公式の [2024年大会方式変更](https://www.jleague.jp/news/article/26789/) と
+[2025年大会方式](https://www.jleague.jp/news/article/29445/)で20クラブ・ホーム＆アウェイ2回戦総当たりを確認。
+クラブ数と対戦回数から38節・各10試合・年間380試合・各クラブ38/home19/away19を導出し、原本と照合した。
+無向190カード各2試合、有向380カード各1試合で全対戦を網羅。欠損・重複・得点矛盾0件、既存Validation通過。
+2024年は02-23～12-08、2025年は02-14～12-06。各CSV・集計JSON・人間レビューを生成済み。
+11列・IDリンク・Ｊ１表記は既存と同じ。年度設定と比較先2024→2023・2025→2024だけを追加した。
+原本の実施日・節・ID・チーム/会場表記を保持し、日程やIDの非連続性は調査報告へ記録する。
+2024年浦和対川崎Ｆ（ID30700）は、[公式発表](https://www.jleague.jp/news/article/28819/)で後半再開試合と確認した。
+原本のmatch_dateは再開日の11-22、K/O19:00、最終1-1。8月の当初開始日へ書き換えず、1試合として保存する。
+このCSVだけでは当初開始・中止・再開の各時点を表現できないため、将来の時系列特徴量では別途扱いを決める。
+取得後はキャッシュだけを使い追加通信0回。2015～2023年の既存26出力と原本・metadata18ファイルはバイト単位で不変。
+2026年の取得や、自動取得アダプターの追加は行っていない。
 
 ## チーム名称マスター（未作成）
 
