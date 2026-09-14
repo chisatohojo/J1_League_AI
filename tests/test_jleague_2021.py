@@ -181,7 +181,7 @@ def test_2021_source_cells_take_precedence_over_broadcast_annotations(broadcast)
 
 @pytest.mark.parametrize("year, club_count, rounds, match_count", [
     (2018, 18, 34, 306), (2019, 18, 34, 306), (2020, 18, 34, 306),
-    (2021, 20, 38, 380),
+    (2021, 20, 38, 380), (2022, 18, 34, 306), (2023, 18, 34, 306),
 ])
 def test_full_season_passes_existing_validation_and_review(year, club_count, rounds, match_count):
     matches = parse_matches_html(_season_html(year, club_count), expected_season=year)
@@ -327,7 +327,9 @@ def test_2021_comparison_uses_2017_without_assuming_adjacent_seasons(season_2021
     assert comparison["names_preserved"] is True
 
 
-@pytest.mark.parametrize("year, club_count", [(2018, 18), (2019, 18), (2020, 18), (2021, 20)])
+@pytest.mark.parametrize("year, club_count", [
+    (2018, 18), (2019, 18), (2020, 18), (2021, 20), (2022, 18), (2023, 18),
+])
 def test_full_season_reuses_verified_cache_without_changing_originals(tmp_path, year, club_count):
     raw_dir = _write_cache(tmp_path, year, club_count)
     original = {path.name: path.read_bytes() for path in raw_dir.iterdir()}
@@ -371,19 +373,21 @@ def test_2021_missing_cache_stops_without_fetch(offline_cache, filename):
     assert not (root / "data/processed/jleague").exists()
 
 
-@pytest.mark.parametrize("year, before_year, club_count", [
-    (2018, 2017, 18), (2019, 2018, 18), (2020, 2019, 18), (2021, 2017, 20),
+@pytest.mark.parametrize("year, before_year, club_count, before_club_count, before_match_count", [
+    (2018, 2017, 18, 18, 306), (2019, 2018, 18, 18, 306),
+    (2020, 2019, 18, 18, 306), (2021, 2017, 20, 18, 306),
+    (2022, 2021, 18, 20, 380), (2023, 2022, 18, 18, 306),
 ])
 def test_full_season_cli_preserves_baseline_outputs_and_is_reproducible(
-    tmp_path, monkeypatch, year, before_year, club_count,
+    tmp_path, monkeypatch, year, before_year, club_count, before_club_count, before_match_count,
 ):
     root = tmp_path
-    _write_cache(root, before_year, 18)
+    _write_cache(root, before_year, before_club_count)
     raw_dir = _write_cache(root, year, club_count)
     raw_original = {path.name: path.read_bytes() for path in raw_dir.iterdir()}
     output_dir = root / "data/processed/jleague"
     output_dir.mkdir(parents=True)
-    before = parse_matches_html(_season_html(before_year, 18), expected_season=before_year)
+    before = parse_matches_html(_season_html(before_year, before_club_count), expected_season=before_year)
     before.to_csv(output_dir / f"{before_year}_matches_probe.csv", index=False, date_format="%Y-%m-%d")
     (output_dir / f"{before_year}_matches_probe.summary.json").write_text('{"preserve": true}\n', encoding="utf-8")
     (output_dir / f"{before_year}_matches_probe.review.md").write_text("Preserve this prior review.\n", encoding="utf-8")
@@ -402,7 +406,7 @@ def test_full_season_cli_preserves_baseline_outputs_and_is_reproducible(
     assert summary[f"baseline_{before_year}_sha256"] == hashlib.sha256(
         raw_original[f"{before_year}_j1_search.html"]
     ).hexdigest()
-    assert summary["comparison"][str(before_year)]["matches"] == 306
+    assert summary["comparison"][str(before_year)]["matches"] == before_match_count
     assert summary["comparison"][str(year)]["matches"] == len(expected)
     review = (output_dir / f"{year}_matches_probe.review.md").read_text(encoding="utf-8")
     for text in (f"{year}年J1", f"{before_year}年との差分", "full_season",

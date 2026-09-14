@@ -107,7 +107,7 @@ def test_parser_derives_result_from_scores(score, result):
     assert matches.loc[0, "result"] == result
 
 
-@pytest.mark.parametrize("year", [2014, 2022, 2026])
+@pytest.mark.parametrize("year", [2014, 2024, 2026])
 def test_parser_rejects_uninvestigated_years(year):
     with pytest.raises(ValueError):
         parse_matches_html(_html(year), expected_season=year)
@@ -222,7 +222,7 @@ def test_review_samples_preserve_all_columns_and_seed(season_2016):
     assert all(list(row) == MATCH_COLUMNS for row in summary["random_ten"])
 
 
-@pytest.mark.parametrize("year", [2014, 2022])
+@pytest.mark.parametrize("year", [2014, 2024])
 def test_summary_rejects_uninvestigated_years(season_2016, year):
     season_2016["season"] = year
     with pytest.raises(ValueError):

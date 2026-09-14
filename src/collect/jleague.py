@@ -52,6 +52,8 @@ SEASON_FORMATS = {
     2019: _SeasonFormat(18, {"full_season": 2}),
     2020: _SeasonFormat(18, {"full_season": 2}),
     2021: _SeasonFormat(20, {"full_season": 2}),
+    2022: _SeasonFormat(18, {"full_season": 2}),
+    2023: _SeasonFormat(18, {"full_season": 2}),
 }
 SEASON_STAGES = {year: format_.stage_rounds for year, format_ in SEASON_FORMATS.items()}
 SUPPORTED_SEASONS = tuple(SEASON_FORMATS)
