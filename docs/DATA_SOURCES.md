@@ -1,5 +1,37 @@
 # Data Sources
 
+## 通常2026/27 J1（更新アダプター・初回bootstrapまで実装済み）
+
+- 対象: [Data Siteの日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2026&tv_relay_station_name=)。
+  `competition_years=2026`、`competition_frame_ids=1`、原表は`2026/27`・`Ｊ１`。
+- [公式大会方式](https://www.jleague.jp/outline/j1/): 20クラブ・2回戦総当たり・全38節380試合、
+  2026-08-07～2027-06-06。90分引分あり、延長・PKなし。season開始年と実開催日の暦年を区別する。
+- 2026-09-15 07:48 JSTの一覧は380行。数値スコアと公式IDがある70行（第1～7節）と、vs表示310行。
+  **未開催310行には公式IDがない**。時刻空欄180件、会場`●未定●`10件。未確定情報として保持する。
+- 一覧と公式記録詳細34583を各GET1回、計2回取得。以前保存した大会カタログ・検索フォームは再利用。
+  原本とmetadataは `data/raw/jleague/2026_2027/research/20260914T224804164752Z/` に保存した。
+  UTC日時・取得URL・bytes・SHA-256等の来歴は[更新設計報告](JLEAGUE_2026_27_UPDATE_DESIGN.md)に記録。
+- 一覧やSFMS02題名だけでは終了確定としない。補助証拠として
+  [公式東京Ｖ－千葉](https://www.jleague.jp/match/j1/2026/091302/)の実DOM内の「試合終了」欄と得点を使用する。
+  canonical、大会、日付、節、左右クラブslug、得点をData Siteと照合してcompletedへ進める。
+  [未開催の浦和－東京Ｖ](https://www.jleague.jp/match/j1/2026/091904/)には終了欄がないことも確認。
+  読み込み待ちskeletonのpost-gameクラスやscript翻訳辞書は終了根拠にならない。
+- 上記公式matchの追加GET2件を `data/raw/jleague/2026_27/research/20260915T035921896334Z/` に保存。
+  UTC03:59:22と04:00:08取得。各metadataにURL・HTTP200・bytes・SHAを保存し、一覧は再取得していない。
+- 更新処理: 不変snapshotを取得ごとに保存し、同じmatch_idの意味内容を比較する。
+  IDなし予定は `j1_2026_2027:<home_slug>:<away_slug>` で追跡し、公式ID出現後も対応表を保持する。
+  検証済みrevisionだけlatest参照を更新し、過去snapshot・過去訂正前の値は上書きしない。
+- 訂正検出の初期対象は一覧に掲載された項目。詳細だけの変更の定期監査は別途設計する。
+  応答にはETag・Last-Modifiedがなく、条件付きGETは未採用。
+- 初回snapshotは `data/raw/jleague/2026_27/snapshots/bootstrap-20260915/`。
+  `data/processed/jleague/2026_27/` にschedule・completed・対応表・change log・summary・reviewを生成した。
+  全380予定（20クラブ・38節・各38/home19/away19）、scheduled310・candidate69・completed1。
+  34583だけ公式終了証拠と照合し、1-1・result1で既存Validationを通過。残り69件は終了未確認。
+- `python -m scripts.update_jleague_ongoing replay SNAPSHOT_DIRECTORY` は通信なし。
+  明示的な `capture --fetch` で一覧1回、必要な公式matchだけ `--evidence-url` で指定する。自動列挙・定期実行はしない。
+- 最終再開後は追加アクセス0回。同一snapshotの再import・2回replayでraw7・加工17ファイルの全バイト一致。
+  2015～2025の32件と百年構想リーグ4件を別rootで再生成し、全36成果物が一致。既存92データファイルもSHA不変。
+
 ## 2026年J1百年構想リーグ（通常J1とは別大会）
 
 - 取得元: J.League Data Site。[対象一覧](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=35&competition_years=20261&tv_relay_station_name=)
@@ -42,7 +74,7 @@
   [2023年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2023&tv_relay_station_name=)、
   [2024年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2024&tv_relay_station_name=)、
   [2025年J1の日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2025&tv_relay_station_name=)
-- 対象期間: 2015～2025年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017～2020年・2022/2023年は通年34節306試合、2021年・2024/2025年は通年38節380試合。通常2026/27以降は未取得
+- 対象期間: 2015～2025年の取得・検証を完了。2015/2016年は1st / 2nd各153試合、2017～2020年・2022/2023年は通年34節306試合、2021年・2024/2025年は通年38節380試合。通常2026/27は冒頭の調査原本のみ取得、継続更新は未実装
 - 取得方法: `/SFMS01/search` へ対象の `competition_years`（確認済み2015～2025年）、`competition_frame_ids=1` を指定してGET。
   各年1ページに年間の全試合が含まれる。原本は `data/raw/jleague/{年}_j1_search.html` に保存
 - 更新方法: 取得済み原本とmetadataを再利用する。今回の再解析は通信なし。

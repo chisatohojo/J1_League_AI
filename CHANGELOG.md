@@ -1,5 +1,43 @@
 # Changelog
 
+## 2026-09-15（通常2026/27 J1の更新アダプター・最終確認）
+
+### Added
+
+- 公式matchの実「試合終了」欄とData Siteのカード・日付・節・得点を照合する専用source解析を追加。
+  予定scheduled、数値だけのcandidate、照合済みcompletedを分離し、既存Validationはcompletedだけに適用。
+- 不変snapshot/revision、開催日・KO非依存のfixture_key、公式match_id対応表、前回取得／採用との差分を実装。
+  new_fixture・schedule_changed・result_candidate・completed・result_corrected・missing_from_snapshot等を記録。
+  訂正A→B→Aの履歴、保留時の旧latest維持、固定比較基準による再処理、writer排他を追加。
+- キャッシュ優先CLI `scripts/update_jleague_ongoing.py` を追加。明示--fetchのみ一覧・指定公式証拠を取得。
+  保存済み一覧＋公式証拠2ページからbootstrapを生成し、予定310・候補69・終了確認済み1（34583、1-1）を確認。
+- 専用テスト69件を追加し全508件成功。終了根拠の偽陽性、ID対応、日程・訂正・欠落、公開失敗・改竄・古入力を検証。
+  うち保存済み原本の検証1件はローカル原本なし環境ではskip。
+
+### Changed
+
+- 未コミット実装を保持して最終成果物・STATUS・README・DATA_SOURCES・DECISIONS・更新設計報告を整備。
+- 同一snapshot再importと2回replayでraw7・processed17ファイルの全バイト一致、履歴重複なしを確認。
+- 2015～2025の32成果物と百年構想リーグ4成果物を隔離rootで再生成して全36件一致。既存92データファイルのSHA不変。
+- 最終再開後の追加サイトアクセス0回、git diff --check問題なし。既存Validation・旧年度コード・依存は変更なし。
+  残り69候補の終了証拠・定期更新は別作業。Elo・特徴量・モデル、add・commit・pushは実施しない。
+
+## 2026-09-15（通常2026/27 J1の更新設計）
+
+### Added
+
+- 通常2026/27 J1の公式大会方式とData Site識別条件を確認し、進行中シーズンの更新設計報告を追加。
+- 一覧380行（スコア掲載70・vs表示310）と詳細1件の調査原本・metadataを各GET1回、計2回で保存。
+  未開催行の公式ID欠落、予定時刻・会場の未定、明示的終了状態がない点を設計へ反映。
+- 不変snapshot、終了済み結果のValidation境界、match_id/fixture_key、訂正差分、idempotency、公開手順を提案。
+
+### Changed
+
+- README・STATUS・DATA_SOURCES・DECISIONSを更新。百年構想リーグがcommit・push済みの状態も反映。
+- 今回は設計のみ。取得アダプター・自動更新・正式な2026/27結果CSVは未実装。
+  2015～2025年と百年構想リーグの既存コード・Validation・出力を維持し、commit・pushなし。
+- 既存データ88ファイルのSHA不変、全439テスト成功、git diff --check問題なしを確認。
+
 ## 2026-09-15（J1百年構想リーグ対応）
 
 ### Added
