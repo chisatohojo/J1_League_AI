@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-15（2026/27候補69試合の終了確認）
+
+### Added
+
+- 公式日程一覧の実リンクから対象ページを特定し、未取得69ページのHTML・metadata・SHA・判定記録を保存。
+  既存公式ページは再利用し、新規GETは一覧1＋対象試合69。Data Site一覧・詳細の再取得は0。
+- 終了ルールを変えず69候補すべての終了欄・大会・日付・節・クラブ・得点を照合し、completedへ昇格。
+  scheduled310・candidate0・completed70。既存Validation通過、全試合の公式根拠を調査報告へ記録。
+
+### Changed
+
+- 新snapshot confirmed-candidates-20260915 と検証済みrevisionを保存し、latestを更新。
+  fixture_key/公式ID・日程・得点/result等を維持。既存902履歴に2比較計138のcompletedイベントを追加。
+- 同一入力再import・2回replayで全raw/加工ファイル不変、旧bootstrap再処理でもlatest維持を確認。
+  既存113保護ファイルのSHA不変、過去36成果物の隔離再生成も全件バイト一致。
+- STATUS・README・DATA_SOURCES・更新設計を最新状態へ更新。基盤commit b50dd86を反映。
+  既存コード・テスト・終了規則・Validationは変更なし。全508pytest成功、git diff --check問題なし。
+- Elo、特徴量、モデル、commit・pushは実施しない。
+
 ## 2026-09-15（通常2026/27 J1の更新アダプター・最終確認）
 
 ### Added

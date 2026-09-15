@@ -85,7 +85,7 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016�
 [2016年差分検証](docs/JLEAGUE_2016_RESEARCH.md)、[2017年適用検証](docs/JLEAGUE_2017_RESEARCH.md)、
 [2021年大会構造検証](docs/JLEAGUE_2021_RESEARCH.md)、[2018～2020年共通検証](docs/JLEAGUE_2018_2020_RESEARCH.md)、
 [2022・2023年共通検証](docs/JLEAGUE_2022_2023_RESEARCH.md)、[2024・2025年共通検証](docs/JLEAGUE_2024_2025_RESEARCH.md) を参照してください。
-自動取得アダプターと学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
+定期自動更新と学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
 `data/raw/` の取得データは編集せず、加工結果は `data/processed/` へ出力します。
 名称統一用マスターは `data/master/teams.csv` に追加します（未作成）。
 
@@ -157,7 +157,9 @@ stageごとの総当たり回数から、節数・各節試合数・年間試合
 `python -m scripts.update_jleague_ongoing capture --listing-html PATH` で保存済み原本を取り込み、
 `replay SNAPSHOT_DIRECTORY` でオフライン再処理できます。明示的な `capture --fetch` だけが新規取得を行います。
 数値スコアだけでは終了扱いにせず、公式matchページの「試合終了」とカード・得点を照合します。
-初回は予定310・終了未確認69・終了確認済み1件。開催日に依存しないfixture_keyと公式IDの対応、
+2026-09-15に候補69件の公式終了根拠を追加確認し、予定310・終了未確認0・終了確認済み70件へ更新しました。
+[候補の終了確認報告](docs/JLEAGUE_2026_27_CANDIDATE_REVIEW.md)に全試合と検証結果を記録しています。
+開催日に依存しないfixture_keyと公式IDの対応、
 不変snapshot、訂正履歴、検証後のlatest切替を `data/{raw,processed}/jleague/2026_27/` で管理します。
 終了確認済みだけ既存Validationを適用し、過去年度・百年構想リーグの出力は維持します。
 再現手順と整合した読取方法は[更新設計・実装報告](docs/JLEAGUE_2026_27_UPDATE_DESIGN.md)を参照してください。

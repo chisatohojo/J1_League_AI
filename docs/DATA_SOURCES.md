@@ -1,6 +1,6 @@
 # Data Sources
 
-## 通常2026/27 J1（更新アダプター・初回bootstrapまで実装済み）
+## 通常2026/27 J1（更新基盤完成・候補69件の終了確認済み）
 
 - 対象: [Data Siteの日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2026&tv_relay_station_name=)。
   `competition_years=2026`、`competition_frame_ids=1`、原表は`2026/27`・`Ｊ１`。
@@ -26,11 +26,23 @@
 - 初回snapshotは `data/raw/jleague/2026_27/snapshots/bootstrap-20260915/`。
   `data/processed/jleague/2026_27/` にschedule・completed・対応表・change log・summary・reviewを生成した。
   全380予定（20クラブ・38節・各38/home19/away19）、scheduled310・candidate69・completed1。
-  34583だけ公式終了証拠と照合し、1-1・result1で既存Validationを通過。残り69件は終了未確認。
+  初回は34583だけ公式終了証拠と照合し、1-1・result1で既存Validationを通過。残り69件は当時終了未確認。
 - `python -m scripts.update_jleague_ongoing replay SNAPSHOT_DIRECTORY` は通信なし。
   明示的な `capture --fetch` で一覧1回、必要な公式matchだけ `--evidence-url` で指定する。自動列挙・定期実行はしない。
-- 最終再開後は追加アクセス0回。同一snapshotの再import・2回replayでraw7・加工17ファイルの全バイト一致。
+- 更新基盤実装の最終再開後は追加アクセス0回。同一snapshotの再import・2回replayでraw7・加工17ファイルの全バイト一致。
   2015～2025の32件と百年構想リーグ4件を別rootで再生成し、全36成果物が一致。既存92データファイルもSHA不変。
+
+### 2026-09-15: 69候補の終了根拠を追加
+
+- [公式期間一覧](https://www.jleague.jp/j1/match/search-list/?enddate=2026-09-13&period=custom&startdate=2026-08-07)を1回取得し、実hrefで対象70ページを特定。
+  既存の1終了ページはキャッシュ利用、未取得69ページだけ各1回GET。Data Site一覧・詳細の追加GETは0。
+- 既存 `official-game-over-v1` により全69件の終了欄・カード・得点を照合し、scheduled310・candidate0・completed70へ更新。
+  70件は既存Validationを通過。fixture_key/公式ID、日付、得点/result、チーム・会場名は変更していない。
+- 新規原本・metadataは `data/raw/jleague/2026_27/acquisitions/candidate_completion_20260915/`。
+  各URL・取得UTC時刻・SHAと判定を `verification_report.json` に保存。HTTP取得は全件成功、再取得なし。
+- 新snapshot `confirmed-candidates-20260915` と新revisionを保存。過去snapshot/revisionと902履歴を保持し、2比較計138のcompletedイベントを追加。
+- 同一入力再import・2回replayと旧snapshot再処理で不変性・最新参照維持を確認。過去36成果物の隔離再生成もバイト一致。
+- 全対象の公式根拠URL・結果・取得範囲は[候補終了確認報告](JLEAGUE_2026_27_CANDIDATE_REVIEW.md)を参照。
 
 ## 2026年J1百年構想リーグ（通常J1とは別大会）
 

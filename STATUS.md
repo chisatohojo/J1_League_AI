@@ -12,7 +12,8 @@ J.League Data Siteの2015年J1取得調査 — 完了（commit・push済み `79a
 2022・2023年J1の取得・共通検証 — 完了（commit・push済み `3194dd5`）。
 2024・2025年J1の取得・共通検証 — 完了（commit・push済み `a1f9f50`）。2015～2025年を検証済み。
 2026年J1百年構想リーグの調査・専用解析・正規化・大会検証 — 完了（commit・push済み `f60d28f`）。
-通常2026/27 J1の更新アダプター・初回bootstrap・再処理と回帰検証 — 完了、未コミット。
+通常2026/27 J1の更新アダプター・初回bootstrap・再処理と回帰検証 — 完了（commit・push済み `b50dd86`）。
+通常2026/27 J1の候補69試合の公式終了確認・completedへの昇格 — 完了、今回分は未コミット。
 
 ## 完了
 
@@ -78,15 +79,19 @@ J.League Data Siteの2015年J1取得調査 — 完了（commit・push済み `79a
 - 保存済み一覧＋公式証拠2ページからbootstrapを生成。scheduled310・candidate69・completed1、既存Validation通過
 - 同一snapshot再importと2回replayでraw7・加工17ファイルの全バイト一致。日程・訂正・欠落・公開失敗を検証
 - 既存2015～2025の32成果物＋百年構想リーグ4成果物を隔離再生成し全36件一致。既存92データファイルのSHA不変
+- 公式期間一覧の実リンクから対象ページを特定し、未取得69試合の終了欄・カード・得点を既存規則で照合
+- 新snapshotで69候補を昇格しscheduled310・candidate0・completed70。全70件が既存Validation通過
+- fixture_key/公式ID対応と既存試合値を維持。旧902イベントを保持し、2比較計138のcompletedイベントを追加
+- 同一snapshot再import・2回replay、旧bootstrap再処理で履歴と最新参照の不変性を確認。既存113保護ファイルのSHA不変
 
 ## 作業中
 
-通常2026/27更新アダプターの残作業・成果物・文書の最終確認を完了。現在の未コミット実装を保持した。
-終了判定はData Siteスコアだけで行わず、保存した公式matchの実「試合終了」欄との一致が根拠。
-初回は34583（東京Ｖ－千葉1-1）だけ終了確認済み。数値掲載の残り69件をcandidateへ分離した。
-snapshot・schedule・completed・change log・対応表・summary・reviewとlatest manifestを保存済み。
-最終再開後の追加サイトアクセスは0回。過去36成果物の再生成一致、全508pytestとdiff確認を完了した。
-定期自動更新や残り69件の終了証拠取得は未実施。既存Validation・旧年度コード・依存ファイルは変更なし。
+今回依頼の候補69試合の終了確認を完了。開始時はクリーンで、更新基盤はb50dd86までcommit・push済みだった。
+既存の公式match終了判定を変更せず、全69試合の実「試合終了」欄とカード・日付・節・得点が一致した。
+新規取得は公式URL発見用一覧1回と未取得の試合ページ69回。既存ページ・Data Site一覧は再利用した。
+新snapshot confirmed-candidates-20260915 を採用し、予定310・候補0・終了確認済み70を保存済み。
+対応表・試合値・過去履歴を保持し、同じ入力の再処理でも変化なし。過去36成果物の隔離再生成も完全一致。
+全508pytestとdiff確認を完了。定期更新は未実施。終了規則・コード・テスト・既存Validation・依存ファイルは変更なし。
 Git add / commit / pushは行わず、最終報告時点で停止する。
 Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 
@@ -95,10 +100,10 @@ Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 - 正式リモートorigin: `https://github.com/chisatohojo/J1_League_AI.git`（fetch / push共通）
 - 現在のブランチ: `main`、追跡先: `origin/main`
 - `git fetch origin`: 成功。GitHubからの取得接続を確認
-- `HEAD` / `origin/main`: `f60d28f`（百年構想リーグ対応）
+- `HEAD` / `origin/main`: `b50dd86`（通常2026/27更新基盤）
 - `HEAD...origin/main`: ローカルのみ0件 / リモートのみ0件。同期は不要
-- 変更5ファイル: README・STATUS・CHANGELOG・DATA_SOURCES・DECISIONS
-- 未追跡6ファイル: 更新設計報告、専用CLI、source解析・更新保存の2モジュール、専用テスト2ファイル。すべて未ステージ
+- 変更5ファイル: README・STATUS・CHANGELOG・DATA_SOURCES・JLEAGUE_2026_27_UPDATE_DESIGN
+- 未追跡1ファイル: `docs/JLEAGUE_2026_27_CANDIDATE_REVIEW.md`。すべて未ステージ
 - HTML原本・metadata・正規化検証CSV・集計JSON・人間レビュー用Markdownは既存設定によりGit対象外で、ローカルに保存
 - リモートURLの変更、履歴変更、GitHubへの書き込みは行っていない
 
@@ -106,7 +111,7 @@ Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 
 1. Git状態・現在のブランチ・リモートとの差分と、README.md、DEVELOPMENT_GUIDE.md、本ファイルを確認する。
 2. `docs/JLEAGUE_2026_27_UPDATE_DESIGN.md` の採用済み終了根拠、再現CLI、latest/revision読取方法を確認する。
-3. 未確認69件から必要な公式終了証拠を選び、最小限の取得で新snapshotへ追加する。
+3. 候補69件の追加確認は完了。次の新しい結果についても必要な公式終了証拠を選び、新snapshotへ追加する。
    日付経過や数値スコアだけで終了を決めず、未確認行は結果Validationへ渡さない。
 4. 次の明示的な取得で日程・得点差分を確認する。未知の中断・延期・取消表記は発見時に調査する。
    自動URL発見・定期実行・詳細だけの訂正監査・百年構想リーグの旧CSV投影は別作業とする。
@@ -116,7 +121,8 @@ Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 百年構想リーグ対応時の完全一致検証には、作業開始前から保存した2015～2025年の32実出力を使用した。
 再生成は原本コピーを置いた隔離rootで実施し、退避結果・既存成果物とのバイト一致を確認した。
 pytestは人工データと変更前コードによる固定ハッシュで検証し、実データと通信を必要としない。
-今回のアダプター作業では既存データ92ファイルのSHAを照合し、過去36成果物を隔離再生成して不変を再確認した。
+更新基盤実装時は既存92データファイルのSHAを照合した。今回も過去36成果物を隔離再生成して不変を再確認した。
+今回は開始時120ファイルのうち最新参照・閲覧用コピー7件を除く113件がSHA不変。対応表コピーもバイト一致した。
 
 ## 通常2026/27 J1の更新成果物
 
@@ -127,12 +133,16 @@ pytestは人工データと変更前コードによる固定ハッシュで検�
 - 終了証拠: `data/raw/jleague/2026_27/research/20260915T035921896334Z/` の公式091302・091904とmetadata
 - snapshot: `data/raw/jleague/2026_27/snapshots/bootstrap-20260915/`（HTML3・metadata3・manifest1）
 - 加工成果物: `data/processed/jleague/2026_27/` のschedule.csv、completed_matches.csv、fixture_identity.csv、change_log.csv、update_summary.json、review.md
-- 採用参照: 同ディレクトリのlatest.json → revisions/a5f7e4c2e9b53b7860f0f3e727ff212456128f203adae92fc5abd9f42ba80e9b/
-- 状態: scheduled310 / candidate69 / completed1。fixture_key380一意・公式ID70一意、予定310はID空
+- 初回revision: a5f7e4c2e9b53b7860f0f3e727ff212456128f203adae92fc5abd9f42ba80e9b（不変保持）
+- 新snapshot: `data/raw/jleague/2026_27/snapshots/confirmed-candidates-20260915/`（HTML72・metadata72・manifest1）
+- 採用参照: 同ディレクトリのlatest.json → revisions/9622f4bd6332db056e214b5cb94aed12d2c2d1ec187118b03f3d2d350f3850ec/
+- 状態: scheduled310 / candidate0 / completed70。fixture_key380一意・公式ID70一意、予定310はID空
 - 初回差分: 前回取得／前回採用の各基準でnew_fixture380・result_candidate70・completed1。全902イベント一意
 - 実装: `scripts/update_jleague_ongoing.py`、`src/collect/jleague_ongoing_source.py`、`src/collect/jleague_ongoing.py`
-- 再処理: `python -m scripts.update_jleague_ongoing replay data/raw/jleague/2026_27/snapshots/bootstrap-20260915`
-- 結果Validationはcompleted1件のみ通過。定期自動更新・候補69件の追加終了証拠取得は未実施
+- 再処理: `python -m scripts.update_jleague_ongoing replay data/raw/jleague/2026_27/snapshots/confirmed-candidates-20260915`
+- 追加確認: 2比較各completed69イベント、累積1,040イベント一意。ID対応・日程・得点/result等は不変
+- 結果Validationはcompleted70件すべて通過（Away22・Draw15・Home33）、第1～7節各10件。定期自動更新は未実施
+- 全対象公式URL・取得来歴・検証: `docs/JLEAGUE_2026_27_CANDIDATE_REVIEW.md`
 
 ## 共通解析の構成と互換性
 
@@ -320,7 +330,7 @@ resultはAway Win107・Draw73・Home Win126、総得点793、会場24表記。
 ## 現在の問題
 
 - 端末の3.12登録先には実体がないため、`.tools/python/` 内のPython 3.12.14で対処済み。
-- 通常2026/27のcandidate69件は試合別終了証拠未確認。公式の終了欄を必要分だけ保存して追加照合する。
+- 通常2026/27の対象69候補は全件終了確認済みで未解決0。今後新規に現れる結果も公式終了根拠の確認が必要。
 - 未知の中断・延期・取消・候補日表記は安全停止する。自動URL発見・定期実行・詳細だけの訂正監査は未対応。
 - 未開催310件には公式IDがない。対応表で追跡し、ID再割当や別カードへの移動は自動採用を保留する。
 - 複数成果物の整合した読取にはread_latestを使う。閲覧用CSV群はプロセス強制終了時に混在し得るためreplayで復旧する。
@@ -335,7 +345,23 @@ resultはAway Win107・Draw73・Home Win126、総得点793、会場24表記。
 
 ## 最終検証結果
 
-通常2026/27 J1の更新アダプター・最終確認（Windows / Python 3.12.14、2026-09-15）:
+通常2026/27 J1の候補69試合の終了確認（Windows / Python 3.12.14、2026-09-15）:
+
+| 確認 | 結果 |
+| --- | --- |
+| Git | 開始時クリーン、main / origin/mainはb50dd86、fetch成功、差分0/0 |
+| 取得 | 公式一覧1＋対象詳細69 GET、既存ページ再利用、Data Site再取得0 |
+| 公式終了根拠 | 既存規則で69/69件一致、未知状態・得点不一致・取得失敗0 |
+| 新状態 | scheduled310・candidate0・completed70。全70件Validation通過 |
+| 既存値・ID | fixture_key380/公式ID70の対応維持。日程・得点/result等は不変 |
+| 履歴 | 902件保持＋138件追加、計1,040件一意。過去snapshot/revision不変 |
+| Idempotency | 同一入力再import・2回replayで全raw/加工不変。旧bootstrap再処理でもlatest維持 |
+| 回帰 | 過去36成果物を隔離再生成し全件一致。既存113保護ファイルのSHA不変 |
+| 全pytest | 508件成功 |
+| git diff --check | 問題なし。新規報告の空白・競合マーカーも確認 |
+| 変更範囲 | 文書5変更・報告1新規。コード・終了規則・Validation・テスト変更なし。commit・pushなし |
+
+通常2026/27 J1の更新アダプター実装時の検証（Windows / Python 3.12.14、2026-09-15）:
 
 | 確認 | 結果 |
 | --- | --- |
