@@ -1,5 +1,24 @@
 # Data Sources
 
+## チーム名称マスター（2026-09-16）
+
+- `data/master/teams.csv`に33クラブ・86 aliasを登録。原表記や既存CSVは変更しない。
+  2015～2025の3,588試合、百年構想200試合、2026/27の380予定・試合から33略称を抽出した。
+- 略称は保存済みData Site一覧のクラブリンクとprofile slugを照合。同一略称・slugの多対一／一対多の衝突なし。
+  表示名と公式サイト用alias33件は保存済み[公式期間一覧](https://www.jleague.jp/j1/match/search-list/?enddate=2026-09-13&period=custom&startdate=2026-08-07)
+  のRSC `clubGroupOptions[*].options[*]`（value=slug、label=名称）から確認した。
+- 根拠ファイルは`data/raw/jleague/2026_27/research/candidate_completion_20260915/official_fixture_index.html`とmetadata。
+  取得日時2026-09-15T10:20:10.982821+00:00、SHA-256:
+  `9869843f51032787c97088f161b73dbed55fccc4a9839eaf37ba9a02ef35579c`。
+- Data Site詳細の正式表記20件は保存済み`data/raw/jleague/2026_hyakunen/match_*.html`の
+  `div.score-board-main th#team-name-l / th#team-name-r`で確認した。
+  例: match_33021の鹿島アントラーズ／柏レイソル。全20件が公式サイト表示名と一致し、Data Site側aliasに追加。
+  残る13クラブの正式表記はData Site原本で未確認なので、公式サイトsourceでだけ登録した。
+- 表示名は保存済み公式ページ時点の名称。大宮→ＲＢ大宮アルディージャ等の同一性を保持するが、
+  改称日を推測して設定しない。canonical_nameを試合当時の名称や特徴量として使わない。
+- 原本とmetadataを再利用し、新規アクセス0回。team_idはプロジェクト内の固定IDで、source_club_idは照合補助。
+  API・期間・追加手順・検証範囲は[チーム名称マスター仕様](TEAM_MASTER.md)に記録した。
+
 ## 通常2026/27 J1（更新基盤完成・候補69件の終了確認済み）
 
 - 対象: [Data Siteの日程・結果](https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=1&competition_years=2026&tv_relay_station_name=)。

@@ -5,6 +5,7 @@ J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を
 ## 現在の実装範囲
 
 現在は **Phase 1: 試合データ読み込み・入力検証まで実装済み** です。
+Phase 2前準備として、33クラブの安定したteam_idと名称aliasを持つチームマスターを実装済みです。
 Elo、特徴量生成、モデル学習、予測、UIは未実装です。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
@@ -60,6 +61,7 @@ uvは環境構築用で、アプリケーションの依存には含めません
 ```text
 data/{raw,processed,master}/   # 生データ、加工データ、チーム名称マスター用
 src/collect/matches.py        # CSV読み込み・入力検証
+src/collect/teams.py          # 名称マスター読取・安定team_idへの解決
 src/collect/jleague.py        # J.League Data Siteの共通解析・キャッシュ読取・集計
 src/{features,model}/         # 後続フェーズの実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
@@ -87,7 +89,25 @@ J1試合結果の一次データ源はJ.League Data Siteです。2015年・2016�
 [2022・2023年共通検証](docs/JLEAGUE_2022_2023_RESEARCH.md)、[2024・2025年共通検証](docs/JLEAGUE_2024_2025_RESEARCH.md) を参照してください。
 定期自動更新と学習済みモデルはまだありません。生成物、仮想環境、取得データはGit管理から除外します。
 `data/raw/` の取得データは編集せず、加工結果は `data/processed/` へ出力します。
-名称統一用マスターは `data/master/teams.csv` に追加します（未作成）。
+名称マスターは [data/master/teams.csv](data/master/teams.csv) としてGit管理します。
+2015～2025、百年構想リーグ、2026/27の33クラブを対象とし、原本の名称は変更しません。
+
+## チーム名称マスター
+
+```python
+from src.collect.teams import load_team_master
+
+teams = load_team_master()
+team_id = teams.resolve_team_id("FC東京")  # team_0003
+assert teams.resolve_team_id("ＦＣ東京") == team_id
+with_ids = teams.add_team_ids(matches)  # 元のDataFrameを保持し、コピーへID列を追加
+```
+
+既定sourceは`jleague_data_site`。登録表記を完全一致で照合し、未知名は`UnknownTeamError`です。
+IDを自動作成せず、期間付きaliasには明示した試合日が必要です。
+`canonical_name`は表示用で、内部のクラブ同一性は名称・URLから独立した`team_id`で保持します。
+API、改称・昇格クラブの追加方法、原本根拠、全4,168試合・予定の検証結果は
+[チーム名称マスター仕様](docs/TEAM_MASTER.md)を参照してください。
 
 ## J.League Data Siteのオフライン解析
 

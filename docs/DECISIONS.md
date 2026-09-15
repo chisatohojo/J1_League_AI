@@ -1,5 +1,25 @@
 # Design Decisions
 
+## 2026-09-16: クラブの永続IDを原表記から分離する
+
+Decision: `data/master/teams.csv`をGit管理し、名称やprofile slugとは独立した`team_0001`形式のIDを割り当てる。
+同一クラブのaliasはsource・source_name・任意の有効期間で解決し、IDは改称・昇降格・行の並べ替えで変更しない。
+source_club_idには根拠照合用slugを保存するが、Eloの永続キーには使わない。
+
+Reason: Data Siteの略称・全角半角・公式サイトの表示名が異なっても、長期間のクラブ同一性を維持するため。
+取得原本・既存CSV・Validationは保持し、後続処理が必要な時だけコピーへhome_team_id / away_team_idを追加する。
+未知名には明示的エラーを返す。IDの自動生成・名称の類似照合は行わない。
+
+Names: canonical_nameは表示用の現在の登録名で、当時の名称は原データに保持する。
+確認できたaliasだけ登録し、改称日が不明なら期間は空欄とする。
+期間付きaliasは試合日を必須にし、同一source/nameの期間重複を拒否する。古い名称とIDは消去・再利用しない。
+新クラブは原本と同一性を確認して未使用IDを手動追加する。旧sourceのslug変更でもIDを維持できる。
+
+Status: 33クラブ・86 aliasを実装。全4,168試合・予定の8,336参照を一意に解決。
+`616d345`までの更新基盤・69候補確認はcommit・push済みと確認した。
+今回のマスターは未コミット。Elo本体・スタジアムマスターは対象外。
+詳細は[チーム名称マスター仕様](TEAM_MASTER.md)を参照。
+
 ## 2026-09-15: 進行中2026/27 J1の更新境界と公式終了証拠
 
 Decision: 取得ごとのraw/metadataと、解析・差分・結果のrevisionを不変で保存する。

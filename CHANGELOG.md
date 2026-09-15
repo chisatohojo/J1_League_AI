@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-16（Phase 2前準備: チーム名称マスター）
+
+### Added
+
+- `data/master/teams.csv`に33クラブ・86 aliasを登録。固定team_idを名称・年度・URLのslugから分離。
+  Data Site一覧の33略称、保存済み詳細の20正式表記、公式サイトの33表記を根拠とし、追加通信なし。
+- `src/collect/teams.py`でsource/name/任意の期間を厳密照合。未知名・曖昧名・重複期間は明示的エラー。
+  改称・昇降格でもIDを維持し、新クラブの自動採番はしない。DataFrameのコピーにだけhome/away ID列を追加。
+- 専用47テストでalias・改称・期間境界・名前再利用・固定ID・未知名・不正CSV・入力非破壊を検証。
+  全4,168試合・予定の8,336参照と、正式revisionのcompleted70件も既存値を維持したまま解決。
+- `docs/TEAM_MASTER.md`に仕様・原本根拠・追加手順・検証結果を記録。
+
+### Changed
+
+- 開始時にfetchし、mainとorigin/mainが`616d345`で一致することを確認。
+  STATUSの更新基盤・候補69件の終了確認をcommit・push済みへ修正し、README・DATA_SOURCES・DECISIONSも更新。
+- 全555pytest成功（既存508＋追加47）、git diff --check問題なし。
+  全raw/processed 418ファイルのSHA-256は開始時と一致し、2015～2025・百年構想・2026/27の出力を維持。
+- 既存Validation・取得解析コード・依存は変更なし。スタジアムマスター、Elo本体、commit・pushは実施しない。
+
 ## 2026-09-15（2026/27候補69試合の終了確認）
 
 ### Added
