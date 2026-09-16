@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-16（Phase 2: 2026/27のcompletedへのElo接続）
+
+- `load_elo_history_with_ongoing` / `build_elo_history_with_ongoing`を追加。既存3,788試合からratingを継承し、completed70試合の更新前Eloを取得。
+- read_latestの不変revisionを読み、schedule／completed CSVの一致を確認。予定・候補を除外してから既存Validationとteam masterを適用する。
+  同日クラブ重複・大会間ID重複・観測時点より未来のcompletedを拒否し、取得・更新・正式CSV保存は行わない。
+- 既存2015～2025／百年構想のElo出力・境界ratingは完全一致。raw／processed／master全420ファイル不変、全3,858試合の事前値・全33最終ratingを独立式で照合。
+- 専用39テストを追加し、全pytest 692件成功、git diff --check問題なし。Elo API・Validation・team masterは変更なし。commit・pushなし。
+
 ## 2026-09-16（Phase 2: 百年構想リーグへのElo接続）
 
 - 通常J1の3,588試合に百年構想200試合を接続。全33 IDのratingをリセットせず継承し、試合前Eloを記録する。

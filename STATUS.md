@@ -17,7 +17,8 @@ J.League Data Siteの2015年J1取得調査 — 完了（commit・push済み `79a
 Phase 2前準備: チーム名称マスター — 完了（commit・push済み `b62fc5a`）。
 Phase 2: 最小Elo API — 完了（commit・push済み `f525ee9`）。
 Phase 2: 2015～2025通常J1への時系列適用 — 完了（commit・push済み `5be560b`）。
-Phase 2: 百年構想リーグ200試合へのElo接続 — 実装・検証完了（未コミット）。正式CSV保存は未実装。
+Phase 2: 百年構想リーグ200試合へのElo接続 — 完了（commit・push済み `95b8e7e`）。
+Phase 2: 通常2026/27 J1のcompleted70試合へのElo接続 — 実装・検証完了（未コミット）。正式CSV保存は未実装。
 
 ## 完了
 
@@ -100,13 +101,15 @@ Phase 2: 百年構想リーグ200試合へのElo接続 — 実装・検証完了
 - 2024再開試合30700は既存11月22日を使用する制限を文書・テスト化。時系列適用専用33テスト成功
 - 同じEloインスタンスで百年構想リーグ200試合を接続。計3,788試合・33 ID、途中リセットなし、90分resultのみ使用
 - 百年構想Elo専用26件を含む全pytest 653件成功。既存2015～2025のElo出力・期末ratingの完全一致を確認
+- 保存済み2026/27のcompleted70試合を接続。計3,858試合・33 ID、scheduled310／candidate0はElo対象外
+- 専用39件で状態除外・継承・非リーク・再現性・原本不変・revision整合性を検証。全pytest 692件成功
 
 ## 作業中
 
-通常J1への適用は5be560bまでcommit・push済み。百年構想Elo接続の未コミット変更と手動修正済みテストを保持して再開した。
+百年構想までのElo接続は95b8e7eまでcommit済みでorigin/mainと一致。開始時の作業ツリーはクリーン。
 進行中データはconfirmed-candidates-20260915、予定310・候補0・終了確認済み70の状態を保持する。
-百年構想までの接続・最終確認を完了。今回の再開ではSTATUS.md・CHANGELOG.md・DECISIONS.mdだけ更新し、コードは変更していない。
-2026/27へのElo適用は未実装。百年構想のPK・延長勝者・playoff tie winnerはElo更新に使用しない。
+read_latestで検証した不変revisionのcompletedだけをEloへ接続し、全テスト・最終確認を完了。取得・更新処理は実行していない。
+百年構想のPK・延長勝者・playoff tie winnerは従来どおりElo更新に使用しない。
 raw/processed、既存Elo API・Validation・team masterは未変更。ホーム補正・得点差補正・年度リセットは行わない。
 Git add / commit / pushは行わず、未コミットの実装と検証結果を報告して停止する。
 正式CSV出力・その他の特徴量生成・パラメータ調整・モデル学習・予測処理は未実装。
@@ -115,11 +118,11 @@ Git add / commit / pushは行わず、未コミットの実装と検証結果を
 
 - 正式リモートorigin: `https://github.com/chisatohojo/J1_League_AI.git`（fetch / push共通）
 - 現在のブランチ: `main`、追跡先: `origin/main`
-- `git fetch origin`: 成功。GitHubからの取得接続を確認
-- `HEAD` / `origin/main`: `5be560b`（2015～2025通常J1へのElo適用まで完了）
+- 今回はネットワーク取得なし。保存済みorigin/mainと比較
+- `HEAD` / `origin/main`: `95b8e7e`（百年構想リーグへのElo接続まで完了）
 - `HEAD...origin/main`: ローカルのみ0件 / リモートのみ0件。同期は不要
-- 変更4件: src/features/elo_history.py（再開時の実装を保持）、STATUS.md、CHANGELOG.md、docs/DECISIONS.md
-- 新規1件: tests/test_elo_hyakunen.py（手動修正を保持）。ステージ済み変更なし
+- 変更4件: src/features/elo_history.py、STATUS.md、CHANGELOG.md、docs/DECISIONS.md
+- 新規1件: tests/test_elo_ongoing.py。ステージ済み変更なし
 - HTML原本・metadata・正規化検証CSV・集計JSON・人間レビュー用Markdownは既存設定によりGit対象外で、ローカルに保存
 - リモートURLの変更、履歴変更、GitHubへの書き込みは行っていない
 
@@ -132,7 +135,7 @@ Git add / commit / pushは行わず、未コミットの実装と検証結果を
 4. 次の明示的な取得で日程・得点差分を確認する。未知の中断・延期・取消表記は発見時に調査する。
    自動URL発見・定期実行・詳細だけの訂正監査・百年構想リーグの旧CSV投影は別作業とする。
 5. `docs/TEAM_MASTER.md`に従って名称マスターをレビューする。新たな昇格クラブ・aliasは根拠確認後に追加し、既存IDは変更しない。
-6. 通常J1から百年構想へのElo接続をレビューする。2026/27への接続・正式保存は別依頼とし、訂正時の再計算方針も確認する。
+6. completedのみの2026/27 Elo接続をレビューする。正式保存・訂正時の永続化方針は別依頼とし、現APIは保存済み入力から全系列を再計算する。
    スタジアム名称マスターは未実装で、今回の対象外。
 
 百年構想リーグ対応時の完全一致検証には、作業開始前から保存した2015～2025年の32実出力を使用した。
@@ -373,6 +376,22 @@ resultはAway Win107・Draw73・Home Win126、総得点793、会場24表記。
 - 現在失敗しているテストや既知の実装不具合はない。
 
 ## 最終検証結果
+
+通常2026/27 J1のcompletedへのElo接続（Windows / Python 3.12.14、2026-09-16）:
+
+- 通常3,588＋百年構想200＋completed70＝3,858試合、使用33 ID。新規対象20クラブ、2026-08-07～09-13。
+- read_latestが検証したrevision `9622f4bd6332db056e214b5cb94aed12d2c2d1ec187118b03f3d2d350f3850ec` を固定して読み、
+  completed_matches.csvとscheduleのcompleted部分集合の一致を確認。閲覧用コピー・rawはElo入力にしない。
+- statusで除外してからValidation・ID解決。scheduled310／candidate0は未適用。数値スコアだけで昇格せず、終了根拠列を保持。
+- 全20クラブの初登場pre-Eloは百年構想終了時と厳密一致。同じEloRatingsで継続し、match_date→文字列match_id順で各試合を1回処理。
+  同一IDの同日completed重複、全期間match_id重複、保存済み観測時点より未来のcompleted日付を拒否する。
+- 最終34584（2026-09-13浦和1–2岡山）の更新後は1543.472741／1541.781178。FC東京は1597.745943、全33 ID合計49,500。
+  全事前値・最終ratingは独立式と一致（最大差4.55e-13）。数値確認用であり、実順位・予測精度の評価ではない。
+- 開始前の2015～2025／百年構想Eloの全列・型・値・期末ratingは完全一致。raw／processed／master全420ファイルのSHA-256・集合不変。
+- 専用39件を含む全pytest 692件成功（30.05秒、skipなし）。git diff --check問題なし。
+- API: `load_elo_history_with_ongoing()`はhistorical / hyakunen / ongoing各結果のmatches・final_ratingsをメモリ上で返す。
+  `build_elo_history_with_ongoing(ordinary, special, schedule, team_master=master, observed_at=保存済みUTC観測日時)`も使用可能。
+  既存API・Validation・名称マスターは維持。正式CSV保存、ネットワーク取得、snapshot更新は行わない。
 
 百年構想リーグElo接続（Windows / Python 3.12.14、2026-09-16）:
 
@@ -665,6 +684,7 @@ git rev-list --left-right --count HEAD...origin/main
 - [x] Phase 2: 最小Elo API・試合前後の分離・リーク防止テスト
 - [x] Phase 2: 2015～2025通常J1への時系列Elo適用（メモリ上のみ）
 - [x] Phase 2: 百年構想リーグ200試合への90分resultによるElo接続（メモリ上のみ）
+- [x] Phase 2: 通常2026/27 J1のcompleted70試合へのElo接続（メモリ上のみ）
 - [ ] Phase 3: 直近5試合成績
 - [ ] Phase 4: Baselineと時系列評価
 

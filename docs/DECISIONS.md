@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-16: 2026/27の採用済みcompletedだけをElo系列へ接続する
+
+Decision: read_latestでSHA検証した不変revisionを固定し、schedule.csvのcompleted部分集合とcompleted_matches.csvの一致を確認する。
+status=completedだけを既存結果Validation・team masterへ渡し、同じEloRatingsで通常3,588→百年構想200→終了確認済み70を処理する。
+全IDの1500初期化は2015開始時の1回だけ。日付・文字列match_id順、更新前Elo記録→90分result更新を共用する。
+
+Reason: 閲覧用コピーの混在、数値スコアだけの候補、未開催の未来日程がEloへ入ることを防ぐため。
+終了の再判定・新規取得は行わず、アダプターの既存終了判定と根拠列を引き継ぐ。終了0件ならratingを維持し、空入力を拒否する既存Validationは変更しない。
+観測時点は実行時計でなく保存済みobserved_at_utcを使い、その日本時間の日付より未来のcompletedを拒否する。
+これは採用revisionの結果による系列であり、過去時点で公式訂正・終了証拠がいつ既知だったかの再構成は行わない。
+
+API: build_elo_history_with_ongoing / load_elo_history_with_ongoingはhistorical・hyakunen・ongoingを返す。
+各matches・final_ratingsは独立した値。既存2段階のAPIは維持し、70は現snapshotの受入期待値でAPIの固定上限にはしない。
+毎回保存済み結果から全系列を再計算し、追加適用状態や正式CSVを保存しない。取得・更新・各種補正は対象外。
+
 ## 2026-09-16: 百年構想リーグを90分resultで既存Eloへ接続する
 
 Decision: 全登録IDを初回のみ1500で初期化し、通常2015～2025と百年構想200試合を同じEloRatingsで続けて処理する。
