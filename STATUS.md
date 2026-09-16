@@ -14,7 +14,8 @@ J.League Data Siteの2015年J1取得調査 — 完了（commit・push済み `79a
 2026年J1百年構想リーグの調査・専用解析・正規化・大会検証 — 完了（commit・push済み `f60d28f`）。
 通常2026/27 J1の更新アダプター・初回bootstrap・再処理と回帰検証 — 完了（commit・push済み `b50dd86`）。
 通常2026/27 J1の候補69試合の公式終了確認・completedへの昇格 — 完了（commit・push済み `616d345`）。
-Phase 2前準備: チーム名称マスター — 実装・検証完了（未コミット）。Elo本体は未着手。
+Phase 2前準備: チーム名称マスター — 完了（commit・push済み `b62fc5a`）。
+Phase 2: 最小Elo API — 実装・検証完了（未コミット）。実データへの適用は未実装。
 
 ## 完了
 
@@ -89,25 +90,28 @@ Phase 2前準備: チーム名称マスター — 実装・検証完了（未コ
 - source・原表記・任意の期間による一意解決、未知名エラー、コピーへのID列追加を実装
 - 既存4,168試合・予定の8,336参照とcompleted70件を確認。全raw/processed 418ファイルのSHA不変
 - 名称マスター専用47件を追加し、既存508件を含む全555件のpytest成功
+- `src/features/elo.py`にteam_id単位の最小Elo APIを実装。初期rating=1500、K=20、尺度400
+- 90分resultのみ使用し、試合前ratingから期待値を計算して両チームを更新。変更不能な更新前後の値を取得可能
+- 専用39件で期待値・勝敗/引分・合計保存・未知ID・入力順の再現性・未来結果のリーク防止を検証。全pytest 594件成功
 
 ## 作業中
 
-2026-09-16の開始時はクリーン。更新基盤b50dd86と候補69件の確認616d345はcommit・push済みで、origin/mainと一致した。
+名称マスターはb62fc5aまでcommit・push済みで、origin/mainと一致。最小Elo APIの未コミット変更を保持して再開した。
 進行中データはconfirmed-candidates-20260915、予定310・候補0・終了確認済み70の状態を保持する。
-チーム名称マスターの実装・検証・文書更新を完了。現在実行中の作業はない。
-raw/processed、既存Validation、過去年の出力は未変更。スタジアムマスター・Elo本体は対象外。
+今回はSTATUS.md・CHANGELOG.mdだけを更新し、既存コードは変更せず全pytestとgit diff --checkを再実行した。
+raw/processed、既存Validation、team masterは未変更。ホーム補正・得点差補正・実データ適用は未実装。
 Git add / commit / pushは行わず、未コミットの実装と検証結果を報告して停止する。
-Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
+CSV出力・特徴量生成・パラメータ調整・モデル学習・予測処理は未実装。
 
 ## Git状態（2026-09-16確認）
 
 - 正式リモートorigin: `https://github.com/chisatohojo/J1_League_AI.git`（fetch / push共通）
 - 現在のブランチ: `main`、追跡先: `origin/main`
 - `git fetch origin`: 成功。GitHubからの取得接続を確認
-- `HEAD` / `origin/main`: `616d345`（更新基盤と候補69試合の終了確認まで完了）
+- `HEAD` / `origin/main`: `b62fc5a`（名称マスターまで完了）
 - `HEAD...origin/main`: ローカルのみ0件 / リモートのみ0件。同期は不要
-- 開始時はクリーン。完了時は既存文書5変更（README / STATUS / CHANGELOG / DATA_SOURCES / DECISIONS）
-- 新規4件: data/master/teams.csv、src/collect/teams.py、tests/test_teams.py、docs/TEAM_MASTER.md。ステージ済み変更なし
+- 既存の未コミット変更を保持: README.md、docs/DECISIONS.md、src/main.py、新規src/features/elo.py・tests/test_elo.py
+- 今回追加した変更はSTATUS.md・CHANGELOG.mdのみ。計5変更・2新規、ステージ済み変更なし
 - HTML原本・metadata・正規化検証CSV・集計JSON・人間レビュー用Markdownは既存設定によりGit対象外で、ローカルに保存
 - リモートURLの変更、履歴変更、GitHubへの書き込みは行っていない
 
@@ -120,7 +124,7 @@ Elo Rating・特徴量生成・モデル学習・予測処理は未実装。
 4. 次の明示的な取得で日程・得点差分を確認する。未知の中断・延期・取消表記は発見時に調査する。
    自動URL発見・定期実行・詳細だけの訂正監査・百年構想リーグの旧CSV投影は別作業とする。
 5. `docs/TEAM_MASTER.md`に従って名称マスターをレビューする。新たな昇格クラブ・aliasは根拠確認後に追加し、既存IDは変更しない。
-6. Elo Rating（Phase 2）は別依頼で進める。team_idを使う入力境界、90分結果・大会区分・時系列の扱いを先に確認する。
+6. 最小Elo APIは実装済み。実データ適用は別依頼とし、終了確認済み試合の時系列順・大会選択・訂正時の再計算を先に確認する。
    スタジアム名称マスターは未実装で、今回の対象外。
 
 百年構想リーグ対応時の完全一致検証には、作業開始前から保存した2015～2025年の32実出力を使用した。
@@ -361,6 +365,14 @@ resultはAway Win107・Draw73・Home Win126、総得点793、会場24表記。
 - 現在失敗しているテストや既知の実装不具合はない。
 
 ## 最終検証結果
+
+Phase 2 最小Elo API（Windows / Python 3.12.14、2026-09-16）:
+
+- 初期rating=1500、K=20、尺度400。90分resultだけを使用し、PK・延長勝者・プレーオフtie winnerは使わない。
+- 試合前・試合後の値を分離。未来結果・当該試合結果が過去の試合前ratingへ混入しないことをテスト済み。
+- ホーム補正・得点差補正・実データ適用・CSV出力・特徴量生成は未実装。
+- 全pytest 594件成功（既存555＋Elo専用39）。git diff --check問題なし。
+- 今回の再開ではコードを変更せず、STATUS.md・CHANGELOG.mdだけ更新。commit・pushなし。
 
 チーム名称マスター（Windows / Python 3.12.14、2026-09-16）:
 
@@ -616,7 +628,8 @@ git rev-list --left-right --count HEAD...origin/main
 - [ ] スタジアム名称マスター（別作業）
 - [x] 通常2026/27 J1の識別・大会構造・掲載情報の調査、進行中シーズン更新設計案
 - [x] 通常2026/27 J1取得・更新アダプター、公式終了判定根拠、候補69件の確認・昇格
-- [ ] Phase 2: 試合開始前Eloとリーク防止テスト
+- [x] Phase 2: 最小Elo API・試合前後の分離・リーク防止テスト
+- [ ] Phase 2: Eloの実データへの適用（別作業）
 - [ ] Phase 3: 直近5試合成績
 - [ ] Phase 4: Baselineと時系列評価
 

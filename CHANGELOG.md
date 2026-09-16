@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-16（Phase 2: 最小Elo API）
+
+- `src/features/elo.py`にteam_id単位の逐次更新APIを実装。初期rating=1500、K=20、尺度400。
+- 90分resultのみ使用し、試合前ratingから期待値を計算して両チームを更新。更新前後の値を分離する。
+  PK・延長勝者・プレーオフtie winnerは使用しない。
+- 専用39テストで期待値・勝敗/引分・合計保存・未知ID・入力順の再現性・未来結果のリーク防止を確認。
+  全pytest 594件成功、git diff --check問題なし。
+- ホーム補正・得点差補正・実データ適用・CSV出力・特徴量生成・パラメータ調整は未実装。
+- 最終再開では既存変更を保持し、STATUS.md・CHANGELOG.mdのみ更新。コード変更・commit・pushなし。
+
 ## 2026-09-16（Phase 2前準備: チーム名称マスター）
 
 ### Added

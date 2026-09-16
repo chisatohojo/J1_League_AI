@@ -4,9 +4,9 @@ J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を
 
 ## 現在の実装範囲
 
-現在は **Phase 1: 試合データ読み込み・入力検証まで実装済み** です。
-Phase 2前準備として、33クラブの安定したteam_idと名称aliasを持つチームマスターを実装済みです。
-Elo、特徴量生成、モデル学習、予測、UIは未実装です。
+現在は **Phase 2: Eloの最小計算APIまで実装済み** です。
+Phase 1の入力検証と、33クラブの安定したteam_id・名称aliasを持つチームマスターも実装済みです。
+実データへのElo適用、特徴量生成、モデル学習、予測、UIは未実装です。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
 元の日本語仕様書・手順書は変更せず保存しています。
@@ -63,7 +63,8 @@ data/{raw,processed,master}/   # 生データ、加工データ、チーム名�
 src/collect/matches.py        # CSV読み込み・入力検証
 src/collect/teams.py          # 名称マスター読取・安定team_idへの解決
 src/collect/jleague.py        # J.League Data Siteの共通解析・キャッシュ読取・集計
-src/{features,model}/         # 後続フェーズの実装先（現在はパッケージのみ）
+src/features/elo.py           # team_id単位のElo期待値・逐次更新（I/Oなし）
+src/model/                   # モデル実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
 scripts/inspect_jleague.py    # 年度を指定するオフライン調査CLI
 scripts/inspect_jleague_2015.py # 2015年の既存コマンド用入口
@@ -108,6 +109,34 @@ IDを自動作成せず、期間付きaliasには明示した試合日が必要�
 `canonical_name`は表示用で、内部のクラブ同一性は名称・URLから独立した`team_id`で保持します。
 API、改称・昇格クラブの追加方法、原本根拠、全4,168試合・予定の検証結果は
 [チーム名称マスター仕様](docs/TEAM_MASTER.md)を参照してください。
+
+## Eloの最小API
+
+`src.features.elo`は初期rating=1500、K=20、尺度400固定で、1試合ずつ呼出順に更新します。
+
+```python
+from src.collect.teams import load_team_master
+from src.features.elo import EloRatings, expected_score
+
+master = load_team_master()
+elo = EloRatings({alias.team_id for alias in master.aliases})
+before = elo.pre_match("team_0001", "team_0003")  # 結果を渡さず試合前の値を取得
+change = elo.update("team_0001", "team_0003", result=2)  # 終了後に90分resultを渡す
+assert change.before == before
+assert change.after.home_rating == 1510.0
+assert elo.get_rating("team_0003") == 1490.0
+assert expected_score(1500, 1500) == 0.5
+```
+
+- `EloRatings(team_ids)`は名称マスターから得た一意なID一覧を受け取ります。未知IDは`KeyError`で拒否し、自動登録しません。
+- `pre_match(home_team_id, away_team_id)`はratingと期待値を持つ変更不能な`EloSnapshot`を返し、状態を変更しません。
+- `update(..., result)`は`EloUpdate(before, after, result)`を返します。resultは90分の整数0=Away Win／1=Draw／2=Home Win。
+  勝=1、引分=0.5、負=0で、両者とも更新前の期待値から更新します。不正result・同一ID対戦は`ValueError`で、状態は不変です。
+- `get_rating(team_id)`で現在値、`ratings`で全現在値のコピーを取得します。過去のsnapshotは後の更新で変化しません。
+- 呼出側が終了確認済み試合を時系列順に一度ずつ渡します。APIは未来の結果を先読みせず、日付ソート・重複除去は行いません。
+  同じID一覧で新しいインスタンスを作り、同じ入力順で呼ぶと再現できます。
+- 百年構想リーグも90分resultだけを使用します。PK・延長勝者・tie winner、ホーム補正、得点差補正は使用しません。
+  全年度処理、CSV出力、特徴量生成、パラメータ調整は今回のAPIに含めません。
 
 ## J.League Data Siteのオフライン解析
 
@@ -186,7 +215,7 @@ stageごとの総当たり回数から、節数・各節試合数・年間試合
 
 ## 実装順序
 
-Phase 1まで完了しています。次はPhase 2のElo、直近成績、Baselineの順に進み、
+Phase 1とPhase 2の最小Elo APIまで完了しています。実データへのElo適用は別作業とし、その後は直近成績、Baselineの順に進み、
 時系列評価を用意してからLightGBMを導入します。Data Siteの取得・検証は2015～2025年が完了し、
 2026年百年構想リーグと通常2026/27 J1の更新処理は別大会として実装済みです。定期自動更新は別作業とします。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。
@@ -483,7 +512,7 @@ elo_diff = home_elo - away_elo
 
 ## 7.2 基本式
 
-期待勝率：
+期待スコア（勝=1、引分=0.5、負=0）：
 
 ```text
 Expected_A =

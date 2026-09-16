@@ -5,7 +5,7 @@ def main() -> None:
     """Report the current development phase without running predictions."""
     print("J1 Match Predictor")
     print("Phase 1: match CSV loading and validation available.")
-    print("Elo, feature generation, training, and prediction are not implemented yet.")
+    print("Phase 2: minimal Elo API available; data application, features, training, and prediction are not implemented yet.")
 
 
 if __name__ == "__main__":
