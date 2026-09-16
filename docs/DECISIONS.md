@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-16: 百年構想リーグを90分resultで既存Eloへ接続する
+
+Decision: 全登録IDを初回のみ1500で初期化し、通常2015～2025と百年構想200試合を同じEloRatingsで続けて処理する。
+各試合の更新前home_elo / away_elo / elo_diffを記録し、地域・プレーオフとも既存result（90分）だけで更新する。
+PK・延長勝者・tie winnerは使わず、未出場だった千葉・水戸は保持していた1500から開始する。
+
+Reason: 90分引分と大会上の勝者を分離し、過去のratingと出力形式を維持するため。
+百年構想はMATCH_DTYPES・validate_competitionを再利用し、POのroundを補完して通常Validationへ通すことはしない。
+開催日・文字列match_id順と同日ID重複検査を共用し、全期間のmatch_id重複も拒否する。
+
+API: build_elo_history_with_hyakunen / load_elo_history_with_hyakunenはhistoricalとhyakunenを返し、
+各matches・final_ratingsを分けて保持する。通常専用APIは維持し、playoff_ties.csv・2026/27は読まない。
+Status: メモリ上の接続・再現性・非リーク・旧系列完全一致を検証済み。既存EloRatings APIと入力データは変更しない。
+
 ## 2026-09-16: 通常J1の既存開催日順にEloを継続する
 
 Decision: 2015～2025の既存11 CSVを読み、名称マスターでID解決後、match_date・文字列match_idの昇順で処理する。

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-16（Phase 2: 百年構想リーグへのElo接続）
+
+- 通常J1の3,588試合に百年構想200試合を接続。全33 IDのratingをリセットせず継承し、試合前Eloを記録する。
+  地域・プレーオフとも90分resultのみ使用し、PK・延長勝者・tie winnerは更新結果に使わない。
+- 既存百年構想の型・専用Validationを再利用し、プレーオフのround空欄を保持。通常／百年構想の結果を別DataFrameで返す。
+- 専用26テストを含む全pytest 653件成功、git diff --check問題なし。2015～2025の既存Elo結果・期末ratingは完全一致。
+  データ・マスター・既存Elo API等425保護ファイルのSHA-256不変、全期末ratingも独立式と照合。
+- 最終再開では手動修正を含む実装・テストを保持し、STATUS・CHANGELOG・DECISIONSだけ更新。
+  2026/27への接続、正式CSV保存、各種補正・モデル学習、commit・pushは実施しない。
+
 ## 2026-09-16（Phase 2: 2015～2025通常J1への時系列Elo適用）
 
 - `src/features/elo_history.py`で既存11 CSVを読み、team masterと既存Elo APIにより3,588試合・31 IDを処理。
