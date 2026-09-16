@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-17（Phase 2: Elo成果物出力）
+
+### Added
+
+- `src/features/elo_export.py`と`python -m scripts.export_elo`を追加。既存系列から試合前Eloの3,858行と全33クラブの現在ratingをCSV出力する。
+- 保存先はGit対象外の`data/processed/elo/`。固定列・UTF-8・LF・ISO日付・17桁浮動小数点で決定的に再生成する。
+- 非参加クラブの最終rating・日付を保持する。既存Elo API・入力raw/processed/masterを変更せず、取得や各種補正は追加しない。
+
 ## 2026-09-16（Phase 2: 2026/27のcompletedへのElo接続）
 
 - `load_elo_history_with_ongoing` / `build_elo_history_with_ongoing`を追加。既存3,788試合からratingを継承し、completed70試合の更新前Eloを取得。

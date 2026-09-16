@@ -4,9 +4,9 @@ J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を
 
 ## 現在の実装範囲
 
-現在は **Phase 2: Elo APIと2015～2025年の通常J1への時系列適用まで実装済み** です。
+現在は **Phase 2: 2015～2026/27進行中までのElo系列とCSV出力を実装済み** です。
 Phase 1の入力検証と、33クラブの安定したteam_id・名称aliasを持つチームマスターも実装済みです。
-通常J1の試合前Eloをメモリ上で取得できます。正式CSV保存、その他の特徴量生成、モデル学習、予測、UIは未実装です。
+終了確認済み3,858試合の試合前Eloと全33クラブの現在ratingを再生成できます。その他の特徴量生成、モデル学習、予測、UIは未実装です。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
 元の日本語仕様書・手順書は変更せず保存しています。
@@ -64,7 +64,9 @@ src/collect/matches.py        # CSV読み込み・入力検証
 src/collect/teams.py          # 名称マスター読取・安定team_idへの解決
 src/collect/jleague.py        # J.League Data Siteの共通解析・キャッシュ読取・集計
 src/features/elo.py           # team_id単位のElo期待値・逐次更新（I/Oなし）
-src/features/elo_history.py   # 2015～2025通常J1の読込・時系列適用（保存なし）
+src/features/elo_history.py   # 通常J1・百年構想・2026/27 completedの時系列適用（保存なし）
+src/features/elo_export.py    # 既存系列の試合前Elo・現在ratingをCSV保存
+scripts/export_elo.py         # 保存済み入力だけでElo CSVを再生成するCLI
 src/model/                   # モデル実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
 scripts/inspect_jleague.py    # 年度を指定するオフライン調査CLI
@@ -154,7 +156,25 @@ final_ratings = history.final_ratings  # 2025年最終試合の更新後、全�
 同一team_idの同日複数試合を拒否し、年度をまたいでもratingを維持します。Elo列は必ず当該result適用前の値です。
 部分入力では未入力試合の結果は反映されません。全期間には11ファイル必須の`load_elo_history`を使います。
 2024年の再開試合30700は既存日付の11月22日を使用し、当初8月24日開始前の状態は再現しません。
-百年構想リーグ・2026/27 J1は対象外です。既存日付・原本・processed・名称マスターの書き換えは行いません。
+この通常年度専用APIでは百年構想リーグ・2026/27 J1は対象外です。既存日付・原本・processed・名称マスターの書き換えは行いません。
+
+全系列のCSVは、既存の`load_elo_history_with_ongoing`を使って次のコマンドで再生成します。
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.export_elo
+```
+
+出力先はGit対象外の`data/processed/elo/`です。既存2ファイルは再実行で上書きします。
+
+- `match_elo_history.csv`（現在3,858行）: `match_id, match_date, competition, season, home_team, away_team, home_team_id, away_team_id, home_elo, away_elo, elo_diff, result`
+- `current_ratings.csv`（33行、team_id順）: `team_id, canonical_name, rating, last_match_date`
+
+通常3,588→百年構想200→2026/27 completed70の既存順序・値を保持し、候補・予定は含めません。
+`season`は原データどおり整数で、2026/27は`2026`です。現在ratingは最後のcompleted処理後の値で、
+非参加クラブも最後の対象試合後の値・日付を保持します。未出場IDは1500・日付空欄です。
+UTF-8（BOMなし）・LF・日付`YYYY-MM-DD`・浮動小数点17桁で固定し、同じ入力からバイト一致します。
+pandasで数値を完全往復する場合は`read_csv(..., float_precision="round_trip", dtype={"match_id": "string"})`を使用します。
+`--processed-dir`、`--team-master`、`--output-dir`で入出力先を指定できます。新規取得・入力の書き換えは行いません。
 
 ## J.League Data Siteのオフライン解析
 

@@ -1,5 +1,18 @@
 # Design Decisions
 
+## 2026-09-17: 既存Elo系列の保存を独立した出力層に置く
+
+Decision: `export_elo_history`は既存`load_elo_history_with_ongoing`の結果から2つのCSVだけを生成する。
+試合履歴は通常→百年構想→completedの順序・更新前Elo・原competition/seasonを保持する。
+現在値はongoing.final_ratingsから全登録IDをteam_id順に出力し、canonical_nameは名称マスターから取得する。
+last_match_dateは全系列で各IDを最後に処理した日付。非参加クラブもratingを維持し、未出場IDの日付は空欄とする。
+
+Reason: Elo計算・終了判定・時系列の規則を重複実装せず、人間確認と後続特徴量生成に同一系列を渡すため。
+UTF-8（BOMなし）・LF・固定列順・ISO日付・浮動小数点17桁で、同一入力の再生成をバイト一致させる。
+出力はGit対象外のdata/processed/elo/へ保存し、既存入力raw/processed/master・Elo APIは変更しない。
+差分追加ではなく毎回全系列を再計算する。観測時点・訂正前情報・2024年再開試合の既存制限は引き継ぐ。
+ホーム/得点差補正・K調整・直近成績・モデル学習は追加しない。
+
 ## 2026-09-16: 2026/27の採用済みcompletedだけをElo系列へ接続する
 
 Decision: read_latestでSHA検証した不変revisionを固定し、schedule.csvのcompleted部分集合とcompleted_matches.csvの一致を確認する。
