@@ -4,9 +4,9 @@ J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を
 
 ## 現在の実装範囲
 
-現在は **Phase 2: Eloの最小計算APIまで実装済み** です。
+現在は **Phase 2: Elo APIと2015～2025年の通常J1への時系列適用まで実装済み** です。
 Phase 1の入力検証と、33クラブの安定したteam_id・名称aliasを持つチームマスターも実装済みです。
-実データへのElo適用、特徴量生成、モデル学習、予測、UIは未実装です。
+通常J1の試合前Eloをメモリ上で取得できます。正式CSV保存、その他の特徴量生成、モデル学習、予測、UIは未実装です。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
 元の日本語仕様書・手順書は変更せず保存しています。
@@ -64,6 +64,7 @@ src/collect/matches.py        # CSV読み込み・入力検証
 src/collect/teams.py          # 名称マスター読取・安定team_idへの解決
 src/collect/jleague.py        # J.League Data Siteの共通解析・キャッシュ読取・集計
 src/features/elo.py           # team_id単位のElo期待値・逐次更新（I/Oなし）
+src/features/elo_history.py   # 2015～2025通常J1の読込・時系列適用（保存なし）
 src/model/                   # モデル実装先（現在はパッケージのみ）
 src/main.py                   # 起動確認用エントリーポイント
 scripts/inspect_jleague.py    # 年度を指定するオフライン調査CLI
@@ -136,7 +137,24 @@ assert expected_score(1500, 1500) == 0.5
 - 呼出側が終了確認済み試合を時系列順に一度ずつ渡します。APIは未来の結果を先読みせず、日付ソート・重複除去は行いません。
   同じID一覧で新しいインスタンスを作り、同じ入力順で呼ぶと再現できます。
 - 百年構想リーグも90分resultだけを使用します。PK・延長勝者・tie winner、ホーム補正、得点差補正は使用しません。
-  全年度処理、CSV出力、特徴量生成、パラメータ調整は今回のAPIに含めません。
+  CSV出力、その他の特徴量生成、パラメータ調整はこのAPIに含めません。
+
+2015～2025年の通常J1には、別モジュールで既存processed CSVを読み取り、同じElo APIを適用します。
+
+```python
+from src.features.elo_history import load_elo_history
+
+history = load_elo_history()  # 保存済み11 CSVを読む。通信・ファイル出力なし
+matches = history.matches  # 元の列＋home/away_team_id、home_elo、away_elo、elo_diff
+final_ratings = history.final_ratings  # 2025年最終試合の更新後、全登録IDのrating
+```
+
+`build_elo_history(matches, team_master=master)`はDataFrameから同じ処理を行います。
+全登録IDを1500で初期化し、`match_date`昇順・文字列`match_id`辞書順で処理します。
+同一team_idの同日複数試合を拒否し、年度をまたいでもratingを維持します。Elo列は必ず当該result適用前の値です。
+部分入力では未入力試合の結果は反映されません。全期間には11ファイル必須の`load_elo_history`を使います。
+2024年の再開試合30700は既存日付の11月22日を使用し、当初8月24日開始前の状態は再現しません。
+百年構想リーグ・2026/27 J1は対象外です。既存日付・原本・processed・名称マスターの書き換えは行いません。
 
 ## J.League Data Siteのオフライン解析
 
@@ -215,7 +233,7 @@ stageごとの総当たり回数から、節数・各節試合数・年間試合
 
 ## 実装順序
 
-Phase 1とPhase 2の最小Elo APIまで完了しています。実データへのElo適用は別作業とし、その後は直近成績、Baselineの順に進み、
+Phase 1とPhase 2の最小Elo API・2015～2025通常J1への適用まで完了しています。その後は直近成績、Baselineの順に進み、
 時系列評価を用意してからLightGBMを導入します。Data Siteの取得・検証は2015～2025年が完了し、
 2026年百年構想リーグと通常2026/27 J1の更新処理は別大会として実装済みです。定期自動更新は別作業とします。
 以下のフェーズ番号は元の仕様書を維持しますが、評価処理（Phase 6）は手順書に従ってBaseline段階から整備します。

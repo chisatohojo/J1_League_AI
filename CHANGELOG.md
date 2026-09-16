@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-16（Phase 2: 2015～2025通常J1への時系列Elo適用）
+
+- `src/features/elo_history.py`で既存11 CSVを読み、team masterと既存Elo APIにより3,588試合・31 IDを処理。
+  全33登録IDを1500から初期化し、年度でリセットしない。試合前home_elo / away_elo / elo_diffをメモリ上で返す。
+- match_date・文字列match_idで順序を固定し、名前解決後の同一ID・同日複数試合を拒否。
+  2024再開試合30700は既存11月22日を使用し、当初8月24日開始前の値は再現しないことを明記。
+- 専用33テストで未来・当該結果非リーク、年度継続、再現性、入力非破壊、全3,588試合の一度ずつの適用を確認。
+- 全pytest 627件成功、git diff --check問題なし。既存データ・マスター・Elo/Validation/名称解決コード423ファイルのSHA-256不変。
+- README・STATUS・DECISIONSと起動表示を更新。百年構想・2026/27、正式CSV保存、各種補正・回帰・モデル学習は対象外。
+  既存Elo API・Validation・team master・入力データは維持し、commit・pushは行わない。
+
 ## 2026-09-16（Phase 2: 最小Elo API）
 
 - `src/features/elo.py`にteam_id単位の逐次更新APIを実装。初期rating=1500、K=20、尺度400。
