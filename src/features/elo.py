@@ -57,7 +57,9 @@ class EloRatings:
     KeyError; no team is implicitly added. A new instance starts a fresh replay.
     """
 
-    def __init__(self, team_ids: Iterable[str]):
+    def __init__(self, team_ids: Iterable[str], k_factor: float = K_FACTOR):
+        if isinstance(k_factor, bool) or not isinstance(k_factor, Real) or not math.isfinite(k_factor) or k_factor <= 0:
+            raise ValueError("k_factor must be a finite positive real number.")
         if isinstance(team_ids, (str, bytes)):
             raise ValueError("Provide an iterable of team IDs, not a single string.")
         ratings = {}
@@ -72,6 +74,7 @@ class EloRatings:
         if not ratings:
             raise ValueError("At least one registered team ID is required.")
         self._ratings = ratings
+        self._k_factor = float(k_factor)
 
     @property
     def ratings(self) -> dict[str, float]:
@@ -109,7 +112,7 @@ class EloRatings:
         if isinstance(result, bool) or not isinstance(result, Integral) or result not in (0, 1, 2):
             raise ValueError("result must be an integer: 0=away win, 1=draw, 2=home win.")
         before = self.pre_match(home_team_id, away_team_id)
-        delta = K_FACTOR * (int(result) / 2.0 - before.home_expected)
+        delta = self._k_factor * (int(result) / 2.0 - before.home_expected)
         after = self._snapshot(
             home_team_id, away_team_id,
             before.home_rating + delta, before.away_rating - delta,
