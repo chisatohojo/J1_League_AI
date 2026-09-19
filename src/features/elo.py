@@ -57,9 +57,12 @@ class EloRatings:
     KeyError; no team is implicitly added. A new instance starts a fresh replay.
     """
 
-    def __init__(self, team_ids: Iterable[str], k_factor: float = K_FACTOR):
+    def __init__(self, team_ids: Iterable[str], k_factor: float = K_FACTOR, home_advantage: float = 0.0):
         if isinstance(k_factor, bool) or not isinstance(k_factor, Real) or not math.isfinite(k_factor) or k_factor <= 0:
             raise ValueError("k_factor must be a finite positive real number.")
+        if (isinstance(home_advantage, bool) or not isinstance(home_advantage, Real)
+                or not math.isfinite(home_advantage) or home_advantage < 0):
+            raise ValueError("home_advantage must be a finite nonnegative real number.")
         if isinstance(team_ids, (str, bytes)):
             raise ValueError("Provide an iterable of team IDs, not a single string.")
         ratings = {}
@@ -75,6 +78,7 @@ class EloRatings:
             raise ValueError("At least one registered team ID is required.")
         self._ratings = ratings
         self._k_factor = float(k_factor)
+        self._home_advantage = float(home_advantage)
 
     @property
     def ratings(self) -> dict[str, float]:
@@ -86,9 +90,8 @@ class EloRatings:
             raise KeyError(f"Unknown team_id: {team_id!r}.")
         return self._ratings[team_id]
 
-    @staticmethod
-    def _snapshot(home_team_id, away_team_id, home_rating, away_rating):
-        home_expected = expected_score(home_rating, away_rating)
+    def _snapshot(self, home_team_id, away_team_id, home_rating, away_rating):
+        home_expected = expected_score(home_rating + self._home_advantage, away_rating)
         return EloSnapshot(
             home_team_id, away_team_id, home_rating, away_rating,
             home_expected, 1.0 - home_expected,
