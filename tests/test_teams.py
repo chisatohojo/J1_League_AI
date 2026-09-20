@@ -74,6 +74,14 @@ def test_multiple_aliases_and_source_namespaces_keep_stable_identity(tmp_path):
         master.aliases[0].team_id = "team_9999"
 
 
+def test_omiya_historical_official_alias_is_date_bounded():
+    master = load_team_master(ROOT / "data/master/teams.csv")
+    assert master.resolve_team_id("大宮アルディージャ", source="jleague_official", on="2016-03-05") == "team_0022"
+    with pytest.raises(UnknownTeamError):
+        master.resolve_team_id("大宮アルディージャ", source="jleague_official", on="2025-01-01")
+    assert master.resolve_team_id("ＲＢ大宮アルディージャ", source="jleague_official", on="2025-01-01") == "team_0022"
+
+
 @pytest.mark.parametrize("name,source", [
     ("Unknown Club", "jleague_data_site"),
     ("Club A", "unknown_source"),
@@ -284,7 +292,8 @@ def test_committed_master_registers_33_stable_clubs():
     assert len({entry.team_id for entry in master.aliases}) == 33
     assert all(re.fullmatch(r"team_[0-9]{4}", entry.team_id) for entry in master.aliases)
     for entry in master.aliases:
-        assert master.resolve_team_id(entry.source_name, source=entry.source) == entry.team_id
+        on = date(2016, 3, 5) if entry.valid_from is not None or entry.valid_to is not None else None
+        assert master.resolve_team_id(entry.source_name, source=entry.source, on=on) == entry.team_id
 
 
 def test_all_available_match_outputs_resolve_without_changes():

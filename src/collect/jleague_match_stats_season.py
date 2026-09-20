@@ -16,6 +16,10 @@ SEASON_OUTPUT_COLUMNS = (
     "match_id", "home_team", "away_team", "home_team_id", "away_team_id",
     "home_shots", "away_shots", "home_ck", "away_ck", "home_fk", "away_fk", "source_url",
 )
+EXPECTED_MATCH_COUNTS = {
+    2015: 306, 2016: 306, 2017: 306, 2018: 306, 2019: 306,
+    2020: 306, 2021: 380, 2022: 306, 2023: 306, 2024: 380, 2025: 380,
+}
 
 
 def collect_match_stats_for_season(
@@ -24,15 +28,16 @@ def collect_match_stats_for_season(
     team_master: TeamMaster | None = None,
 ) -> pd.DataFrame:
     """Collect and validate one season without mutating ``matches``."""
-    if season != 2015:
-        raise ValueError("This prototype is intentionally limited to 2015.")
+    expected_count = EXPECTED_MATCH_COUNTS.get(season)
+    if expected_count is None:
+        raise ValueError(f"Unsupported ordinary J1 season: {season}.")
     source = matches.copy(deep=True)
     required = {"match_id", "match_date", "home_team", "away_team", "season"}
     if not required.issubset(source.columns):
         raise ValueError("Existing match dataset lacks required columns.")
     source = source.loc[source["season"].eq(season)].copy(deep=True)
-    if len(source) != 306 or source["match_id"].isna().any() or not source["match_id"].is_unique:
-        raise ValueError("2015 existing dataset must contain 306 unique nonmissing match IDs.")
+    if len(source) != expected_count or source["match_id"].isna().any() or not source["match_id"].is_unique:
+        raise ValueError(f"{season} existing dataset must contain {expected_count} unique nonmissing match IDs.")
     source["match_id"] = source["match_id"].astype(str)
     team_master = team_master or load_team_master()
 
@@ -67,7 +72,7 @@ def collect_match_stats_for_season(
         if index + 1 < len(source) and request_interval_seconds:
             time.sleep(request_interval_seconds)
     if failures:
-        raise RuntimeError("2015 match stats collection failed:\n" + "\n".join(failures))
+        raise RuntimeError(f"{season} match stats collection failed:\n" + "\n".join(failures))
 
     result = pd.concat(frames, ignore_index=True).loc[:, list(SEASON_OUTPUT_COLUMNS)]
     _validate_result(result, source, team_master=team_master)
@@ -91,8 +96,9 @@ def collect_2015_match_stats(
 
 
 def _validate_result(result: pd.DataFrame, source: pd.DataFrame, *, team_master: TeamMaster | None = None) -> None:
-    if len(result) != 306 or not result["match_id"].is_unique:
-        raise ValueError("Collected result must contain 306 unique rows.")
+    expected_count = EXPECTED_MATCH_COUNTS.get(int(source["season"].iloc[0]))
+    if expected_count is None or len(result) != expected_count or not result["match_id"].is_unique:
+        raise ValueError(f"Collected result must contain {expected_count} unique rows.")
     if set(result["match_id"]) != set(source["match_id"]):
         raise ValueError("Collected match_id set does not exactly match the existing dataset.")
     merged = source[["match_id", "home_team", "away_team"]].merge(
