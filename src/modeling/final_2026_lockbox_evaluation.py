@@ -27,8 +27,11 @@ def preflight_inputs(paths=None):
         "2026_emperor": "data/processed/emperors_cup/2026_emperors_cup_matches.csv",
         "hyakunen": "data/processed/jleague/2026_hyakunen/matches.csv",
         "target": "data/processed/jleague/2026_27/completed_matches.csv",
+        "schedule": "data/processed/jleague/2026_27/schedule.csv",
     }
-    expected = {"2026_cup": 4, "2026_emperor": 19, "hyakunen": 200, "target": 70}
+    expected = {"2025_j1": 380, "2025_cup": 56, "2025_emperor": 41,
+                "2026_cup": 4, "2026_emperor": 19, "hyakunen": 200,
+                "target": 70, "schedule": 380}
     result={}
     for name,path in paths.items():
         p=Path(path)
@@ -36,6 +39,13 @@ def preflight_inputs(paths=None):
         result[name] = {"path": str(p), "rows": int(len(pd.read_csv(p)))}
         if name in expected and result[name]["rows"] != expected[name]:
             raise ValueError(f"unexpected row count for {name}: {result[name]['rows']} != {expected[name]}")
+    if "schedule" in result and "target" in result:
+        schedule = pd.read_csv(result["schedule"]["path"])
+        target = pd.read_csv(result["target"]["path"])
+        if (int((schedule.status == "scheduled").sum()) != 310
+                or int((schedule.status == "completed").sum()) != 70
+                or not set(target.match_id).issubset(set(schedule.loc[schedule.status == "completed", "match_id"]))):
+            raise ValueError("2026/27 completed-target and future-schedule invariant failed")
     return result
 
 def _j1(path, master, years=range(2015,2026)):

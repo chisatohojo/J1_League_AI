@@ -11,9 +11,14 @@ from src.modeling.final_2026_lockbox_evaluation import (
 
 def test_frozen_input_preflight_and_feature_contract():
     inputs=preflight_inputs()
+    assert inputs["2025_j1"]["rows"] == 380
+    assert inputs["2025_cup"]["rows"] == 56
+    assert inputs["2025_emperor"]["rows"] == 41
     assert inputs["2026_cup"]["rows"] == 4
     assert inputs["2026_emperor"]["rows"] == 19
+    assert inputs["hyakunen"]["rows"] == 200
     assert inputs["target"]["rows"] == 70
+    assert inputs["schedule"]["rows"] == 380
     assert FEATURE_A == ("elo_diff",)
     assert FEATURE_B == ("elo_diff", "home_domestic_days_since_last_competitive_match",
                          "away_domestic_days_since_last_competitive_match",
@@ -26,6 +31,13 @@ def test_project_multiclass_brier_scale():
 
 def test_preflight_does_not_predict():
     assert "probabilities" not in preflight_inputs()
+
+
+def test_preflight_rejects_wrong_2025_training_count(tmp_path):
+    wrong = tmp_path / "2025_j1.csv"
+    wrong.write_text("match_id\n1\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="2025_j1"):
+        preflight_inputs({"2025_j1": wrong})
 
 
 def _matches(rows):
