@@ -8,7 +8,7 @@ from urllib.request import Request, urlopen
 import pandas as pd
 from src.collect.teams import load_team_master, TeamMasterError
 
-OUTPUT_COLUMNS=("season","match_date","home_team","away_team","home_team_id","away_team_id","competition","competition_raw","source_match_id","source_url")
+OUTPUT_COLUMNS=("season","match_date","home_team","away_team","home_team_id","away_team_id","home_is_j1","away_is_j1","competition","competition_raw","source_match_id","source_url")
 class _Parser(HTMLParser):
     def __init__(self): super().__init__(convert_charrefs=True); self.rows=[]; self.row=None; self.cell=None; self.link=None; self.table_depth=0; self.active=False; self.cell_index=0
     def handle_starttag(self,t,a):
@@ -49,22 +49,55 @@ def _get(url,root,interval=.25):
     with urlopen(req,timeout=30) as r: b=r.read(); final=r.geturl(); status=r.status
     rp.write_bytes(b); mp.write_text(json.dumps({'requested_url':url,'final_url':final,'status':status,'fetched_at_utc':datetime.now(timezone.utc).isoformat(),'bytes':len(b),'sha256':sha256(b).hexdigest()},indent=2)+'\n')
     time.sleep(interval); return b,False
-def collect_jleague_cup_history(*,years=range(2015,2025),raw_dir='data/raw/jleague_cup',output_path='data/processed/jleague_cup/2015_2024_jleague_cup_matches.csv',interval=.25):
-    master=load_team_master(); frames=[]; unresolved=[]
+def _season_j1_team_ids(year, master, league_dir='data/processed/jleague'):
+    path=Path(league_dir)/f'{year}_matches_probe.csv'
+    if not path.exists(): raise FileNotFoundError(f'missing J1 league data: {path}')
+    league=pd.read_csv(path, dtype={'home_team':str,'away_team':str})
+    ids=set(); names=set()
+    for row in league.itertuples():
+        for side in ('home','away'):
+            name=getattr(row, side+'_team')
+            if pd.isna(name) or not str(name).strip():
+                raise ValueError(f'missing J1 team name: season={year}, match_id={row.match_id}, side={side}')
+            try:
+                ids.add(master.resolve_team_id(str(name), source='jleague_data_site', on=pd.Timestamp(row.match_date)))
+            except TeamMasterError as e:
+                raise ValueError(f'unresolved J1 team: season={year}, match_id={row.match_id}, side={side}, name={name!r}: {e}') from e
+            names.add(str(name))
+    if not ids: raise ValueError(f'empty J1 team set: season={year}')
+    return ids, names
+
+def _retain_j1_matches(frame, j1_ids):
+    """Return only Cup rows involving at least one season J1 club."""
+    return frame[frame.home_is_j1 | frame.away_is_j1].copy()
+
+def collect_jleague_cup_history(*,years=range(2015,2025),raw_dir='data/raw/jleague_cup',output_path='data/processed/jleague_cup/2015_2024_jleague_cup_matches.csv',interval=.25,league_dir='data/processed/jleague'):
+    master=load_team_master(); frames=[]; diagnostics=[]
     for year in years:
+        j1_ids,j1_names=_season_j1_team_ids(year, master, league_dir)
         url=f'https://data.j-league.or.jp/SFMS01/search?competition_frame_ids=11&competition_years={year}'
         b,_=_get(url,raw_dir,interval); f=parse_sfms01_html(b.decode('utf8',errors='replace'),expected_season=year)
         for side in ('home','away'):
             ids=[]
             for row in f.itertuples():
                 try: ids.append(master.resolve_team_id(getattr(row,side+'_team'),source='jleague_data_site',on=row.match_date))
-                except TeamMasterError as e: unresolved.append((year,row.source_match_id,side,getattr(row,side+'_team'),str(e))); ids.append(pd.NA)
+                except TeamMasterError:
+                    if getattr(row, side+'_team') in j1_names:
+                        raise ValueError(f'unresolved J1 Cup team: season={year}, match_id={row.source_match_id}, side={side}, name={getattr(row, side+"_team")!r}')
+                    ids.append(pd.NA)
             f[side+'_team_id']=ids
-        frames.append(f)
-    if unresolved:
-        details='\n'.join(f'{y} match_id={mid} {side} {name!r}: {reason}' for y,mid,side,name,reason in unresolved)
-        raise ValueError('Unresolved J.League Cup team aliases; no output written:\n'+details)
+            f[side+'_is_j1']=f[side+'_team_id'].isin(j1_ids)
+        retained=_retain_j1_matches(f, j1_ids)
+        for row in f.itertuples():
+            for side in ('home','away'):
+                if pd.isna(getattr(row,side+'_team_id')) and not getattr(row,side+'_is_j1'):
+                    diagnostics.append({'season':year,'match_id':row.source_match_id,'date':row.match_date,'side':side,'team_name':getattr(row,side+'_team')})
+        frames.append(retained)
+        if retained.empty and not f.empty: raise ValueError(f'no retained J1 Cup matches: season={year}')
     out=pd.concat(frames,ignore_index=True).loc[:,list(OUTPUT_COLUMNS)].sort_values(['match_date','source_match_id']).reset_index(drop=True)
     if out.source_match_id.duplicated().any(): raise ValueError('duplicate source_match_id')
     if out[['match_date','home_team','away_team']].isna().any().any() or (out.home_team==out.away_team).any(): raise ValueError('invalid match row')
-    p=Path(output_path); p.parent.mkdir(parents=True,exist_ok=True); out.to_csv(p,index=False,encoding='utf8'); return out
+    if not out.home_is_j1.astype(bool).any() and not out.away_is_j1.astype(bool).any(): raise ValueError('retained output has no J1 match')
+    p=Path(output_path); p.parent.mkdir(parents=True,exist_ok=True); out.to_csv(p,index=False,encoding='utf8')
+    out.attrs['diagnostics']=pd.DataFrame(diagnostics)
+    return out
