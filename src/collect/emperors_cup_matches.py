@@ -5,9 +5,34 @@ import json, time
 from pathlib import Path
 from urllib.request import Request, urlopen
 import pandas as pd
+from bs4 import BeautifulSoup
 from src.collect.teams import load_team_master, TeamMasterError
 
 OUTPUT_COLUMNS=("season","match_date","home_team","away_team","home_team_id","away_team_id","home_is_j1","away_is_j1","competition","competition_raw","round_raw","source_match_id","source_url")
+
+def parse_jfa_2026_match_page(html, *, match_number):
+    """Parse the 2026 JFA match page; completed status comes from score cells."""
+    soup = BeautifulSoup(html, "html.parser")
+    schedule = soup.select_one("#header-schedule-score .text-schedule, #header-schedule-result .text-schedule")
+    if schedule is None:
+        raise ValueError(f"missing JFA schedule block: m{match_number}")
+    text = schedule.get_text(" ", strip=True)
+    import re
+    date = re.search(r"(2026)年(\d{1,2})月(\d{1,2})日", text)
+    if not date:
+        raise ValueError(f"missing JFA match date: m{match_number}")
+    flags = soup.select("#score-board-header .flag p:last-child")
+    scores = [x.get_text("", strip=True) for x in soup.select("#score-board-header .total-score")]
+    if len(flags) < 2 or len(scores) < 2:
+        raise ValueError(f"missing JFA teams/score: m{match_number}")
+    completed = all(score != "" for score in scores[:2])
+    return {
+        "season": 2026, "match_date": pd.Timestamp(int(date.group(1)), int(date.group(2)), int(date.group(3))),
+        "home_team": flags[0].get_text("", strip=True), "away_team": flags[1].get_text("", strip=True),
+        "completed": completed, "source_match_id": f"2026-m{int(match_number):02d}",
+        "source_url": f"https://www.jfa.jp/match/emperorscup_2026/match_page/m{int(match_number)}.html",
+        "competition": "emperors_cup", "competition_raw": "Emperor's Cup", "round_raw": text,
+    }
 
 def parse_jfa_schedule_json(payload, *, season):
     data=json.loads(payload) if isinstance(payload,(str,bytes,bytearray)) else payload

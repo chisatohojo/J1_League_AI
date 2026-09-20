@@ -1,5 +1,13 @@
 # 2026 Lockbox Protocol Correction
 
+## Final data-readiness clarification (2026-09-20)
+
+The 2026 Emperor's Cup non-J1 opponent identity is not required for the J1 club
+Domestic Rest chronology. A resolved J1 side is sufficient to record that club's
+competitive-match date; the opponent team_id may remain nullable under the
+existing policy. This clarification does not change the model or feature
+definition and does not permit fuzzy matching or TeamMaster expansion.
+
 確認日: 2026-09-20
 
 ## Protocol correction
@@ -62,3 +70,8 @@ prediction、Accuracy、Log Loss、Brier、class distribution、confusion matrix
 
 season終了後、同一仕様で2026/27 ordinary J1のfull 380 completed matchesを再評価する。百年構想リーグは引き続きevaluation target外とする。
 
+## Pre-metrics protocol update (2026-09-20)
+
+70件のmetricsを見る前に、百年構想リーグ200件をDomestic Rest chronologyとElo replayの両方へ利用する方針を確定した。ただし百年構想のrowsはLogistic Regression training targetには追加せず、Elo state update専用とする。Elo updateでは90-minute regulation resultだけを使用し、extra-time後またはPKのwinnerを通常勝利として使用しない。
+
+JFA公式の2026 Emperor's Cupは`schedule_result`とmatch pageを使用する。m56のmatch pageは2026-08-26のscoreありcompleted、m57は2026-09-23のscore空欄futureであることを確認した。2026専用parserを追加したが、m1–m56のJ1 involvement identityには未解決raw namesが残り、2026 Emperor's Cupの安全なretained historyは未完成である。従ってModel Bは未ready、common evaluation readinessも未readyのままとする。prediction/metricsは実行していない。
