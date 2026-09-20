@@ -2,6 +2,8 @@
 
 調査日: 2026-09-20。対象は J.LEAGUE.jp 公式の J1 クラブ統計、主に 2026/27 と比較用の 2025。少数の公式ページと既存 TeamMaster だけを確認した。全クラブ・全統計・時系列の coverage 監査ではない。collector、feature、prediction、model 評価は実行していない。
 
+> **追跡監査（同日）:** この文書は初回監査時点の記録であり、以下の「未確認」は当時の状態を示す。後続の [J_STATS_TEAM_SNAPSHOT_COLLECTOR_DESIGN.md](J_STATS_TEAM_SNAPSHOT_COLLECTOR_DESIGN.md) で、2026/27 の全20クラブを HTML 内の RSC data から取得できること、2025/2026-27 の主要8 stat、両季の xGA、2026/27 の xG・攻撃側枠内シュートを確認した。後続監査の実装準備判定・stat availability を優先する。過去 snapshot や match-level 差分が検証済みになったわけではない。
+
 ## 結論
 
 **B: 一部 stat の point-in-time snapshot collector は設計可能。ただし、この監査だけで match-level 差分を安全に復元できる stat は確定していない。** 少なくともシュート総数、被枠内シュート総数、パス総数（2025）、平均パス数・支配率・走行距離・スプリント数（2026/27）は公式 HTML に値がある。一方、優先度の高い 2026/27 J1 の xG/xGA、攻撃側の枠内シュート数、タックルは今回の公式ページ標本では確認できなかった。「未確認」は「存在しない」を意味しない。ランキング初期表示が10クラブであること、更新日と試合消化数の紐付け、前後2 snapshot の実測比較も未解決である。
