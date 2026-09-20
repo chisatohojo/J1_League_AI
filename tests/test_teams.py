@@ -288,12 +288,23 @@ def test_committed_master_registers_33_stable_clubs():
         "山形": "team_0031", "横浜FC": "team_0032", "横浜FM": "team_0033",
     }
     assert {name: master.resolve_team_id(name) for name in expected_ids} == expected_ids
-    assert master.team_count == 33
-    assert len({entry.team_id for entry in master.aliases}) == 33
+    assert master.team_count == 49
+    assert len({entry.team_id for entry in master.aliases}) == 49
     assert all(re.fullmatch(r"team_[0-9]{4}", entry.team_id) for entry in master.aliases)
     for entry in master.aliases:
-        on = date(2016, 3, 5) if entry.valid_from is not None or entry.valid_to is not None else None
+        on = entry.valid_from or date(2016, 3, 5) if entry.valid_from is not None or entry.valid_to is not None else None
         assert master.resolve_team_id(entry.source_name, source=entry.source, on=on) == entry.team_id
+
+
+def test_j2_extension_registers_only_new_ids_and_iwate_identifier():
+    master = load_team_master()
+    new_ids = {f"team_{number:04d}" for number in range(34, 50)}
+    assert {entry.team_id for entry in master.aliases if entry.team_id in new_ids} == new_ids
+    assert len({entry.team_id for entry in master.aliases}) == 49
+    iwate = [entry for entry in master.aliases if entry.team_id == "team_0038"]
+    assert len(iwate) == 1
+    assert iwate[0].source_club_id == "team_ids=269"
+    assert iwate[0].source == "jleague_data_site"
 
 
 def test_all_available_match_outputs_resolve_without_changes():
