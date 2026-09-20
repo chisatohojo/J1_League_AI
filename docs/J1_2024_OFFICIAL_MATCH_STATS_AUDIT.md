@@ -81,3 +81,34 @@ stats pageはHTML/RSC payloadにmatch identityとTeam Stats表示を含む。今
 - [J.LEAGUE official 2024 J1 match stats sample](https://www.jleague.jp/en/match/j1/2024/051510/stats/)
 - [J.LEAGUE official 2024 J1 match page](https://www.jleague.jp/en/match/j1/2024/051510/)
 
+## Full-coverage follow-up audit
+
+前節の「380/380, A」は、ページ構造とサンプル表示からの暫定判定であり、今回の全件確認で修正した。2024日程のmatch dateごとに公式6桁match identifierを照合し、stats pageを442回リクエストした（各リクエスト間隔は0.25秒以上）。その結果、stats blockを機械的に読めたのは357試合、23試合はこの照合経路で確定できず、4件はparse anomalyとなった。
+
+さらに重要なのは、357ページでnumeric token自体は得られても、`Shots on Target`、`Possession`、`Fouls` が多数（確認できた行では全て）`0` / `0%`となったことである。これは実試合の確定値としては不自然で、HTML/RSCのplaceholderまたはinitial stateと判断するのが妥当である。したがって、今回の4必須fieldの**確定したfinal-value coverageは0/380として扱い、全てC**と再判定する。`Offsides`は357ページでnumeric tokenを得たが、同じpayloadにplaceholderが混在するため、final-value coverageをA/Bとは判定しない。
+
+| field | reachable stats block | numeric token | final valueとして確認 | 最終判定 |
+| --- | ---: | ---: | ---: | --- |
+| Shots on Target | 357/380 | 357/380 | 0/380 | C |
+| Possession | 357/380 | 357/380 | 0/380 | C |
+| Offsides | 357/380 | 357/380 | 未確定 | C |
+| Fouls | 357/380 | 357/380 | 0/380 | C |
+
+Possessionのhome+awayは、得られたpayload上では0+0となり、100%近傍のsum sanityを満たさない。従って、これをmatch-level possessionとして採用してはならない。
+
+### Distribution of observed tokens
+
+placeholderを除外せずに機械的に読んだtokenの分布は次の通りである。これはfinal statsの分布ではない。
+
+| field | min | median | mean | max |
+| --- | ---: | ---: | ---: | ---: |
+| Shots on Target | 0 | 0 | 0.000 | 0 |
+| Possession | 0.0 | 0.0 | 0.000 | 0.0 |
+| Offsides | 0 | 1 | 1.636 | 6 |
+| Fouls | 0 | 0 | 0.000 | 0 |
+
+代表的に、season序盤・中盤・終盤のページで同じ`0 / 0%`状態が確認された。従って、HTTP 200やnumeric parseだけをcoverageとすることはできない。
+
+### Revised conclusion
+
+2024公式ページ上に4項目のラベルとhome/away欄は存在するが、今回使用した静的HTML/RSC経路からは、全380試合の確定final valuesを再現可能な形で取得できなかった。ブラウザ実行後の追加データ経路（XHR/fetch等）を特定しない限り、これら4項目をcollectorやfeatureへ進めない。前節のA判定は撤回し、今回の最終分類は4項目すべてCとする。
