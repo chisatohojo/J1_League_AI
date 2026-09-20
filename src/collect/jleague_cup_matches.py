@@ -33,10 +33,12 @@ class _Parser(HTMLParser):
 def parse_sfms01_html(html,*,expected_season):
     p=_Parser(); p.feed(html); p.close(); out=[]
     for season,raw,date,home,away,href in p.rows:
-        if int(season)!=int(expected_season): raise ValueError('season mismatch')
+        season_text = str(season).strip()
+        if not (season_text == str(expected_season) or season_text.startswith(f"{expected_season}/")):
+            raise ValueError('season mismatch')
         m=re.match(r'(\d{2})/(\d{2})/(\d{2})',date)
         if not m: raise ValueError('invalid match date')
-        year=int(season); out.append({'season':year,'match_date':pd.Timestamp(year,int(m.group(2)),int(m.group(3))), 'home_team':home,'away_team':away,'competition':'jleague_cup','competition_raw':raw,'source_match_id':re.search(r'match_card_id=(\d+)',href).group(1),'source_url':'https://data.j-league.or.jp'+href})
+        year=int(expected_season); out.append({'season':year,'match_date':pd.Timestamp(year,int(m.group(2)),int(m.group(3))), 'home_team':home,'away_team':away,'competition':'jleague_cup','competition_raw':raw,'source_match_id':re.search(r'match_card_id=(\d+)',href).group(1),'source_url':'https://data.j-league.or.jp'+href})
     result=pd.DataFrame(out)
     if not result.empty and result.source_match_id.duplicated().any(): raise ValueError('duplicate match_card_id')
     return result
