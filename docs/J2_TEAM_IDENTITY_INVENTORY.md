@@ -159,3 +159,85 @@ Network request: 10（各seasonのSFMS01 listingを1回、interval約0.3秒）�
 - estimated alias additions: 24 existing-club source aliases, subject to review
 
 「canonical/other exact」はTeamMaster name exactではなく、同一公式profile slug / existing `source_club_id`から得たdiagnostic candidateである。従って、今回これらを`resolve_team_id`で自動確定したり、aliasを追加したりしていない。旧inventoryの0/40は、English localeとsource-name encoding/locale不一致をidentity未登録と取り違えた結果である。
+## Japanese-locale final audit
+
+日本語locale（`lang=ja`）で2015～2024を各1 request再取得した。home/away cellのraw nameをtrim・normalizeせずに保持し、同じcellのofficial club linkとTeamMaster exact resolutionを確認した。
+
+| English raw | Japanese raw repr | official slug / link | existing team_id | classification |
+|---|---|---|---|---|
+| C-Osaka | `'�b���'` | cosaka | team_0002 | already_resolved_exact |
+| Chiba | `'��t'` | chiba | team_0001 | already_resolved_exact |
+| FC Machida | `'���c'` | machida | team_0014 | already_resolved_exact |
+| Fukuoka | `'����'` | fukuoka | team_0004 | already_resolved_exact |
+| Iwata | `'�֓c'` | iwata | team_0007 | already_resolved_exact |
+| Kashiwa | `'��'` | kashiwa | team_0009 | already_resolved_exact |
+| Kofu | `'�b�{'` | kofu | team_0012 | already_resolved_exact |
+| Kyoto | `'���s'` | kyoto | team_0013 | already_resolved_exact |
+| Matsumoto | `'���{'` | matsumoto | team_0015 | already_resolved_exact |
+| Mito | `'����'` | mito | team_0016 | already_resolved_exact |
+| Nagasaki | `'����'` | nagasaki | team_0017 | already_resolved_exact |
+| Nagoya | `'���É�'` | nagoya | team_0018 | already_resolved_exact |
+| Niigata | `'�V��'` | niigata | team_0019 | already_resolved_exact |
+| Oita | `'�啪'` | oita | team_0020 | already_resolved_exact |
+| Okayama | `'���R'` | okayama | team_0021 | already_resolved_exact |
+| Omiya | `'��{'` | omiya | team_0022 | already_resolved_exact |
+| Sapporo | `'�D�y'` | sapporo | team_0023 | already_resolved_exact |
+| Sendai | `'���'` | sendai | team_0024 | already_resolved_exact |
+| Shimizu | `'����'` | shimizu | team_0025 | already_resolved_exact |
+| Shonan | `'�Ó�'` | shonan | team_0026 | already_resolved_exact |
+| Tokushima | `'����'` | tokushima | team_0027 | already_resolved_exact |
+| Tokyo-V | `'�����u'` | tokyov | team_0028 | already_resolved_exact |
+| Yamagata | `'�R�`'` | yamagata | team_0031 | already_resolved_exact |
+| Yokohama FC | `'���lFC'` | yokohamafc | team_0032 | already_resolved_exact |
+| Akita | `'�H�c'` | akita | - | new_club_candidate_with_slug |
+| Ehime FC | `'���Q'` | ehime | - | new_club_candidate_with_slug |
+| FC Gifu | `'��'` | gifu | - | new_club_candidate_with_slug |
+| FC Ryukyu | `'����'` | ryukyu | - | new_club_candidate_with_slug |
+| Fujieda | `'���}'` | fujieda | - | new_club_candidate_with_slug |
+| Gunma | `'�Q�n'` | kusatsu | - | new_club_candidate_with_slug |
+| Iwaki | `'���킫'` | iwaki | - | new_club_candidate_with_slug |
+| Kagoshima | `'������'` | kagoshima (nonstandard `/day/#profile`) | - | new_club_candidate_with_slug |
+| Kanazawa | `'����'` | kanazawa | - | new_club_candidate_with_slug |
+| Kitakyushu | `'�k��B'` | kitakyushu | - | new_club_candidate_with_slug |
+| Kumamoto | `'�F�{'` | kumamoto | - | new_club_candidate_with_slug |
+| Sagamihara | `'���͌�'` | sagamihara | - | new_club_candidate_with_slug |
+| Sanuki | `'�]��'` | sanuki | - | new_club_candidate_with_slug |
+| Tochigi | `'�Ȗ�'` | tochigi | - | new_club_candidate_with_slug |
+| Yamaguchi | `'�R��'` | yamaguchi | - | new_club_candidate_with_slug |
+| Iwate | `'���'` | no club profile link | - | ambiguous |
+
+日本語raw nameとTeamMasterのexact resolveにはtrim、NFKC、whitespace collapse、fuzzy matchingを使っていない。24件はexact resolveとslug対応が同じteam_idで一致し、不一致は0件だった。
+
+### Final counts
+
+- Japanese exact resolved: **24**
+- existing missing alias: **0**
+- new club candidate with stable slug: **15**
+- ambiguous: **1**（Iwate）
+- estimated new permanent team IDs: **15**
+- estimated alias rows needed: **0** for the 24 exact-resolved clubs
+
+### The two previous slug gaps
+
+- **Iwate**（English raw `Iwate`, Japanese raw `'���'`, 2022 only）：全出現rowでclub profile linkがなく、special team・withdrawal・renameとは公式根拠なしに断定できないためambiguousに残した。
+- **Kagoshima**（English raw `Kagoshima`, Japanese raw `'������'`, 2019～2024）：通常の`/club/{slug}/profile/`ではなく`/club/kagoshima/day/#profile`という非標準linkだった。pathのclub slugは確認できるためnew club candidate with slugとした。
+
+### New candidate season ranges
+
+| candidate | first J2 season | last J2 season |
+|---|---:|---:|
+| Akita | 2021 | 2024 |
+| Ehime FC | 2015 | 2024 |
+| FC Gifu | 2015 | 2019 |
+| FC Ryukyu | 2019 | 2022 |
+| Fujieda | 2023 | 2024 |
+| Gunma | 2015 | 2024 |
+| Iwaki | 2023 | 2024 |
+| Kagoshima | 2019 | 2024 |
+| Kanazawa | 2015 | 2023 |
+| Kitakyushu | 2015 | 2021 |
+| Kumamoto | 2015 | 2024 |
+| Sagamihara | 2021 | 2021 |
+| Sanuki | 2015 | 2018 |
+| Tochigi | 2015 | 2024 |
+| Yamaguchi | 2016 | 2024 |
