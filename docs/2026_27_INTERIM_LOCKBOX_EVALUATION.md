@@ -1,6 +1,19 @@
 # 2026/27 Interim Lockbox Evaluation
 
-Evaluation date: 2026-09-20. This is the corrected formal evaluation of 70
+> Chronology audit (2026-09-20): The saved figures below are **not yet
+> chronology-certified**. The original evaluator omitted previous 2026/27
+> target matches from Model B Domestic Rest history (50 target matches / 97
+> team appearances have changed Rest features). It also updated target Elo
+> match-by-match within a date; the evaluator now reads all same-date
+> pre-match states before applying that date's results. All 70 targets have
+> kickoff times, but no verified final-whistle times; date batching is the
+> conservative policy. The old and corrected Elo-difference features happen
+> to agree for all 70 targets because no team plays twice on a target date.
+> This audit did **not**
+> rerun prediction or metrics. The actual Logistic training input is 3,588
+> rows; the 3,514 below is a documentation count error, not a 74-row drop.
+
+Evaluation date: 2026-09-20. The figures below were reported for 70
 completed ordinary J1 matches, not the full-season 380-match evaluation.
 Future 310 scheduled matches were excluded.
 
@@ -14,7 +27,7 @@ Training used only ordinary J1 2015–2025 (3,514 matches). Hyakunen rows were
 Elo-state/rest-history events only, never Logistic targets. Frozen Elo and
 Logistic parameters were unchanged.
 
-## Formal metrics
+## Previously reported metrics (pending chronology-corrected evaluation)
 
 | model | correct / 70 | accuracy | log loss | Brier |
 |---|---:|---:|---:|---:|

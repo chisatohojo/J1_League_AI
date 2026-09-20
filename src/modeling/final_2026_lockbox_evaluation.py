@@ -56,7 +56,31 @@ def _elo_features(stream, team_ids):
         elo.update(r.home_team_id,r.away_team_id,int(r.result))
     return pd.DataFrame(rows,columns=["match_id","elo_diff"])
 
-def _rest_features(j1, domestic, targets):
+def _target_elo_features(history, targets, team_ids):
+    """Read every target day's pre-match state before applying that day's results.
+
+    Target kickoff times exist, but final-whistle times do not. A calendar-day
+    bucket conservatively prevents an earlier-listed, still-running match from
+    leaking its result into another match's pre-match Elo.
+    """
+    if not targets.empty and (pd.to_datetime(history.match_date) >= pd.to_datetime(targets.match_date).min()).any():
+        raise ValueError("Elo history must precede the first target date.")
+    elo=EloRatings(sorted(team_ids),k_factor=30,home_advantage=175)
+    for r in history.sort_values(["match_date","match_id"],kind="stable").itertuples():
+        elo.update(r.home_team_id,r.away_team_id,int(r.result))
+    rows=[]
+    ordered=targets.assign(_match_id=targets.match_id.astype(str)).sort_values(
+        ["match_date","_match_id"],kind="stable"
+    )
+    for _,bucket in ordered.groupby("match_date",sort=False):
+        for r in bucket.itertuples():
+            before=elo.pre_match(r.home_team_id,r.away_team_id)
+            rows.append((str(r.match_id),before.home_rating-before.away_rating))
+        for r in bucket.itertuples():
+            elo.update(r.home_team_id,r.away_team_id,int(r.result))
+    return pd.DataFrame(rows,columns=["match_id","elo_diff"])
+
+def _rest_features(j1, domestic, targets, *, include_completed_targets=False):
     events=[]
     for d in (j1,domestic):
         for r in d.itertuples():
@@ -64,12 +88,20 @@ def _rest_features(j1, domestic, targets):
                 tid=getattr(r,side+"_team_id",None)
                 if isinstance(tid,str) and tid: events.append((pd.Timestamp(r.match_date),str(getattr(r,"match_id",getattr(r,"source_match_id",""))),tid))
     events.sort(key=lambda x:(x[0],x[1])); result=[]
-    for r in targets.sort_values(["match_date","match_id"],kind="stable").itertuples():
-        date=pd.Timestamp(r.match_date); vals=[]
-        for side in ("home","away"):
-            tid=getattr(r,side+"_team_id"); prior=[d for d,_,t in events if t==tid and d < date]; prev=max(prior) if prior else None
-            vals += [0 if prev is None else (date-prev).days, int(prev is not None)]
-        result.append((str(r.match_id),*vals))
+    ordered=targets.assign(_match_id=targets.match_id.astype(str)).sort_values(
+        ["match_date","_match_id"],kind="stable"
+    )
+    for date,bucket in ordered.groupby("match_date",sort=False):
+        for r in bucket.itertuples():
+            vals=[]
+            for side in ("home","away"):
+                tid=getattr(r,side+"_team_id"); prior=[d for d,_,t in events if t==tid and d < date]; prev=max(prior) if prior else None
+                vals += [0 if prev is None else (date-prev).days, int(prev is not None)]
+            result.append((str(r.match_id),*vals))
+        if include_completed_targets:
+            for r in bucket.itertuples():
+                for side in ("home","away"):
+                    events.append((date,f"j1:{r.match_id}",getattr(r,side+"_team_id")))
     frame=pd.DataFrame(result,columns=["match_id","home_domestic_days_since_last_competitive_match","home_domestic_has_previous_competitive_match","away_domestic_days_since_last_competitive_match","away_domestic_has_previous_competitive_match"])
     return frame[["match_id","home_domestic_days_since_last_competitive_match","away_domestic_days_since_last_competitive_match","home_domestic_has_previous_competitive_match","away_domestic_has_previous_competitive_match"]]
 
@@ -92,10 +124,15 @@ def evaluate_lockbox(processed_dir="data/processed/jleague", target_path="data/p
     for c in ("home_team_id","away_team_id"): dom[c]=dom[c].where(dom[c].notna(),pd.NA)
     # Only resolved J1-side events are needed for rest chronology.
     dom=dom.loc[dom.home_team_id.notna() | dom.away_team_id.notna()].copy()
-    train_rest=_rest_features(j1,dom,j1); target_rest=_rest_features(j1,pd.concat([dom,hy],ignore_index=True),target)
-    train_elo=_elo_features(j1, set(j1.home_team_id)|set(j1.away_team_id)); all_stream=pd.concat([j1,hy[["match_id","match_date","home_team_id","away_team_id","result"]],target[["match_id","match_date","home_team_id","away_team_id","result"]]],ignore_index=True); all_elo=_elo_features(all_stream,set(all_stream.home_team_id)|set(all_stream.away_team_id))
+    train_rest=_rest_features(j1,dom,j1)
+    target_rest=_rest_features(j1,pd.concat([dom,hy],ignore_index=True),target,include_completed_targets=True)
+    train_elo=_elo_features(j1, set(j1.home_team_id)|set(j1.away_team_id))
+    history=pd.concat([j1,hy[["match_id","match_date","home_team_id","away_team_id","result"]]],ignore_index=True)
+    all_elo=_target_elo_features(history,target,set(history.home_team_id)|set(history.away_team_id)|set(target.home_team_id)|set(target.away_team_id))
     j1["match_id"]=j1.match_id.astype(str); target["match_id"]=target.match_id.astype(str)
     train=j1.merge(train_elo,on="match_id").merge(train_rest,on="match_id"); targetf=target.merge(all_elo,on="match_id").merge(target_rest,on="match_id")
+    if len(train)!=3588 or len(targetf)!=70:
+        raise ValueError("Unexpected Logistic training or target row count.")
     p_a=_fit(train,targetf,FEATURE_A); p_b=_fit(train,targetf,FEATURE_B); y=target.result.to_numpy(); return targetf,p_a,p_b,y
 
 def metrics(y,p):
