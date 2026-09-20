@@ -241,3 +241,64 @@ Network request: 10（各seasonのSFMS01 listingを1回、interval約0.3秒）�
 | Sanuki | 2015 | 2018 |
 | Tochigi | 2015 | 2024 |
 | Yamaguchi | 2016 | 2024 |
+
+## Iwate final official identity audit (2026-09-20)
+
+This audit used only official J.League / J.League Data Site pages. No
+TeamMaster row, alias, or permanent team ID was added.
+
+### Result
+
+| Item | Official evidence |
+|---|---|
+| Japanese official club name | いわてグルージャ盛岡 |
+| English official display name | Iwate Grulla Morioka |
+| 2022 SFMS01 Japanese display | 岩手 |
+| 2022 SFMS01 English display | Iwate |
+| Official stable identifier | Data Site `team_ids=269` query identifier |
+| Profile slug in the 2022 SFMS01 row | Not present; no profile-link slug is claimed |
+| Final classification | `new_club_candidate_with_stable_official_id` |
+
+The official Data Site team-filtered 2022 listing uses `team_ids=269` and
+returns J2 rows involving 岩手, including Oita vs 岩手, 岩手 vs Niigata,
+Yamagata vs 岩手, and 岩手 vs Mito. This is a direct same-source linkage
+between the official team identifier and the 2022 J2 participant; it is not
+an identity inferred from the English word “Iwate”.
+
+The official Data Site 2022 J2 aggregate page also lists 岩手 with 21 home
+matches. The official J.League 2022 standings identify the club as
+いわてグルージャ盛岡 and place it in J2. The official 2022 J2 schedule PDF
+uses the full Japanese name in fixtures. An official J.League match page
+further presents the same club as いわてグルージャ盛岡 / 岩手, while the
+official English match page presents Iwate Grulla Morioka / IWATE.
+
+Sources checked on 2026-09-20:
+
+- [Data Site 2022 team-filtered match listing](https://data.j-league.or.jp/SFMS01/search?competition_years=2022&home_away_select=0&team_ids=269)
+- [Data Site 2022 J2 aggregate page](https://data.j-league.or.jp/SFTD12/search?competitionFrame=2&competitionFrameName=%EF%BC%AA%EF%BC%92%E3%83%AA%E3%83%BC%E3%82%B0&endCompetitionYear=2022&startCompetitionYear=2022&teamFlag=1)
+- [Official 2022 J2 standings](https://www.jleague.jp/sp/standings/2022/j2.html)
+- [Official 2022 J2 schedule PDF](https://www.jleague.jp/img/pdf/schedule_j2_2022.pdf)
+- [Official Japanese 2022 match page](https://www.jleague.jp/match/j2/2022/100204/review/)
+- [Official English 2022 match page](https://www.jleague.jp/en/match/j2/2022/040902/)
+
+The locally cached SFMS01 Japanese raw value remains encoding-corrupted in
+the existing audit artifact, and the English raw value is `Iwate`. No
+replacement-character string was decoded by guess, normalized, fuzzy-matched,
+or used as the basis for the decision. The decision rests on the official
+2022 listing identifier and the independent official Japanese/English club
+names above.
+
+### Revised inventory conclusion
+
+Iwate moves out of `ambiguous` and into the new-club candidate set. The
+revised totals are:
+
+- Japanese exact resolved: 24
+- existing missing alias: 0
+- new club candidates with an official stable identifier: 16
+- ambiguous: 0
+- estimated new permanent team IDs: 16 (allocation not performed)
+- aliases added in this audit: 0
+
+The 16 candidates require a future TeamMaster extension review; this audit
+does not decide ID allocation or add aliases.
