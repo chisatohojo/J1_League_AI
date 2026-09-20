@@ -1,5 +1,13 @@
 # 2026 Lockbox Protocol Correction
 
+> This document preserves pre-evaluation protocol and readiness snapshots.
+> Earlier statements below that Hyakunen is excluded from Elo or that Model B
+> is not ready were superseded **before metrics were viewed** by the later
+> pre-metrics protocol update and completed input/identity audits. The current
+> chronology-corrected official 70-match result, including training=3,588,
+> is in [2026_27_INTERIM_LOCKBOX_EVALUATION.md](2026_27_INTERIM_LOCKBOX_EVALUATION.md).
+> No freeze specification is changed by this documentation note.
+
 ## Final data-readiness clarification (2026-09-20)
 
 The 2026 Emperor's Cup non-J1 opponent identity is not required for the J1 club
