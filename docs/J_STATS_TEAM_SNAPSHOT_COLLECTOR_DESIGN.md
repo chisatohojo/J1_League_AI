@@ -123,3 +123,80 @@ metadata は requested/final URL、HTTP status、content type、`retrieved_at_ut
 今回の直接 HTTP GET は**29件**（公式 HTML 17、同ページで実際に参照された公式 JS chunk 12）。検索・閲覧ツールでの公式ページ表示2件は別途行ったが、内部の cache / network 挙動は不明。全クラブ×全 stat の crawl はしていない。将来の collector は1 stat につき原則1ページで20クラブを検証し、低頻度で取得する。club 別20 requests は不要。`?club=` は不具合調査用の明示的な fallback 候補に留める。RSC が消えた場合や20クラブが揃わない場合、非公式 endpoint の推測や無検証の fallback は行わない。
 
 次の実装/運用前 gate: (1) 20件が継続して揃うか、(2) `games_played` の source と J Stats 更新ラグの安全な扱い、(3) raw snapshot の再取得・訂正時の保存方針、(4) xG/xGA の累積 semantics と定義改定、(5) 利用条件・自動取得許容範囲。まず snapshot を蓄積し、後から match-level 差分を検証する。日程だけから同時点を断定しない。既存 [DATA_PIPELINE_STATUS.md](DATA_PIPELINE_STATUS.md) の match-level stats placeholder 問題は別系統であり、本件のクラブ統計で解消したとはみなさない。production code、データ CSV、cache directory、TeamMaster は今回変更していない。
+
+## 2026-09-14 source state の補完 snapshot
+
+2026-09-21 に、公式表示更新日が引き続き `2026/9/14 更新` である間に追加 stat を保存した。これは「第7節確定値」ではなく、**source display update date = 2026-09-14 の point-in-time snapshot**である。統計ページ自身から集計対象試合数を確定できないため、全行の `games_played` と `source_updated_at` は null のままとした。平均値から total を逆算せず、match-level delta reconstruction、feature、prediction、model 評価も行っていない。
+
+- base snapshot: `20260920T212008928504Z`（既存10 stat、未変更）
+- supplemental snapshot: `20260921T044103287576Z`（追加27 stat、540 rows）
+- raw: `data/raw/jstats_team_snapshots/20260921T044103287576Z/`
+- processed: `data/processed/jstats_team_snapshots/20260921T044103287576Z.csv`
+- manifest: `related_snapshot_id=20260920T212008928504Z`, `source_state_date=2026-09-14`, `status=COMPLETE`
+- identity: 各 stat 20 clubs、TeamMaster `jleague_official` name + slug exact 20/20
+
+既存HTMLの公式 stat filterには62 optionsがあり、既存10を除く追加 route candidate は52だった。候補を無差別取得せず、意味・単位が明確で情報の重複が比較的小さいPriority A/Bを中心に検証した。下表の「20」は実ページのRSC rankingを取得・検証したもの、「未取得」は公式filterにroute候補があることだけを確認したものである。
+
+### 保存した追加 stat
+
+| slug | label | value type | unit | clubs | source update | saved | reason |
+| --- | --- | --- | --- | ---: | --- | --- | --- |
+| `cross_count` | クロス総数 | total | 回 | 20 | 2026-09-14 | yes | 明確な攻撃量 |
+| `chance_create` | チャンスクリエイト総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `suffer_shoot` | 被シュート総数 | total | 回 | 20 | 2026-09-14 | yes | 明確な被攻撃量 |
+| `clear_count` | クリア総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `tackle_count` | タックル総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `tackle_rate` | タックル成功率 | percentage | % | 20 | 2026-09-14 | yes | 公式定義あり。逆算禁止 |
+| `block_count` | ブロック総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `intercept_count` | インターセプト総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `recovery_count` | こぼれ球奪取数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `expected_goals_against_excl_pk` | 被ゴール期待値 ※PKを除く | unknown | — | 20 | 2026-09-14 | yes | xGA関連の観測値。集計単位は断定しない |
+| `dribble_count` | ドリブル総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `dribble_rate` | ドリブル成功率 | percentage | % | 20 | 2026-09-14 | yes | 公式定義あり。逆算禁止 |
+| `air_battle_win_count` | 空中戦勝利数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `air_battle_win_rate` | 空中戦勝率 | percentage | % | 20 | 2026-09-14 | yes | 公式定義あり。逆算禁止 |
+| `one_on_one` | 1vs1勝利総数 | total | 回 | 20 | 2026-09-14 | yes | 公式filter上の明確な指標 |
+| `at_sprint_per_game` | 1試合平均Atスプリント回数 | average | 回/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `mt_sprint_per_game` | 1試合平均Mtスプリント回数 | average | 回/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `dt_sprint_per_game` | 1試合平均Dtスプリント回数 | average | 回/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `possession_distance_per_game` | 1試合平均ポゼッション時の走行距離 | average | km/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `possession_sprint_per_game` | 1試合平均ポゼッション時のスプリント回数 | average | 回/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `un_possession_distance_per_game` | 1試合平均被ポゼッション時の走行距離 | average | km/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `un_possession_sprint_per_game` | 1試合平均被ポゼッション時のスプリント回数 | average | 回/試合 | 20 | 2026-09-14 | yes | tracking detail。平均の逆算禁止 |
+| `pass_rate` | パス成功率 | percentage | % | 20 | 2026-09-14 | yes | 明確なpass detail。逆算禁止 |
+| `through_pass_count` | スルーパス総数 | total | 回 | 20 | 2026-09-14 | yes | 公式定義あり |
+| `through_pass_rate` | スルーパス成功率 | percentage | % | 20 | 2026-09-14 | yes | 公式定義あり。逆算禁止 |
+| `foul_count` | ファウル総数 | total | 回 | 20 | 2026-09-14 | yes | discipline stat |
+| `yellow_count` | 警告数 | total | 枚 | 20 | 2026-09-14 | yes | discipline stat |
+
+### 保存しなかった追加 route candidate
+
+| slug | label | value type / unit | clubs | source update | saved | reason |
+| --- | --- | --- | ---: | --- | --- | --- |
+| `shoot_per_game` | 1試合平均シュート数 | average / 回/試合 | 未取得 | 未検証 | no | 既存totalとの重複が大きい |
+| `shoot_on_target_per_game` | 1試合平均枠内シュート数 | average / 回/試合 | 未取得 | 未検証 | no | 既存totalとの重複が大きい |
+| `shoot_rate` | シュート決定率 | percentage / % | 未取得 | 未検証 | no | 得点・shootから派生する率 |
+| `score` | 得点総数 | total / 点 | 未取得 | 未検証 | no | 公式match resultから既取得 |
+| `score_per_game` | 1試合平均得点数 | average / 点/試合 | 未取得 | 未検証 | no | resultと重複しgames basis不明 |
+| `cross_count_per_game` | 1試合平均クロス数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `chance_create_per_game` | 1試合平均チャンスクリエイト数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `suffer_shoot_per_game` | 1試合平均被シュート数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `suffer_shoot_on_target_per_game` | 1試合平均被枠内シュート数 | average / 回/試合 | 未取得 | 未検証 | no | 既存totalと重複 |
+| `lost` | 失点総数 | total / 点 | 未取得 | 未検証 | no | 公式match resultから既取得 |
+| `lost_per_game` | 1試合平均失点数 | average / 点/試合 | 未取得 | 未検証 | no | resultと重複しgames basis不明 |
+| `clear_count_per_game` | 1試合平均クリア数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `tackle_count_per_game` | 1試合平均タックル数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `block_count_per_game` | 1試合平均ブロック数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `intercept_count_per_game` | 1試合平均インターセプト数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `recovery_count_per_game` | 1試合平均こぼれ球奪取数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `expected_goals_against_per_game` | 1試合平均被ゴール期待値 | average / 不明 | 未取得 | 未検証 | no | 既存xGAと重複しgames basis不明 |
+| `apt_pg_rank` | 1試合平均アクチュアルプレーイングタイム(APT) | average / 不明 | 未取得 | 未検証 | no | ranking slugと値の単位を安全に確定していない |
+| `dribble_count_per_game` | 1試合平均ドリブル数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `air_battle_win_count_per_game` | 1試合平均空中戦勝利数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `one_on_one_per_game` | 1試合平均1vs1勝利数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `through_pass_count_per_game` | 1試合平均スルーパス数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `foul_count_per_game` | 1試合平均ファウル数 | average / 回/試合 | 未取得 | 未検証 | no | 保存したtotalと重複 |
+| `clean_sheet` | クリーンシート総数 | total / 試合 | 17 | 2026-09-14 | no | 0値クラブを含む20件を返さずstrict completeness不成立 |
+| `red_count` | 退場数 | total / 枚 | 6 | 2026-09-14 | no | 0値クラブを含む20件を返さずstrict completeness不成立 |
+
+最初の取得は `clean_sheet=17` で、次の補完試行は `red_count=6` でそれぞれhard failureとなった。両runは raw HTML と `status=INCOMPLETE` manifestだけを保持し、processed CSVを作っていない。成功したページは再requestせずcacheから正式snapshotへコピーしたため、公式HTTP requestは追加候補29 unique routeに対する29回だった。正式snapshotは27/27 statが20 clubs、同一更新日、重複 `(team_id, stat_name)` なしの場合だけpublishされた。

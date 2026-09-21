@@ -49,7 +49,38 @@ STATS = (
     Stat("distance_per_game", "1試合平均走行距離", "average", "km/試合"),
     Stat("sprint_per_game", "1試合平均スプリント回数", "average", "回/試合"),
 )
-STAT_BY_SLUG = {stat.slug: stat for stat in STATS}
+SUPPLEMENTAL_STATS = (
+    Stat("cross_count", "クロス総数", "total", "回"),
+    Stat("chance_create", "チャンスクリエイト総数", "total", "回"),
+    Stat("suffer_shoot", "被シュート総数", "total", "回"),
+    Stat("clear_count", "クリア総数", "total", "回"),
+    Stat("tackle_count", "タックル総数", "total", "回"),
+    Stat("tackle_rate", "タックル成功率", "percentage", "%"),
+    Stat("block_count", "ブロック総数", "total", "回"),
+    Stat("intercept_count", "インターセプト総数", "total", "回"),
+    Stat("recovery_count", "こぼれ球奪取数", "total", "回"),
+    Stat("expected_goals_against_excl_pk", "被ゴール期待値 ※PKを除く", "unknown", ""),
+    Stat("dribble_count", "ドリブル総数", "total", "回"),
+    Stat("dribble_rate", "ドリブル成功率", "percentage", "%"),
+    Stat("air_battle_win_count", "空中戦勝利数", "total", "回"),
+    Stat("air_battle_win_rate", "空中戦勝率", "percentage", "%"),
+    Stat("one_on_one", "1vs1勝利総数", "total", "回"),
+    Stat("at_sprint_per_game", "1試合平均Atスプリント回数", "average", "回/試合"),
+    Stat("mt_sprint_per_game", "1試合平均Mtスプリント回数", "average", "回/試合"),
+    Stat("dt_sprint_per_game", "1試合平均Dtスプリント回数", "average", "回/試合"),
+    Stat("possession_distance_per_game", "1試合平均ポゼッション時の走行距離", "average", "km/試合"),
+    Stat("possession_sprint_per_game", "1試合平均ポゼッション時のスプリント回数", "average", "回/試合"),
+    Stat("un_possession_distance_per_game", "1試合平均被ポゼッション時の走行距離", "average", "km/試合"),
+    Stat("un_possession_sprint_per_game", "1試合平均被ポゼッション時のスプリント回数", "average", "回/試合"),
+    Stat("pass_rate", "パス成功率", "percentage", "%"),
+    Stat("through_pass_count", "スルーパス総数", "total", "回"),
+    Stat("through_pass_rate", "スルーパス成功率", "percentage", "%"),
+    Stat("foul_count", "ファウル総数", "total", "回"),
+    Stat("yellow_count", "警告数", "total", "枚"),
+)
+RELATED_BASE_SNAPSHOT_ID = "20260920T212008928504Z"
+SUPPLEMENTAL_SOURCE_STATE_DATE = "2026-09-14"
+STAT_BY_SLUG = {stat.slug: stat for stat in (*STATS, *SUPPLEMENTAL_STATS)}
 CSV_FIELDS = (
     "snapshot_id", "retrieved_at", "source_updated_at", "source_updated_date_jst",
     "competition", "season", "team_id", "official_club_id", "official_club_name",
@@ -217,7 +248,8 @@ def _fetch(url: str):
 
 
 def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
-                     schedule_path=SCHEDULE, master=None, now=None, fetch=_fetch, pause=time.sleep):
+                     schedule_path=SCHEDULE, master=None, now=None, fetch=_fetch, pause=time.sleep,
+                     stats=STATS, related_snapshot_id=None, required_source_date=None):
     """Fetch each allowlisted page once; publish only a complete 20 x N snapshot.
 
     A failed run retains its raw pages and INCOMPLETE manifest, never a CSV.
@@ -234,16 +266,23 @@ def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
         raise SnapshotError(f"Snapshot already exists: {snapshot_id}.")
     expected = expected_club_slugs(schedule_path)
     master = master or load_team_master()
-    urls = [BASE_URL.format(slug=stat.slug) for stat in STATS]
+    stats = tuple(stats)
+    if not stats or any(STAT_BY_SLUG.get(stat.slug) != stat for stat in stats):
+        raise SnapshotError("Empty or unknown stat allowlist.")
+    urls = [BASE_URL.format(slug=stat.slug) for stat in stats]
     if len(urls) != len(set(urls)):
         raise SnapshotError("Duplicate stat URL in allowlist.")
     raw_dir.mkdir(parents=True)
     manifest = {"snapshot_id": snapshot_id, "retrieved_at": retrieved_at,
-                "season": SEASON, "requested_stats": [s.slug for s in STATS],
+                "season": SEASON, "requested_stats": [s.slug for s in stats],
                 "status": "INCOMPLETE", "pages": []}
+    if related_snapshot_id is not None:
+        manifest["related_snapshot_id"] = related_snapshot_id
+    if required_source_date is not None:
+        manifest["source_state_date"] = required_source_date
     all_rows = []
     try:
-        for index, (stat, url) in enumerate(zip(STATS, urls)):
+        for index, (stat, url) in enumerate(zip(stats, urls)):
             if index:
                 pause(0.25)
             body, status, final_url, content_type = fetch(url)
@@ -260,6 +299,11 @@ def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
             rows, source_date = parse_page(body, stat=stat, expected_slugs=expected,
                                            master=master,
                                            observed_date=now.astimezone(ZoneInfo("Asia/Tokyo")).date())
+            if required_source_date is not None and source_date != required_source_date:
+                raise SnapshotError(
+                    f"{stat.slug}: source update date {source_date!r} does not match "
+                    f"required state {required_source_date!r}."
+                )
             page_record["parsed_clubs"] = len(rows)
             page_record["source_updated_date_jst"] = source_date
             for row in rows:
@@ -269,7 +313,7 @@ def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
                                  "games_played": "", "stat_name": stat.slug,
                                  "value_type": stat.value_type, "unit": stat.unit,
                                  "source_url": url, "raw_sha256": digest})
-        if len(all_rows) != 20 * len(STATS) or len({(r["team_id"], r["stat_name"]) for r in all_rows}) != len(all_rows):
+        if len(all_rows) != 20 * len(stats) or len({(r["team_id"], r["stat_name"]) for r in all_rows}) != len(all_rows):
             raise SnapshotError("Incomplete or duplicate processed snapshot rows.")
         Path(processed_root).mkdir(parents=True, exist_ok=True)
         with output.open("x", encoding="utf-8", newline="") as handle:
@@ -287,6 +331,16 @@ def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
     return {"snapshot_id": snapshot_id, "raw_dir": raw_dir, "processed_path": output,
             "request_count": len(manifest["pages"]), "row_count": len(all_rows),
             "parsed_clubs_per_stat": {p["stat_name"]: p["parsed_clubs"] for p in manifest["pages"]}}
+
+
+def collect_supplemental_snapshot(**kwargs):
+    """Capture the additional stats only when every page is still at the base source state."""
+    return collect_snapshot(
+        stats=SUPPLEMENTAL_STATS,
+        related_snapshot_id=RELATED_BASE_SNAPSHOT_ID,
+        required_source_date=SUPPLEMENTAL_SOURCE_STATE_DATE,
+        **kwargs,
+    )
 
 
 if __name__ == "__main__":

@@ -8,8 +8,9 @@ from pathlib import Path
 import pytest
 
 from src.collect.jstats_team_snapshots import (
-    BASE_URL, STATS, Stat, SnapshotError, collect_snapshot, expected_club_slugs,
-    parse_page,
+    BASE_URL, RELATED_BASE_SNAPSHOT_ID, STATS, SUPPLEMENTAL_SOURCE_STATE_DATE,
+    SUPPLEMENTAL_STATS, Stat, SnapshotError, collect_snapshot,
+    collect_supplemental_snapshot, expected_club_slugs, parse_page,
 )
 from src.collect.teams import load_team_master
 
@@ -145,6 +146,53 @@ def test_source_update_unknown_is_not_retrieval_time():
     assert len(rows) == 20 and date is None
 
 
+def test_supplemental_snapshot_is_complete_related_and_same_source_state(tmp_path):
+    calls = []
+
+    def fetch(url):
+        calls.append(url)
+        stat = next(s for s in SUPPLEMENTAL_STATS if BASE_URL.format(slug=s.slug) == url)
+        return fixture_html(stat), 200, url, "text/html; charset=utf-8"
+
+    result = collect_supplemental_snapshot(
+        raw_root=tmp_path / "raw", processed_root=tmp_path / "processed",
+        now=datetime(2026, 9, 21, 2, 3, 4, tzinfo=timezone.utc),
+        fetch=fetch, pause=lambda _: None,
+    )
+    assert result["request_count"] == len(SUPPLEMENTAL_STATS) == len(set(calls))
+    assert result["row_count"] == 20 * len(SUPPLEMENTAL_STATS)
+    assert set(result["parsed_clubs_per_stat"].values()) == {20}
+    manifest = json.loads((result["raw_dir"] / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "COMPLETE"
+    assert manifest["related_snapshot_id"] == RELATED_BASE_SNAPSHOT_ID
+    assert manifest["source_state_date"] == SUPPLEMENTAL_SOURCE_STATE_DATE
+    assert {page["source_updated_date_jst"] for page in manifest["pages"]} == {
+        SUPPLEMENTAL_SOURCE_STATE_DATE
+    }
+
+
+def test_supplemental_snapshot_rejects_mixed_update_state(tmp_path):
+    calls = []
+
+    def fetch(url):
+        calls.append(url)
+        stat = next(s for s in SUPPLEMENTAL_STATS if BASE_URL.format(slug=s.slug) == url)
+        raw = fixture_html(stat)
+        if len(calls) == 2:
+            raw = raw.replace(b"2026/9/14", b"2026/9/21")
+        return raw, 200, url, "text/html; charset=utf-8"
+
+    with pytest.raises(SnapshotError, match="does not match required state"):
+        collect_supplemental_snapshot(
+            raw_root=tmp_path / "raw", processed_root=tmp_path / "processed",
+            now=datetime(2026, 9, 21, 2, 3, 4, tzinfo=timezone.utc),
+            fetch=fetch, pause=lambda _: None,
+        )
+    assert len(calls) == 2
+    assert not list((tmp_path / "processed").glob("*.csv")) \
+        if (tmp_path / "processed").exists() else True
+
+
 def test_allowlist_is_fixed_and_contains_no_model_or_2025_routes():
     assert {s.slug for s in STATS} == {
         "shoot", "shoot_on_target", "suffer_shoot_on_target", "ball_rate",
@@ -152,3 +200,7 @@ def test_allowlist_is_fixed_and_contains_no_model_or_2025_routes():
         "distance_per_game", "sprint_per_game",
     }
     assert all("/2026-27/" in BASE_URL.format(slug=s.slug) for s in STATS)
+    assert len(SUPPLEMENTAL_STATS) == 27
+    assert not ({s.slug for s in STATS} & {s.slug for s in SUPPLEMENTAL_STATS})
+    assert len({s.slug for s in SUPPLEMENTAL_STATS}) == len(SUPPLEMENTAL_STATS)
+    assert all("/2026-27/" in BASE_URL.format(slug=s.slug) for s in SUPPLEMENTAL_STATS)
