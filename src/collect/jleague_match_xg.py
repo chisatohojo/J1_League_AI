@@ -31,13 +31,80 @@ USER_AGENT = "J1-League-AI official match xG collector/1.0"
 DEFAULT_SEASON = 2025
 DEFAULT_INTERVAL = 0.25
 
+LEGACY_FULL_TIME_SUMMARY = "legacy_full_time_summary"
+TWO_WIDGET_SUMMARY = "two_widget_summary"
+AUTO_SUMMARY = "auto"
+
+
+@dataclass(frozen=True)
+class CompetitionConfig:
+    key: str
+    output_season: str
+    page_year: int
+    official_name: str
+    schedule_urls: tuple[str, ...]
+    reference_path: Path
+    raw_dir: Path
+    output_path: Path
+    expected_matches: int
+    scheduled_matches: int
+    source_format: str
+    allow_extra_time_source_score: bool = False
+
+
+def _schedule_url(start: str, end: str) -> str:
+    return (
+        f"{BASE_URL}/j1/match/search-list/?category=j1"
+        f"&startdate={start}&enddate={end}&period=custom"
+    )
+
+
+COMPETITIONS = {
+    "2025_j1": CompetitionConfig(
+        key="j1_2025", output_season="2025", page_year=2025,
+        official_name="明治安田Ｊ１リーグ",
+        schedule_urls=tuple(
+            _schedule_url(f"2025-{start}", f"2025-{end}")
+            for start, end in (("01-01", "06-30"), ("07-01", "12-31"))
+        ),
+        reference_path=ROOT / "data/processed/jleague/2025_matches_probe.csv",
+        raw_dir=ROOT / "data/raw/jleague_match_xg/2025",
+        output_path=ROOT / "data/processed/jleague_match_xg/2025_j1_match_xg.csv",
+        expected_matches=380, scheduled_matches=380,
+        source_format=LEGACY_FULL_TIME_SUMMARY,
+    ),
+    "2026_hyakunen": CompetitionConfig(
+        key="j1_hyakunen_2026", output_season="2026", page_year=2026,
+        official_name="明治安田Ｊ１百年構想リーグ",
+        schedule_urls=(_schedule_url("2026-01-01", "2026-06-30"),),
+        reference_path=ROOT / "data/processed/jleague/2026_hyakunen/matches.csv",
+        raw_dir=ROOT / "data/raw/jleague_match_xg/2026_hyakunen",
+        output_path=ROOT / "data/processed/jleague_match_xg/2026_hyakunen_j1_match_xg.csv",
+        expected_matches=200, scheduled_matches=200,
+        source_format=LEGACY_FULL_TIME_SUMMARY,
+        allow_extra_time_source_score=True,
+    ),
+    "2026_27_j1": CompetitionConfig(
+        key="j1_2026_2027", output_season="2026/27", page_year=2026,
+        official_name="明治安田Ｊ１リーグ",
+        schedule_urls=(_schedule_url("2026-07-01", "2026-09-21"),),
+        reference_path=ROOT / "data/processed/jleague/2026_27/completed_matches.csv",
+        raw_dir=ROOT / "data/raw/jleague_match_xg/2026_27",
+        output_path=ROOT / "data/processed/jleague_match_xg/2026_27_j1_match_xg.csv",
+        expected_matches=80, scheduled_matches=380,
+        source_format=TWO_WIDGET_SUMMARY,
+    ),
+}
+
 OUTPUT_COLUMNS = (
-    "season", "match_id", "match_date",
+    "competition", "season", "match_id", "match_date",
     "home_team_id", "away_team_id", "home_team_name", "away_team_name",
     "home_score", "away_score", "home_xg", "away_xg",
     "home_shots", "away_shots", "home_shots_on_target",
     "away_shots_on_target", "source_match_path_id", "source_url",
-    "retrieved_at", "raw_full_time_summary",
+    "source_format", "source_home_score", "source_away_score",
+    "score_scope_status", "xg_time_scope", "retrieved_at",
+    "raw_full_time_summary",
 )
 
 
@@ -53,6 +120,7 @@ class SummaryStats:
     home_shots_on_target: int | None = None
     away_shots_on_target: int | None = None
     raw_summary: str | None = None
+    source_format: str | None = None
 
 
 @dataclass(frozen=True)
@@ -86,10 +154,42 @@ def commentary_url(season: int, path_id: str) -> str:
     return f"{BASE_URL}/match/j1/{season}/{path_id}/live-commentary/"
 
 
-def parse_schedule_detail_hrefs(source: str, *, season: int) -> tuple[str, ...]:
-    """Read only actual official detailHref values; never generate path IDs."""
-    pattern = re.compile(rf"/match/j1/{season}/([0-9]{{6}})")
-    ids = sorted(set(pattern.findall(source)))
+def parse_schedule_detail_hrefs(
+    source: str,
+    *,
+    season: int,
+    competition_name: str | None = None,
+    completed_only: bool = False,
+) -> tuple[str, ...]:
+    """Read actual detailHref values, optionally under an exact competition.
+
+    Filtered discovery reads the observed RSC grouping: one
+    ``leagueDisplayName`` followed by match records containing adjacent
+    ``state`` and ``detailHref`` fields.  It never generates path IDs.
+    """
+    if competition_name is None and not completed_only:
+        pattern = re.compile(rf"/match/j1/{season}/([0-9]{{6}})")
+        ids = sorted(set(pattern.findall(source)))
+    else:
+        normalized = source.replace('\\"', '"')
+        groups = list(re.finditer(r'"leagueDisplayName":"([^"\\]+)"', normalized))
+        observed: dict[str, tuple[str, str]] = {}
+        for index, group in enumerate(groups):
+            end = groups[index + 1].start() if index + 1 < len(groups) else len(normalized)
+            name = group.group(1)
+            for state, path_id in re.findall(
+                rf'"state":"([^"\\]+)","detailHref":"/match/j1/{season}/([0-9]{{6}})"',
+                normalized[group.end():end],
+            ):
+                identity = (name, state)
+                if path_id in observed and observed[path_id] != identity:
+                    raise ValueError(f"Conflicting official schedule identity for {path_id}.")
+                observed[path_id] = identity
+        ids = sorted(
+            path_id for path_id, (name, state) in observed.items()
+            if (competition_name is None or name == competition_name)
+            and (not completed_only or state == "game-over")
+        )
     if not ids:
         raise ValueError(f"No official J1 detailHref found for {season}.")
     return tuple(ids)
@@ -153,7 +253,7 @@ def parse_full_time_summary(source: str) -> SummaryStats:
         for value in re.findall(r"この試合のシュート：[^\"\\<]+", source)
     }
     if not candidates:
-        return SummaryStats(status="missing")
+        return SummaryStats(status="missing", source_format=LEGACY_FULL_TIME_SUMMARY)
     if len(candidates) != 1:
         raise ValueError("Multiple conflicting Full Time summaries.")
     raw_summary = candidates.pop()
@@ -168,11 +268,14 @@ def parse_full_time_summary(source: str) -> SummaryStats:
         if len(segments) >= 3 else []
     )
     if len(xg) == 0:
-        return SummaryStats(status="missing", raw_summary=raw_summary)
+        return SummaryStats(
+            status="missing", raw_summary=raw_summary,
+            source_format=LEGACY_FULL_TIME_SUMMARY,
+        )
     if len(xg) == 1:
         return SummaryStats(
             status="partial", home_name=xg[0][0], home_xg=xg[0][1],
-            raw_summary=raw_summary,
+            raw_summary=raw_summary, source_format=LEGACY_FULL_TIME_SUMMARY,
         )
     if len(xg) != 2:
         raise ValueError("Full Time xG must have at most two sides.")
@@ -186,8 +289,98 @@ def parse_full_time_summary(source: str) -> SummaryStats:
         home_xg=xg[0][1], away_xg=xg[1][1],
         home_shots=shots[0][1], away_shots=shots[1][1],
         home_shots_on_target=on_target[0][1], away_shots_on_target=on_target[1][1],
-        raw_summary=raw_summary,
+        raw_summary=raw_summary, source_format=LEGACY_FULL_TIME_SUMMARY,
     )
+
+
+def _single_value(raw_summary: str, *, label: str, integer: bool, suffix: str = ""):
+    segments = raw_summary.split("、")
+    selected = [segment for segment in segments if segment.startswith(label)]
+    if len(selected) != 1:
+        return None
+    raw = selected[0][len(label):]
+    if not raw:
+        return None
+    if suffix:
+        if not raw.endswith(suffix):
+            raise ValueError(f"Missing {suffix!r} suffix in one-sided Full Time summary.")
+        raw = raw[: -len(suffix)]
+    return _integer(raw, field=label) if integer else _decimal(raw, field=label)
+
+
+_TWO_WIDGET = re.compile(
+    r'"visual":"[^"\\]*:(awayTeam|homeTeam):teamLogo"'
+    r'.{0,1800}?"children":"(この試合のシュート：[^"\\<]+)"',
+    re.DOTALL,
+)
+
+
+def parse_two_widget_summary(source: str) -> SummaryStats:
+    """Parse the observed 2026/27 home/away Full Time widget pair.
+
+    Values are bound through each widget's explicit ``homeTeam`` or
+    ``awayTeam`` logo reference.  Page order alone is never used.
+    """
+    normalized = html_module.unescape(source).replace('\\"', '"')
+    by_side: dict[str, str] = {}
+    for side, raw_summary in _TWO_WIDGET.findall(normalized):
+        raw_summary = raw_summary.strip()
+        if side in by_side and by_side[side] != raw_summary:
+            raise ValueError(f"Conflicting {side} Full Time widgets.")
+        by_side[side] = raw_summary
+    if not by_side:
+        return SummaryStats(status="missing", source_format=TWO_WIDGET_SUMMARY)
+
+    parsed = {}
+    for side, raw_summary in by_side.items():
+        parsed[side] = {
+            "shots": _single_value(
+                raw_summary, label="この試合のシュート：", integer=True, suffix="本"
+            ),
+            "sot": _single_value(raw_summary, label="枠内シュート：", integer=True, suffix="本"),
+            "xg": _single_value(raw_summary, label="ゴール期待値：", integer=False),
+        }
+    present_xg = sum(values["xg"] is not None for values in parsed.values())
+    raw = json.dumps(
+        {side: by_side[side] for side in ("homeTeam", "awayTeam") if side in by_side},
+        ensure_ascii=False, separators=(",", ":"),
+    )
+    if present_xg == 0:
+        return SummaryStats(
+            status="missing", raw_summary=raw, source_format=TWO_WIDGET_SUMMARY,
+        )
+    if present_xg == 1:
+        side = next(side for side, values in parsed.items() if values["xg"] is not None)
+        kwargs = {"home_xg" if side == "homeTeam" else "away_xg": parsed[side]["xg"]}
+        return SummaryStats(
+            status="partial", raw_summary=raw, source_format=TWO_WIDGET_SUMMARY,
+            **kwargs,
+        )
+    if set(parsed) != {"homeTeam", "awayTeam"}:
+        raise ValueError("Complete two-widget xG requires one explicit widget per side.")
+    if any(values["shots"] is None or values["sot"] is None for values in parsed.values()):
+        raise ValueError("Complete two-widget xG also requires shots and SOT for both sides.")
+    return SummaryStats(
+        status="complete",
+        home_xg=parsed["homeTeam"]["xg"], away_xg=parsed["awayTeam"]["xg"],
+        home_shots=parsed["homeTeam"]["shots"], away_shots=parsed["awayTeam"]["shots"],
+        home_shots_on_target=parsed["homeTeam"]["sot"],
+        away_shots_on_target=parsed["awayTeam"]["sot"],
+        raw_summary=raw, source_format=TWO_WIDGET_SUMMARY,
+    )
+
+
+def parse_match_summary(source: str, *, source_format: str = AUTO_SUMMARY) -> SummaryStats:
+    if source_format == LEGACY_FULL_TIME_SUMMARY:
+        return parse_full_time_summary(source)
+    if source_format == TWO_WIDGET_SUMMARY:
+        return parse_two_widget_summary(source)
+    if source_format != AUTO_SUMMARY:
+        raise ValueError(f"Unknown Full Time source format: {source_format!r}.")
+    two_widget = parse_two_widget_summary(source)
+    if two_widget.status != "missing":
+        return two_widget
+    return parse_full_time_summary(source)
 
 
 _IDENTITY = re.compile(
@@ -207,6 +400,7 @@ def parse_commentary_page(
     source_match_path_id: str,
     source_url: str,
     retrieved_at: str,
+    source_format: str = LEGACY_FULL_TIME_SUMMARY,
 ) -> CommentaryMatch:
     expected_url = commentary_url(season, source_match_path_id)
     if source_url != expected_url:
@@ -222,9 +416,10 @@ def parse_commentary_page(
     away_full, away_short, away_score, match_date, home_full, home_short, home_score = identities.pop()
     if not match_date.startswith(f"{season}-"):
         raise ValueError("Commentary match date is outside requested season.")
-    summary = parse_full_time_summary(source)
+    summary = parse_match_summary(source, source_format=source_format)
     if summary.status == "complete" and (
-        summary.home_name != home_short or summary.away_name != away_short
+        summary.source_format == LEGACY_FULL_TIME_SUMMARY
+        and (summary.home_name != home_short or summary.away_name != away_short)
     ):
         raise ValueError("Full Time summary teams do not match page identity.")
     return CommentaryMatch(
@@ -254,6 +449,10 @@ def build_processed_rows(
     reference_rows: list[dict[str, str]],
     matches: list[CommentaryMatch],
     master: TeamMaster,
+    *,
+    competition: str | None = None,
+    output_season: str | None = None,
+    allow_extra_time_source_score: bool = False,
 ) -> list[dict[str, object]]:
     """Strictly join official page identities to the existing league dataset."""
     required = {
@@ -288,9 +487,29 @@ def build_processed_rows(
         expected_away = master.resolve_team_id(reference["away_team"], source="jleague_data_site", on=reference["match_date"])
         if (home_id, away_id) != (expected_home, expected_away):
             raise ValueError("Official commentary TeamMaster identity mismatch.")
-        if (match.home_score, match.away_score) != (int(reference["home_score"]), int(reference["away_score"])):
-            raise ValueError("Official commentary score differs from reference J1 data.")
-        expected_result = 1 if match.home_score == match.away_score else 2 if match.home_score > match.away_score else 0
+        regulation_score = (int(reference["home_score"]), int(reference["away_score"]))
+        source_score = (match.home_score, match.away_score)
+        score_scope_status = "REGULATION_MATCH"
+        xg_time_scope = "REGULATION"
+        if source_score != regulation_score:
+            extra_time_score = (
+                reference.get("home_extra_time_score", ""),
+                reference.get("away_extra_time_score", ""),
+            )
+            safely_explained = (
+                allow_extra_time_source_score
+                and reference.get("extra_time_played") == "True"
+                and all(value != "" for value in extra_time_score)
+                and source_score == tuple(int(value) for value in extra_time_score)
+            )
+            if not safely_explained:
+                raise ValueError("Official commentary score differs from reference J1 data.")
+            score_scope_status = "EXTRA_TIME_SOURCE_SCORE"
+            xg_time_scope = "OFFICIAL_FINAL_SCOPE_UNRESOLVED"
+        expected_result = (
+            1 if regulation_score[0] == regulation_score[1]
+            else 2 if regulation_score[0] > regulation_score[1] else 0
+        )
         if expected_result != int(reference["result"]):
             raise ValueError("Reference result is inconsistent with score.")
         if match.summary.status != "complete":
@@ -299,17 +518,24 @@ def build_processed_rows(
             raise ValueError("Multiple commentary pages joined to one reference match.")
         used_reference_ids.add(reference["match_id"])
         output.append({
-            "season": match.season, "match_id": reference["match_id"],
+            "competition": competition or f"j1_{match.season}",
+            "season": output_season or str(match.season),
+            "match_id": reference["match_id"],
             "match_date": match.match_date, "home_team_id": home_id,
             "away_team_id": away_id, "home_team_name": match.home_full_name,
             "away_team_name": match.away_full_name,
-            "home_score": match.home_score, "away_score": match.away_score,
+            "home_score": regulation_score[0], "away_score": regulation_score[1],
             "home_xg": str(match.summary.home_xg), "away_xg": str(match.summary.away_xg),
             "home_shots": match.summary.home_shots, "away_shots": match.summary.away_shots,
             "home_shots_on_target": match.summary.home_shots_on_target,
             "away_shots_on_target": match.summary.away_shots_on_target,
             "source_match_path_id": match.source_match_path_id,
-            "source_url": match.source_url, "retrieved_at": match.retrieved_at,
+            "source_url": match.source_url,
+            "source_format": match.summary.source_format,
+            "source_home_score": source_score[0], "source_away_score": source_score[1],
+            "score_scope_status": score_scope_status,
+            "xg_time_scope": xg_time_scope,
+            "retrieved_at": match.retrieved_at,
             "raw_full_time_summary": match.summary.raw_summary,
         })
     output.sort(key=lambda row: (row["match_date"], str(row["match_id"])))
@@ -386,6 +612,7 @@ def _write_csv(path: Path, rows: list[dict[str, object]]) -> None:
 def collect_jleague_match_xg(
     *,
     season: int = DEFAULT_SEASON,
+    competition_name: str | None = None,
     reference_path: str | Path | None = None,
     raw_dir: str | Path | None = None,
     output_path: str | Path | None = None,
@@ -393,23 +620,54 @@ def collect_jleague_match_xg(
     fetcher=_default_fetch,
     sleep=time.sleep,
 ) -> tuple[list[dict[str, object]], dict]:
-    reference_path = Path(reference_path or ROOT / f"data/processed/jleague/{season}_matches_probe.csv")
-    raw_dir = Path(raw_dir or ROOT / f"data/raw/jleague_match_xg/{season}")
-    output_path = Path(output_path or ROOT / f"data/processed/jleague_match_xg/{season}_j1_match_xg.csv")
+    config = COMPETITIONS.get(competition_name) if competition_name else None
+    if competition_name and config is None:
+        raise ValueError(f"Unknown competition configuration: {competition_name!r}.")
+    if config:
+        season = config.page_year
+        schedule_source_urls = config.schedule_urls
+        official_name = config.official_name
+        source_format = config.source_format
+        expected_config = config.expected_matches
+        scheduled_matches = config.scheduled_matches
+        output_season = config.output_season
+        competition_key = config.key
+        allow_extra_time_source_score = config.allow_extra_time_source_score
+        reference_path = Path(reference_path or config.reference_path)
+        raw_dir = Path(raw_dir or config.raw_dir)
+        output_path = Path(output_path or config.output_path)
+    else:
+        schedule_source_urls = schedule_urls(season)
+        official_name = None
+        source_format = LEGACY_FULL_TIME_SUMMARY
+        expected_config = None
+        scheduled_matches = None
+        output_season = str(season)
+        competition_key = f"j1_{season}"
+        allow_extra_time_source_score = False
+        reference_path = Path(reference_path or ROOT / f"data/processed/jleague/{season}_matches_probe.csv")
+        raw_dir = Path(raw_dir or ROOT / f"data/raw/jleague_match_xg/{season}")
+        output_path = Path(output_path or ROOT / f"data/processed/jleague_match_xg/{season}_j1_match_xg.csv")
     reference = _read_csv(reference_path)
     expected = len(reference)
     if expected == 0:
         raise ValueError("Reference J1 dataset is empty.")
+    if expected_config is not None and expected != expected_config:
+        raise ValueError(f"Configured reference count mismatch: {expected} != {expected_config}.")
     cache_hits = requests = 0
     source_urls = []
     path_ids = set()
-    for index, url in enumerate(schedule_urls(season), 1):
+    for index, url in enumerate(schedule_source_urls, 1):
         body, _, hit = fetch_cached(
             url, raw_dir / f"schedule_{index}.html", fetcher=fetcher,
             interval=interval, sleep=sleep,
         )
         cache_hits += int(hit); requests += int(not hit); source_urls.append(url)
-        path_ids.update(parse_schedule_detail_hrefs(body.decode("utf-8"), season=season))
+        path_ids.update(parse_schedule_detail_hrefs(
+            body.decode("utf-8"), season=season,
+            competition_name=official_name,
+            completed_only=config is not None,
+        ))
     if len(path_ids) != expected:
         raise ValueError(f"Official schedule/reference count mismatch: {len(path_ids)} != {expected}.")
     parsed, partial, missing, identity_mismatch = [], 0, 0, 0
@@ -425,6 +683,7 @@ def collect_jleague_match_xg(
                 body.decode("utf-8"), season=season,
                 source_match_path_id=path_id, source_url=url,
                 retrieved_at=metadata["retrieved_at"],
+                source_format=source_format,
             )
         except ValueError:
             identity_mismatch += 1
@@ -433,18 +692,35 @@ def collect_jleague_match_xg(
         partial += int(match.summary.status == "partial")
         missing += int(match.summary.status == "missing")
     master = load_team_master()
-    rows = build_processed_rows(reference, parsed, master)
+    rows = build_processed_rows(
+        reference, parsed, master, competition=competition_key,
+        output_season=output_season,
+        allow_extra_time_source_score=allow_extra_time_source_score,
+    )
     complete = sum(match.summary.status == "complete" for match in parsed)
+    source_format_counts = {}
+    for match in parsed:
+        key = match.summary.source_format or "unknown"
+        source_format_counts[key] = source_format_counts.get(key, 0) + 1
+    score_scope_mismatch = sum(
+        row["score_scope_status"] == "EXTRA_TIME_SOURCE_SCORE" for row in rows
+    )
     manifest = {
-        "season": season,
+        "competition": competition_key,
+        "season": output_season,
         "retrieved_at": datetime.now(timezone.utc).isoformat(),
         "expected_matches": expected,
+        "completed_matches": expected,
+        "scheduled_matches": scheduled_matches or expected,
+        "future_excluded": (scheduled_matches or expected) - expected,
         "downloaded": requests,
         "cache_hits": cache_hits,
         "parse_success": complete,
         "partial": partial,
         "missing": missing,
         "identity_mismatch": identity_mismatch,
+        "score_scope_mismatch": score_scope_mismatch,
+        "source_format_counts": source_format_counts,
         "source_urls": source_urls,
         "request_count": requests,
         "processed_rows": len(rows),
@@ -468,13 +744,15 @@ def collect_jleague_match_xg(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--season", type=int, default=DEFAULT_SEASON)
+    parser.add_argument("--competition", choices=sorted(COMPETITIONS))
     parser.add_argument("--reference-path")
     parser.add_argument("--raw-dir")
     parser.add_argument("--output-path")
     parser.add_argument("--interval", type=float, default=DEFAULT_INTERVAL)
     args = parser.parse_args()
     rows, manifest = collect_jleague_match_xg(
-        season=args.season, reference_path=args.reference_path,
+        season=args.season, competition_name=args.competition,
+        reference_path=args.reference_path,
         raw_dir=args.raw_dir, output_path=args.output_path,
         interval=args.interval,
     )

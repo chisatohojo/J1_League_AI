@@ -75,11 +75,15 @@ The full scan was started only after opening, middle, and late samples from each
 | 100 Year Vision | `020601` | 2026-02-06 | 横浜FM vs 町田 | 1.96-0.53 | 15-8 | 4-4 |
 | 100 Year Vision | `041201` | 2026-04-12 | 浦和 vs 東京Ｖ | 1.44-1.17 | 17-7 | 4-1 |
 | 100 Year Vision | `060611` | 2026-06-06 | 川崎Ｆ vs 広島 | 0.60-1.49 | 11-20 | 5-7 |
-| ordinary J1 | `080701` | 2026-08-07 | 横浜FM vs 鹿島 | 2.97-1.46 | 19-10 | 5-4 |
-| ordinary J1 | `090216` | 2026-09-02 | 水戸 vs 鹿島 | 1.06-1.41 | 14-7 | 5-5 |
-| ordinary J1 | `092002` | 2026-09-20 | Ｇ大阪 vs 神戸 | 1.47-2.13 | 14-16 | 3-5 |
+| ordinary J1 | `080701` | 2026-08-07 | 横浜FM vs 鹿島 | 1.46-2.97 | 10-19 | 4-5 |
+| ordinary J1 | `090216` | 2026-09-02 | 水戸 vs 鹿島 | 1.41-1.06 | 7-14 | 5-5 |
+| ordinary J1 | `092002` | 2026-09-20 | Ｇ大阪 vs 神戸 | 2.13-1.47 | 16-14 | 5-3 |
 
 The values above are source sanity checks, not model inputs or performance results.
+
+The ordinary-J1 values are assigned using the explicit RSC `homeTeam`/`awayTeam`
+widget markers, not the sentences' page-wide occurrence order. This binding was
+confirmed during the subsequent production implementation.
 
 ## Source-format compatibility with the 2025 collector
 
@@ -141,3 +145,11 @@ Final classifications:
 
 - 2026 J1 100 Year Vision League: **A**, with an explicit extra-time scope flag/limitation.
 - 2026/27 ordinary J1 completed matches: **A**, after adding the observed two-widget parser.
+
+## Post-audit implementation status
+
+The subsequent production task implemented the competition-aware collector and
+the explicit two-widget side binding. It materialized 200 and 80 complete rows
+in separate cache/output namespaces. The audit itself remains a record of the
+pre-implementation source investigation; production details are documented in
+`docs/JLEAGUE_MATCH_XG_DATASET.md`.

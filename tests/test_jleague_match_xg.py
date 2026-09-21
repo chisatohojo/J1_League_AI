@@ -4,12 +4,18 @@ from pathlib import Path
 import pytest
 
 from src.collect.jleague_match_xg import (
+    AUTO_SUMMARY,
+    COMPETITIONS,
+    LEGACY_FULL_TIME_SUMMARY,
+    TWO_WIDGET_SUMMARY,
     build_processed_rows,
     commentary_url,
     fetch_cached,
     parse_commentary_page,
     parse_full_time_summary,
+    parse_match_summary,
     parse_schedule_detail_hrefs,
+    parse_two_widget_summary,
 )
 from src.collect.teams import TeamAlias, TeamMaster
 
@@ -24,13 +30,16 @@ SUMMARY = (
 )
 
 
-def _page(*, date_value="2025-02-14", home_short="Ｇ大阪", summary=SUMMARY):
+def _page(
+    *, date_value="2025-02-14", home_short="Ｇ大阪", summary=SUMMARY,
+    home_score=2, away_score=5,
+):
     payload = (
         r'\"awayTeam\":{\"name\":\"セレッソ大阪\",\"nameS\":\"Ｃ大阪\",'
-        r'\"score\":5,\"playerScoreList\":[]},'
+        rf'\"score\":{away_score},\"playerScoreList\":[]}},'
         rf'\"date\":\"$D{date_value}T10:03:00.000Z\",'
         rf'\"homeTeam\":{{\"name\":\"ガンバ大阪\",\"nameS\":\"{home_short}\",'
-        r'\"score\":2,\"playerScoreList\":[]}'
+        rf'\"score\":{home_score},\"playerScoreList\":[]}}'
     )
     return (
         f'<html><head><link rel="canonical" href="{URL}"/></head>'
@@ -72,6 +81,36 @@ def test_full_time_summary_parses_xg_shots_and_sot():
     assert (str(result.home_xg), str(result.away_xg)) == ("1.43", "1.33")
     assert (result.home_shots, result.away_shots) == (16, 12)
     assert (result.home_shots_on_target, result.away_shots_on_target) == (5, 7)
+    assert result.source_format == LEGACY_FULL_TIME_SUMMARY
+
+
+def _two_widget_source(home=SUMMARY, away=SUMMARY.replace("１６", "９").replace("１２", "８")):
+    home = "この試合のシュート：１６本、枠内シュート：５本、ゴール期待値：１．４３" if home == SUMMARY else home
+    away = "この試合のシュート：９本、枠内シュート：３本、ゴール期待値：０．８０" if "Ｇ大阪" in away else away
+    return (
+        r'\"visual\":\"$x:awayTeam:teamLogo\",\"children\":\"' + away + r'\" '
+        r'\"visual\":\"$x:homeTeam:teamLogo\",\"children\":\"' + home + r'\"'
+    )
+
+
+def test_two_widget_summary_binds_explicit_home_and_away_markers():
+    result = parse_two_widget_summary(_two_widget_source())
+    assert result.status == "complete"
+    assert result.source_format == TWO_WIDGET_SUMMARY
+    assert (str(result.home_xg), str(result.away_xg)) == ("1.43", "0.80")
+    assert (result.home_shots, result.away_shots) == (16, 9)
+    assert (result.home_shots_on_target, result.away_shots_on_target) == (5, 3)
+
+
+def test_summary_format_detection_is_explicit_and_deterministic():
+    assert parse_match_summary(SUMMARY, source_format=AUTO_SUMMARY).source_format == LEGACY_FULL_TIME_SUMMARY
+    assert parse_match_summary(_two_widget_source(), source_format=AUTO_SUMMARY).source_format == TWO_WIDGET_SUMMARY
+
+
+def test_malformed_two_widget_summary_is_rejected():
+    malformed = _two_widget_source(home="この試合のシュート：１６本、ゴール期待値：１．４３")
+    with pytest.raises(ValueError, match="shots and SOT"):
+        parse_two_widget_summary(malformed)
 
 
 def test_ui_translation_label_alone_is_missing():
@@ -102,6 +141,24 @@ def test_schedule_uses_only_observed_detail_hrefs():
     assert parse_schedule_detail_hrefs(source, season=2025) == ("021401", "021502")
 
 
+def test_schedule_filters_exact_competition_and_excludes_future():
+    source = (
+        r'\"leagueDisplayName\":\"明治安田Ｊ１百年構想リーグ\",'
+        r'\"state\":\"game-over\",\"detailHref\":\"/match/j1/2026/020601\" '
+        r'\"leagueDisplayName\":\"明治安田Ｊ１リーグ\",'
+        r'\"state\":\"game-over\",\"detailHref\":\"/match/j1/2026/080701\" '
+        r'\"state\":\"before-game\",\"detailHref\":\"/match/j1/2026/092701\"'
+    )
+    assert parse_schedule_detail_hrefs(
+        source, season=2026, competition_name="明治安田Ｊ１百年構想リーグ",
+        completed_only=True,
+    ) == ("020601",)
+    assert parse_schedule_detail_hrefs(
+        source, season=2026, competition_name="明治安田Ｊ１リーグ",
+        completed_only=True,
+    ) == ("080701",)
+
+
 def test_page_identity_and_team_master_exact_resolution():
     match = _match()
     rows = build_processed_rows(_reference(), [match], _master())
@@ -109,6 +166,27 @@ def test_page_identity_and_team_master_exact_resolution():
     assert rows[0]["match_id"] == "31361"
     assert rows[0]["home_team_id"] == "team_0005"
     assert rows[0]["away_team_id"] == "team_0002"
+
+
+def test_extra_time_source_score_preserves_regulation_and_flags_xg_scope():
+    match = _match(_page(home_score=2, away_score=1))
+    reference = [{
+        **_reference()[0], "home_score": "0", "away_score": "0", "result": "1",
+        "extra_time_played": "True", "home_extra_time_score": "2",
+        "away_extra_time_score": "1",
+    }]
+    rows = build_processed_rows(
+        reference, [match], _master(), allow_extra_time_source_score=True,
+    )
+    assert (rows[0]["home_score"], rows[0]["away_score"]) == (0, 0)
+    assert (rows[0]["source_home_score"], rows[0]["source_away_score"]) == (2, 1)
+    assert rows[0]["score_scope_status"] == "EXTRA_TIME_SOURCE_SCORE"
+    assert rows[0]["xg_time_scope"] == "OFFICIAL_FINAL_SCOPE_UNRESOLVED"
+
+
+def test_unexplained_source_score_mismatch_is_rejected():
+    with pytest.raises(ValueError, match="score differs"):
+        build_processed_rows(_reference(), [_match(_page(home_score=3))], _master())
 
 
 def test_page_identity_mismatch_is_rejected():
@@ -147,6 +225,15 @@ def test_raw_cache_is_reused_without_network(tmp_path):
     assert first[2] is False and second[2] is True
     assert second[0] == b"official"
     assert calls == [URL]
+
+
+def test_competition_cache_namespaces_are_separate():
+    legacy = COMPETITIONS["2025_j1"]
+    hyakunen = COMPETITIONS["2026_hyakunen"]
+    ordinary = COMPETITIONS["2026_27_j1"]
+    assert len({legacy.raw_dir, hyakunen.raw_dir, ordinary.raw_dir}) == 3
+    assert hyakunen.source_format == LEGACY_FULL_TIME_SUMMARY
+    assert ordinary.source_format == TWO_WIDGET_SUMMARY
 
 
 def test_collector_has_no_model_dependency():
