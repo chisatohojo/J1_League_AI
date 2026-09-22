@@ -49,10 +49,13 @@ required nor accepted by the feature builder.
 - Neither scaler nor Logistic model is refitted.
 - If either team's five-match xG history is unavailable, X0 and raw X1 are
   null and operational probabilities must equal the frozen Model A vector.
-- No persisted Model A artifact currently exists in this repository. A run
-  that actually needs fallback therefore hard-fails unless an externally
-  validated frozen Model A probability provider is supplied. Reconstructing
-  Model A by refitting is explicitly prohibited.
+- Model A is loaded from
+  `models/model_a/operational_champion_20260922_v1/`. Its checksum manifest,
+  metadata, feature order, class order, and serialized width are validated
+  before prediction. Fallback invokes only the persisted scaler transform and
+  `predict_proba`; prediction-time fit/refit remains prohibited.
+- Missing or corrupted Model A artifacts are a hard failure even when the
+  current target batch happens to have complete xG.
 
 The class order is always `0=Away, 1=Draw, 2=Home`. `predicted_class` is plain
 argmax; no draw threshold or probability adjustment exists.
@@ -67,6 +70,9 @@ Before probability generation, the pipeline validates:
 - X0/X1 ordered feature lists;
 - class order and serialized feature widths;
 - `future_rows_used == 0`.
+
+The same preflight separately validates Model A's 3,588-row ordinary-J1
+training contract, `elo_diff`-only feature list, hashes, and class order.
 
 Any discrepancy stops the run before output.
 

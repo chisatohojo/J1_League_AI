@@ -39,6 +39,12 @@ from src.modeling.xg_challenger_artifact import (
     X0_FEATURES,
     X1_FEATURES,
 )
+from src.modeling.model_a_artifact import (
+    CLASS_ORDER as MODEL_A_CLASS_ORDER,
+    FEATURES as MODEL_A_FEATURES,
+    MODEL_VERSION as MODEL_A_VERSION,
+    OUTPUT_DIR as MODEL_A_ARTIFACT_DIR,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -80,6 +86,19 @@ class FrozenArtifacts:
     x0_model: object
     x1_scaler: object
     x1_model: object
+
+
+@dataclass(frozen=True)
+class FrozenModelA:
+    metadata: dict
+    artifact_hash: str
+    scaler: object
+    model: object
+
+    def predict_proba(self, frame: pd.DataFrame) -> np.ndarray:
+        if tuple(frame.columns) != MODEL_A_FEATURES:
+            raise XGPredictionError("Model A fallback feature order mismatch")
+        return _predict_pair(self.scaler, self.model, frame, MODEL_A_FEATURES)
 
 
 @dataclass(frozen=True)
@@ -201,6 +220,57 @@ def validate_artifacts(path: str | Path = ARTIFACT_DIR) -> FrozenArtifacts:
         artifact_hash=_sha256(root / "checksums.sha256"),
         x0_scaler=pairs["x0"][0], x0_model=pairs["x0"][1],
         x1_scaler=pairs["x1"][0], x1_model=pairs["x1"][1],
+    )
+
+
+def validate_model_a_artifact(
+    path: str | Path = MODEL_A_ARTIFACT_DIR,
+) -> FrozenModelA:
+    """Load the persisted Champion only after complete checksum validation."""
+    root = Path(path)
+    required = {
+        "metadata.json", "checksums.sha256", "training_manifest.csv",
+        "scaler.joblib", "model.joblib",
+    }
+    if not root.is_dir() or any(not (root / name).is_file() for name in required):
+        raise XGPredictionError(f"Missing frozen Model A artifact: {root}")
+    checksums = {}
+    for line in (root / "checksums.sha256").read_text(encoding="ascii").splitlines():
+        digest, name = line.split(maxsplit=1)
+        checksums[name.strip()] = digest
+    if set(checksums) != required - {"checksums.sha256"}:
+        raise XGPredictionError("Model A checksum manifest is incomplete")
+    for name, expected in checksums.items():
+        if _sha256(root / name) != expected:
+            raise XGPredictionError(f"Model A checksum mismatch: {name}")
+    metadata = json.loads((root / "metadata.json").read_text(encoding="utf-8"))
+    if (
+        metadata.get("model_version") != MODEL_A_VERSION
+        or metadata.get("role") != "operational_champion"
+        or metadata.get("training_row_count") != 3588
+        or tuple(metadata.get("feature_list", ())) != MODEL_A_FEATURES
+        or tuple(int(key) for key in metadata.get("target_mapping", {})) != MODEL_A_CLASS_ORDER
+        or metadata.get("future_rows_used") != 0
+        or metadata.get("metrics_calculated") is not False
+        or metadata.get("predictions_generated") is not False
+    ):
+        raise XGPredictionError("Model A metadata does not match the frozen Champion contract")
+    if metadata.get("training_manifest_hash") != _sha256(root / "training_manifest.csv"):
+        raise XGPredictionError("Model A training manifest hash mismatch")
+    if metadata.get("scaler_hash") != _sha256(root / "scaler.joblib"):
+        raise XGPredictionError("Model A scaler hash mismatch")
+    if metadata.get("model_hash") != _sha256(root / "model.joblib"):
+        raise XGPredictionError("Model A model hash mismatch")
+    scaler = joblib.load(root / "scaler.joblib")
+    model = joblib.load(root / "model.joblib")
+    if scaler.n_features_in_ != 1 or model.n_features_in_ != 1:
+        raise XGPredictionError("Model A serialized feature width mismatch")
+    if tuple(int(value) for value in model.classes_) != MODEL_A_CLASS_ORDER:
+        raise XGPredictionError("Model A serialized class order mismatch")
+    return FrozenModelA(
+        metadata=metadata,
+        artifact_hash=_sha256(root / "checksums.sha256"),
+        scaler=scaler, model=model,
     )
 
 
@@ -373,7 +443,7 @@ def persist_predictions(
 def run_prediction(
     *, dry_run: bool = False, schedule_path: str | Path = SCHEDULE_PATH,
     output_path: str | Path = OUTPUT_PATH, artifact_dir: str | Path = ARTIFACT_DIR,
-    model_a_predictor: ModelAPredictor | None = None,
+    model_a_artifact_dir: str | Path = MODEL_A_ARTIFACT_DIR,
 ) -> PredictionRun:
     schedule = _read_schedule_without_results(schedule_path)
     cohort, batch = select_next_date_batch(schedule)
@@ -384,6 +454,7 @@ def run_prediction(
     _require_official_target_ids(batch)
     targets = _resolve_targets(batch)
     artifacts = validate_artifacts(artifact_dir)
+    model_a = validate_model_a_artifact(model_a_artifact_dir)
     completed_xg = _load_completed_xg()
     xg_features = build_rolling_xg_target_features(
         completed_xg,
@@ -392,7 +463,7 @@ def run_prediction(
     elo_features = _elo_features(targets)
     records = generate_prediction_records(
         targets, xg_features, elo_features, artifacts,
-        model_a_predictor=model_a_predictor,
+        model_a_predictor=model_a.predict_proba,
     )
     appended, duplicates = persist_predictions(
         records, dry_run=dry_run, path=output_path,
