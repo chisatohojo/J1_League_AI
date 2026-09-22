@@ -1,5 +1,7 @@
 import json
 from datetime import date
+from pathlib import Path
+import shutil
 
 import pytest
 
@@ -71,6 +73,8 @@ def test_profile_rows_use_jleague_official_namespace_and_name_fallback():
                                  expected=expected, master=recorder)
     assert [row["team_id"] for row in rows] == ["team_0001", "team_0002"]
     assert rows[0]["official_club_id"] is None
+    assert rows[0]["official_club_code"] is None
+    assert rows[0]["official_club_href"] is None
     assert set(recorder.sources) == {"jleague_official"}
 
 
@@ -103,3 +107,29 @@ def test_profile_parse_is_deterministic():
     first = parse_profile_page(_page(_rows()), season=2019, stat=stat, expected=expected, master=_master())
     second = parse_profile_page(_page(_rows()), season=2019, stat=stat, expected=expected, master=_master())
     assert first == second
+
+
+def test_rebuild_from_raw_does_not_fetch_http(tmp_path, monkeypatch):
+    from src.collect import jstats_previous_season_profiles as module
+
+    def fail_fetch(*args, **kwargs):
+        raise AssertionError("raw-only rebuild must not fetch HTTP")
+
+    monkeypatch.setattr(module, "urlopen", fail_fetch)
+    raw_copy = Path(tmp_path) / "raw"
+    shutil.copytree("data/raw/jstats_previous_season_profiles/20260923T010000000000Z",
+                    raw_copy / "20260923T010000000000Z")
+    result = module.rebuild_from_raw(
+        retrieval_id="20260923T010000000000Z",
+        raw_root=raw_copy,
+        processed_root=Path(tmp_path),
+    )
+    assert result["request_count"] == 0
+    assert result["row_count"] == 864
+    assert result["identity_diagnostics"]["name_exact_resolution_count"] == 864
+
+
+def test_explicit_mapping_is_not_arithmetic():
+    # The materializer only stores profile seasons; target linkage is governed
+    # by the explicit mapping in the feature specification document.
+    assert [s.available_from for s in PROFILE_STATS if s.slug.startswith("expected_goals")] == [2019, 2019]

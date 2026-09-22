@@ -92,6 +92,8 @@ The subsequent materializer preflight initially used the wrong namespace for the
 
 After the namespace correction, historical materialization completed successfully. The COMPLETE artifact and its raw retrieval manifest are documented in `PREVIOUS_SEASON_JSTATS_PROFILE_ARTIFACT.md`.
 
+The artifact was subsequently rebuilt from the same 46 raw HTML files after an identity-schema cleanup, with zero network requests. `official_club_id` is null unless an actual numeric/internal ID exists; source `club.code` and `href` are retained in separate fields. The stable join key remains `team_id`.
+
 ## Out of scope
 
 No external web access, collector implementation, feature generation, model fitting/evaluation, prediction, parameter tuning, or commit/push was performed.

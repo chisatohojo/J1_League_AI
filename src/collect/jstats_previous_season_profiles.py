@@ -53,7 +53,7 @@ PROFILE_STATS = (
 STAT_BY_SLUG = {stat.slug: stat for stat in PROFILE_STATS}
 CSV_FIELDS = (
     "profile_season", "team_id", "official_club_id", "official_club_code",
-    "official_club_name", "stat_name", "raw_value", "derived_value", "unit",
+    "official_club_name", "official_club_href", "stat_name", "raw_value", "derived_value", "unit",
     "value_type", "source_url", "source_update_date", "retrieved_at",
     "retrieval_id", "raw_sha256", "games_played_basis",
 )
@@ -159,7 +159,7 @@ def parse_profile_page(raw: bytes, *, season: int, stat: ProfileStat,
         seen.add(team_id)
         code = club.get("code") if isinstance(club, dict) else None
         href = item.get("href")
-        official_id = code or (href.removeprefix("/club/") if isinstance(href, str) and href.startswith("/club/") else None)
+        official_id = None
         raw_value = _numeric(item.get("score"))
         denominator = next((count for team, count in expected.values() if team == team_id), None)
         if denominator is None:
@@ -168,7 +168,9 @@ def parse_profile_page(raw: bytes, *, season: int, stat: ProfileStat,
         if stat.derived_name and stat.value_type in {"total", "decimal_total"}:
             derived = format(Decimal(raw_value) / Decimal(denominator), "f")
         rows.append({"team_id": team_id, "official_club_id": official_id,
-                     "official_club_code": code or None, "official_club_name": name,
+                     "official_club_code": code or None,
+                     "official_club_name": name,
+                     "official_club_href": href if isinstance(href, str) else None,
                      "stat_name": stat.slug, "raw_value": raw_value,
                      "derived_value": derived, "unit": stat.unit,
                      "value_type": stat.value_type, "games_played_basis": denominator,
@@ -209,7 +211,11 @@ def materialize(*, retrieval_id: str | None = None, now: datetime | None = None,
                 "status": "INCOMPLETE", "expected_rows": sum(len(denominators[y]) for y, _ in urls),
                 "actual_rows": 0, "request_count": 0, "cache_reuse_count": 0,
                 "pages": [], "denominator_provenance": "validated local J1 match datasets",
-                "known_restatement_limitation": True}
+                "known_restatement_limitation": True,
+                "identity_diagnostics": {"name_exact_resolution_count": 0,
+                    "code_present_count": 0, "code_missing_count": 0,
+                    "href_present_count": 0, "href_missing_count": 0,
+                    "name_fallback_due_to_missing_code_or_href_count": 0}}
     all_rows = []
     try:
         for index, (season, stat) in enumerate(urls):
@@ -231,6 +237,18 @@ def materialize(*, retrieval_id: str | None = None, now: datetime | None = None,
                                                    expected=denominators[season], master=master)
             page["parsed_clubs"] = len(rows); page["source_update_date"] = source_date
             for row in rows:
+                diagnostics = manifest["identity_diagnostics"]
+                diagnostics["name_exact_resolution_count"] += 1
+                if row["official_club_code"]:
+                    diagnostics["code_present_count"] += 1
+                else:
+                    diagnostics["code_missing_count"] += 1
+                if row["official_club_href"]:
+                    diagnostics["href_present_count"] += 1
+                else:
+                    diagnostics["href_missing_count"] += 1
+                if not row["official_club_code"] or not row["official_club_href"]:
+                    diagnostics["name_fallback_due_to_missing_code_or_href_count"] += 1
                 all_rows.append({"profile_season": season, **row, "source_update_date": source_date,
                                  "retrieved_at": retrieved_at, "retrieval_id": retrieval_id,
                                  "raw_sha256": digest})
@@ -249,6 +267,77 @@ def materialize(*, retrieval_id: str | None = None, now: datetime | None = None,
         raise
     finally:
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def rebuild_from_raw(*, retrieval_id: str, raw_root: Path = RAW_ROOT,
+                     processed_root: Path = PROCESSED_ROOT,
+                     match_root: Path = MATCH_ROOT, master: TeamMaster | None = None) -> dict:
+    """Explicitly rebuild the processed artifact from one validated raw retrieval.
+
+    No network callback exists in this path. The existing manifest hashes are
+    checked before parsing, and the old processed artifact is replaced only by
+    this explicitly named rebuild operation.
+    """
+    master = master or load_team_master()
+    raw_dir = Path(raw_root) / retrieval_id
+    manifest_path = raw_dir / "manifest.json"
+    output = Path(processed_root) / "2018_2025_j1_team_profiles.csv"
+    if not manifest_path.exists():
+        raise SnapshotError(f"Missing raw retrieval manifest: {retrieval_id}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("retrieval_id") != retrieval_id or manifest.get("status") != "COMPLETE":
+        raise SnapshotError("Raw retrieval is not a COMPLETE artifact.")
+    denominators = {season: expected_teams(season, match_root=match_root, master=master) for season in SEASONS}
+    all_rows = []
+    diagnostics = {"name_exact_resolution_count": 0, "code_present_count": 0,
+                   "code_missing_count": 0, "href_present_count": 0,
+                   "href_missing_count": 0,
+                   "name_fallback_due_to_missing_code_or_href_count": 0}
+    for page in manifest.get("pages", []):
+        season, stat = int(page["season"]), STAT_BY_SLUG.get(page["stat_name"])
+        if stat is None or season not in SEASONS or season < stat.available_from:
+            raise SnapshotError("Raw manifest contains an unexpected profile page.")
+        raw_path = raw_dir / page["html"]
+        body = raw_path.read_bytes()
+        if hashlib.sha256(body).hexdigest() != page.get("sha256"):
+            raise SnapshotError(f"Raw hash mismatch: {raw_path}")
+        rows, source_date = parse_profile_page(body, season=season, stat=stat,
+                                               expected=denominators[season], master=master)
+        if source_date != page.get("source_update_date"):
+            raise SnapshotError(f"Source update date changed: {season}/{stat.slug}")
+        for row in rows:
+            diagnostics["name_exact_resolution_count"] += 1
+            if row["official_club_code"]: diagnostics["code_present_count"] += 1
+            else: diagnostics["code_missing_count"] += 1
+            if row["official_club_href"]: diagnostics["href_present_count"] += 1
+            else: diagnostics["href_missing_count"] += 1
+            if not row["official_club_code"] or not row["official_club_href"]:
+                diagnostics["name_fallback_due_to_missing_code_or_href_count"] += 1
+            all_rows.append({"profile_season": season, **row,
+                             "source_update_date": source_date,
+                             "retrieved_at": manifest["retrieved_at"],
+                             "retrieval_id": retrieval_id,
+                             "raw_sha256": page["sha256"]})
+    expected_rows = sum(len(denominators[season]) for season in SEASONS
+                        for stat in PROFILE_STATS if season >= stat.available_from)
+    keys = [(r["profile_season"], r["team_id"], r["stat_name"]) for r in all_rows]
+    if len(all_rows) != expected_rows or len(keys) != len(set(keys)):
+        raise SnapshotError("Raw-only rebuild coverage or duplicate validation failed.")
+    Path(processed_root).mkdir(parents=True, exist_ok=True)
+    temp = output.with_suffix(".csv.rebuild.tmp")
+    with temp.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS); writer.writeheader(); writer.writerows(all_rows)
+    temp.replace(output)
+    manifest["actual_rows"] = len(all_rows)
+    manifest["expected_rows"] = expected_rows
+    manifest["identity_diagnostics"] = diagnostics
+    manifest["rebuild"] = {"type": "raw_only_parser_schema_cleanup",
+                            "processed_path": str(output), "network_request_count": 0,
+                            "raw_source_unchanged": True}
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {"retrieval_id": retrieval_id, "processed_path": output,
+            "manifest_path": manifest_path, "row_count": len(all_rows),
+            "request_count": 0, "identity_diagnostics": diagnostics}
 
 
 if __name__ == "__main__":

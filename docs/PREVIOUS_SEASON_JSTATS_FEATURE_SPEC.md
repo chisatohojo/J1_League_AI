@@ -217,7 +217,7 @@ model側でのimputation、scaling、feature selection、group比較はこの仕
 3. profile seasonごとのJ1 appearance denominatorを完全なmatch datasetから検証する。
 4. count/per-match候補のunitとroundingをmanifestへ保存する。
 5. promoted clubでnull profileとavailability flagが期待通りになるfixture testを作る。
-6. target season `N` がprofile season `N-1` 以外を参照しないleakage testを作る。
+6. target competition / seasonが、上記explicit mappingで許可されたprofile season以外を参照しないleakage testを作る。
 
 このread-only validationが完了するまでcollector、feature generation、model fitting、evaluation、predictionは開始しない。
 
