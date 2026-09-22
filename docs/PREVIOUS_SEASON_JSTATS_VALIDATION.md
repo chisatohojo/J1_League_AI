@@ -84,11 +84,9 @@ No league-average or zero fallback was applied during this validation. The local
 
 ## Materialization preflight outcome
 
-Historical materialization was not started. A minimal official-route preflight fetched only the documented J.LEAGUE.jp route for 2018/2019 candidate pages. The 2018 `shoot_on_target` page exposed 18 ranking clubs with usable identifiers. The 2019 `expected_goals` page exposed ranking entries whose RSC identity was not lossless: some entries had an empty `club.code`, and the corresponding club name was already replacement-character text in the official response. Therefore the required exact TeamMaster linkage cannot be performed safely for that page.
+The targeted 2019 `expected_goals` identity audit is recorded in [J_STATS_2019_XG_IDENTITY_AUDIT.md](J_STATS_2019_XG_IDENTITY_AUDIT.md). The response contained 18 lossless official club names and all 18 mapped exactly and uniquely to existing `jleague_official` TeamMaster aliases. Fifteen rows also had `href`/`club.code`; three had those fields empty, but no guessed slug or ID is needed because the exact official name-to-TeamMaster mapping is safe.
 
-Because the requested artifact requires hard failure on unresolved identity, missing rows, or duplicate team/stat rows, no partial `2018_2025_j1_team_profiles.csv`, raw materialization cache, or manifest was published. No guessed club mapping, normalization, alias creation, or fallback was applied. The remaining seasons/stats were not bulk-fetched after this blocking identity failure.
-
-This is a source-data/identity blocker, not evidence that the historical stats do not exist. A future run may proceed only after an official route response preserves a stable club identifier and lossless name for every required row.
+The earlier apparent replacement characters were terminal-output mojibake, not raw response bytes or parser output. This removes the identity blocker for this page. Full historical materialization was still not run in this audit; every page must pass the same strict validation before publication.
 
 ## Out of scope
 
