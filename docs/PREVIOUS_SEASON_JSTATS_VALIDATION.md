@@ -2,7 +2,7 @@
 
 ## Scope
 
-2026-09-23時点のlocal repositoryだけを使ったread-only validation。外部web、collector、feature dataset、model fitting/evaluation、predictionは実行していない。
+2026-09-23時点のlocal repositoryだけを使ったvalidation。historical profile artifactとordinary-J1 feature datasetは後続のlocal materializationで生成済み。外部web、model fitting/evaluation、predictionは実行していない。
 
 ## Explicit season mapping
 
@@ -41,14 +41,14 @@
 
 | Candidate | Documented source seasons | Local processed profile artifact | Numeric/finite/non-negative check |
 |---|---:|---|---|
-| `expected_goals` | 2019–2025 | historical files absent | 2026 snapshot 20/20 |
-| `shoot_on_target` | 2018–2025 | historical files absent | 2026 snapshot 20/20 |
-| `expected_goals_against` | 2019–2025 | historical files absent | 2026 snapshot 20/20 |
-| `suffer_shoot_on_target` | 2018–2025 | historical files absent | 2026 snapshot 20/20 |
-| `ball_rate` | 2018–2025 | historical files absent | 2026 snapshot 20/20 |
-| `pass_rate` | 2018–2025 | historical files absent | 2026 snapshot 20/20 |
+| `expected_goals` | 2019–2025 | COMPLETE artifact | 2019–2025 expected club coverage |
+| `shoot_on_target` | 2018–2025 | COMPLETE artifact | 2018–2025 expected club coverage |
+| `expected_goals_against` | 2019–2025 | COMPLETE artifact | 2019–2025 expected club coverage |
+| `suffer_shoot_on_target` | 2018–2025 | COMPLETE artifact | 2018–2025 expected club coverage |
+| `ball_rate` | 2018–2025 | COMPLETE artifact | 2018–2025 expected club coverage |
+| `pass_rate` | 2018–2025 | COMPLETE artifact | 2018–2025 expected club coverage |
 
-Current local snapshot `20260922T120000000000Z` has 20 clubs and numeric finite non-negative values for all six candidate stat names. This is a schema/value sanity check only; it does not validate historical season coverage. No historical 2018–2025 processed J Stats profile CSV exists under `data/processed/jstats_team_snapshots/`, so historical source rows cannot be independently rechecked from local artifacts in this turn.
+The historical profile artifact is `2018_2025_j1_team_profiles.csv`, retrieval `20260923T010000000000Z`, with 864 rows and finite non-negative values. The separate 2026 snapshot remains only a schema/value sanity reference.
 
 ## Profile normalization readiness
 
@@ -78,9 +78,9 @@ No league-average or zero fallback was applied during this validation. The local
 - Candidate source coverage: documented coverage is 2018–2025 for non-xG candidates and 2019–2025 for xG/xGA.
 - TeamMaster unresolved: 0 across 2018–2025 J1 denominator datasets.
 - Denominator: validated from local match datasets; 34 or 38 per club depending on actual season.
-- Candidate local historical profile rows: not available; historical artifact materialization remains required.
+- Candidate local historical profile rows: materialized and COMPLETE, 864 rows.
 - Promoted-team handling: null plus `has_previous_j1_profile=false`; no imputation.
-- Implementation readiness: **no**. The join/denominator contract is ready, but historical 2018–2025 profile artifacts and their per-stat validation are not present locally.
+- Profile artifact readiness: **complete**. Feature dataset generation is also complete for the scoped ordinary-J1 targets; model stage remains unstarted.
 
 ## Materialization preflight outcome
 
