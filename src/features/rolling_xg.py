@@ -213,6 +213,125 @@ def build_rolling_xg_features(matches: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
+def build_rolling_xg_target_features(
+    completed_matches: pd.DataFrame, targets: pd.DataFrame,
+) -> pd.DataFrame:
+    """Build frozen v1 features for future targets without target observations.
+
+    ``completed_matches`` uses the same official-final xG contract as the
+    historical builder.  Targets contain identity and chronology only; they
+    never contain xG, score, or result fields.  All targets on one date are
+    evaluated from the state at the start of that date.
+    """
+    ordered = _validate_sources(completed_matches.copy(deep=True))
+    required = (
+        "competition", "season", "match_id", "match_date",
+        "home_team_id", "away_team_id",
+    )
+    if not isinstance(targets, pd.DataFrame) or targets.columns.has_duplicates:
+        raise RollingXGError("targets must be a DataFrame with unique columns")
+    if set(required) - set(targets.columns):
+        raise RollingXGError("Missing rolling xG target columns")
+    forbidden = {"home_xg", "away_xg", "result", "home_score", "away_score"}
+    if forbidden & set(targets.columns):
+        raise RollingXGError("Future targets must not expose observations or outcomes")
+
+    target_rows, seen = [], set(ordered.match_id)
+    for source in targets.loc[:, list(required)].to_dict("records"):
+        competition = _text(source["competition"], "competition")
+        if competition not in COMPETITION_ORDER:
+            raise RollingXGError(f"Unsupported target competition: {competition!r}")
+        match_id = _text(source["match_id"], "target match_id")
+        if match_id in seen:
+            raise RollingXGError(f"Duplicate target/history match_id: {match_id}")
+        seen.add(match_id)
+        day = _date(source["match_date"])
+        home = _text(source["home_team_id"], "home_team_id")
+        away = _text(source["away_team_id"], "away_team_id")
+        if home == away:
+            raise RollingXGError(f"Self-match: {match_id}")
+        target_rows.append({
+            "competition": competition,
+            "season": _text(source["season"], "season"),
+            "match_id": match_id,
+            "match_date": day,
+            "home_team_id": home,
+            "away_team_id": away,
+        })
+    target_frame = pd.DataFrame(target_rows)
+    if target_frame.empty:
+        return pd.DataFrame(columns=OUTPUT_COLUMNS)
+    if not ordered.empty and ordered.match_date.max() >= target_frame.match_date.min():
+        raise RollingXGError("Completed xG history must be strictly before target dates")
+
+    history = defaultdict(lambda: deque(maxlen=WINDOW))
+    excluded = defaultdict(int)
+    for day, today in ordered.groupby("match_date", sort=True):
+        for row in today.itertuples(index=False):
+            if row.xg_time_scope != REGULATION_SCOPE:
+                excluded[row.home_team_id] += 1
+                excluded[row.away_team_id] += 1
+                continue
+            history[row.home_team_id].append((row.match_id, row.home_xg, row.away_xg))
+            history[row.away_team_id].append((row.match_id, row.away_xg, row.home_xg))
+
+    output, audit = [], []
+    target_frame = target_frame.sort_values(
+        ["match_date", "competition", "match_id"], kind="stable",
+    )
+    for day, today in target_frame.groupby("match_date", sort=True):
+        for row in today.itertuples(index=False):
+            record = {
+                "competition": row.competition, "season": row.season,
+                "match_id": row.match_id, "match_date": day.isoformat(),
+                "home_team_id": row.home_team_id, "away_team_id": row.away_team_id,
+            }
+            histories = {}
+            for side, team in (("home", row.home_team_id), ("away", row.away_team_id)):
+                prior = tuple(history[team])
+                count = len(prior)
+                available = count == WINDOW
+                record.update({
+                    f"{side}_last5_xg_for": (
+                        sum(item[1] for item in prior) / WINDOW if available else None
+                    ),
+                    f"{side}_last5_xg_against": (
+                        sum(item[2] for item in prior) / WINDOW if available else None
+                    ),
+                    f"{side}_xg_history_count": count,
+                    f"{side}_xg_available": available,
+                    f"{side}_prior_xg_scope_exclusion_count": excluded[team],
+                })
+                histories[side] = tuple(item[0] for item in prior)
+            record["xg_pair_available"] = (
+                record["home_xg_available"] and record["away_xg_available"]
+            )
+            record["xg_history_excluded_source_match"] = False
+            output.append(record)
+            audit.append({
+                "competition": row.competition, "match_id": row.match_id,
+                "match_date": day.isoformat(),
+                "home_history_match_ids": histories["home"],
+                "away_history_match_ids": histories["away"],
+            })
+
+    result = pd.DataFrame.from_records(output, columns=OUTPUT_COLUMNS)
+    for column in FEATURE_COLUMNS:
+        result[column] = pd.array(result[column], dtype="Float64")
+    for column in (
+        "home_xg_history_count", "away_xg_history_count",
+        "home_prior_xg_scope_exclusion_count", "away_prior_xg_scope_exclusion_count",
+    ):
+        result[column] = pd.array(result[column], dtype="int64")
+    for column in (
+        "home_xg_available", "away_xg_available", "xg_pair_available",
+        "xg_history_excluded_source_match",
+    ):
+        result[column] = pd.array(result[column], dtype="bool")
+    result.attrs["rolling_xg_history_audit"] = pd.DataFrame.from_records(audit)
+    return result
+
+
 def rolling_xg_history_audit(featured: pd.DataFrame) -> pd.DataFrame:
     """Return a detached match-ID provenance table saved during construction."""
     if not isinstance(featured, pd.DataFrame):
