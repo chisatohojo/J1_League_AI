@@ -38,7 +38,21 @@ J Statsの過去season pageは後日restatementされ得る。従って、この
 - target seasonのhome/away clubはtarget J1 match datasetからstable `team_id`で取得
 - profileはhome/away splitせず、team overall profileを両sideへlookupする
 
-target clubの `team_id` に対して、`profile_season = target_season - 1` のprofileをjoinする。TeamMasterで解決できない、またはprofile側のofficial identityが一致しない場合はjoin errorとし、別clubへの自動割当を行わない。
+target clubの `team_id` に対するprofileは、数値の単純減算ではなく、competitionとseason labelの明示mappingで選ぶ。
+
+| Target competition / season | Allowed profile source |
+|---|---:|
+| 2020 ordinary J1 | 2019 J1 final profile |
+| 2021 ordinary J1 | 2020 J1 final profile |
+| 2022 ordinary J1 | 2021 J1 final profile |
+| 2023 ordinary J1 | 2022 J1 final profile |
+| 2024 ordinary J1 | 2023 J1 final profile |
+| 2025 ordinary J1 | 2024 J1 final profile |
+| 2026/27 ordinary J1 | 2025 J1 final profile |
+
+この表にないtarget competitionは自動mappingしない。特に2026 J1百年構想リーグは、既存project方針上、通常J1のevaluation targetとは別competitionであり、この previous-season J Stats profile featureのtargetには含めない。百年構想向けに2025 J1 profileを自動適用してはならない。将来別のcompetition-specific profile sourceが確立した場合は、別仕様として扱う。
+
+TeamMasterで解決できない、またはprofile側のofficial identityが一致しない場合はjoin errorとし、別clubへの自動割当を行わない。
 
 ## 4. Feature groups and final candidate list
 
@@ -89,7 +103,7 @@ J1 match datasetから得たappearance countを denominatorとして使用する
 ```text
 profile_value = null
 has_previous_j1_profile = false
-profile_season = target_season - 1
+profile_season = explicit competition/season mapping
 ```
 
 禁止事項:
@@ -142,13 +156,14 @@ away_profile_source_snapshot
 
 必須ルール:
 
-1. target season `N` の全rowは profile season `N-1` のみ参照する。
+1. ordinary J1 targetは、上記の明示mappingで指定されたprofile seasonのみ参照する。`target_season - 1` の数値減算を実装規則にしない。
 2. target season `N` のseason-final statsは同seasonのどのmatchにも参照しない。
 3. future season、target match result、target match stats、target season final aggregateをprofile作成に使わない。
 4. profileのsource retrieval dateと公式表示update dateを別フィールドで保持する。
 5. 後日restatementされた過去profileは、取得時点の値として再現可能なsnapshot/artifactから読む。
 6. home/awayのprofile lookupはstable `team_id`で行う。
-7. target datasetのseason範囲外（2025/2026を含むopened data）のperformanceを、この仕様の候補feature選択に使わない。
+7. 2026 J1百年構想リーグはこのmappingのtarget外であり、2025 J1 profileを流用しない。
+8. target datasetのseason範囲外（2025/2026を含むopened data）のperformanceを、この仕様の候補feature選択に使わない。
 
 このprofileは「previous completed season」を使うため、season開始前に常に利用可能だったことを保証するものではない。将来のprospective運用では、各profileのretrieved/source stateを記録し、事前にfreezeする。
 
