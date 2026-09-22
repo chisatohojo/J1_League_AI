@@ -88,6 +88,10 @@ The targeted 2019 `expected_goals` identity audit is recorded in [J_STATS_2019_X
 
 The earlier apparent replacement characters were terminal-output mojibake, not raw response bytes or parser output. This removes the identity blocker for this page. Full historical materialization was still not run in this audit; every page must pass the same strict validation before publication.
 
+The subsequent materializer preflight initially used the wrong namespace for the denominator input and attempted `jleague_official` resolution against J1 match-probe names. That was corrected to `source=jleague_data_site`; the profile pages continue to use `source=jleague_official`. The namespaces are joined only by stable `team_id`. No re-decoding, name repair, normalization, alias guess, or denominator substitution was applied.
+
+After the namespace correction, historical materialization completed successfully. The COMPLETE artifact and its raw retrieval manifest are documented in `PREVIOUS_SEASON_JSTATS_PROFILE_ARTIFACT.md`.
+
 ## Out of scope
 
 No external web access, collector implementation, feature generation, model fitting/evaluation, prediction, parameter tuning, or commit/push was performed.
