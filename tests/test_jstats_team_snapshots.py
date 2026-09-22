@@ -98,7 +98,9 @@ def test_snapshot_is_atomic_and_provenance_is_shared(tmp_path):
 
     now = datetime(2026, 9, 21, 1, 2, 3, tzinfo=timezone.utc)
     kwargs = {"raw_root": tmp_path / "raw", "processed_root": tmp_path / "processed",
-              "now": now, "fetch": fetch, "pause": lambda _: None}
+              "now": now, "fetch": fetch, "pause": lambda _: None,
+              "previous_source_state_date": "2026-09-14",
+              "previous_snapshot_ids": ["old-base", "old-supplemental"]}
     result = collect_snapshot(**kwargs)
     assert result["request_count"] == len(STATS) == len(set(calls))
     assert result["row_count"] == 20 * len(STATS)
@@ -117,6 +119,8 @@ def test_snapshot_is_atomic_and_provenance_is_shared(tmp_path):
     manifest = json.loads((result["raw_dir"] / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "COMPLETE"
     assert len(manifest["pages"]) == len(STATS)
+    assert manifest["previous_source_state_date"] == "2026-09-14"
+    assert manifest["previous_snapshot_ids"] == ["old-base", "old-supplemental"]
     with pytest.raises(SnapshotError, match="already exists"):
         collect_snapshot(**kwargs)
     assert len(calls) == len(STATS)  # no duplicate request or overwrite

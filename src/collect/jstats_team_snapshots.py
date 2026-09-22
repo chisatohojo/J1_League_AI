@@ -249,7 +249,8 @@ def _fetch(url: str):
 
 def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
                      schedule_path=SCHEDULE, master=None, now=None, fetch=_fetch, pause=time.sleep,
-                     stats=STATS, related_snapshot_id=None, required_source_date=None):
+                     stats=STATS, related_snapshot_id=None, required_source_date=None,
+                     previous_source_state_date=None, previous_snapshot_ids=None):
     """Fetch each allowlisted page once; publish only a complete 20 x N snapshot.
 
     A failed run retains its raw pages and INCOMPLETE manifest, never a CSV.
@@ -280,6 +281,10 @@ def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
         manifest["related_snapshot_id"] = related_snapshot_id
     if required_source_date is not None:
         manifest["source_state_date"] = required_source_date
+    if previous_source_state_date is not None:
+        manifest["previous_source_state_date"] = previous_source_state_date
+    if previous_snapshot_ids is not None:
+        manifest["previous_snapshot_ids"] = list(previous_snapshot_ids)
     all_rows = []
     try:
         for index, (stat, url) in enumerate(zip(stats, urls)):
