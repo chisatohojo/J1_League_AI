@@ -59,7 +59,19 @@ def _fit(train, valid, columns):
     model.fit(train.loc[:, columns], train["result"])
     if not np.array_equal(model.named_steps["logistic"].classes_, CLASS_ORDER):
         raise ValueError("Expected class order [0, 1, 2].")
-    return model.predict_proba(valid.loc[:, columns])
+    probabilities = model.predict_proba(valid.loc[:, columns])
+    _validate_probabilities(probabilities)
+    return probabilities
+
+
+def _validate_probabilities(probabilities) -> None:
+    probabilities = np.asarray(probabilities, dtype=float)
+    if probabilities.ndim != 2 or probabilities.shape[1] != 3:
+        raise ValueError("Expected three-class probabilities.")
+    if not np.isfinite(probabilities).all() or (probabilities < 0).any() or (probabilities > 1).any():
+        raise ValueError("Probabilities must be finite and within [0, 1].")
+    if not np.allclose(probabilities.sum(axis=1), 1.0):
+        raise ValueError("Probability rows must sum to one.")
 
 
 def frozen_decision(fold_results: dict, pooled: dict) -> str:
@@ -67,13 +79,14 @@ def frozen_decision(fold_results: dict, pooled: dict) -> str:
     j0 = [fold_results[year]["j0"]["log_loss"] for year in FOLDS]
     j1 = [fold_results[year]["j1"]["log_loss"] for year in FOLDS]
     improved = sum(b < a for a, b in zip(j0, j1))
+    non_improved = sum(b >= a for a, b in zip(j0, j1))
     if (pooled["j1"]["log_loss"] < pooled["j0"]["log_loss"]
             and pooled["j1"]["brier"] < pooled["j0"]["brier"]
             and improved >= 3):
         return "CONTINUE_TO_PROSPECTIVE_FREEZE"
     if (pooled["j1"]["log_loss"] >= pooled["j0"]["log_loss"]
             and pooled["j1"]["brier"] >= pooled["j0"]["brier"]
-            and improved < 3):
+            and non_improved >= 3):
         return "CLOSE_RETROSPECTIVE_LANE"
     return "MIXED"
 
@@ -86,11 +99,12 @@ def _load_matches(match_dir: Path = MATCH_DIR) -> pd.DataFrame:
 
 
 def _with_elo(matches: pd.DataFrame) -> pd.DataFrame:
-    frames = tuple(matches.loc[matches.season.eq(season),
+    ordered = matches.sort_values(["match_date", "match_id"], kind="stable").reset_index(drop=True)
+    frames = tuple(ordered.loc[ordered.season.eq(season),
                                ["match_id", "home_team_id", "away_team_id", "result"]].copy()
                    for season in range(2015, 2025))
     replay = _replay(frames, 175.0)
-    return matches.merge(replay, on="match_id", how="left", validate="one_to_one")
+    return ordered.merge(replay, on="match_id", how="left", validate="one_to_one")
 
 
 def evaluate(*, match_dir: Path = MATCH_DIR, feature_path: Path = FEATURE_PATH) -> dict:
@@ -120,12 +134,17 @@ def evaluate(*, match_dir: Path = MATCH_DIR, feature_path: Path = FEATURE_PATH) 
         j0_p = _fit(j0_train, j0_valid, ["elo_diff"])
         j1_p = _fit(j1_train, j1_valid, list(J1_FEATURES))
         y = valid_pair.result.to_numpy()
-        fold_results[year] = {"j0": asdict(_metrics(y, j0_p)), "j1": asdict(_metrics(y, j1_p)), "matched_rows": len(valid_pair)}
+        fold_results[year] = {"j0": asdict(_metrics(y, j0_p)), "j1": asdict(_metrics(y, j1_p)),
+                              "train_matched_rows": len(train_pair), "matched_rows": len(valid_pair)}
         for key, value in (("j0_y", y), ("j1_y", y), ("j0_p", j0_p), ("j1_p", j1_p)):
             pooled[key].append(value)
 
         a_train = matches.loc[matches.season.between(2015, year - 1)].copy()
         a_valid = matches.loc[matches.season.eq(year)].copy()
+        if not a_valid.match_id.is_unique or not valid_all.match_id.is_unique:
+            raise ValueError(f"Validation match IDs must be unique for {year}.")
+        if set(a_valid.match_id) != set(valid_all.match_id):
+            raise ValueError(f"Operational validation IDs are not aligned for {year}.")
         a_p = _fit(a_train[["elo_diff", "result"]], a_valid[["elo_diff", "result"]], ["elo_diff"])
         op_p = np.empty((len(valid_all), 3))
         pair_p = _fit(j1_train, valid_all.loc[valid_all.profile_pair, list(J1_FEATURES[1:]) + ["elo_diff", "result"]], list(J1_FEATURES))

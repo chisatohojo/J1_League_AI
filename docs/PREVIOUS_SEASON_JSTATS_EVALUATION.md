@@ -24,6 +24,9 @@ frozen Logistic configuration.
 | 2024 | 272 | 1.072811 | 1.083807 | 0.649206 | 0.655668 | 0.459559 | 0.397059 |
 | **Pooled** | **1,058** | **1.053432** | **1.073160** | **0.634161** | **0.644229** | **0.464083** | **0.442344** |
 
+Matched training row counts were derived from the artifact: 2021 **240**,
+2022 **546**, 2023 **786**, and 2024 **1,026**.
+
 J1 minus J0 pooled deltas:
 
 - Log Loss: **+0.019729**
@@ -54,6 +57,12 @@ Operational J1 minus `A_Y` pooled deltas:
 
 The production Model A artifact trained on 2015-2025 was not reused for these
 historical folds.
+
+The implementation sorts the full ordinary-J1 replay universe by
+`match_date`, then `match_id`, before attaching pre-match Elo. Operational
+validation probabilities are aligned to the full validation set by
+`match_id`, not by row position, and all probability arrays are checked for
+finite three-class rows summing to one.
 
 ## Frozen decision
 

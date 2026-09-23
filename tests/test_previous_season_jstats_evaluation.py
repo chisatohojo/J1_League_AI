@@ -1,11 +1,13 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from src.modeling.previous_season_jstats_evaluation import (
     EXPECTED_MATCHED,
     FOLDS,
     J1_FEATURES,
     _metrics,
+    _validate_probabilities,
     MODEL_PARAMS,
     frozen_decision,
     evaluate,
@@ -53,6 +55,14 @@ def test_frozen_decision_rule_has_three_outcomes():
     assert frozen_decision(fold(1.1), {"j0": {"log_loss": 1.0, "brier": 1.0}, "j1": {"log_loss": 1.1, "brier": 1.1}}) == "CLOSE_RETROSPECTIVE_LANE"
     mixed = fold(0.9); mixed[2024]["j1"]["log_loss"] = 1.1
     assert frozen_decision(mixed, {"j0": {"log_loss": 1.0, "brier": 1.0}, "j1": {"log_loss": 0.9, "brier": 1.1}}) == "MIXED"
+    two_two = fold(0.9); two_two[2023]["j1"]["log_loss"] = 1.1; two_two[2024]["j1"]["log_loss"] = 1.1
+    assert frozen_decision(two_two, {"j0": {"log_loss": 1.0, "brier": 1.0}, "j1": {"log_loss": 1.1, "brier": 1.1}}) == "MIXED"
+
+
+def test_probability_contract():
+    _validate_probabilities(np.full((2, 3), 1 / 3))
+    with pytest.raises(ValueError):
+        _validate_probabilities(np.array([[0.5, 0.5, np.nan]]))
 
 
 def test_frozen_metrics_and_decision_unchanged():
