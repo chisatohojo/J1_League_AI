@@ -106,9 +106,27 @@ The primary comparison excludes rows without a complete profile on either side.
 Missing values are not replaced with zero, a league average, J2/Cup profiles,
 or availability flags.
 
-For a separate operational diagnostic only, a missing-profile row may use a
-fold-specific Elo-only fallback trained on that fold's ordinary-J1 history.
-This fallback must not be mixed into the primary matched comparison.
+For a separate operational diagnostic only, define a fold-specific baseline
+`A_Y` for every validation season `Y`:
+
+- training: all ordinary-J1 matches from 2015 through `Y-1`;
+- validation: all ordinary-J1 matches in season `Y`;
+- frozen Elo convention: initial 1500, K 30, HA 175;
+- feature: `elo_diff` only;
+- `StandardScaler`, fit on that fold's training rows only;
+- `LogisticRegression(C=1.0, solver="lbfgs", max_iter=1000, random_state=0)`.
+
+The operational challenger uses the J1-fold challenger prediction when both
+teams have a complete previous-season profile. When either side lacks a
+profile, it uses the corresponding `A_Y` prediction. This operational J1
+fallback is evaluated across every ordinary-J1 match in validation season `Y`
+and compared directly with `A_Y`.
+
+Report Log Loss, project multiclass Brier, and Accuracy per fold and pooled.
+This secondary operational comparison is separate from the primary matched
+comparison and must not use the production Model A artifact trained on
+2015-2025 directly for the 2021-2024 historical folds; doing so would create
+future-season leakage.
 
 Partial profiles are hard errors. A team with no previous-season profile is
 represented by null profile values and `has_previous_j1_profile = false` in the
@@ -132,6 +150,7 @@ Accuracy is descriptive and is not a decision criterion.
 
 ## Freeze metadata
 
+- freeze timestamp: `2026-09-23T11:17:21+09:00`
 - profile retrieval: `20260923T010000000000Z`
 - feature artifact: `data/processed/features/previous_season_jstats_features.csv`
 - feature family: previous-season J Stats six-stat family
