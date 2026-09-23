@@ -88,7 +88,9 @@ and eligible rows are:
 | 2023 | 2015-2022 | 2,522 | 2,449 |
 | 2024 | 2015-2023 | 2,828 | 2,746 |
 
-The corresponding eligible validation counts are 297, 370, 297, 297, and 370.
+The corresponding eligible validation counts are 297, 370, 297, 297, and 370,
+for a primary pooled eligible validation total of **1,631**. The operational
+full-validation total is **1,678**.
 
 ### Validation ineligible-reason audit
 
