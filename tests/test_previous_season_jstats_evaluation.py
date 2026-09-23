@@ -7,6 +7,7 @@ from src.modeling.previous_season_jstats_evaluation import (
     FOLDS,
     J1_FEATURES,
     _metrics,
+    _align_predictions,
     _validate_probabilities,
     MODEL_PARAMS,
     frozen_decision,
@@ -63,6 +64,15 @@ def test_probability_contract():
     _validate_probabilities(np.full((2, 3), 1 / 3))
     with pytest.raises(ValueError):
         _validate_probabilities(np.array([[0.5, 0.5, np.nan]]))
+
+
+def test_match_id_alignment_is_invariant_to_source_row_order():
+    ids = pd.Series(["m1", "m2", "m3"])
+    probabilities = np.array([[0.1, 0.2, 0.7], [0.2, 0.3, 0.5], [0.4, 0.3, 0.3]])
+    target = pd.Series(["m3", "m1", "m2"])
+    aligned = _align_predictions(probabilities, ids, target)
+    reordered = _align_predictions(probabilities[[2, 0, 1]], target, target)
+    np.testing.assert_array_equal(aligned, reordered)
 
 
 def test_frozen_metrics_and_decision_unchanged():

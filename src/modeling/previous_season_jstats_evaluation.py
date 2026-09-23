@@ -74,6 +74,22 @@ def _validate_probabilities(probabilities) -> None:
         raise ValueError("Probability rows must sum to one.")
 
 
+def _align_predictions(predictions, prediction_ids, target_ids):
+    """Reindex probability rows by match_id; never rely on source row order."""
+    source_ids = pd.Index(prediction_ids.astype(str))
+    target_ids = pd.Index(target_ids.astype(str))
+    if not source_ids.is_unique or not target_ids.is_unique:
+        raise ValueError("Prediction and target match IDs must be unique.")
+    if set(source_ids) != set(target_ids):
+        raise ValueError("Prediction and target match ID sets differ.")
+    aligned = pd.DataFrame(np.asarray(predictions), index=source_ids).reindex(target_ids)
+    if aligned.isna().any().any() or len(aligned) != len(target_ids):
+        raise ValueError("Prediction alignment has missing rows.")
+    result = aligned.to_numpy()
+    _validate_probabilities(result)
+    return result
+
+
 def frozen_decision(fold_results: dict, pooled: dict) -> str:
     """Apply the frozen primary decision rule without tuning or reinterpretation."""
     j0 = [fold_results[year]["j0"]["log_loss"] for year in FOLDS]
@@ -146,15 +162,16 @@ def evaluate(*, match_dir: Path = MATCH_DIR, feature_path: Path = FEATURE_PATH) 
         if set(a_valid.match_id) != set(valid_all.match_id):
             raise ValueError(f"Operational validation IDs are not aligned for {year}.")
         a_p = _fit(a_train[["elo_diff", "result"]], a_valid[["elo_diff", "result"]], ["elo_diff"])
+        a_p_aligned = _align_predictions(a_p, a_valid.match_id, valid_all.match_id)
         op_p = np.empty((len(valid_all), 3))
         pair_p = _fit(j1_train, valid_all.loc[valid_all.profile_pair, list(J1_FEATURES[1:]) + ["elo_diff", "result"]], list(J1_FEATURES))
         op_p[valid_all.profile_pair.to_numpy()] = pair_p
-        a_by_id = pd.DataFrame(a_p, index=a_valid.match_id.astype(str))
+        a_by_id = pd.DataFrame(a_p_aligned, index=valid_all.match_id.astype(str))
         fallback_ids = valid_all.loc[~valid_all.profile_pair, "match_id"].astype(str)
         op_p[~valid_all.profile_pair.to_numpy()] = a_by_id.loc[fallback_ids].to_numpy()
         op_y = valid_all.result.to_numpy()
-        operational_results[year] = {"a_y": asdict(_metrics(op_y, a_p)), "operational_j1": asdict(_metrics(op_y, op_p)), "rows": len(valid_all)}
-        pooled["op_y"].append(op_y); pooled["op_p"].append(op_p); pooled["a_y_p"].append(a_p)
+        operational_results[year] = {"a_y": asdict(_metrics(op_y, a_p_aligned)), "operational_j1": asdict(_metrics(op_y, op_p)), "rows": len(valid_all)}
+        pooled["op_y"].append(op_y); pooled["op_p"].append(op_p); pooled["a_y_p"].append(a_p_aligned)
     return {"folds": fold_results, "operational": operational_results,
             "pooled": {"j0": asdict(_metrics(np.concatenate(pooled["j0_y"]), np.concatenate(pooled["j0_p"]))),
                         "j1": asdict(_metrics(np.concatenate(pooled["j1_y"]), np.concatenate(pooled["j1_p"]))),
