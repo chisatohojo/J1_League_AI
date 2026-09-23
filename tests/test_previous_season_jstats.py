@@ -94,3 +94,24 @@ def test_duplicate_2026_fixture_key_hard_fails():
     rows = [{"match_id": "", "fixture_key": "f1"}, {"match_id": "m2", "fixture_key": "f1"}]
     with pytest.raises(ValueError, match="fixture_key"):
         _validate_target_identities("2026/27", rows)
+
+
+def test_duplicate_populated_2026_match_id_hard_fails():
+    rows = [{"match_id": "m1", "fixture_key": "f1"}, {"match_id": "m1", "fixture_key": "f2"}]
+    with pytest.raises(ValueError, match="match_id"):
+        _validate_target_identities("2026/27", rows)
+
+
+def test_blank_2026_match_ids_are_allowed():
+    rows = [{"match_id": "", "fixture_key": "f1"}, {"match_id": "", "fixture_key": "f2"}]
+    _validate_target_identities("2026/27", rows)
+
+
+def test_real_2026_identity_policy_passes():
+    path = Path("data/processed/features/previous_season_jstats_features.csv")
+    with path.open(encoding="utf-8", newline="") as handle:
+        rows = [row for row in csv.DictReader(handle) if row["season"] == "2026/27"]
+    _validate_target_identities("2026/27", rows)
+    assert sum(bool(row["match_id"]) for row in rows) == 80
+    assert sum(not row["match_id"] for row in rows) == 300
+    assert len({row["fixture_key"] for row in rows}) == 380

@@ -119,11 +119,20 @@ def _target_rows(target_season, *, match_root: Path, schedule_path: Path, master
 def _validate_target_identities(target, rows):
     identity_field = "fixture_key" if target == "2026/27" else "match_id"
     seen = set()
+    populated_match_ids = set()
     for row in rows:
         identity = row.get(identity_field, "")
         if not identity or identity in seen:
             raise ValueError(f"Missing or duplicate target {identity_field}: {target}/{identity}")
         seen.add(identity)
+        match_id = row.get("match_id", "")
+        if target == "2026/27":
+            if match_id and match_id in populated_match_ids:
+                raise ValueError(f"Duplicate populated target match_id: {target}/{match_id}")
+            if match_id:
+                populated_match_ids.add(match_id)
+        elif row.get("fixture_key", ""):
+            raise ValueError(f"Unexpected fixture_key for historical target: {target}/{row['fixture_key']}")
     return seen
 
 
