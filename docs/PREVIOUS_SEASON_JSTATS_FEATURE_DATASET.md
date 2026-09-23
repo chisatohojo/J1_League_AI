@@ -22,6 +22,13 @@ The dataset contains 2,438 ordinary-J1 target fixtures:
 | 2025 ordinary J1 | 2024 | 380 |
 | 2026/27 ordinary J1 schedule | 2025 | 380 |
 
+There are 2,438 unique target fixtures, one row per ordinary-J1 fixture.
+Historical 2020-2025 rows have a populated, unique official `match_id` and an
+empty `fixture_key`. The 2026/27 schedule has a unique non-empty `fixture_key`;
+its official `match_id` is preserved as supplied by the schedule (80 completed
+rows are populated and 300 future rows are blank). A `fixture_key` is never
+copied into `match_id` and is not presented as an official match identity.
+
 2026 J1百年構想リーグ is not included. The 2026/27 rows include future fixtures, but no score, result, or match statistics are used.
 
 ## Mapping and identity

@@ -52,7 +52,11 @@ The historical profile artifact is `2018_2025_j1_team_profiles.csv`, retrieval `
 
 ## Profile normalization readiness
 
-The J1 denominator is ready for a future per-match conversion: every audited profile season has complete match coverage, exact team identity, and a constant appearance count within that season. The actual historical stat values and official semantics still need to be materialized/validated before implementation.
+The J1 denominator and the six candidate profile values are materialized in
+the COMPLETE local artifact. Every audited profile season has complete match
+coverage, exact team identity, and a constant appearance count within that
+season. The feature dataset uses the validated derived values and official
+rate values; model-stage implementation remains separate.
 
 For the six candidates:
 
@@ -70,7 +74,9 @@ profile_value = null
 has_previous_j1_profile = false
 ```
 
-No league-average or zero fallback was applied during this validation. The local ordinary-J1 history contains the exact team memberships needed to derive this comparison, but no feature rows were generated.
+No league-average or zero fallback was applied. The local ordinary-J1 history
+contains the exact team memberships needed to derive this comparison, and the
+feature rows are materialized in the scoped output artifact.
 
 ## Validation result
 
@@ -86,7 +92,7 @@ No league-average or zero fallback was applied during this validation. The local
 
 The targeted 2019 `expected_goals` identity audit is recorded in [J_STATS_2019_XG_IDENTITY_AUDIT.md](J_STATS_2019_XG_IDENTITY_AUDIT.md). The response contained 18 lossless official club names and all 18 mapped exactly and uniquely to existing `jleague_official` TeamMaster aliases. Fifteen rows also had `href`/`club.code`; three had those fields empty, but no guessed slug or ID is needed because the exact official name-to-TeamMaster mapping is safe.
 
-The earlier apparent replacement characters were terminal-output mojibake, not raw response bytes or parser output. This removes the identity blocker for this page. Full historical materialization was still not run in this audit; every page must pass the same strict validation before publication.
+The earlier apparent replacement characters were terminal-output mojibake, not raw response bytes or parser output. This removed the identity blocker for this page. At that historical checkpoint, full materialization had not yet run; the later COMPLETE artifact supersedes that checkpoint.
 
 The subsequent materializer preflight initially used the wrong namespace for the denominator input and attempted `jleague_official` resolution against J1 match-probe names. That was corrected to `source=jleague_data_site`; the profile pages continue to use `source=jleague_official`. The namespaces are joined only by stable `team_id`. No re-decoding, name repair, normalization, alias guess, or denominator substitution was applied.
 
@@ -94,6 +100,13 @@ After the namespace correction, historical materialization completed successfull
 
 The artifact was subsequently rebuilt from the same 46 raw HTML files after an identity-schema cleanup, with zero network requests. `official_club_id` is null unless an actual numeric/internal ID exists; source `club.code` and `href` are retained in separate fields. The stable join key remains `team_id`.
 
+The downstream feature dataset is also complete for the seven scoped ordinary-J1
+target seasons: 2,438 rows, with explicit `match_id`/`fixture_key` identity
+semantics documented in `PREVIOUS_SEASON_JSTATS_FEATURE_DATASET.md`. Model-stage
+work remains unstarted.
+
 ## Out of scope
 
-No external web access, collector implementation, feature generation, model fitting/evaluation, prediction, parameter tuning, or commit/push was performed.
+No external web access, collector implementation, model fitting/evaluation,
+prediction, parameter tuning, or commit/push was performed. Feature dataset
+materialization is complete; model-stage work remains out of scope.
