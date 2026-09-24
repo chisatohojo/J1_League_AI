@@ -1,6 +1,7 @@
 # J1 historical match event dataset specification
 
-Status: schema/parser contract frozen; **READY_FOR_FULL_EVENT_MATERIALIZATION**.
+Status: schema/parser contract frozen; fixture gate passed and production
+result **MATERIALIZED_AND_VALIDATED**.
 
 ## Scope
 
@@ -51,6 +52,10 @@ only when the source explicitly identifies own goal, penalty goal, or another
 subtype; otherwise it is `UNKNOWN`/null. Never infer `NORMAL_GOAL` merely
 because no subtype is shown.
 
+The observed A2 DOM mirrors its cells: home rows are `[player, minute]` and
+away rows are `[minute, player]`. Both are parsed from their explicit side
+containers; position or score-based team inference is prohibited.
+
 ### Substitutions
 
 Reuse `sfms02_player_minutes.py` semantics:
@@ -80,6 +85,11 @@ minutes, `45+N'`, `90+N'`, and the observed `46'` boundary. Added time keeps
 its order component. `46'` receives `MINUTE_46_BOUNDARY_AMBIGUOUS` where the
 existing minute policy requires it. Unsupported tokens are hard failures or
 explicit unresolved values; silent coercion is prohibited.
+
+The full cache contains 18 A8 rows whose official token is `***`. For this
+observed variant only, `minute_raw` is retained, normalized minute/order fields
+are null, and `null_reason=SOURCE_MINUTE_UNRESOLVED`. No numeric minute is
+inferred. Any other unsupported token remains a hard failure.
 
 Event ordering is `(minute_order_half, minute_order_base,
 minute_order_added, source row order)`. This is deterministic source order,
@@ -113,4 +123,5 @@ ambiguity, blank/replacement names, malformed/unpaired rows, same-minute
 substitution/red ambiguity, deterministic IDs, section absence/zero-event
 semantics, and no network dependency. The parser contract is therefore
 **READY_FOR_FULL_EVENT_MATERIALIZATION**. This task still produces no
-3,208-match CSV; materialization is a separate explicitly authorized task.
+3,208-match CSV by itself; materialization is a separate explicitly authorized
+task and is documented in `docs/J1_MATCH_EVENT_DATASET.md`.
