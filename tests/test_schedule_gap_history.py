@@ -95,8 +95,9 @@ def synthetic_source():
 def test_real_partition_counts(real_case):
     assert isinstance(real_case.result, history_module.OngoingScheduleGapHistory)
     counts = [len(getattr(real_case.result, name)) for name in PARTITIONS]
-    assert counts == [3588, 200, 70]
-    assert sum(counts) == 3858
+    expected = [len(frame) for frame in _frames(real_case.source)]
+    assert expected[:2] == [3588, 200]
+    assert counts == expected
 
 
 @pytest.mark.parametrize("name", PARTITIONS)

@@ -85,10 +85,11 @@ def _load_sample(monkeypatch, history):
 
 
 def test_saved_match_counts(saved_history):
-    _, result = saved_history
+    original, result = saved_history
     counts = tuple(len(getattr(result, part)) for part in PARTS)
-    assert counts == (3588, 200, 70)
-    assert sum(counts) == 3858
+    expected = tuple(len(getattr(original, part).matches) for part in PARTS)
+    assert expected[:2] == (3588, 200)
+    assert counts == expected
 
 
 def test_four_features_in_every_interval(saved_history):

@@ -90,8 +90,8 @@ def _source_history(empty_ongoing=False):
 
 def test_real_history_match_counts(real_history):
     counts = [len(getattr(real_history, name)) for name in SEGMENTS]
-    assert counts == [3588, 200, 70]
-    assert sum(counts) == 3858
+    assert counts[:2] == [3588, 200]
+    assert counts[2] == real_history.ongoing["match_id"].nunique()
 
 
 def test_all_segments_have_twelve_integer_form_columns(real_history):

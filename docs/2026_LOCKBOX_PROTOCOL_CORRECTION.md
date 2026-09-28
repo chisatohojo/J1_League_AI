@@ -8,6 +8,27 @@
 > is in [2026_27_INTERIM_LOCKBOX_EVALUATION.md](2026_27_INTERIM_LOCKBOX_EVALUATION.md).
 > No freeze specification is changed by this documentation note.
 
+## Immutable interim target versus live publication (2026-09-29)
+
+The opened interim target remains exactly the 70 match IDs recorded in
+`data/processed/modeling/2026_27_interim_lockbox_predictions.csv`. Its frozen
+SHA-256 is
+`2f3e85eaf412afdcd9095891ce366aa75155773504205274015157119702ab14`.
+The saved predictions, results and official metrics are unchanged.
+
+`data/processed/jleague/2026_27/` is a separate, mutable live publication. It
+contained 80 completed and 300 scheduled fixtures in the local sequence-3
+publication checked on 2026-09-29, and its completed count will continue to
+grow. Live validation therefore checks the 380-fixture, 20-club double
+round-robin structure, unique identities, status partition, completed
+score/result validity, and equality of `completed_matches.csv` with the
+completed schedule subset. It does not require a current count of 70.
+
+The lockbox preflight selects target membership by the SHA-256-validated saved
+prediction IDs and verifies their date, teams and actual class against the live
+completed records. It never selects the first 70 rows from current sorting.
+Consequently later live results cannot enter the frozen interim target.
+
 ## Final data-readiness clarification (2026-09-20)
 
 The 2026 Emperor's Cup non-J1 opponent identity is not required for the J1 club

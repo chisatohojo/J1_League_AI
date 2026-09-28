@@ -61,8 +61,8 @@ def synthetic_case(monkeypatch):
     return dataset, history
 
 
-def test_real_dataset_has_3858_rows_and_33_columns(real_case):
-    assert real_case[2].shape == (3858, 33)
+def test_real_dataset_matches_live_base_rows_and_has_33_columns(real_case):
+    assert real_case[2].shape == (len(real_case[0]), 33)
 
 
 def test_original_24_columns_values_dtypes_and_index_are_exact(real_case):

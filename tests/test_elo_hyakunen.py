@@ -322,7 +322,9 @@ def test_cached_3788_matches_keep_the_old_history_and_use_real_90_minute_results
     assert set(first.hyakunen.matches.stage) == {"regional", "playoff"}
     assert first.hyakunen.matches.stage.value_counts().to_dict() == {"regional": 180, "playoff": 20}
     used_ids = set(all_matches.home_team_id) | set(all_matches.away_team_id)
-    assert len(used_ids) == master.team_count == 33
+    registered_ids = {alias.team_id for alias in master.aliases}
+    assert len(used_ids) == 33
+    assert used_ids.issubset(registered_ids)
     ratings = EloRatings(sorted(first.historical.final_ratings))
     for row in all_matches.itertuples(index=False):
         snapshot = ratings.pre_match(row.home_team_id, row.away_team_id)
@@ -346,5 +348,5 @@ def test_cached_3788_matches_keep_the_old_history_and_use_real_90_minute_results
     tie = build_playoff_ties(first.hyakunen.matches).set_index("playoff_tie_id").loc[playoff.playoff_tie_id]
     assert (playoff.home_score, playoff.away_score, playoff.result) == (2, 0, 2)
     assert playoff.match_winner_team != tie.tie_winner_team
-    assert sum(first.hyakunen.final_ratings.values()) == pytest.approx(33 * 1500)
+    assert sum(first.hyakunen.final_ratings.values()) == pytest.approx(master.team_count * 1500)
     assert {path: sha256(path.read_bytes()).hexdigest() for path in paths} == before

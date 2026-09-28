@@ -128,8 +128,9 @@ def synthetic_history():
 def test_saved_row_counts(saved_history):
     result = saved_history.result
     assert isinstance(result, elo_momentum_history.OngoingEloMomentumHistory)
-    assert [len(getattr(result, part)) for part in PARTS] == [3588, 200, 70]
-    assert sum(len(getattr(result, part)) for part in PARTS) == 3858
+    expected = [len(getattr(saved_history.source, part).matches) for part in PARTS]
+    assert expected[:2] == [3588, 200]
+    assert [len(getattr(result, part)) for part in PARTS] == expected
 
 
 @pytest.mark.parametrize("part", PARTS)

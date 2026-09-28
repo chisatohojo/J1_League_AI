@@ -68,11 +68,12 @@ def _manual_window(prior, current, window):
 
 
 def test_real_completed_row_counts(real_history):
-    _, _, results, _ = real_history
+    sources, _, results, _ = real_history
     result = results[5]
     counts = [len(getattr(result, name)) for name in PARTS]
-    assert counts == [3588, 200, 70]
-    assert sum(counts) == 3858
+    expected = [len(getattr(sources, name).matches) for name in PARTS]
+    assert expected[:2] == [3588, 200]
+    assert counts == expected
     assert isinstance(result, history_module.OngoingStadiumWindowHistory)
 
 

@@ -132,6 +132,11 @@ Actual rates Away/Draw/Home: 31.43% / 21.43% / 47.14%.
 Per-match output:
 `data/processed/modeling/2026_27_interim_lockbox_predictions.csv`
 
+This artifact is also the immutable target-membership source. Its SHA-256 is
+`2f3e85eaf412afdcd9095891ce366aa75155773504205274015157119702ab14`.
+Later growth of the live completed-match publication does not expand or
+reselect these 70 IDs.
+
 The first preliminary run was invalid because 2026 Cup/Emperor inputs were
 absent and it used the wrong Brier reduction. The subsequent report included
 those inputs and the correct Brier scale but retained the Domestic Rest

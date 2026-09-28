@@ -38,8 +38,9 @@ def real_split(real_dataset):
 
 def test_real_partition_counts(real_dataset, real_split):
     counts = [len(getattr(real_split, name)) for name, _ in PARTITIONS]
-    assert counts == [2828, 380, 380, 270]
-    assert sum(counts) == len(real_dataset) == 3858
+    assert counts[:3] == [2828, 380, 380]
+    assert counts[3] == int(real_dataset.season.eq(2026).sum())
+    assert sum(counts) == len(real_dataset)
 
 
 @pytest.mark.parametrize("name,seasons", PARTITIONS)

@@ -4,6 +4,7 @@ Domestic rest deliberately excludes AFC.  Hyakunen matches are Elo-state and
 domestic-chronology events only; they are never Logistic training targets.
 """
 from pathlib import Path
+import hashlib
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
@@ -17,35 +18,174 @@ CLASS_ORDER=(0,1,2)
 FEATURE_A=("elo_diff",)
 FEATURE_B=("elo_diff","home_domestic_days_since_last_competitive_match","away_domestic_days_since_last_competitive_match","home_domestic_has_previous_competitive_match","away_domestic_has_previous_competitive_match")
 
-def preflight_inputs(paths=None):
-    """Validate all frozen evaluation inputs without fitting or predicting."""
-    paths = paths or {
+FROZEN_TARGET_COUNT = 70
+FROZEN_PREDICTIONS_PATH = Path(
+    "data/processed/modeling/2026_27_interim_lockbox_predictions.csv"
+)
+FROZEN_PREDICTIONS_SHA256 = (
+    "2f3e85eaf412afdcd9095891ce366aa75155773504205274015157119702ab14"
+)
+LIVE_SCHEDULE_COUNT = 380
+
+
+def _read_strings(path):
+    return pd.read_csv(path, dtype="string", keep_default_na=False)
+
+
+def validate_live_2026_inputs(schedule_path, completed_path):
+    """Validate one mutable 2026/27 publication without fixing its progress count."""
+    schedule = _read_strings(schedule_path)
+    completed_file = _read_strings(completed_path)
+    required = {
+        "match_id", "season", "round", "match_date", "home_team", "away_team",
+        "home_score", "away_score", "result", "fixture_key", "status",
+        "competition_key", "competition", "stage",
+    }
+    if schedule.columns.has_duplicates or required - set(schedule.columns):
+        raise ValueError("invalid live 2026/27 schedule schema")
+    if len(schedule) != LIVE_SCHEDULE_COUNT:
+        raise ValueError("2026/27 schedule must contain all 380 fixtures")
+    if schedule.fixture_key.eq("").any() or schedule.fixture_key.duplicated().any():
+        raise ValueError("live schedule fixture_key must be complete and unique")
+    known_match_ids = schedule.loc[schedule.match_id.ne(""), "match_id"]
+    if known_match_ids.duplicated().any():
+        raise ValueError("nonblank live match_id must be unique")
+    if not schedule.status.isin(("scheduled", "candidate", "completed")).all():
+        raise ValueError("invalid live schedule status")
+    if schedule.home_team.eq(schedule.away_team).any():
+        raise ValueError("a club cannot play itself")
+    if not schedule.season.eq("2026").all():
+        raise ValueError("invalid live season identity")
+    if not schedule.competition_key.eq("j1_2026_2027").all():
+        raise ValueError("invalid live competition identity")
+    if not schedule.competition.eq("Ｊ１").all() or not schedule.stage.eq("full_season").all():
+        raise ValueError("invalid live competition/stage")
+    schedule_dates = pd.to_datetime(schedule.match_date, format="%Y-%m-%d", errors="coerce")
+    if (schedule_dates.isna().any()
+            or not schedule_dates.between(
+                pd.Timestamp("2026-08-01"), pd.Timestamp("2027-06-30")
+            ).all()):
+        raise ValueError("invalid live schedule date")
+    rounds = pd.to_numeric(schedule["round"], errors="coerce")
+    if (rounds.isna().any() or not rounds.between(1, 38).all()
+            or not rounds.value_counts().sort_index().eq(10).all()):
+        raise ValueError("invalid 38-round schedule")
+
+    clubs = set(schedule.home_team) | set(schedule.away_team)
+    appearances = pd.concat([schedule.home_team, schedule.away_team], ignore_index=True)
+    directed = schedule[["home_team", "away_team"]]
+    if (len(clubs) != 20 or not appearances.value_counts().eq(38).all()
+            or not schedule.home_team.value_counts().eq(19).all()
+            or not schedule.away_team.value_counts().eq(19).all()
+            or directed.duplicated().any()):
+        raise ValueError("invalid 20-club double round-robin schedule")
+
+    expected_completed = schedule.loc[schedule.status.eq("completed")].reset_index(drop=True)
+    if not expected_completed.equals(completed_file):
+        raise ValueError("completed_matches.csv must equal the live completed schedule subset")
+    if (expected_completed.match_id.eq("").any()
+            or expected_completed.match_id.duplicated().any()):
+        raise ValueError("completed match_id must be complete and unique")
+    if expected_completed[["match_date", "home_team", "away_team"]].eq("").any().any():
+        raise ValueError("completed match identity is incomplete")
+    if not expected_completed.home_score.str.fullmatch(r"[0-9]+").all():
+        raise ValueError("invalid completed home score")
+    if not expected_completed.away_score.str.fullmatch(r"[0-9]+").all():
+        raise ValueError("invalid completed away score")
+    if not expected_completed.result.isin(("0", "1", "2")).all():
+        raise ValueError("invalid completed result")
+    home_score = expected_completed.home_score.astype(int)
+    away_score = expected_completed.away_score.astype(int)
+    expected_result = pd.Series(
+        np.where(home_score > away_score, "2", np.where(home_score < away_score, "0", "1")),
+        dtype="string",
+    )
+    if not expected_completed.result.reset_index(drop=True).equals(expected_result):
+        raise ValueError("completed score/result mismatch")
+    return schedule, completed_file
+
+
+def load_frozen_lockbox_target(
+    completed_path, prediction_path=FROZEN_PREDICTIONS_PATH, *,
+    expected_prediction_sha256=FROZEN_PREDICTIONS_SHA256,
+):
+    """Select the immutable target by saved prediction IDs, never by live ordering."""
+    prediction_path = Path(prediction_path)
+    digest = hashlib.sha256(prediction_path.read_bytes()).hexdigest()
+    if digest != expected_prediction_sha256:
+        raise ValueError("frozen prediction artifact SHA-256 mismatch")
+    predictions = _read_strings(prediction_path)
+    identity = ["match_id", "match_date", "home_team", "away_team", "actual_class"]
+    if predictions.columns.has_duplicates or set(identity) - set(predictions.columns):
+        raise ValueError("invalid frozen prediction artifact schema")
+    if (len(predictions) != FROZEN_TARGET_COUNT or predictions.match_id.eq("").any()
+            or predictions.match_id.duplicated().any()):
+        raise ValueError("frozen prediction artifact must identify exactly 70 matches")
+
+    completed = _read_strings(completed_path)
+    if completed.columns.has_duplicates or "match_id" not in completed:
+        raise ValueError("invalid live completed schema")
+    if completed.match_id.eq("").any() or completed.match_id.duplicated().any():
+        raise ValueError("live completed match_id must be complete and unique")
+    indexed = completed.set_index("match_id", drop=False)
+    missing = set(predictions.match_id) - set(indexed.index)
+    if missing:
+        raise ValueError("frozen target match IDs are absent from the live completed data")
+    target = indexed.loc[predictions.match_id.tolist()].reset_index(drop=True)
+    observed = target[["match_id", "match_date", "home_team", "away_team", "result"]].rename(
+        columns={"result": "actual_class"}
+    )
+    if not observed.reset_index(drop=True).equals(predictions[identity].reset_index(drop=True)):
+        raise ValueError("frozen target identity/result disagrees with saved predictions")
+    return target
+
+def _default_input_paths():
+    return {
         "2025_j1": "data/processed/jleague/2025_matches_probe.csv",
         "2025_cup": "data/processed/jleague_cup/2025_jleague_cup_matches.csv",
         "2025_emperor": "data/processed/emperors_cup/2025_emperors_cup_matches.csv",
         "2026_cup": "data/processed/jleague_cup/2026_jleague_cup_matches.csv",
         "2026_emperor": "data/processed/emperors_cup/2026_emperors_cup_matches.csv",
         "hyakunen": "data/processed/jleague/2026_hyakunen/matches.csv",
-        "target": "data/processed/jleague/2026_27/completed_matches.csv",
+        "live_completed": "data/processed/jleague/2026_27/completed_matches.csv",
         "schedule": "data/processed/jleague/2026_27/schedule.csv",
+        "frozen_predictions": FROZEN_PREDICTIONS_PATH,
     }
+
+
+def preflight_inputs(paths=None, *, expected_prediction_sha256=FROZEN_PREDICTIONS_SHA256):
+    """Validate immutable evaluation inputs and the separate mutable live source."""
+    paths = _default_input_paths() if paths is None else paths
     expected = {"2025_j1": 380, "2025_cup": 56, "2025_emperor": 41,
                 "2026_cup": 4, "2026_emperor": 19, "hyakunen": 200,
-                "target": 70, "schedule": 380}
+                "schedule": LIVE_SCHEDULE_COUNT, "frozen_predictions": FROZEN_TARGET_COUNT}
     result={}
     for name,path in paths.items():
         p=Path(path)
         if not p.exists(): raise FileNotFoundError(f"missing frozen input: {name}: {path}")
         result[name] = {"path": str(p), "rows": int(len(pd.read_csv(p)))}
+        if name == "frozen_predictions":
+            result[name]["sha256"] = hashlib.sha256(p.read_bytes()).hexdigest()
         if name in expected and result[name]["rows"] != expected[name]:
             raise ValueError(f"unexpected row count for {name}: {result[name]['rows']} != {expected[name]}")
-    if "schedule" in result and "target" in result:
-        schedule = pd.read_csv(result["schedule"]["path"])
-        target = pd.read_csv(result["target"]["path"])
-        if (int((schedule.status == "scheduled").sum()) != 310
-                or int((schedule.status == "completed").sum()) != 70
-                or not set(target.match_id).issubset(set(schedule.loc[schedule.status == "completed", "match_id"]))):
-            raise ValueError("2026/27 completed-target and future-schedule invariant failed")
+    if "schedule" in result and "live_completed" in result:
+        schedule, live = validate_live_2026_inputs(
+            result["schedule"]["path"], result["live_completed"]["path"]
+        )
+        result["live_completed"].update(
+            scheduled_rows=int(schedule.status.eq("scheduled").sum()),
+            candidate_rows=int(schedule.status.eq("candidate").sum()),
+        )
+    if "live_completed" in result and "frozen_predictions" in result:
+        target = load_frozen_lockbox_target(
+            result["live_completed"]["path"], result["frozen_predictions"]["path"],
+            expected_prediction_sha256=expected_prediction_sha256,
+        )
+        result["frozen_target"] = {
+            "rows": len(target),
+            "match_ids": tuple(target.match_id.astype(str)),
+            "identity_source": "frozen_predictions",
+        }
     return result
 
 def _j1(path, master, years=range(2015,2026)):
@@ -122,10 +262,11 @@ def _fit(train, target, features):
     return p
 
 def evaluate_lockbox(processed_dir="data/processed/jleague", target_path="data/processed/jleague/2026_27/completed_matches.csv", hyakunen_path="data/processed/jleague/2026_hyakunen/matches.csv"):
-    preflight_inputs(); master=load_team_master(); j1=_j1(processed_dir,master); target=pd.read_csv(target_path); target["match_date"]=pd.to_datetime(target.match_date).dt.normalize()
+    paths=_default_input_paths(); paths["live_completed"]=target_path; paths["schedule"]=str(Path(target_path).with_name("schedule.csv")); paths["hyakunen"]=hyakunen_path
+    inputs=preflight_inputs(paths); master=load_team_master(); j1=_j1(processed_dir,master); target=load_frozen_lockbox_target(inputs["live_completed"]["path"], inputs["frozen_predictions"]["path"]); target["match_date"]=pd.to_datetime(target.match_date).dt.normalize()
     target["home_team_id"]=[master.resolve_team_id(x,source="jleague_data_site",on=t) for x,t in zip(target.home_team,target.match_date)]
     target["away_team_id"]=[master.resolve_team_id(x,source="jleague_data_site",on=t) for x,t in zip(target.away_team,target.match_date)]
-    if len(target)!=70 or target.match_id.duplicated().any(): raise ValueError("2026 target invariant failed")
+    if len(target)!=FROZEN_TARGET_COUNT or target.match_id.duplicated().any(): raise ValueError("2026 target invariant failed")
     hy=pd.read_csv(hyakunen_path); hy["match_date"]=pd.to_datetime(hy.match_date).dt.normalize(); hy["home_team_id"]=[master.resolve_team_id(x,source="jleague_data_site",on=t) for x,t in zip(hy.home_team,hy.match_date)]; hy["away_team_id"]=[master.resolve_team_id(x,source="jleague_data_site",on=t) for x,t in zip(hy.away_team,hy.match_date)]
     domestic=[]
     for pat in ["data/processed/jleague_cup/2015_2024_jleague_cup_matches.csv","data/processed/jleague_cup/2025_jleague_cup_matches.csv","data/processed/jleague_cup/2026_jleague_cup_matches.csv","data/processed/emperors_cup/2015_2024_emperors_cup_matches.csv","data/processed/emperors_cup/2025_emperors_cup_matches.csv","data/processed/emperors_cup/2026_emperors_cup_matches.csv"]:
@@ -141,7 +282,7 @@ def evaluate_lockbox(processed_dir="data/processed/jleague", target_path="data/p
     all_elo=_target_elo_features(history,target,set(history.home_team_id)|set(history.away_team_id)|set(target.home_team_id)|set(target.away_team_id))
     j1["match_id"]=j1.match_id.astype(str); target["match_id"]=target.match_id.astype(str)
     train=j1.merge(train_elo,on="match_id").merge(train_rest,on="match_id"); targetf=target.merge(all_elo,on="match_id").merge(target_rest,on="match_id")
-    if len(train)!=3588 or len(targetf)!=70:
+    if len(train)!=3588 or len(targetf)!=FROZEN_TARGET_COUNT:
         raise ValueError("Unexpected Logistic training or target row count.")
     p_a=_fit(train,targetf,FEATURE_A); p_b=_fit(train,targetf,FEATURE_B); y=target.result.to_numpy(); return targetf,p_a,p_b,y
 

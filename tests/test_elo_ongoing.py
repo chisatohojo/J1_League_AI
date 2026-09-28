@@ -295,7 +295,7 @@ def test_loader_requires_historical_inputs_even_when_latest_is_complete(tmp_path
         load_elo_history_with_ongoing(tmp_path, team_master=master)
 
 
-def test_cached_70_completed_extend_3788_matches_and_leave_all_data_unchanged():
+def test_cached_live_completed_extend_history_and_leave_all_data_unchanged():
     directory = ROOT / "data/processed/jleague"
     paths = [directory / f"{year}_matches_probe.csv" for year in range(2015, 2026)]
     paths.extend([directory / "2026_hyakunen/matches.csv", directory / "2026_27/latest.json"])
@@ -304,17 +304,21 @@ def test_cached_70_completed_extend_3788_matches_and_leave_all_data_unchanged():
     before = {name: file_hashes(ROOT / "data" / name) for name in ("raw", "processed", "master")}
     revision, _ = read_latest(directory / "2026_27")
     source = pd.read_csv(revision / "schedule.csv", dtype="string", keep_default_na=False)
-    assert source.status.value_counts().to_dict() == {"scheduled": 310, "completed": 70}
+    status_counts = source.status.value_counts().to_dict()
+    assert set(status_counts).issubset({"scheduled", "candidate", "completed"})
+    assert sum(status_counts.values()) == 380
+    assert source.fixture_key.is_unique
     master = load_team_master()
     previous = load_elo_history_with_hyakunen(directory, team_master=master)
     history = load_elo_history_with_ongoing(directory, team_master=master)
     assert_same_elo(history, previous)
     completed = history.ongoing.matches
-    assert len(completed) == completed.match_id.nunique() == 70
+    expected_completed = source.loc[source.status.eq("completed")]
+    assert len(completed) == completed.match_id.nunique() == len(expected_completed)
     assert set(completed.match_id) == set(source.loc[source.status.eq("completed"), "match_id"])
     assert set(completed.fixture_key).isdisjoint(source.loc[source.status.ne("completed"), "fixture_key"])
     all_matches = pd.concat([history.historical.matches, history.hyakunen.matches, completed], ignore_index=True)
-    assert len(all_matches) == all_matches.match_id.nunique() == 3858
+    assert len(all_matches) == all_matches.match_id.nunique() == 3588 + 200 + len(completed)
     assert len(set(all_matches.home_team_id) | set(all_matches.away_team_id)) == 33
     elo = EloRatings(sorted(history.historical.final_ratings))
     seen_ongoing = set()
@@ -333,5 +337,5 @@ def test_cached_70_completed_extend_3788_matches_and_leave_all_data_unchanged():
             elo.update(row.home_team_id, row.away_team_id, row.result)
     assert len(seen_ongoing) == 20
     assert history.ongoing.final_ratings == elo.ratings
-    assert sum(history.ongoing.final_ratings.values()) == pytest.approx(33 * 1500)
+    assert sum(history.ongoing.final_ratings.values()) == pytest.approx(master.team_count * 1500)
     assert {name: file_hashes(ROOT / "data" / name) for name in ("raw", "processed", "master")} == before

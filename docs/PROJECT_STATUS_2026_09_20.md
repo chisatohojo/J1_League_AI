@@ -19,6 +19,13 @@ B − A: Accuracy `-0.001788`, Log Loss `-0.000527`, Brier `-0.000681`; Log Loss
 
 The evaluation target is the **70 completed ordinary 2026/27 J1 matches**, not the 200 Hyakunen matches; 310 scheduled fixtures are future and unused. Hyakunen's 200 regulation-time results update Elo and its dates enter Domestic Rest, but its rows are excluded from Logistic training. The current official interim result is documented in [2026_27_INTERIM_LOCKBOX_EVALUATION.md](2026_27_INTERIM_LOCKBOX_EVALUATION.md):
 
+This is an immutable opened-lockbox statement, not a requirement that the live
+2026/27 publication remain at 70 completed matches. As of the 2026-09-29 local
+publication, live progress is 80 completed / 300 scheduled. Tests treat that
+publication as mutable while binding the interim target to the 70 IDs in the
+SHA-256-validated saved prediction artifact. The additional ten matches are
+live history only and do not enter the frozen interim target.
+
 | Model | Correct | Accuracy | Log Loss | Brier |
 |---|---:|---:|---:|---:|
 | A | 40/70 | 0.571429 | 0.996370 | 0.592515 |
@@ -49,7 +56,11 @@ The earlier report's `3,514` was a **documentation error**, not a 74-row exclusi
 
 1. The previous evaluator omitted earlier completed 2026/27 ordinary J1 target matches from Model B's Domestic Rest history. It is corrected: **50 target matches / 97 team appearances** have changed Rest features; the first affected match was **2026-08-14, ID 34527**. Each date's target events enter Rest history only for later dates.
 2. Target Elo and Rest use **same-date batching**. There are 15 date buckets, **12** with multiple matches; 11 exact-kickoff-time groups also contain multiple matches. No same-date match result enters another match's pre-match feature. The corrected Elo difference changed for **0/70** actual targets because no club played twice on a target date.
-3. `preflight_inputs()` now hard-fails on the 2025 J1/Cup/Emperor counts **380/56/41**, 2026 Cup/Emperor **4/19**, Hyakunen **200**, target **70**, and schedule **380** with **310** future rows excluded.
+3. `preflight_inputs()` hard-fails on the static 2025 J1/Cup/Emperor counts
+   **380/56/41**, 2026 Cup/Emperor **4/19**, Hyakunen **200**, the full live
+   schedule **380**, and the immutable saved-prediction target **70**. The
+   live completed/future split is validated structurally and may advance; it
+   is not the source of frozen target membership.
 4. The first interim run lacked 2026 Cup/Emperor inputs and used the wrong Brier reduction; it is **invalid**. The later 36/70 Model B report used the correct inputs/Brier scale but had the Rest chronology bug; it is **superseded**, not the current official result. The original `270` target assumption (200 Hyakunen + 70 ordinary J1) was withdrawn in [2026_LOCKBOX_PROTOCOL_CORRECTION.md](2026_LOCKBOX_PROTOCOL_CORRECTION.md).
 
 These corrections restore the frozen chronology contract; they do not authorize tuning or further 2026-driven model selection.

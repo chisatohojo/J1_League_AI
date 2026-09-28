@@ -271,7 +271,7 @@ def test_cached_2015_through_2025_replay_is_complete_reproducible_and_read_only(
     played = set(first.matches.home_team_id) | set(first.matches.away_team_id)
     registered = {alias.team_id for alias in master.aliases}
     assert len(played) == 31
-    assert len(registered) == len(first.final_ratings) == 33
+    assert len(registered) == len(first.final_ratings) == master.team_count
     assert set(first.final_ratings) == registered
     assert all(first.final_ratings[team_id] == 1500 for team_id in registered - played)
     assert first.matches.home_team_id.notna().all() and first.matches.away_team_id.notna().all()
@@ -295,5 +295,5 @@ def test_cached_2015_through_2025_replay_is_complete_reproducible_and_read_only(
         assert master.resolve_team_id(row.away_team, on=row.match_date) == row.away_team_id
         ratings.update(row.home_team_id, row.away_team_id, row.result)
     assert first.final_ratings == ratings.ratings
-    assert sum(first.final_ratings.values()) == pytest.approx(33 * 1500)
+    assert sum(first.final_ratings.values()) == pytest.approx(master.team_count * 1500)
     assert {path: sha256(path.read_bytes()).hexdigest() for path in paths} == original_hashes

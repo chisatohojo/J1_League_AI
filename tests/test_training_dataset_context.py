@@ -85,8 +85,8 @@ def mock_loaders(monkeypatch):
     return install
 
 
-def test_real_shape(real_output):
-    assert real_output.shape == (3858, 38)
+def test_real_shape(real_inputs, real_output):
+    assert real_output.shape == (len(real_inputs[0]), 38)
 
 
 def test_real_original_33_columns_are_unchanged(real_inputs, real_output):

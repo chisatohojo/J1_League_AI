@@ -52,8 +52,10 @@ def real_dataset():
 
 
 def test_real_dataset_has_one_row_per_match(real_dataset):
-    dataset, _ = real_dataset
-    assert len(dataset) == 3858
+    dataset, history = real_dataset
+    expected = sum(len(getattr(history, part))
+                   for part in ("historical", "hyakunen", "ongoing"))
+    assert len(dataset) == expected
     assert dataset["match_id"].is_unique
 
 

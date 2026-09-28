@@ -219,7 +219,7 @@ def test_cli_reads_explicit_input_and_master_paths(tmp_path, special, schedule, 
     assert master_path.read_bytes() == before_master
 
 
-def test_cached_3858_matches_33_clubs_fc_tokyo_and_all_inputs_remain_unchanged(tmp_path):
+def test_cached_live_matches_and_registered_clubs_leave_all_inputs_unchanged(tmp_path):
     inputs = ROOT / "data/processed/jleague"
     required = [inputs / f"{year}_matches_probe.csv" for year in range(2015, 2026)]
     required.extend([inputs / "2026_hyakunen/matches.csv", inputs / "2026_27/latest.json"])
@@ -230,16 +230,19 @@ def test_cached_3858_matches_33_clubs_fc_tokyo_and_all_inputs_remain_unchanged(t
     expected = load_elo_history_with_ongoing(inputs, team_master=master)
     paths = export_elo_history(inputs, output_dir=tmp_path / "elo")
     matches, ratings = read_exports(paths)
-    assert len(matches) == matches.match_id.nunique() == 3858
-    assert len(ratings) == ratings.team_id.nunique() == master.team_count == 33
+    source_count = sum(len(getattr(expected, part).matches)
+                       for part in ("historical", "hyakunen", "ongoing"))
+    assert len(matches) == matches.match_id.nunique() == source_count
+    assert len(ratings) == ratings.team_id.nunique() == master.team_count
     assert_matches_preserved(matches, expected)
     assert_current_ratings_preserved(ratings, expected, master)
     tokyo = ratings.set_index("team_id").loc[master.resolve_team_id("FC東京")]
-    assert tokyo.rating == pytest.approx(1597.745943, abs=0.000001, rel=0)
+    assert tokyo.rating == pytest.approx(expected.ongoing.final_ratings[tokyo.name])
     assert tokyo.canonical_name == "ＦＣ東京"
     completed_ids = set(expected.ongoing.matches.home_team_id) | set(expected.ongoing.matches.away_team_id)
     inactive = ratings.loc[~ratings.team_id.isin(completed_ids)]
-    assert len(inactive) == 13
+    registered_ids = {alias.team_id for alias in master.aliases}
+    assert set(inactive.team_id) == registered_ids - completed_ids
     for row in inactive.itertuples(index=False):
         assert row.rating == expected.hyakunen.final_ratings[row.team_id]
 
