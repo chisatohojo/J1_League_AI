@@ -26,7 +26,7 @@ New sources should be acquired in a separate research cycle. Before any model ex
 - FootyStats historical xG has match-level promise but no verified full 2015/2019/2024 coverage, methodology consistency or approved free bulk path; investigate a licensed CSV/API sample before any collector.
 - SofaScore historical lineup/rating/minutes lacks a confirmed official public structured path and sample-level player-ID coverage; investigate rights and source access first.
 - J.LEAGUE.jp 2024 match stats HTML/RSC showed `0`/`0%` placeholder candidates. A browser request trace or official documented feed is needed to establish final values.
-- The 145 identity-safe J1–J2 Cup bridge candidates need source-proven **90-minute** scores before any Elo experiment. The prior zero-used run was a data-path limit, not a performance verdict.
+- The 145 identity-safe J1–J2 Cup bridge candidates now have an official period-breakdown source contract ([audit](CUP_J1_J2_REGULATION_RESULT_FEASIBILITY.md)): 58 Emperor rows are locally confirmable and 87 bounded official detail lookups remain. Materialize and validate that immutable candidate set before any Elo experiment. The prior zero-used run was a data-path limit, not a performance verdict.
 
 ## Order of work within a new cycle
 
