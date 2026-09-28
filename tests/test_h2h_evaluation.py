@@ -176,27 +176,52 @@ def test_18_pooled_validation_count_is_1678() -> None:
 def test_19_s0_and_s1_training_ids_can_be_identical() -> None:
     train, validation = _model_frames()
     evaluation.assert_same_fold_inputs(train, train.copy(), validation, validation.copy())
+    altered = train.copy()
+    altered.loc[0, "match_id"] = "different"
+    with pytest.raises(evaluation.H2HEvaluationError, match="training match IDs differ"):
+        evaluation.assert_same_fold_inputs(train, altered, validation, validation.copy())
 
 
 def test_20_s0_and_s1_validation_ids_can_be_identical() -> None:
     train, validation = _model_frames()
     evaluation.assert_same_fold_inputs(train, train.copy(), validation, validation.copy())
-    assert len(evaluation._fit(train, validation, evaluation.S0_FEATURES)) == len(validation)
-    assert len(evaluation._fit(train, validation, evaluation.S1_FEATURES)) == len(validation)
+    altered = validation.iloc[::-1].copy()
+    with pytest.raises(evaluation.H2HEvaluationError, match="validation match IDs differ"):
+        evaluation.assert_same_fold_inputs(train, train.copy(), validation, altered)
 
 
 def test_21_s0_and_s1_labels_are_identical() -> None:
     train, validation = _model_frames()
     evaluation.assert_same_fold_inputs(train, train.copy(), validation, validation.copy())
+    altered = validation.copy()
+    altered.loc[altered.index[0], "result"] = 2
+    with pytest.raises(evaluation.H2HEvaluationError, match="validation labels differ"):
+        evaluation.assert_same_fold_inputs(train, train.copy(), validation, altered)
 
 
-def test_22_pipeline_fits_training_rows_only() -> None:
+def test_22_pipeline_fits_training_rows_only(monkeypatch) -> None:
     train, validation = _model_frames()
-    baseline = evaluation._fit(train, validation, evaluation.S0_FEATURES)
-    changed_validation = validation.copy()
-    changed_validation.loc[:, "elo_diff"] = 999999.0
-    changed = evaluation._fit(train, changed_validation, evaluation.S0_FEATURES)
-    assert baseline.shape == changed.shape == (len(validation), 3)
+    scaler_fits = []
+    logistic_fits = []
+
+    class SpyScaler(evaluation.StandardScaler):
+        def fit(self, X, y=None, **params):
+            scaler_fits.append((np.asarray(X).copy(), None if y is None else np.asarray(y).copy()))
+            return super().fit(X, y, **params)
+
+    class SpyLogistic(evaluation.LogisticRegression):
+        def fit(self, X, y, sample_weight=None):
+            logistic_fits.append((np.asarray(X).copy(), np.asarray(y).copy()))
+            return super().fit(X, y, sample_weight=sample_weight)
+
+    monkeypatch.setattr(evaluation, "StandardScaler", SpyScaler)
+    monkeypatch.setattr(evaluation, "LogisticRegression", SpyLogistic)
+    evaluation._fit(train, validation, evaluation.S0_FEATURES)
+    assert len(scaler_fits) == len(logistic_fits) == 1
+    assert scaler_fits[0][0].shape[0] == logistic_fits[0][0].shape[0] == len(train)
+    np.testing.assert_array_equal(logistic_fits[0][1], train.result.to_numpy())
+    assert set(scaler_fits[0][0][:, 0]) == set(train.elo_diff.to_numpy())
+    assert not set(scaler_fits[0][0][:, 0]) & set(validation.elo_diff.to_numpy())
 
 
 def test_23_s0_features_are_exact() -> None:
@@ -230,12 +255,34 @@ def test_26_pooled_metrics_use_concatenated_oof_rows() -> None:
     ])
 
 
-def test_27_a_y_mismatch_blocks_s1_and_decision() -> None:
-    folds = {season: {"s0": {"log_loss": evaluation.EXPECTED_A_Y_LL[season]}} for season in evaluation.FOLDS}
-    pooled = dict(evaluation.EXPECTED_A_Y_POOLED)
-    pooled["log_loss"] += 1e-6
+def test_27_a_y_mismatch_blocks_s1_and_decision(monkeypatch) -> None:
+    data = pd.DataFrame({
+        "season": list(range(2015, 2025)),
+        "match_id": [f"m{index}" for index in range(10)],
+        "result": [0, 1, 2, 0, 1, 2, 0, 1, 2, 0],
+    })
+    fit_features = []
+    decision_called = []
+
+    def fake_prepare_data(*args, **kwargs):
+        return data
+
+    def fake_fit(train, validation, features):
+        fit_features.append(tuple(features))
+        return np.tile([1 / 3, 1 / 3, 1 / 3], (len(validation), 1))
+
+    def forbidden_decision(*args, **kwargs):
+        decision_called.append(True)
+        raise AssertionError("frozen_decision must not be called after A_Y mismatch")
+
+    monkeypatch.setattr(evaluation, "_prepare_data", fake_prepare_data)
+    monkeypatch.setattr(evaluation, "_fit", fake_fit)
+    monkeypatch.setattr(evaluation, "frozen_decision", forbidden_decision)
     with pytest.raises(evaluation.H2HEvaluationError, match="BLOCKED_REFERENCE_MISMATCH"):
-        evaluation.assert_a_y_references(folds, pooled)
+        evaluation.evaluate()
+    assert fit_features == [evaluation.S0_FEATURES] * 5
+    assert evaluation.S1_FEATURES not in fit_features
+    assert decision_called == []
 
 
 def test_28_continue_decision_branch_is_exact() -> None:
@@ -296,3 +343,41 @@ def test_35_draw_diagnostics_do_not_enter_decision() -> None:
 
 def test_36_existing_baseline_prediction_reuse_is_no() -> None:
     assert evaluation.EXISTING_BASELINE_PREDICTION_REUSED is False
+
+
+def test_37_each_fold_delta_has_accuracy_log_loss_and_brier() -> None:
+    s0 = {"accuracy": 0.4, "log_loss": 1.1, "brier": 0.7}
+    s1 = {"accuracy": 0.5, "log_loss": 1.0, "brier": 0.6}
+    assert evaluation._metric_delta(s1, s0) == pytest.approx({
+        "accuracy": 0.1, "log_loss": -0.1, "brier": -0.1,
+    })
+
+
+def test_38_markdown_renderer_contains_frozen_result_sections() -> None:
+    metric = {"accuracy": 0.4, "log_loss": 1.1, "brier": 0.7, "count": 1678}
+    diagnostic = {
+        "actual": [1, 0, 0], "s0_argmax": [1, 0, 0], "s1_argmax": [1, 0, 0],
+        "s0_mean_draw_probability": 0.2, "s1_mean_draw_probability": 0.3,
+        "delta_mean_draw_probability": 0.1,
+    }
+    folds = {
+        season: {
+            "train_n": 1, "validation_n": 1, "s0": metric, "s1": metric,
+            "delta": evaluation._metric_delta(metric, metric),
+            "draw_diagnostic": diagnostic,
+        }
+        for season in evaluation.FOLDS
+    }
+    result = {
+        "baseline_sanity": "PASS", "folds": folds,
+        "pooled": {"s0": metric, "s1": metric, "delta": evaluation._metric_delta(metric, metric), "draw_diagnostic": diagnostic},
+        "s1_log_loss_improved_folds": 0, "decision": "INCONCLUSIVE_NO_TUNING",
+        "existing_baseline_prediction_reused": False,
+    }
+    markdown = evaluation.render_evaluation_markdown(result)
+    assert "Baseline sanity" in markdown
+    assert "Primary fold results" in markdown
+    assert "Primary pooled" in markdown and "1,678" in markdown
+    assert "Draw diagnostic" in markdown
+    assert "Final decision" in markdown
+    assert "adaptive follow-up = **NOT RUN**" in markdown

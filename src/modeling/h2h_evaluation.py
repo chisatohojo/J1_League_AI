@@ -33,6 +33,7 @@ from src.modeling.player_workload_evaluation import (
 ROOT = Path(__file__).resolve().parents[2]
 MATCH_DIR = ROOT / "data/processed/jleague"
 H2H_PATH = ROOT / "data/processed/features/2015_2024_j1_h2h_features.csv"
+EVALUATION_DOC_PATH = ROOT / "docs/H2H_EVALUATION.md"
 H2H_SHA256 = "ab51fd674ee1665591e4b4b152a92f12ffd020211db3e541047c3066815784ff"
 FOLDS = (2020, 2021, 2022, 2023, 2024)
 S0_FEATURES = ("elo_diff",)
@@ -201,6 +202,13 @@ def _metric_dict(labels, probabilities) -> dict:
     return asdict(_metrics(labels, probabilities))
 
 
+def _metric_delta(s1: dict, s0: dict) -> dict:
+    return {
+        metric: s1[metric] - s0[metric]
+        for metric in ("accuracy", "log_loss", "brier")
+    }
+
+
 def assert_same_fold_inputs(
     s0_train: pd.DataFrame,
     s1_train: pd.DataFrame,
@@ -259,6 +267,92 @@ def _validate_fold_counts(data: pd.DataFrame) -> None:
             raise H2HEvaluationError(f"Fold-count mismatch for {season}: {observed}")
 
 
+def render_evaluation_markdown(result: dict) -> str:
+    """Render the frozen result document without timestamps or nondeterminism."""
+    lines = [
+        "# H2H Evaluation",
+        "",
+        f"Baseline sanity: **{result['baseline_sanity']}**",
+        "",
+        "## A_Y fold Log Loss",
+        "",
+        "| Season | A_Y Log Loss |",
+        "|---:|---:|",
+    ]
+    for season in FOLDS:
+        lines.append(f"| {season} | {result['folds'][season]['s0']['log_loss']!r} |")
+    lines.extend([
+        "",
+        "## Primary fold results",
+        "",
+        "| Season | Train n | Validation n | S0 Accuracy | S0 Log Loss | S0 Brier | S1 Accuracy | S1 Log Loss | S1 Brier | Delta Accuracy | Delta Log Loss | Delta Brier |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for season in FOLDS:
+        fold = result["folds"][season]
+        s0, s1, delta = fold["s0"], fold["s1"], fold["delta"]
+        lines.append(
+            f"| {season} | {fold['train_n']} | {fold['validation_n']} | "
+            f"{s0['accuracy']!r} | {s0['log_loss']!r} | {s0['brier']!r} | "
+            f"{s1['accuracy']!r} | {s1['log_loss']!r} | {s1['brier']!r} | "
+            f"{delta['accuracy']!r} | {delta['log_loss']!r} | {delta['brier']!r} |"
+        )
+    pooled = result["pooled"]
+    lines.extend([
+        "",
+        "## Primary pooled",
+        "",
+        "| Population | Accuracy | Log Loss | Brier | n |",
+        "|---|---:|---:|---:|---:|",
+        f"| S0 | {pooled['s0']['accuracy']!r} | {pooled['s0']['log_loss']!r} | {pooled['s0']['brier']!r} | {pooled['s0']['count']:,} |",
+        f"| S1 | {pooled['s1']['accuracy']!r} | {pooled['s1']['log_loss']!r} | {pooled['s1']['brier']!r} | {pooled['s1']['count']:,} |",
+        f"| Delta (S1 - S0) | {pooled['delta']['accuracy']!r} | {pooled['delta']['log_loss']!r} | {pooled['delta']['brier']!r} | — |",
+        "",
+        f"S1 Log Loss improved folds: **{result['s1_log_loss_improved_folds']} / 5**",
+        "",
+        "## Draw diagnostic",
+        "",
+        "| Population | Actual Away/Draw/Home | S0 argmax Away/Draw/Home | S1 argmax Away/Draw/Home | S0 mean Draw probability | S1 mean Draw probability | Delta |",
+        "|---|---|---|---|---:|---:|---:|",
+    ])
+    for season in FOLDS:
+        diagnostic = result["folds"][season]["draw_diagnostic"]
+        lines.append(
+            f"| {season} | {diagnostic['actual']} | {diagnostic['s0_argmax']} | {diagnostic['s1_argmax']} | "
+            f"{diagnostic['s0_mean_draw_probability']!r} | {diagnostic['s1_mean_draw_probability']!r} | "
+            f"{diagnostic['delta_mean_draw_probability']!r} |"
+        )
+    diagnostic = pooled["draw_diagnostic"]
+    lines.append(
+        f"| Pooled | {diagnostic['actual']} | {diagnostic['s0_argmax']} | {diagnostic['s1_argmax']} | "
+        f"{diagnostic['s0_mean_draw_probability']!r} | {diagnostic['s1_mean_draw_probability']!r} | "
+        f"{diagnostic['delta_mean_draw_probability']!r} |"
+    )
+    lines.extend([
+        "",
+        "Draw diagnostics are descriptive only and do not enter the decision.",
+        "",
+        "## Final decision",
+        "",
+        f"**{result['decision']}**",
+        "",
+        f"existing baseline prediction reused from another lane = **{'YES' if result['existing_baseline_prediction_reused'] else 'NO'}**",
+        "feature changes = **NO**",
+        "parameter changes = **NO**",
+        "tuning = **NOT RUN**",
+        "adaptive follow-up = **NOT RUN**",
+        "",
+    ])
+    return "\n".join(lines)
+
+
+def write_evaluation_markdown(result: dict, path: str | Path = EVALUATION_DOC_PATH) -> Path:
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(render_evaluation_markdown(result), encoding="utf-8", newline="\n")
+    return output
+
+
 def _prepare_data(match_dir: str | Path, artifact_path: str | Path) -> pd.DataFrame:
     assert_artifact_sha(artifact_path)
     targets = load_j1_matches(match_dir)
@@ -280,11 +374,13 @@ def evaluate(*, match_dir: str | Path = MATCH_DIR, artifact_path: str | Path = H
     """
     data = _prepare_data(match_dir, artifact_path)
     folds = {}
+    fold_inputs = {}
     pooled_labels = []
     pooled_s0 = []
     for season in FOLDS:
         train = data.loc[data.season.lt(season)].copy()
         validation = data.loc[data.season.eq(season)].copy()
+        fold_inputs[season] = (train, validation)
         s0_probabilities = _fit(train, validation, S0_FEATURES)
         labels = validation.result.to_numpy()
         folds[season] = {
@@ -301,22 +397,21 @@ def evaluate(*, match_dir: str | Path = MATCH_DIR, artifact_path: str | Path = H
 
     pooled_s1 = []
     for season in FOLDS:
-        train = data.loc[data.season.lt(season)].copy()
-        validation = data.loc[data.season.eq(season)].copy()
-        assert_same_fold_inputs(train, train, validation, validation)
-        s1_probabilities = _fit(train, validation, S1_FEATURES)
-        labels = validation.result.to_numpy()
+        s0_train, s0_validation = fold_inputs[season]
+        s1_train = data.loc[data.season.lt(season)].copy()
+        s1_validation = data.loc[data.season.eq(season)].copy()
+        assert_same_fold_inputs(s0_train, s1_train, s0_validation, s1_validation)
+        s1_probabilities = _fit(s1_train, s1_validation, S1_FEATURES)
+        labels = s1_validation.result.to_numpy()
         folds[season]["s1"] = _metric_dict(labels, s1_probabilities)
-        folds[season]["draw_diagnostic"] = _draw_diagnostic(labels, pooled_s0[ FOLDS.index(season) ], s1_probabilities)
+        folds[season]["delta"] = _metric_delta(folds[season]["s1"], folds[season]["s0"])
+        folds[season]["draw_diagnostic"] = _draw_diagnostic(labels, pooled_s0[FOLDS.index(season)], s1_probabilities)
         pooled_s1.append(s1_probabilities)
     pooled_s1_array = np.concatenate(pooled_s1)
     pooled_metrics = {"s0": pooled_s0_metrics, "s1": _metric_dict(pooled_labels_array, pooled_s1_array)}
-    pooled_metrics["delta"] = {
-        metric: pooled_metrics["s1"][metric] - pooled_metrics["s0"][metric]
-        for metric in ("accuracy", "log_loss", "brier")
-    }
+    pooled_metrics["delta"] = _metric_delta(pooled_metrics["s1"], pooled_metrics["s0"])
     pooled_metrics["draw_diagnostic"] = _draw_diagnostic(pooled_labels_array, pooled_s0_array, pooled_s1_array)
-    return {
+    result = {
         "status": "PASS",
         "baseline_sanity": "PASS",
         "folds": folds,
@@ -325,3 +420,5 @@ def evaluate(*, match_dir: str | Path = MATCH_DIR, artifact_path: str | Path = H
         "s1_log_loss_improved_folds": sum(folds[season]["s1"]["log_loss"] < folds[season]["s0"]["log_loss"] for season in FOLDS),
         "existing_baseline_prediction_reused": False,
     }
+    write_evaluation_markdown(result)
+    return result
