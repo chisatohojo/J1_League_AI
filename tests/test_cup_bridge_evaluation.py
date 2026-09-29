@@ -1,13 +1,18 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
 import pytest
 
 from src.modeling import cup_bridge_evaluation as evaluation
 from src.modeling import player_workload_evaluation as known_good
+
+
+_FORMAL_DOC_INITIAL_BYTES = (
+    evaluation.EVALUATION_DOC_PATH.read_bytes()
+    if evaluation.EVALUATION_DOC_PATH.exists()
+    else None
+)
 
 
 @pytest.fixture(scope="module")
@@ -440,5 +445,8 @@ def test_30_formal_entry_gate_failure_prevents_c_and_report(monkeypatch, tmp_pat
     assert not report.exists()
 
 
-def test_31_formal_result_document_has_not_been_created() -> None:
-    assert not Path(evaluation.EVALUATION_DOC_PATH).exists()
+def test_31_test_suite_does_not_create_or_modify_formal_result_document() -> None:
+    if _FORMAL_DOC_INITIAL_BYTES is None:
+        assert not evaluation.EVALUATION_DOC_PATH.exists()
+    else:
+        assert evaluation.EVALUATION_DOC_PATH.read_bytes() == _FORMAL_DOC_INITIAL_BYTES
