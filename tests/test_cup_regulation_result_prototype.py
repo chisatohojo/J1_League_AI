@@ -7,7 +7,7 @@ import pytest
 
 from src.collect.cup_regulation_result_prototype import (
     CONFIRMED, UNRESOLVED, CupRegulationError, parse_jleague_sfms02,
-    parse_jfa_schedule_result,
+    parse_jfa_match_page, parse_jfa_schedule_result,
 )
 
 
@@ -16,9 +16,10 @@ FIXTURES = Path(__file__).parent / "fixtures/cup_regulation_result"
 
 def _jleague(name, match_id, home, away):
     raw = (FIXTURES / name).read_bytes()
+    match_date = "2024-11-02" if match_id == "31274" else "2018-03-07"
     return parse_jleague_sfms02(
         raw, season=2024 if match_id == "31274" else 2018,
-        source_match_id=match_id, match_date="2024-11-02",
+        source_match_id=match_id, match_date=match_date,
         home_team_id="home-id", away_team_id="away-id",
         expected_home_team=home, expected_away_team=away,
         source_url=f"https://data.j-league.or.jp/SFMS02/?match_card_id={match_id}",
@@ -28,6 +29,7 @@ def _jleague(name, match_id, home, away):
 def _jfa(score):
     item = {
         "matchNumber": "59", "homeTeamName": "名古屋", "awayTeamName": "仙台",
+        "matchDate": "2023/07/12",
         "score": score,
     }
     raw = json.dumps({"matchScheduleList": {"matchSchedule": [item]}}).encode()
@@ -87,6 +89,29 @@ def test_jleague_raw_sha_is_exact_source_bytes():
     assert row["raw_sha256"] == hashlib.sha256(raw).hexdigest()
 
 
+def test_jleague_exact_official_club_slug_validates_full_name_identity():
+    raw = (FIXTURES / "jleague_regulation.html").read_bytes()
+    raw = raw.replace(
+        "仙台</th>".encode(),
+        '<a href="https://www.jleague.jp/club/sendai/profile/">ベガルタ仙台</a></th>'.encode(),
+    ).replace(
+        "新潟</th>".encode(),
+        '<a href="http://www.jleague.jp/club/niigata/profile/">アルビレックス新潟</a></th>'.encode(),
+    )
+    kwargs = dict(
+        season=2018, source_match_id="21051", match_date="2018-03-07",
+        home_team_id="home-id", away_team_id="away-id",
+        expected_home_team="仙台", expected_away_team="新潟",
+        source_url="https://data.j-league.or.jp/SFMS02/?match_card_id=21051",
+        expected_home_club_ids=("sendai",), expected_away_club_ids=("niigata",),
+    )
+    assert parse_jleague_sfms02(raw, **kwargs)["regulation_result"] == 1
+    with pytest.raises(CupRegulationError, match="club identity"):
+        parse_jleague_sfms02(
+            raw, **{**kwargs, "expected_home_club_ids": ("wrong",)}
+        )
+
+
 @pytest.mark.parametrize("home,away,expected", [(2, 0, 2), (1, 1, 1), (0, 3, 0)])
 def test_jfa_class_order_is_away_draw_home(home, away, expected):
     row = _jfa({
@@ -101,6 +126,7 @@ def test_jfa_class_order_is_away_draw_home(home, away, expected):
 def test_jfa_raw_sha_and_match_identity_share_one_payload():
     item = {
         "matchNumber": "59", "homeTeamName": "名古屋", "awayTeamName": "仙台",
+        "matchDate": "2023/07/12",
         "score": {
             "homeScore": "1", "awayScore": "0",
             "homeTeamScore1st": "0", "awayTeamScore1st": "0",
@@ -168,7 +194,8 @@ def test_jfa_partial_periods_and_wrong_identity_fail_closed():
     }
     with pytest.raises(CupRegulationError, match="partial JFA regulation"):
         _jfa(score)
-    item = {"matchNumber": "59", "homeTeamName": "wrong", "awayTeamName": "仙台", "score": score}
+    item = {"matchNumber": "59", "matchDate": "2023/07/12",
+            "homeTeamName": "wrong", "awayTeamName": "仙台", "score": score}
     with pytest.raises(CupRegulationError, match="home/away identity"):
         parse_jfa_schedule_result(
             json.dumps({"matchScheduleList": {"matchSchedule": [item]}}).encode(),
@@ -202,6 +229,7 @@ def test_blank_or_identical_team_ids_fail_closed():
         parse_jfa_schedule_result(
             json.dumps({"matchScheduleList": {"matchSchedule": [{
                 "matchNumber": "59", "homeTeamName": "名古屋", "awayTeamName": "仙台",
+                "matchDate": "2023/07/12",
                 "score": {"homeScore": "1", "awayScore": "0"},
             }]}}).encode(),
             season=2023, source_match_id="2023-m59", match_date="2023-07-12",
@@ -228,3 +256,37 @@ def test_inputs_are_not_mutated():
     before = copy.deepcopy(score)
     _jfa(score)
     assert score == before
+
+
+def test_jfa_detail_extra_time_and_pk_preserve_regulation_draw():
+    raw = (FIXTURES / "jfa_extra_pk.html").read_bytes()
+    row = parse_jfa_match_page(
+        raw, season=2015, source_match_id="2015-m63", match_date="2015-10-14",
+        home_team_id="home-id", away_team_id="away-id",
+        expected_home_team="鹿島アントラーズ",
+        expected_away_team="水戸ホーリーホック",
+        source_url="https://www.jfa.jp/match/emperorscup_2015/match_page/m63.html",
+    )
+    assert (row["regulation_home_score"], row["regulation_away_score"]) == (0, 0)
+    assert row["regulation_result"] == 1
+    assert row["extra_time_played"] is True
+    assert row["penalty_shootout_played"] is True
+
+
+def test_jfa_detail_identity_date_and_arithmetic_fail_closed():
+    raw = (FIXTURES / "jfa_extra_pk.html").read_bytes()
+    kwargs = dict(
+        season=2015, source_match_id="2015-m63", match_date="2015-10-14",
+        home_team_id="home-id", away_team_id="away-id",
+        expected_home_team="鹿島アントラーズ",
+        expected_away_team="水戸ホーリーホック",
+        source_url="https://www.jfa.jp/match/emperorscup_2015/match_page/m63.html",
+    )
+    with pytest.raises(CupRegulationError, match="home/away identity"):
+        parse_jfa_match_page(raw, **{**kwargs, "expected_home_team": "wrong"})
+    with pytest.raises(CupRegulationError, match="match date mismatch"):
+        parse_jfa_match_page(raw, **{**kwargs, "match_date": "2015-10-15"})
+    broken = raw.replace(b'<div class="total-score">0</div><div class="flag">',
+                         b'<div class="total-score">1</div><div class="flag">')
+    with pytest.raises(CupRegulationError, match="period/final"):
+        parse_jfa_match_page(broken, **kwargs)

@@ -41,6 +41,13 @@ def _team_id(value, field):
     return text
 
 
+def _utf8_soup(raw, source):
+    try:
+        return BeautifulSoup(raw.decode("utf-8"), "html.parser")
+    except UnicodeDecodeError as exc:
+        raise CupRegulationError(f"invalid UTF-8 {source} source") from exc
+
+
 def _jleague_url(source_url, source_match_id):
     parsed = urlparse(source_url)
     query = parse_qs(parsed.query)
@@ -91,6 +98,8 @@ def parse_jleague_sfms02(
     raw: bytes, *, season: int, source_match_id: str, match_date: str,
     home_team_id: str, away_team_id: str, expected_home_team: str,
     expected_away_team: str, source_url: str,
+    expected_home_aliases=(), expected_away_aliases=(),
+    expected_home_club_ids=(), expected_away_club_ids=(),
 ):
     """Resolve one known SFMS02 match from explicit period rows."""
     _jleague_url(source_url, source_match_id)
@@ -100,7 +109,7 @@ def parse_jleague_sfms02(
         raise CupRegulationError("identical home/away team IDs")
     if not raw:
         raise CupRegulationError("empty J.League source")
-    soup = BeautifulSoup(raw, "html.parser")
+    soup = _utf8_soup(raw, "J.League")
     board = soup.select_one(".score-board-main")
     if board is None:
         raise CupRegulationError("missing J.League score board")
@@ -108,9 +117,34 @@ def parse_jleague_sfms02(
     away = board.select_one("#team-name-r")
     if home is None or away is None:
         raise CupRegulationError("missing J.League home/away identity")
-    if (home.get_text(" ", strip=True) != expected_home_team
-            or away.get_text(" ", strip=True) != expected_away_team):
-        raise CupRegulationError("J.League home/away identity mismatch")
+    home_names = {expected_home_team, *expected_home_aliases}
+    away_names = {expected_away_team, *expected_away_aliases}
+    for node, names, allowed in (
+        (home, home_names, set(expected_home_club_ids)),
+        (away, away_names, set(expected_away_club_ids)),
+    ):
+        source_name = node.get_text(" ", strip=True)
+        if not source_name:
+            raise CupRegulationError("J.League home/away identity mismatch")
+        if not allowed:
+            if source_name not in names:
+                raise CupRegulationError("J.League home/away identity mismatch")
+            continue
+        link = node.find("a", href=True)
+        link_url = urlparse(link["href"] if link else "")
+        club_match = re.match(r"^/club/([^/]+)/", link_url.path)
+        if (link_url.scheme not in {"http", "https"}
+                or link_url.hostname != "www.jleague.jp"
+                or club_match is None or club_match.group(1) not in allowed):
+            raise CupRegulationError("J.League club identity mismatch")
+    source_dates = {
+        node.get_text("", strip=True)
+        for node in soup.select(".two-column-table-bottom td")
+        if re.fullmatch(r"[0-9]{4}/[0-9]{2}/[0-9]{2}", node.get_text("", strip=True))
+    }
+    expected_date = str(match_date).replace("-", "/")
+    if source_dates != {expected_date} or not expected_date.startswith(f"{int(season):04d}/"):
+        raise CupRegulationError("J.League match date mismatch")
     totals = board.select("td.score")
     if len(totals) != 2:
         raise CupRegulationError("invalid J.League final-score cells")
@@ -187,6 +221,8 @@ def parse_jfa_schedule_result(
     if len(selected) != 1:
         raise CupRegulationError("JFA source match identity is missing or duplicated")
     item = selected[0]
+    if item.get("matchDate") != str(match_date).replace("-", "/"):
+        raise CupRegulationError("JFA match date mismatch")
     if (item.get("homeTeamName") != expected_home_team
             or item.get("awayTeamName") != expected_away_team):
         raise CupRegulationError("JFA home/away identity mismatch")
@@ -262,6 +298,113 @@ def parse_jfa_schedule_result(
         "regulation_away_score": regulation_away,
         "regulation_result": _result(regulation_home, regulation_away),
         "extra_time_played": bool(ex_flag is True or has_extra_periods),
+        "resolution_status": CONFIRMED,
+        "resolution_reason": "explicit_first_and_second_half_scores",
+    }
+
+
+def parse_jfa_match_page(
+    raw: bytes, *, season: int, source_match_id: str, match_date: str,
+    home_team_id: str, away_team_id: str, expected_home_team: str,
+    expected_away_team: str, source_url: str,
+):
+    """Resolve a legacy JFA detail page from explicit score-breakdown rows."""
+    match = re.fullmatch(rf"{int(season)}-m([0-9]+)", str(source_match_id))
+    if match is None:
+        raise CupRegulationError("JFA detail source match identity mismatch")
+    number = int(match.group(1))
+    parsed = urlparse(source_url)
+    expected_path = f"/match/emperorscup_{int(season)}/match_page/m{number}.html"
+    if (parsed.scheme != "https" or parsed.hostname != "www.jfa.jp"
+            or parsed.path != expected_path or parsed.query or parsed.fragment):
+        raise CupRegulationError("JFA detail source URL/match identity mismatch")
+    if not raw:
+        raise CupRegulationError("empty JFA detail source")
+    soup = _utf8_soup(raw, "JFA detail")
+    schedule = soup.select_one(
+        "#header-schedule-result .text-schedule, #header-schedule-score .text-schedule"
+    )
+    if schedule is None:
+        raise CupRegulationError("missing JFA detail schedule")
+    date_match = re.search(
+        r"([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日",
+        schedule.get_text(" ", strip=True),
+    )
+    if date_match is None:
+        raise CupRegulationError("missing JFA detail match date")
+    source_date = f"{int(date_match.group(1)):04d}-{int(date_match.group(2)):02d}-{int(date_match.group(3)):02d}"
+    if source_date != str(match_date) or not source_date.startswith(f"{int(season):04d}-"):
+        raise CupRegulationError("JFA detail match date mismatch")
+    board = soup.select_one("#score-board-header")
+    if board is None:
+        raise CupRegulationError("missing JFA detail score board")
+    flags = board.select(".flag")
+    totals = board.select(".total-score")
+    if len(flags) != 2 or len(totals) != 2:
+        raise CupRegulationError("invalid JFA detail teams/final scores")
+    team_names = []
+    for flag in flags:
+        text_nodes = [node.get_text(" ", strip=True) for node in flag.select("p")]
+        team_names.append(next((text for text in reversed(text_nodes) if text), ""))
+    if team_names != [expected_home_team, expected_away_team]:
+        raise CupRegulationError("JFA detail home/away identity mismatch")
+    home_team_id = _team_id(home_team_id, "home_team_id")
+    away_team_id = _team_id(away_team_id, "away_team_id")
+    if home_team_id == away_team_id:
+        raise CupRegulationError("identical home/away team IDs")
+    final_home = _integer(totals[0].get_text("", strip=True), "JFA detail final home score")
+    final_away = _integer(totals[1].get_text("", strip=True), "JFA detail final away score")
+    groups = []
+    for group in board.select(".score-detail ul.inner-score"):
+        rows = []
+        for item in group.select("li"):
+            cells = item.select("span")
+            if len(cells) != 3:
+                raise CupRegulationError("malformed JFA detail period row")
+            rows.append((
+                cells[1].get_text(" ", strip=True),
+                _integer(cells[0].get_text("", strip=True), "JFA detail home period score"),
+                _integer(cells[2].get_text("", strip=True), "JFA detail away period score"),
+            ))
+        if rows:
+            groups.append(rows)
+    if not groups or [row[0] for row in groups[0]] != ["前半", "後半"]:
+        raise CupRegulationError("explicit JFA first/second-half scores are required")
+    regulation_home = sum(row[1] for row in groups[0])
+    regulation_away = sum(row[2] for row in groups[0])
+    extra_home = extra_away = 0
+    extra_time = False
+    pk_played = False
+    for group in groups[1:]:
+        labels = [row[0] for row in group]
+        if labels in (["延前", "延後"], ["延長前半", "延長後半"]):
+            if extra_time:
+                raise CupRegulationError("duplicate JFA detail extra-time group")
+            extra_time = True
+            extra_home = sum(row[1] for row in group)
+            extra_away = sum(row[2] for row in group)
+        elif labels in (["PK"], ["PK戦"]):
+            if pk_played or group[0][1] == group[0][2]:
+                raise CupRegulationError("invalid JFA detail PK group")
+            pk_played = True
+        else:
+            raise CupRegulationError("unknown JFA detail score group")
+    if (final_home, final_away) != (
+        regulation_home + extra_home, regulation_away + extra_away
+    ):
+        raise CupRegulationError("JFA detail period/final score mismatch")
+    return {
+        "competition": "emperors_cup", "season": int(season),
+        "source_match_id": str(source_match_id), "match_date": str(match_date),
+        "home_team_id": home_team_id, "away_team_id": away_team_id,
+        "regulation_home_score": regulation_home,
+        "regulation_away_score": regulation_away,
+        "regulation_result": _result(regulation_home, regulation_away),
+        "extra_time_played": extra_time,
+        "penalty_shootout_played": pk_played,
+        "final_home_score": final_home, "final_away_score": final_away,
+        "source_url": source_url, "source_type": "jfa_match_page",
+        "raw_sha256": hashlib.sha256(raw).hexdigest(),
         "resolution_status": CONFIRMED,
         "resolution_reason": "explicit_first_and_second_half_scores",
     }
