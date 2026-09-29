@@ -85,16 +85,17 @@ The freeze lists **19** non-production experiments. The table lists a pooled Log
 | Elo Parity | `abs(elo_diff)` | N/A | N/A | Closed; pooled improvement absent per freeze |
 | Promotion Reset | Returning team Elo reset to 1500 | 1.055671 | −0.000394 | Closed; only 2/5 folds improved, early promoted matches worsened |
 | Equal J1+J2 Elo | J2 league Elo updates | 1.057002 | +0.000937 | Closed; returning subgroup improved, pooled worsened |
+| Frozen Cup-bridged J1+J2 Elo | Equal J1+J2 plus 145 regulation-time Cup events | 1.056566 | +0.000501 | **Closed** by the only formal run; C−A Brier `+0.0005719612389700757`, 2/5 folds improved; no tuning or adaptive follow-up |
 | J2 initial=1400 | Fixed division prior | 1.056353 | +0.000288 | Closed; 1/5 folds improved |
 | Promotion-Calibrated J1+J2 | Prior-season mean offset | 1.056243 | +0.000178 | Closed; pooled worse, first-time/early group worse |
 | Returning-History Hybrid | J2 carry-over for returning teams | 1.056399 | +0.000333* | Closed; pooled worse, early group worse |
 | Davidson | Draw-explicit Elo outcome model | N/A | N/A | Closed in freeze; no persisted pooled number found |
 | Lineup Continuity | Previous two Starting XI overlap | N/A | N/A | Closed; pooled Log Loss did not improve per freeze |
 
-The J2/promotion numbers come from [ELO_PROMOTION_J2_EXPERIMENT_SUMMARY.md](ELO_PROMOTION_J2_EXPERIMENT_SUMMARY.md) and [ELO_PROMOTION_RESET_EVALUATION.md](ELO_PROMOTION_RESET_EVALUATION.md). `*` The Hybrid document reports `+0.000333`; subtraction of the two separately rounded six-decimal scores gives `+0.000334`. The source document's difference is retained rather than inventing extra precision. The separate Cup cross-division bridge audit found 145 identity candidates (68 League Cup, 77 Emperor's Cup), but zero matches with safely usable regulation-time result in its evaluation; it is **unevaluated, not rejected on performance**.
+The J2/promotion numbers come from [ELO_PROMOTION_J2_EXPERIMENT_SUMMARY.md](ELO_PROMOTION_J2_EXPERIMENT_SUMMARY.md) and [ELO_PROMOTION_RESET_EVALUATION.md](ELO_PROMOTION_RESET_EVALUATION.md). `*` The Hybrid document reports `+0.000333`; subtraction of the two separately rounded six-decimal scores gives `+0.000334`. The source document's difference is retained rather than inventing extra precision. The later Cup bridge dataset resolved all 145 regulation-time results and its separately frozen formal run is recorded in [CUP_BRIDGE_EVALUATION.md](CUP_BRIDGE_EVALUATION.md): A/B/C pooled Log Loss `1.056065401323764` / `1.057002111148765` / `1.05656623974119`, final decision **`CLOSE_CUP_BRIDGE_LANE`**.
 
 ## Deferred information and research discipline
 
-FootyStats historical match xG, SofaScore player ratings, J.LEAGUE.jp final detailed stats, AFC integration, stable player identity, and regulation-time Cup bridge results remain data-path/identity tasks. See [DATA_PIPELINE_STATUS.md](DATA_PIPELINE_STATUS.md) and [NEXT_DATA_RESEARCH_ROADMAP.md](NEXT_DATA_RESEARCH_ROADMAP.md).
+FootyStats historical match xG, SofaScore player ratings, J.LEAGUE.jp final detailed match stats, AFC integration, and stable player identity remain data-path/identity tasks. J Stats team cumulative snapshots are a prospective archive only; no match-level reconstruction or model evaluation is approved. See [DATA_PIPELINE_STATUS.md](DATA_PIPELINE_STATUS.md) and [NEXT_DATA_RESEARCH_ROADMAP.md](NEXT_DATA_RESEARCH_ROADMAP.md).
 
 2025 is a spent test and cannot be used for a new model choice. The first 70 completed 2026/27 matches are an opened interim lockbox and cannot be used for feature selection or tuning. Future feature groups require a new research cycle with point-in-time snapshots and independent validation. The 2020–2024 OOF cycle is closed to repeated small-feature searches.

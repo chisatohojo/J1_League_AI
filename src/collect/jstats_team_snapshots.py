@@ -4,6 +4,7 @@ These are season-to-date page values, NOT reconstructed match statistics or
 pre-match features. The site's update lag and games-played basis are unknown.
 """
 
+import argparse
 import csv
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -78,9 +79,11 @@ SUPPLEMENTAL_STATS = (
     Stat("foul_count", "ファウル総数", "total", "回"),
     Stat("yellow_count", "警告数", "total", "枚"),
 )
+FULL_STATS = (*STATS, *SUPPLEMENTAL_STATS)
 RELATED_BASE_SNAPSHOT_ID = "20260920T212008928504Z"
 SUPPLEMENTAL_SOURCE_STATE_DATE = "2026-09-14"
-STAT_BY_SLUG = {stat.slug: stat for stat in (*STATS, *SUPPLEMENTAL_STATS)}
+STAT_BY_SLUG = {stat.slug: stat for stat in FULL_STATS}
+PROFILE_STATS = {"base": STATS, "full": FULL_STATS}
 CSV_FIELDS = (
     "snapshot_id", "retrieved_at", "source_updated_at", "source_updated_date_jst",
     "competition", "season", "team_id", "official_club_id", "official_club_name",
@@ -250,7 +253,8 @@ def _fetch(url: str):
 def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
                      schedule_path=SCHEDULE, master=None, now=None, fetch=_fetch, pause=time.sleep,
                      stats=STATS, related_snapshot_id=None, required_source_date=None,
-                     previous_source_state_date=None, previous_snapshot_ids=None):
+                     previous_source_state_date=None, previous_snapshot_ids=None,
+                     require_uniform_source_state=False):
     """Fetch each allowlisted page once; publish only a complete 20 x N snapshot.
 
     A failed run retains its raw pages and INCOMPLETE manifest, never a CSV.
@@ -318,6 +322,11 @@ def collect_snapshot(*, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
                                  "games_played": "", "stat_name": stat.slug,
                                  "value_type": stat.value_type, "unit": stat.unit,
                                  "source_url": url, "raw_sha256": digest})
+        if require_uniform_source_state:
+            source_dates = {page.get("source_updated_date_jst") for page in manifest["pages"]}
+            if len(source_dates) != 1 or None in source_dates:
+                raise SnapshotError("Full profile pages do not share one known source update date.")
+            manifest["source_state_date"] = next(iter(source_dates))
         if len(all_rows) != 20 * len(stats) or len({(r["team_id"], r["stat_name"]) for r in all_rows}) != len(all_rows):
             raise SnapshotError("Incomplete or duplicate processed snapshot rows.")
         Path(processed_root).mkdir(parents=True, exist_ok=True)
@@ -348,5 +357,42 @@ def collect_supplemental_snapshot(**kwargs):
     )
 
 
+def stats_for_profile(profile: str):
+    """Return an immutable fixed allowlist for a named capture profile."""
+    try:
+        stats = PROFILE_STATS[profile]
+    except KeyError as exc:
+        raise SnapshotError(f"Unknown snapshot profile: {profile!r}.") from exc
+    slugs = [stat.slug for stat in stats]
+    if len(slugs) != len(set(slugs)):
+        raise SnapshotError(f"Duplicate stat slug in {profile} profile.")
+    if profile == "base" and len(stats) != 10:
+        raise SnapshotError("BASE profile must contain exactly 10 stats.")
+    if profile == "full" and (len(stats) != 37 or set(stats) != set(FULL_STATS)):
+        raise SnapshotError("FULL profile must contain exactly the frozen 37 stats.")
+    return stats
+
+
+def collect_full_snapshot(**kwargs):
+    """Capture the exact 37-stat profile as one uniform source-state event."""
+    return collect_snapshot(
+        stats=stats_for_profile("full"),
+        require_uniform_source_state=True,
+        **kwargs,
+    )
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--profile", choices=tuple(PROFILE_STATS), default="base")
+    args = parser.parse_args(argv)
+    if args.profile == "full":
+        result = collect_full_snapshot()
+    else:
+        result = collect_snapshot(stats=stats_for_profile("base"))
+    print(json.dumps(result, ensure_ascii=False, default=str, indent=2))
+    return 0
+
+
 if __name__ == "__main__":
-    print(json.dumps(collect_snapshot(), ensure_ascii=False, default=str, indent=2))
+    raise SystemExit(main())

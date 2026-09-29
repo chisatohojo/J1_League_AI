@@ -8,9 +8,10 @@ from pathlib import Path
 import pytest
 
 from src.collect.jstats_team_snapshots import (
-    BASE_URL, RELATED_BASE_SNAPSHOT_ID, STATS, SUPPLEMENTAL_SOURCE_STATE_DATE,
-    SUPPLEMENTAL_STATS, Stat, SnapshotError, collect_snapshot,
-    collect_supplemental_snapshot, expected_club_slugs, parse_page,
+    BASE_URL, FULL_STATS, RELATED_BASE_SNAPSHOT_ID, STATS,
+    SUPPLEMENTAL_SOURCE_STATE_DATE, SUPPLEMENTAL_STATS, Stat, SnapshotError,
+    collect_full_snapshot, collect_snapshot, collect_supplemental_snapshot,
+    expected_club_slugs, parse_page, stats_for_profile,
 )
 from src.collect.teams import load_team_master
 
@@ -208,3 +209,76 @@ def test_allowlist_is_fixed_and_contains_no_model_or_2025_routes():
     assert not ({s.slug for s in STATS} & {s.slug for s in SUPPLEMENTAL_STATS})
     assert len({s.slug for s in SUPPLEMENTAL_STATS}) == len(SUPPLEMENTAL_STATS)
     assert all("/2026-27/" in BASE_URL.format(slug=s.slug) for s in SUPPLEMENTAL_STATS)
+
+
+def test_full_profile_is_exact_fixed_37_without_duplicate_slugs():
+    full = stats_for_profile("full")
+    assert full == (*STATS, *SUPPLEMENTAL_STATS) == FULL_STATS
+    assert len(full) == len({stat.slug for stat in full}) == 37
+    assert stats_for_profile("base") == STATS
+
+
+def test_duplicate_stat_capture_is_rejected_before_request(tmp_path):
+    calls = []
+    with pytest.raises(SnapshotError, match="Duplicate stat URL"):
+        collect_snapshot(
+            raw_root=tmp_path / "raw",
+            processed_root=tmp_path / "processed",
+            stats=(STATS[0], STATS[0]),
+            now=datetime(2026, 9, 22, tzinfo=timezone.utc),
+            fetch=lambda url: calls.append(url),
+        )
+    assert calls == []
+
+
+def test_full_profile_captures_one_request_per_stat_and_740_rows(tmp_path):
+    calls = []
+
+    def fetch(url):
+        calls.append(url)
+        stat = next(stat for stat in FULL_STATS if BASE_URL.format(slug=stat.slug) == url)
+        return fixture_html(stat), 200, url, "text/html; charset=utf-8"
+
+    result = collect_full_snapshot(
+        raw_root=tmp_path / "raw",
+        processed_root=tmp_path / "processed",
+        now=datetime(2026, 9, 22, 3, 4, 5, tzinfo=timezone.utc),
+        fetch=fetch,
+        pause=lambda _: None,
+    )
+    assert result["request_count"] == len(calls) == len(set(calls)) == 37
+    assert result["row_count"] == 740
+    manifest = json.loads((result["raw_dir"] / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "COMPLETE"
+    assert manifest["source_state_date"] == "2026-09-14"
+    with result["processed_path"].open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 740
+    assert len({(row["team_id"], row["stat_name"]) for row in rows}) == 740
+
+
+def test_full_profile_mixed_source_dates_keeps_incomplete_raw_without_csv(tmp_path):
+    calls = []
+
+    def fetch(url):
+        calls.append(url)
+        stat = next(stat for stat in FULL_STATS if BASE_URL.format(slug=stat.slug) == url)
+        raw = fixture_html(stat)
+        if len(calls) == 37:
+            raw = raw.replace(b"2026/9/14", b"2026/9/21")
+        return raw, 200, url, "text/html; charset=utf-8"
+
+    with pytest.raises(SnapshotError, match="do not share one known"):
+        collect_full_snapshot(
+            raw_root=tmp_path / "raw",
+            processed_root=tmp_path / "processed",
+            now=datetime(2026, 9, 22, 4, 5, 6, tzinfo=timezone.utc),
+            fetch=fetch,
+            pause=lambda _: None,
+        )
+    assert len(calls) == 37
+    manifest_path = next((tmp_path / "raw").glob("*/manifest.json"))
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["status"] == "INCOMPLETE"
+    assert not list((tmp_path / "processed").glob("*.csv")) \
+        if (tmp_path / "processed").exists() else True

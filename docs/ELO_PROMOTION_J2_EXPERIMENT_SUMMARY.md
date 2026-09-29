@@ -53,15 +53,20 @@ Equal J1+J2より改善したが、Currentには届かなかった。Log Loss改
 
 ## 5. Cross-Division Cup Bridge
 
-国内CupのJ1-vs-J2 bridge candidateは145件だった。
+国内CupのJ1-vs-J2 bridge candidate 145件について、その後公式sourceから全件のregulation-time resultを確定し、freeze済み仕様によるformal runを1回だけ実行した。
 
 - J.League Cup: 68
 - Emperor's Cup: 77
 - identity-safe candidate: 145
-- safe 90-minute score/resultを利用できた件数: 0
-- used bridge: 0
+- confirmed regulation-time result: 145
+- A pooled Log Loss: `1.056065401323764`
+- B pooled Log Loss: `1.057002111148765`
+- C pooled Log Loss: `1.05656623974119`
+- C−A Log Loss delta: `+0.0005008384174258751`
+- C−A Brier delta: `+0.0005719612389700757`
+- A比Log Loss改善fold: 2/5
 
-したがって性能結果はEqual J1+J2と同一になった。Cup bridge仮説そのものをrejectしたのではなく、現在のprocessed dataでは90分score/resultが不足しており未評価である。将来、公式90-minute dataを安全に整備できた場合のみ再検討可能である。
+final decisionは **`CLOSE_CUP_BRIDGE_LANE`**。datasetはprovenance-complete artifactとして保持するが、このElo research laneはclosedである。tuningおよびadaptive follow-upは実行していない。
 
 ## 6. Promotion-Calibrated J1+J2
 
@@ -122,7 +127,7 @@ returningは小幅改善したが、first-timeとearly-seasonは悪化した。
 - offset multiplier、shrinkage、club別補正は禁止する
 - promotion-specific flag tuningもこのbranchでは行わない
 - J2 dataset / TeamMaster拡張は将来別用途に再利用可能
-- Cup bridgeは90-minute dataを将来整備した場合のみ再検討可能
+- Cup bridge formal laneは唯一のrunで`CLOSE_CUP_BRIDGE_LANE`となり、追加variant・tuning・adaptive follow-upは禁止
 
 ## Final status
 
