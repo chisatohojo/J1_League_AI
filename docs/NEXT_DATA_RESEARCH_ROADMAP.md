@@ -4,12 +4,13 @@
 
 The project is in a **new information layer / data platform** phase. Model A (Elo-only Logistic) remains the frozen Champion/reference and Model B (Elo + Domestic Competitive Rest) the frozen Challenger. The 2020–2024 OOF cycle is closed to repeated one-feature searches. The 2025 test is spent, and the first 70 completed 2026/27 ordinary J1 matches are an opened interim lockbox. Neither may be used to select or tune a new feature. The reported 70-match result does not change the frozen specifications; a completed 380-match evaluation is a later fixed-specification check.
 
-The strictly-prior ordinary-J1 team draw-propensity specification is frozen at
-**`READY_FOR_DRAW_PROPENSITY_FEATURE_MATERIALIZATION`**. It reuses existing
-form output as the last-five source of truth, adds only current-season draw
-state, and fixes four symmetric candidates plus a 21-column artifact schema.
-No feature dataset or model evaluation exists. Materialization is the next
-gate; 2025 and the opened 2026/27 results remain prohibited.
+The strictly-prior ordinary-J1 team draw-propensity dataset is materialized at
+**`READY_TO_FREEZE_DRAW_PROPENSITY_EVALUATION`**. Its 3,208-row, 21-column
+artifact reuses existing form output, adds only current-season draw state, and
+fixes four symmetric candidates under SHA-256
+`97b33269a11b62f94dbd4b83924b97cc1cb1cb250ae0eb636ca5d8ccc6ba36a5`.
+No model evaluation has run. A separate one-time evaluation contract is the
+next gate; 2025 and the opened 2026/27 results remain prohibited.
 
 New sources should be acquired in a separate research cycle. Before any model experiment, record source terms, match/team identity, raw evidence, **observation timestamp**, revision behavior, availability time relative to kickoff, coverage and missingness by season, and a deterministic history-only feature contract. Preserve cumulative point-in-time snapshots for future validation. Evaluate coherent feature groups once under a newly declared validation protocol, without treating the opened lockbox as a search target. No performance gain is assumed below.
 
