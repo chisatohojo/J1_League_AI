@@ -39,6 +39,25 @@ class PlayerSnapshotPrototypeError(ValueError):
 
 
 @dataclass(frozen=True)
+class OfficialProfileIdentity:
+    player_id: str
+    player_name_raw: str
+    official_club_slug: str
+    official_club_name: str
+    profile_url: str
+
+
+@dataclass(frozen=True)
+class EmbeddedIdentityDecision:
+    player_id: str
+    ranking_player_name_raw: str
+    profile_player_name_raw: str
+    official_club_slug: str
+    identity_source: str
+    name_exact_match: bool
+
+
+@dataclass(frozen=True)
 class PlayerRow:
     player_id: str | None
     player_id_candidate: str
@@ -111,6 +130,143 @@ class _Page(HTMLParser):
             self._in_script = False
         elif tag == "a":
             self._player_href = None
+
+
+class _ProfilePage(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.canonical_urls = []
+        self.profile_headings = []
+        self.profile_clubs = []
+        self._depth = 0
+        self._profile_depth = None
+        self._heading_depth = None
+        self._heading_parts = []
+        self._anchor_href = None
+        self._anchor_parts = []
+        self._in_script = False
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        classes = set(attrs.get("class", "").split())
+        if tag == "link" and attrs.get("rel") == "canonical":
+            self.canonical_urls.append(attrs.get("href"))
+        if tag == "script":
+            self._in_script = True
+        if "p-player-profile" in classes and self._profile_depth is None:
+            self._profile_depth = self._depth
+        if self._profile_depth is not None and tag in ("h1", "h2"):
+            self._heading_depth = self._depth
+            self._heading_parts = []
+        if self._profile_depth is not None and tag == "a":
+            self._anchor_href = attrs.get("href")
+            self._anchor_parts = []
+        self._depth += 1
+
+    def handle_data(self, data):
+        if self._in_script or self._profile_depth is None:
+            return
+        if self._heading_depth is not None:
+            self._heading_parts.append(data)
+        if self._anchor_href is not None:
+            self._anchor_parts.append(data)
+
+    def handle_endtag(self, tag):
+        self._depth -= 1
+        if tag == "script":
+            self._in_script = False
+        if self._heading_depth is not None and self._depth == self._heading_depth:
+            value = "".join(self._heading_parts)
+            if value:
+                self.profile_headings.append(value)
+            self._heading_depth = None
+            self._heading_parts = []
+        if tag == "a" and self._anchor_href is not None:
+            match = re.fullmatch(r"/club/([a-z][a-z0-9]*)/", self._anchor_href)
+            if match:
+                self.profile_clubs.append(
+                    (match.group(1), "".join(self._anchor_parts), self._anchor_href)
+                )
+            self._anchor_href = None
+            self._anchor_parts = []
+        if self._profile_depth is not None and self._depth == self._profile_depth:
+            self._profile_depth = None
+
+
+def parse_official_profile_identity(raw: bytes, *, expected_player_id: str) -> OfficialProfileIdentity:
+    """Parse identity fields from one already-acquired official profile response."""
+    if not re.fullmatch(r"[0-9]+", expected_player_id):
+        raise PlayerSnapshotPrototypeError("Expected one numeric profile candidate")
+    if not isinstance(raw, bytes):
+        raise PlayerSnapshotPrototypeError("Expected raw profile response bytes")
+    try:
+        html = raw.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise PlayerSnapshotPrototypeError("Profile response is not lossless UTF-8") from exc
+    page = _ProfilePage()
+    page.feed(html)
+    expected_url = f"https://www.jleague.jp/player/{expected_player_id}/"
+    if page.canonical_urls != [expected_url]:
+        raise PlayerSnapshotPrototypeError("Official profile canonical ID does not match candidate")
+    names = tuple(dict.fromkeys(page.profile_headings))
+    clubs = tuple(dict.fromkeys(page.profile_clubs))
+    if len(names) != 1 or len(clubs) != 1 or not names[0] or not clubs[0][1]:
+        raise PlayerSnapshotPrototypeError("Official profile lacks one player name and club identity")
+    return OfficialProfileIdentity(
+        player_id=expected_player_id,
+        player_name_raw=names[0],
+        official_club_slug=clubs[0][0],
+        official_club_name=clubs[0][1],
+        profile_url=expected_url,
+    )
+
+
+def verify_embedded_player_identity(
+    *,
+    candidate_player_id: str | None,
+    ranking_player_name_raw: str,
+    ranking_club_slug: str,
+    profile: OfficialProfileIdentity,
+) -> EmbeddedIdentityDecision:
+    """Accept an embedded ID only through exact official numeric/profile evidence."""
+    if not candidate_player_id or not re.fullmatch(r"[0-9]+", candidate_player_id):
+        raise PlayerSnapshotPrototypeError("Name-only player identity fallback is forbidden")
+    if profile.player_id != candidate_player_id or profile.profile_url != (
+        f"https://www.jleague.jp/player/{candidate_player_id}/"
+    ):
+        raise PlayerSnapshotPrototypeError("Profile numeric ID does not match embedded candidate")
+    if not profile.player_name_raw or not ranking_player_name_raw:
+        raise PlayerSnapshotPrototypeError("Player identity lacks a raw displayed name")
+    if profile.official_club_slug != ranking_club_slug:
+        raise PlayerSnapshotPrototypeError("Profile and ranking club identities conflict")
+    return EmbeddedIdentityDecision(
+        player_id=candidate_player_id,
+        ranking_player_name_raw=ranking_player_name_raw,
+        profile_player_name_raw=profile.player_name_raw,
+        official_club_slug=ranking_club_slug,
+        identity_source="VERIFIED_EMBEDDED_PLAYER_ID",
+        name_exact_match=ranking_player_name_raw == profile.player_name_raw,
+    )
+
+
+def classify_player_identity_states(rows: tuple[PlayerRow, ...]) -> dict[str, str]:
+    """Fail closed on conflicting names and quarantine same-state multi-club IDs."""
+    names = defaultdict(set)
+    clubs = defaultdict(set)
+    for row in rows:
+        if not row.player_id_candidate:
+            raise PlayerSnapshotPrototypeError("Name-only player identity fallback is forbidden")
+        names[row.player_id_candidate].add(row.player_name_raw)
+        clubs[row.player_id_candidate].add(row.official_club_slug)
+    states = {}
+    for player_id in names:
+        if len(names[player_id]) != 1:
+            states[player_id] = "CONFLICTING_PLAYER_IDENTITY"
+        elif len(clubs[player_id]) != 1:
+            states[player_id] = "AMBIGUOUS_MULTI_CLUB_PLAYER_STATE"
+        else:
+            states[player_id] = "ONE_PLAYER_ONE_CLUB_STATE"
+    return states
 
 
 def _rsc_values(page: _Page, key: str):

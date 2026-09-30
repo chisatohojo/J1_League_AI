@@ -132,3 +132,7 @@ There is **no authorized first production profile while identity is deferred**. 
 - No historical point-in-time player snapshot was inferred or reconstructed.
 
 The next gate is an official-source identity clarification or later bounded source state in which every ranking row directly exposes a numeric profile URL, or an official contract proving that the embedded photo-lookup ID is the same stable player-profile namespace. Then rerun the same bounded audit and require 100% direct identity coverage, zero conflicts, exact club identity, explicit transfer handling, and immutable pre-target timestamp rules before writing a collector specification.
+
+## Identity clarification result
+
+The bounded 2026-09-30 follow-up retained the `DEFER_PLAYER_SNAPSHOT_IDENTITY` verdict. Direct href/photo IDs agreed for all 1,110 directly linked rows. The five source-provided candidates each returned HTTP 200 with an exact canonical `/player/{candidate}/` URL, but all responses contained only a profile skeleton and generic metadata: player-specific displayed name, club, career identity, and player-specific Data Site relation were absent. Thus verified embedded identities were 0/5, and a canonical route alone was not treated as person identity. See `J_STATS_PLAYER_SNAPSHOT_IDENTITY_CLARIFICATION.md`.

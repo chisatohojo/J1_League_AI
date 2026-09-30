@@ -1,5 +1,6 @@
 """Offline contracts for the bounded player snapshot feasibility parser."""
 
+from dataclasses import replace
 from datetime import date
 import json
 from pathlib import Path
@@ -7,10 +8,14 @@ from pathlib import Path
 import pytest
 
 from src.collect.jstats_player_snapshot_prototype import (
+    OfficialProfileIdentity,
     PlayerSnapshotPrototypeError,
     STATS,
+    classify_player_identity_states,
     discover_player_stat_options,
+    parse_official_profile_identity,
     parse_player_page,
+    verify_embedded_player_identity,
 )
 from src.collect.teams import TeamAlias, TeamMaster
 
@@ -75,6 +80,17 @@ def parse(raw):
     )
 
 
+def profile_fixture(*, player_id="1011", name="Player 11", club="beta",
+                    club_name="Beta", include_name=True, include_club=True):
+    heading = f"<h1>{name}</h1>" if include_name else ""
+    club_link = f'<a href="/club/{club}/">{club_name}</a>' if include_club else ""
+    return (
+        f'<html><head><link rel="canonical" '
+        f'href="https://www.jleague.jp/player/{player_id}/"></head>'
+        f'<body><main class="p-player-profile">{heading}{club_link}</main></body></html>'
+    ).encode()
+
+
 def test_extracts_complete_embedded_rows_stable_ids_clubs_and_visible_contract():
     result = parse(fixture())
     assert result.row_count == result.embedded_rows == result.load_more_max == 12
@@ -106,6 +122,84 @@ def test_missing_direct_profile_link_is_explicitly_unresolved_not_inferred_exact
     assert result.rows[-1].player_id_candidate_source == "LEGACY_PLAYER_PHOTO_LOOKUP"
     assert result.rows[-1].player_profile_url == ""
     assert result.rows[-1].identity_status == "UNRESOLVED_NO_DIRECT_PROFILE_LINK"
+
+
+def test_verified_embedded_id_acceptance_preserves_source_kind_and_raw_names():
+    profile = parse_official_profile_identity(profile_fixture(), expected_player_id="1011")
+    decision = verify_embedded_player_identity(
+        candidate_player_id="1011",
+        ranking_player_name_raw="Player 11",
+        ranking_club_slug="beta",
+        profile=profile,
+    )
+    assert decision.player_id == "1011"
+    assert decision.identity_source == "VERIFIED_EMBEDDED_PLAYER_ID"
+    assert decision.name_exact_match is True
+
+
+def test_profile_name_difference_is_retained_without_name_normalization():
+    profile = parse_official_profile_identity(
+        profile_fixture(name="Official Display"), expected_player_id="1011",
+    )
+    decision = verify_embedded_player_identity(
+        candidate_player_id="1011",
+        ranking_player_name_raw="Ranking Display",
+        ranking_club_slug="beta",
+        profile=profile,
+    )
+    assert decision.ranking_player_name_raw == "Ranking Display"
+    assert decision.profile_player_name_raw == "Official Display"
+    assert decision.name_exact_match is False
+
+
+def test_wrong_profile_id_is_rejected():
+    with pytest.raises(PlayerSnapshotPrototypeError, match="canonical ID"):
+        parse_official_profile_identity(profile_fixture(player_id="9999"), expected_player_id="1011")
+
+
+@pytest.mark.parametrize("changes", [{"include_name": False}, {"include_club": False}])
+def test_missing_profile_identity_field_is_rejected(changes):
+    with pytest.raises(PlayerSnapshotPrototypeError, match="lacks one player name and club"):
+        parse_official_profile_identity(profile_fixture(**changes), expected_player_id="1011")
+
+
+def test_conflicting_profile_club_is_rejected():
+    profile = parse_official_profile_identity(
+        profile_fixture(club="alpha", club_name="Alpha"), expected_player_id="1011",
+    )
+    with pytest.raises(PlayerSnapshotPrototypeError, match="club identities conflict"):
+        verify_embedded_player_identity(
+            candidate_player_id="1011",
+            ranking_player_name_raw="Player 11",
+            ranking_club_slug="beta",
+            profile=profile,
+        )
+
+
+def test_conflicting_player_identity_and_multi_club_state_fail_closed():
+    row = parse(fixture()).rows[0]
+    name_conflict = replace(row, player_name_raw="Different Person")
+    club_conflict = replace(row, official_club_slug="beta")
+    assert classify_player_identity_states((row, name_conflict))[row.player_id_candidate] == (
+        "CONFLICTING_PLAYER_IDENTITY"
+    )
+    assert classify_player_identity_states((row, club_conflict))[row.player_id_candidate] == (
+        "AMBIGUOUS_MULTI_CLUB_PLAYER_STATE"
+    )
+
+
+def test_name_only_fallback_is_forbidden():
+    profile = OfficialProfileIdentity(
+        player_id="1011", player_name_raw="Player 11", official_club_slug="beta",
+        official_club_name="Beta", profile_url="https://www.jleague.jp/player/1011/",
+    )
+    with pytest.raises(PlayerSnapshotPrototypeError, match="Name-only"):
+        verify_embedded_player_identity(
+            candidate_player_id=None,
+            ranking_player_name_raw="Player 11",
+            ranking_club_slug="beta",
+            profile=profile,
+        )
 
 
 @pytest.mark.parametrize(
