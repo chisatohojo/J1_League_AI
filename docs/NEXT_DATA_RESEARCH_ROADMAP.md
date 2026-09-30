@@ -4,6 +4,14 @@
 
 The project is in a **new information layer / data platform** phase. Model A (Elo-only Logistic) remains the frozen Champion/reference and Model B (Elo + Domestic Competitive Rest) the frozen Challenger. The 2020–2024 OOF cycle is closed to repeated one-feature searches. The 2025 test is spent, and the first 70 completed 2026/27 ordinary J1 matches are an opened interim lockbox. Neither may be used to select or tune a new feature. The reported 70-match result does not change the frozen specifications; a completed 380-match evaluation is a later fixed-specification check.
 
+The offline strictly-prior ordinary-J1 team draw-propensity audit is complete
+with verdict **`PROCEED_TO_DRAW_PROPENSITY_FEATURE_SPEC`**. The audited family
+is limited to unsmoothed current-season prior counts/rates and one predeclared
+cross-season last-five window with explicit availability. No feature dataset
+or model evaluation exists. The next gate is to freeze its schema, symmetric
+derived candidates, null handling, and one-time evaluation protocol; 2025 and
+the opened 2026/27 results remain prohibited inputs to those choices.
+
 New sources should be acquired in a separate research cycle. Before any model experiment, record source terms, match/team identity, raw evidence, **observation timestamp**, revision behavior, availability time relative to kickoff, coverage and missingness by season, and a deterministic history-only feature contract. Preserve cumulative point-in-time snapshots for future validation. Evaluate coherent feature groups once under a newly declared validation protocol, without treating the opened lockbox as a search target. No performance gain is assumed below.
 
 ## Ranked source and feature investigations
