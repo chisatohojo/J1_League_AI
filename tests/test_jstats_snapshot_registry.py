@@ -185,6 +185,15 @@ def test_profile_classification_uses_exact_set_equality():
     assert registry.classify_profile([stat.slug for stat in STATS[:-1]] + ["invented"]) == "UNKNOWN"
 
 
+def test_latest_logical_source_date_is_distinct_and_not_retrieval_time():
+    old = _logical("2026-09-14")
+    duplicate = replace(old, kind="RECONSTRUCTED", snapshot_ids=("base", "supplemental"))
+    latest = _logical("2026-09-21")
+    report = registry.RegistryReport((), (latest, duplicate, old), ())
+    assert registry.distinct_logical_source_dates(report) == ("2026-09-14", "2026-09-21")
+    assert registry.latest_logical_source_date(report) == "2026-09-21"
+
+
 def test_manifest_raw_sha_mismatch_is_hard_failure(tmp_path):
     raw_dir, processed_root, _ = _make_snapshot(tmp_path, "sha-mismatch", STATS)
     (raw_dir / "shoot.html").write_bytes(b"mutated")

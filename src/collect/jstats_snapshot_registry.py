@@ -96,6 +96,24 @@ class RegistryReport:
     transitions: tuple[TransitionAudit, ...]
 
 
+def distinct_logical_source_dates(report: RegistryReport) -> tuple[str, ...]:
+    """Return valid FULL_37 source dates once each, in chronological order."""
+    dates = {state.source_state_date for state in report.logical_full_states}
+    try:
+        for value in dates:
+            datetime.fromisoformat(value).date()
+    except (TypeError, ValueError) as exc:
+        raise SnapshotRegistryError("Logical FULL_37 state has an invalid source date") from exc
+    return tuple(sorted(dates))
+
+
+def latest_logical_source_date(report: RegistryReport | None = None, **audit_kwargs) -> str | None:
+    """Read the latest distinct valid logical FULL_37 source-state date."""
+    report = report or audit_registry(**audit_kwargs)
+    dates = distinct_logical_source_dates(report)
+    return dates[-1] if dates else None
+
+
 def classify_profile(stat_names) -> str:
     """Classify by exact slug-set equality, never by count alone."""
     observed = frozenset(stat_names)
