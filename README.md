@@ -2,6 +2,10 @@
 
 J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を予測するPythonプロジェクトです。
 
+現在のresearch decision、closed/deferred/prospective lane、主要data資産のcanonical mapは
+[PROJECT_RESEARCH_SUMMARY.md](docs/PROJECT_RESEARCH_SUMMARY.md) と
+[DATA_ASSET_INVENTORY.md](docs/DATA_ASSET_INVENTORY.md) を参照してください。
+
 ## 現在の実装範囲
 
 現在は **Phase 2: 2015～2026/27進行中までのElo系列とCSV出力を実装済み** です。

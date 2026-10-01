@@ -1,5 +1,14 @@
 # Next data research roadmap (2026-09-20)
 
+Current canonical project state and asset boundaries are summarized in
+[PROJECT_RESEARCH_SUMMARY.md](PROJECT_RESEARCH_SUMMARY.md) and
+[DATA_ASSET_INVENTORY.md](DATA_ASSET_INVENTORY.md). This dated roadmap retains
+the approved operating sequence; newer formal result documents take precedence
+for final lane status.
+
+In particular, Team Draw Propensity is now **CLOSED** after its frozen one-shot
+evaluation; see [TEAM_DRAW_PROPENSITY_EVALUATION.md](TEAM_DRAW_PROPENSITY_EVALUATION.md).
+
 ## Starting point and evaluation discipline
 
 The project is in a **new information layer / data platform** phase. Model A (Elo-only Logistic) remains the frozen Champion/reference and Model B (Elo + Domestic Competitive Rest) the frozen Challenger. The 2020–2024 OOF cycle is closed to repeated one-feature searches. The 2025 test is spent, and the first 70 completed 2026/27 ordinary J1 matches are an opened interim lockbox. Neither may be used to select or tune a new feature. The reported 70-match result does not change the frozen specifications; a completed 380-match evaluation is a later fixed-specification check.
