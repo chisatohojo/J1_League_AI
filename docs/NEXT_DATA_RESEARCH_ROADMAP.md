@@ -9,6 +9,12 @@ for final lane status.
 In particular, Team Draw Propensity is now **CLOSED** after its frozen one-shot
 evaluation; see [TEAM_DRAW_PROPENSITY_EVALUATION.md](TEAM_DRAW_PROPENSITY_EVALUATION.md).
 
+The separate Model Architecture Phase 0 contract is documented in
+[MODEL_ARCHITECTURE_FEASIBILITY.md](MODEL_ARCHITECTURE_FEASIBILITY.md) and
+[MODEL_ARCHITECTURE_BENCHMARK_SPEC.md](MODEL_ARCHITECTURE_BENCHMARK_SPEC.md).
+It freezes only A/P/G for future implementation/preflight; no fit, prediction,
+or evaluation has been authorized by that docs-only task.
+
 ## Starting point and evaluation discipline
 
 The project is in a **new information layer / data platform** phase. Model A (Elo-only Logistic) remains the frozen Champion/reference and Model B (Elo + Domestic Competitive Rest) the frozen Challenger. The 2020–2024 OOF cycle is closed to repeated one-feature searches. The 2025 test is spent, and the first 70 completed 2026/27 ordinary J1 matches are an opened interim lockbox. Neither may be used to select or tune a new feature. The reported 70-match result does not change the frozen specifications; a completed 380-match evaluation is a later fixed-specification check.

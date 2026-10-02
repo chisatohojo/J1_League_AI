@@ -8,6 +8,8 @@
 
 現在のChampionはModel A、既存ChallengerはDomestic Competitive Restを加えたModel Bである。2025はspent test、最初の70件の2026/27 ordinary J1はopened interim lockboxであり、どちらも新しいfeature選択やtuningには使わない。直近までにformal retrospective evaluationへ進んだ10 feature laneはすべてclosed decisionとなった。一方、J Stats team cumulative snapshots、suspension notices、rolling xGは、historical backfillと混同しないprospective/operational資産として管理されている。詳細なdata pathは[DATA_ASSET_INVENTORY.md](DATA_ASSET_INVENTORY.md)、運用順序は[NEXT_DATA_RESEARCH_ROADMAP.md](NEXT_DATA_RESEARCH_ROADMAP.md)を参照する。
 
+Architecture Phase 0では、feature-family探索と分離したA/P/Gの3-candidate contractをdocs-onlyでfreezeした。Aは現行Model A、PはIndependent Poisson、Gはfixed basic-state LightGBMであり、fit・prediction・evaluationは未実行。Source feasibilityとexact benchmark contractは[MODEL_ARCHITECTURE_FEASIBILITY.md](MODEL_ARCHITECTURE_FEASIBILITY.md)および[MODEL_ARCHITECTURE_BENCHMARK_SPEC.md](MODEL_ARCHITECTURE_BENCHMARK_SPEC.md)を参照する。
+
 ## A. 現行baselineとevaluation discipline
 
 ### Model A
