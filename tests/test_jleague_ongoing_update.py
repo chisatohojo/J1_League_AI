@@ -114,6 +114,26 @@ def write_completion(root: Path, fixture, number: int):
     )
 
 
+def write_prematch_identity(root: Path, fixture, number: int):
+    """An explicit official pre-match page carrying identity, not completion."""
+    day = fixture["date"]
+    url = f"https://www.jleague.jp/match/j1/{day.year}/{day:%m%d}01/"
+    html = (
+        f'<link rel="canonical" href="{url}">'
+        '<div class="o-page-header--game-details o-page-header--game-details--pre-game">'
+        '<div class="a-tournament-logo--j1"><img alt="明治安田Ｊ１リーグ"></div>'
+        f'<p class="o-page-header__date">{day.year}/{day.month}/{day.day} (土) 19:00 KO</p>'
+        f'<p class="o-page-header__section">第{fixture["round"]}節</p>'
+        f'<a class="o-page-header__club--home" href="/club/{fixture["home"]}/"></a>'
+        f'<a class="o-page-header__club--away" href="/club/{fixture["away"]}/"></a>'
+        '</div>'
+    )
+    return write_source(
+        root / f"identity-evidence-{number}.html", html,
+        timestamp=f"2026-09-{number:02d}T10:00:00+00:00", url=url,
+    )
+
+
 def tree_bytes(root: Path):
     return {
         path.relative_to(root).as_posix(): path.read_bytes()
@@ -210,6 +230,34 @@ def test_bootstrap_with_no_completed_matches_skips_empty_validation_and_replays_
     assert changes.event_id.is_unique
     before = tree_bytes(output)
     assert ongoing.process_snapshot(snapshot, output) == summary
+    assert tree_bytes(output) == before
+
+
+def test_prematch_evidence_publishes_identity_without_changing_status_and_replays(
+    tmp_path, make_snapshot,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    snapshot = make_snapshot(fixtures, 1, [evidence])
+    output = tmp_path / "processed"
+
+    summary = process_snapshot(snapshot, output)
+
+    assert summary["publication_status"] == "published"
+    assert summary["counts"] == {"scheduled": 380, "candidate": 0, "completed": 0}
+    assert summary["match_id_count"] == 1
+    schedule = read_csv(output, "schedule.csv")
+    linked = schedule.loc[schedule.fixture_key.eq("j1_2026_2027:club00:club19")].iloc[0]
+    assert linked.match_id == "080701"
+    assert linked.status == "scheduled"
+    assert linked.evidence_type == "official_completion_unconfirmed"
+    assert read_csv(output, "completed_matches.csv").empty
+    identity = read_csv(output, "fixture_identity.csv")
+    assert identity.loc[identity.fixture_key.eq(linked.fixture_key), "match_id"].item() == "080701"
+    before = tree_bytes(output)
+    assert process_snapshot(snapshot, output) == summary
     assert tree_bytes(output) == before
 
 

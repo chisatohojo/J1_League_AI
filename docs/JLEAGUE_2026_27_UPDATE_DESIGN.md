@@ -91,14 +91,17 @@ scriptの翻訳辞書にも「試合終了」があり、ページ全文の文�
 
 `parse_completion_evidence` は次のすべてを確認する。
 
-1. 取得URLとcanonicalが一致する公式 `/match/j1/{2026|2027}/{6桁}/` ページ。
+1. 取得URLとcanonicalが一致する公式 `/match/j1/{2026|2027}/{6桁}/` ページ。URL末尾6桁を`match_id`としてevidence recordへ保持する。
 2. skeletonを除いた実ヘッダーが1件。通常J1ロゴ、対象期間の日付、節、左右のクラブURLを確認。
 3. 実DOMの終了欄が1件で、その見出しが「試合終了」。実ヘッダーのpost-game状態と両得点も一致。
-4. Data Site側のfixture_key・開催日・節・左右クラブ・得点と一致し、公式match_idを持つ数値スコア行。
+4. Data Site側のfixture_key・開催日・節・左右クラブと一致する。終了確認時は得点も一致し、Data Site `match_card_id`を持つ数値スコア行であることを確認する。
 
 script・template・noscript・skeleton・対象自身や内部の非表示要素は根拠から除外する。
 Reactのストリーミング配送用コンテナー自体を機械的に全排除せず、配送された実DOMの対象領域を解析する。
 構造変更、別大会、複数候補、別日付、得点矛盾なら停止する。終了欄がなければ `verified=false`。
+`verified=false`でも、explicit `--evidence-url`で取得したpre-match pageのfixture_key・開催日・節・左右クラブがscheduled rowと完全一致すれば、そのURL由来`match_id`だけを付与できる。statusは`scheduled`、score/resultはnullのままで、completionへpromoteしない。URLの組み立て、ID enumeration、fixture_keyからのsynthetic ID生成は行わない。
+
+既存completed/candidate rowの`match_id`はData Site `match_card_id` namespaceであり、既存completion replayとの互換性を維持するためmatch-page URL suffixへ置換しない。Scheduled rowに既存IDがある場合は同じURL由来IDだけを許可し、不一致、別fixtureで使用済みのID、duplicate evidence、canonical/date/round/home/away/competition不一致はhard failureとする。
 基盤実装時は34583（2026-09-13、東京Ｖ－千葉、1-1、result=1）の1件だけを確認し、残り69件には推測で付与しなかった。
 その後、同じ規則で69件の公式ページを個別確認した結果は第8.1節を参照。
 
@@ -172,7 +175,7 @@ revision IDはその固定入力と解析版 `ongoing-v1`、終了規則 `offici
 
 | status | 条件 | 結果Validation |
 | --- | --- | --- |
-| scheduled | 一覧のvs表示。公式IDなしを許容し、得点/resultはnull | 渡さない |
+| scheduled | 一覧のvs表示。公式IDなし、またはexact-match済みofficial pre-match pageのURL由来IDを許容。得点/resultはnull | 渡さない |
 | candidate | 数値得点と公式IDはあるが、照合済み終了根拠がない | 渡さない |
 | completed | 第3節の公式終了根拠と一覧が一致 | 既存validate_matchesへ渡す |
 
@@ -187,7 +190,7 @@ fixture_key = j1_2026_2027:<home_club_slug>:<away_club_slug>
 
 クラブslugはData Siteの公式profile URLから取得する。開催日、KO時刻、会場、節はキーに含めない。
 同一方向のカードは年間1回という確認済み大会方式に基づき、日程変更でも同一キーを保つ。
-公式ID出現後もキーを維持し、`fixture_identity.csv` に対応を保存。IDなしを仮のmatch_idで補完しない。
+公式ID出現後もキーを維持し、`fixture_identity.csv` に対応を保存。IDなしを仮のmatch_idで補完しない。URL由来IDは、operatorが明示したofficial match pageをcanonical・competition・date・round・home/awayまで検証した場合だけscheduled fixtureへ付与する。
 既存IDの再割当、別カードへの移動、IDの消失は自動統合せず採用を保留する。
 過去の対応は各revisionおよび差分のbefore/afterに残る。
 
@@ -206,6 +209,7 @@ v1は今回観測した単一日付表記を解析し、候補日・未知の書
 得点や日付が変われば再確認が必要。古い証拠を変更後の得点の証明には使わない。
 列 `evidence_url`、`evidence_type`、`evidence_sha256`、`evidence_fetched_at_utc`、
 `completion_origin_snapshot`／必要時の `completion_origin_revision` に来歴を残す。
+Scheduled identity linkageでは`evidence_url`と`evidence_type=official_completion_unconfirmed`をscheduleに残し、raw snapshot manifestが取得URL・SHA・取得時刻を保持する。これはcompletion evidenceではなくidentity provenanceである。
 
 ## 6. 差分・訂正履歴
 

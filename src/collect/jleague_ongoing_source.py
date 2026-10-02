@@ -1,8 +1,10 @@
-"""Parse ongoing ordinary J1 fixtures and explicit official completion evidence.
+"""Parse ongoing ordinary J1 fixtures and explicit official match evidence.
 
 All functions are offline. A numeric Data Site score is only a candidate;
 completion requires a separately archived official match page with its own
 match-specific ``section#game-over`` and matching fixture identity and scores.
+A pre-match page may link its URL identity to an exactly matching scheduled
+fixture, but never proves completion.
 """
 
 from collections import Counter
@@ -264,6 +266,7 @@ def parse_completion_evidence(html: str, *, source_url: str) -> dict:
         home_score, away_score = displayed
     return {
         "competition_key": COMPETITION_KEY, "fixture_key": fixture_key,
+        "match_id": url[2],
         "match_date": match_date, "round": round_number,
         "home_club": clubs[0], "away_club": clubs[1],
         "home_score": home_score, "away_score": away_score,
@@ -274,11 +277,24 @@ def parse_completion_evidence(html: str, *, source_url: str) -> dict:
 
 
 def apply_completion_evidence(records: list[dict], evidence_records: list[dict]) -> list[dict]:
-    """Promote only candidates with exact official club/date/round/score agreement."""
+    """Link scheduled IDs or promote candidates only after exact agreement.
+
+    Match-page URL IDs are attached only to scheduled fixtures. Candidate and
+    completed rows retain the established Data Site ``match_card_id`` namespace;
+    verified game-over evidence continues to validate their completion without
+    replacing that identity.
+    """
     evidence_by_key = {}
     records_by_key = {record["fixture_key"]: record for record in records}
     if len(records_by_key) != len(records):
         raise ValueError("Ambiguous duplicate fixture keys.")
+    record_ids = {
+        record["match_id"]: record["fixture_key"]
+        for record in records if record.get("match_id")
+    }
+    if len(record_ids) != sum(bool(record.get("match_id")) for record in records):
+        raise ValueError("Duplicate official match_id in source fixtures.")
+    evidence_ids = {}
     for evidence in evidence_records:
         key = evidence["fixture_key"]
         if key in evidence_by_key or key not in records_by_key:
@@ -288,6 +304,16 @@ def apply_completion_evidence(records: list[dict], evidence_records: list[dict])
             evidence[field] != record[field] for field in ("home_club", "away_club", "match_date", "round")
         ):
             raise ValueError("Official completion evidence differs from the source fixture identity.")
+        evidence_id = evidence.get("match_id")
+        if not isinstance(evidence_id, str) or re.fullmatch(r"[0-9]{6}", evidence_id) is None:
+            raise ValueError("Official match-page evidence has an invalid match_id.")
+        if evidence_id in evidence_ids and evidence_ids[evidence_id] != key:
+            raise ValueError("Official evidence match_id is duplicated across fixtures.")
+        if evidence_id in record_ids and record_ids[evidence_id] != key:
+            raise ValueError("Official evidence match_id is already assigned to another fixture.")
+        evidence_ids[evidence_id] = key
+        if record["status"] == "scheduled" and record.get("match_id") not in (None, evidence_id):
+            raise ValueError("Official match-page evidence conflicts with the scheduled fixture match_id.")
         if evidence["verified"] and (
             record["status"] != "candidate" or not record["match_id"] or any(
                 evidence[field] != record[field] for field in ("home_score", "away_score")
@@ -302,6 +328,8 @@ def apply_completion_evidence(records: list[dict], evidence_records: list[dict])
         if evidence:
             copy["evidence_url"] = evidence["source_url"]
             copy["evidence_type"] = evidence["evidence_type"]
+            if copy["status"] == "scheduled":
+                copy["match_id"] = evidence["match_id"]
             if evidence["verified"]:
                 copy["status"] = "completed"
         result.append(copy)

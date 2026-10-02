@@ -28,6 +28,14 @@ scheduled pairing but is never promoted to an official match ID. If the local
 schedule does not yet contain official IDs for the next batch, the run stops
 without writing predictions.
 
+Future fixture identity may be published through the ongoing-update CLI only
+from an operator-supplied exact official match-page `--evidence-url`. The page
+URL/canonical, ordinary-J1 competition, date, round, home club, and away club
+must all match the local scheduled fixture. A pre-match page supplies identity
+only: `status` remains `scheduled`, score/result remain null, and it cannot
+prove completion. The pipeline never constructs URLs, enumerates IDs, derives
+an ID from `fixture_key`, or relaxes `_require_official_target_ids()`.
+
 ## Pre-match chronology
 
 Elo uses the existing frozen replay: initial rating 1500, K=30, home advantage

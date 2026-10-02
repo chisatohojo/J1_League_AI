@@ -125,10 +125,78 @@ def test_explicit_match_bound_evidence_promotes_candidate_without_mutating_input
     evidence = parse_completion_evidence(official_html(), source_url=URL)
     completed = apply_completion_evidence(records, [evidence])
     assert evidence["verified"] is True
+    assert evidence["match_id"] == "091302"
     assert completed[0]["status"] == "completed"
+    assert completed[0]["match_id"] == "34583"
     assert completed[0]["evidence_url"] == URL
     assert completed[0]["evidence_type"] == "official_game_over_section"
     assert records == before
+
+
+def test_prematch_page_links_official_id_without_completing_scheduled_fixture():
+    records = parse_listing(listing_html(score="vs", match_id=None))
+    before = deepcopy(records)
+    evidence = parse_completion_evidence(official_html(completed=False), source_url=URL)
+
+    updated = apply_completion_evidence(records, [evidence])
+
+    assert evidence["verified"] is False
+    assert evidence["match_id"] == "091302"
+    assert updated[0]["match_id"] == "091302"
+    assert updated[0]["status"] == "scheduled"
+    assert updated[0]["home_score"] is None
+    assert updated[0]["away_score"] is None
+    assert updated[0]["result"] is None
+    assert updated[0]["evidence_url"] == URL
+    assert updated[0]["evidence_type"] == "official_completion_unconfirmed"
+    assert records == before
+
+
+def test_prematch_identity_accepts_same_id_and_rejects_conflicting_id():
+    evidence = parse_completion_evidence(official_html(completed=False), source_url=URL)
+    same = parse_listing(listing_html(score="vs", match_id=None))
+    same[0]["match_id"] = "091302"
+    assert apply_completion_evidence(same, [evidence])[0]["match_id"] == "091302"
+
+    conflict = parse_listing(listing_html(score="vs", match_id=None))
+    conflict[0]["match_id"] = "091303"
+    with pytest.raises(ValueError, match="conflicts with the scheduled fixture match_id"):
+        apply_completion_evidence(conflict, [evidence])
+
+
+def test_match_page_id_cannot_be_reused_by_another_fixture():
+    records = parse_listing(listing_html(score="vs", match_id=None))
+    other = deepcopy(records[0])
+    other.update(
+        fixture_key=f"{COMPETITION_KEY}:urawa:kashima",
+        home_club="urawa",
+        away_club="kashima",
+    )
+    evidence = parse_completion_evidence(official_html(completed=False), source_url=URL)
+    duplicate = deepcopy(evidence)
+    duplicate.update(
+        fixture_key=other["fixture_key"],
+        home_club="urawa",
+        away_club="kashima",
+    )
+
+    with pytest.raises(ValueError, match="duplicated across fixtures"):
+        apply_completion_evidence([records[0], other], [evidence, duplicate])
+
+
+def test_match_page_id_cannot_collide_with_another_listing_fixture():
+    records = parse_listing(listing_html(score="vs", match_id=None))
+    other = deepcopy(records[0])
+    other.update(
+        fixture_key=f"{COMPETITION_KEY}:urawa:kashima",
+        match_id="091302",
+        home_club="urawa",
+        away_club="kashima",
+    )
+    evidence = parse_completion_evidence(official_html(completed=False), source_url=URL)
+
+    with pytest.raises(ValueError, match="already assigned to another fixture"):
+        apply_completion_evidence([records[0], other], [evidence])
 
 
 @pytest.mark.parametrize("fake_wrapper", ["script", "template", "noscript", "skeleton"])
