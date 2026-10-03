@@ -1,5 +1,13 @@
 # Design Decisions
 
+## 2026-10-04: First confirmed prospective suspension PIT observation
+
+Decision: Snapshot `20261003T224234521936Z`をfirst live `PRE_KICKOFF_CONFIRMED` suspension observationとして記録する。7 evidence rowsは7 exact match links、7 exact kickoff links、7 `PRE_KICKOFF_CONFIRMED` classificationsを持ち、4 distinct exact target matchesを表す。これはexact archived page versionがfrozen kickoff前に観測されたことの証拠であり、model feature eligibilityやarchive completenessの判定ではない。
+
+Version history: 同一noticeの直前snapshot `20261003T221607715238Z`は、schedule identity stateに必要なofficial match IDsがまだ無かったため7 rowsすべてを`UNRESOLVED_NO_MATCH_ID` / `UNRESOLVED_NO_MATCH`として正しく保持した。その後、ongoing revision pipelineがrevision `fec1af40fe78218ba6b53719a415dff0496f9ab0703576587032370bfe68171a`をpublishedし、later captureでexact provenanceを得た。Earlier/later両versionをimmutable recordとして残し、上書き・統合・失敗扱いしない。
+
+Boundary: Exact player linkageは0で、registry全17 evidence rowsのplayer identityは未解決。Name normalization、player master、SFMS02 minutes join、suspension feature、model workは承認しない。No suspension rowは**UNKNOWN**でありzeroではない。Historical 2015–2024 production verdictは**C / unsafe**、prospective collectionは**B / operational**のまま維持する。これはdata-platform milestoneでありmodel-selection decisionではない。
+
 ## 2026-10-03: Frozen Model Architecture benchmarkをclose
 
 Decision: Frozen ordinary-J1 2015–2024 foldsでA/P/Gを比較するformal benchmarkをexactly once実行し、A reference gateはPASSした。Pはpooled Log Loss delta `+0.001562503284968`、pooled Brier delta `+0.001778814919845`、Log Loss改善3/5 foldsで`CLOSE_ARCHITECTURE_CANDIDATE`。Gはpooled Log Loss delta `+0.009111421708431`、pooled Brier delta `+0.005858678190648`、改善0/5 foldsで`CLOSE_ARCHITECTURE_CANDIDATE`とする。

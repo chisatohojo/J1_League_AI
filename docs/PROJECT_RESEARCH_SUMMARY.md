@@ -1,6 +1,6 @@
 # J1 League AI 研究サマリー
 
-- 最終更新: **2026-10-03 (JST)**
+- 最終更新: **2026-10-04 (JST)**
 - Project purpose: ordinary J1の試合前に`0=Away / 1=Draw / 2=Home`の3-class確率を再現可能な形で出力する。
 - Current research phase: **new information layer / data platform**。2020–2024 OOFでの小さなretrospective feature探索を閉じ、PIT provenanceを持つprospective dataを蓄積する段階。
 - Current baseline/champion: **Model A — Elo-only Logistic**。
@@ -149,7 +149,11 @@ Current verdictは**`DEFER_PLAYER_SNAPSHOT_IDENTITY`**。保存済み3 ranking p
 
 ### Suspensions
 
-Historical 2015–2024 production featureは、archive completeness、PIT page state、player linkageが未確立のためinsufficientのまま。Prospective collectorはoperatorが手動指定したcanonical official notice URLに対して運用可能で、`retrieved_at`、official `published_at`/`updated_at`、raw bytes、URL、SHAを保存する。Kickoff後に観測したnoticeをretroactive pre-kickoff evidenceにはしない。Match linkageはexact、player linkageは別途evidenceがない限り未解決。Runbook: [JLEAGUE_SUSPENSION_SNAPSHOT_RUNBOOK.md](JLEAGUE_SUSPENSION_SNAPSHOT_RUNBOOK.md)。
+Prospective collector、KICKOFF_V2 capture-time schedule/kickoff provenance、read-only PIT registryはoperationalである。最初のreal `PRE_KICKOFF_CONFIRMED` observationはsnapshot `20261003T224234521936Z`で、7 evidence rows、4 distinct exact target matches、7 exact match rows、7 exact kickoff rows、7 `PRE_KICKOFF_CONFIRMED` rowsを保持する。Exact player linkageは0であり、player identityは全行未解決のままである。
+
+`PRE_KICKOFF_CONFIRMED`は、そのexact archived notice page versionがfrozen target kickoff前にexact match/kickoff provenance付きで観測されたことだけを意味する。Notice archiveのcomplete coverage、model feature safety、rowがない場合のzero、stable player identity、historical recoverabilityは意味しない。**No suspension row = UNKNOWN**を維持し、team/match-level zeroを推論しない。
+
+Historical 2015–2024 production verdictは**C / unsafe**のまま、prospective collectionは**B / operational**のままであり、production model inputへの昇格は行っていない。Runbook: [JLEAGUE_SUSPENSION_SNAPSHOT_RUNBOOK.md](JLEAGUE_SUSPENSION_SNAPSHOT_RUNBOOK.md)。Registry: [JLEAGUE_SUSPENSION_REGISTRY.md](JLEAGUE_SUSPENSION_REGISTRY.md)。
 
 ### Rolling xG prospective pipeline
 

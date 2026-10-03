@@ -115,3 +115,5 @@ A later research cycle may combine eligible pre-kickoff snapshots with previous-
 No workload feature, suspension feature, eligibility flag, historical backfill, model evaluation, or prediction is produced by this collector.
 
 The immutable snapshot archive can be audited without network or filesystem mutation through the read-only registry documented in [JLEAGUE_SUSPENSION_REGISTRY.md](JLEAGUE_SUSPENSION_REGISTRY.md). The registry preserves both `LEGACY_V1` and `KICKOFF_V2` observations and never reconstructs legacy kickoff evidence from the current schedule.
+
+After official match IDs become available through the ongoing schedule revision pipeline, a later immutable capture of the same notice may gain exact match/kickoff provenance. Never rewrite the earlier snapshot: its unresolved linkage state is valid capture-time evidence and remains part of notice version history.

@@ -112,6 +112,28 @@ Classification precedence is deterministic:
 
 Repeated captures of the same `notice_id` are retained as separate physical observations. `NoticeVersion` orders them by `retrieved_at` and `snapshot_id`; earlier versions remain visible. Cross-snapshot repetition is expected and is never collapsed into a destructive “latest truth.” Duplicate source-target rows remain prohibited only within one processed snapshot.
 
+## First live confirmed observation
+
+The first real `PRE_KICKOFF_CONFIRMED` suspension observation is:
+
+```text
+snapshot_id                    20261003T224234521936Z
+evidence rows                  7
+exact match rows               7
+exact kickoff rows             7
+PRE_KICKOFF_CONFIRMED rows     7
+distinct exact target matches  4
+exact player linkage           0
+```
+
+All player identities remain unresolved. This milestone establishes exact match/time provenance only; it does not authorize name normalization, a player master, workload linkage, a suspension feature, or model use.
+
+The same official notice was preserved immediately earlier in snapshot `20261003T221607715238Z`. At that observation, all seven rows correctly recorded `match_link_status = UNRESOLVED_NO_MATCH_ID` and `kickoff_link_status = UNRESOLVED_NO_MATCH`, because the local schedule identity state had not yet frozen the required official match IDs. It is a valid KICKOFF_V2 observation, not a failed snapshot.
+
+The ongoing schedule revision pipeline subsequently published revision `fec1af40fe78218ba6b53719a415dff0496f9ab0703576587032370bfe68171a` with the explicitly evidenced match identities. A later immutable capture then recorded exact match/kickoff provenance. Both versions remain visible: the earlier observation preserves the unresolved identity state known then, and the later observation preserves the subsequently exact state. Neither is rewritten, merged, or collapsed into “latest truth.”
+
+Across the current registry, 17 evidence rows remain player-unresolved. These are archive observation counts, not season coverage.
+
 ## Absence and identity policy
 
 The archive contains only explicitly observed operator-supplied notices. No registry row means **unknown**, never “no suspended player.” The registry creates no team-level zero, match-level zero, suspended-player count, coverage percentage, or absence-derived feature.
