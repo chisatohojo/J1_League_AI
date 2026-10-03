@@ -174,6 +174,8 @@ Consequently, historical coverage is **unknown**, not zero and not assumed compl
 
 Current J.LEAGUE.jp notices are published before their sampled target matches and carry publication/update metadata. An operational collector is feasible if it runs before every target kickoff and stores immutable snapshots.
 
+The prospective collector now also freezes the exact capture-time schedule SHA-256, the raw target kickoff clock, and the canonical `Asia/Tokyo` kickoff instant/status in each new processed snapshot. This supports a future registry's point-in-time assessment without rejoining a revised live schedule. Older snapshots remain immutable and are not backfilled; this operational provenance improvement does not change the historical production verdict.
+
 Required controls:
 
 - fetch on a fixed schedule and before each matchday;

@@ -7,15 +7,17 @@ unlisted target matches, normalize identities, or create modeling features.
 
 import argparse
 import csv
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time as datetime_time, timedelta, timezone
 import hashlib
 from html.parser import HTMLParser
+import io
 import json
 from pathlib import Path
 import re
 import time
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
 from src.collect.teams import TeamMaster, TeamMasterError, load_team_master
 
@@ -38,10 +40,21 @@ CSV_FIELDS = (
     "competition", "season", "team_id", "team_link_status",
     "official_club_name", "player_name_raw", "official_player_id",
     "target_match_id", "target_match_date", "target_round", "opponent_name",
+    "target_kickoff_time", "target_kickoff_at", "schedule_sha256",
     "suspension_code", "suspension_reason", "suspension_match_index",
-    "suspension_match_count", "match_link_status", "player_link_status",
+    "suspension_match_count", "match_link_status", "kickoff_link_status",
+    "player_link_status",
     "source_url",
 )
+KICKOFF_TIME_RE = re.compile(r"(?:[01][0-9]|2[0-3]):[0-5][0-9]")
+KICKOFF_LINK_STATUSES = {
+    "EXACT",
+    "UNRESOLVED_MISSING",
+    "UNRESOLVED_INVALID",
+    "UNRESOLVED_NO_MATCH",
+    "AMBIGUOUS",
+}
+JST = ZoneInfo("Asia/Tokyo")
 
 
 class SuspensionSnapshotError(ValueError):
@@ -225,19 +238,58 @@ def parse_notice(raw: bytes, *, source_url: str):
     }
 
 
-def _schedule_rows(schedule_path, master):
+def _schedule_path_label(schedule_path):
+    resolved = Path(schedule_path).resolve()
+    try:
+        return resolved.relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
+def _read_schedule_evidence(schedule_path):
+    path = Path(schedule_path)
+    if not path.is_file():
+        raise SuspensionSnapshotError(f"Schedule path is not a regular file: {path}.")
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        raise SuspensionSnapshotError(f"Cannot read schedule file: {path}.") from exc
+    return {
+        "path": _schedule_path_label(path),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "raw": raw,
+    }
+
+
+def _schedule_rows(schedule_raw, master):
     required = {
         "match_id", "match_date", "round_label", "home_team", "away_team",
-        "competition_key",
+        "competition_key", "kickoff_time",
     }
+    try:
+        text = schedule_raw.decode("utf-8-sig", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise SuspensionSnapshotError("Schedule is not lossless UTF-8.") from exc
     rows = []
-    with Path(schedule_path).open(encoding="utf-8-sig", newline="") as handle:
+    with io.StringIO(text, newline="") as handle:
         reader = csv.DictReader(handle)
         if not required <= set(reader.fieldnames or ()):
             raise SuspensionSnapshotError(f"Schedule lacks columns: {sorted(required - set(reader.fieldnames or ()))}.")
         for source in reader:
+            if None in source or any(value is None for value in source.values()):
+                raise SuspensionSnapshotError("Schedule row width does not match its header.")
             if source["competition_key"] != "j1_2026_2027":
                 continue
+            try:
+                parsed_date = date.fromisoformat(source["match_date"])
+            except (TypeError, ValueError) as exc:
+                raise SuspensionSnapshotError(
+                    f"Schedule has invalid match_date: {source['match_date']!r}."
+                ) from exc
+            if parsed_date.isoformat() != source["match_date"]:
+                raise SuspensionSnapshotError(
+                    f"Schedule has noncanonical match_date: {source['match_date']!r}."
+                )
             try:
                 home_id = master.resolve_team_id(source["home_team"], source=TEAM_SOURCE,
                                                  on=source["match_date"])
@@ -254,10 +306,86 @@ def _schedule_rows(schedule_path, master):
     return rows
 
 
-def link_rows(rows, *, schedule_path=SCHEDULE, master=None, player_identity_keys=None):
+def _kickoff_evidence(candidate, *, match_link_status):
+    raw = candidate["kickoff_time"]
+    if match_link_status != "EXACT":
+        return raw, "", "UNRESOLVED_NO_MATCH"
+    if raw == "":
+        return raw, "", "UNRESOLVED_MISSING"
+    if KICKOFF_TIME_RE.fullmatch(raw) is None:
+        return raw, "", "UNRESOLVED_INVALID"
+    hour, minute = (int(part) for part in raw.split(":"))
+    target_date = date.fromisoformat(candidate["match_date"])
+    target = datetime.combine(
+        target_date,
+        datetime_time(hour=hour, minute=minute),
+        tzinfo=JST,
+    )
+    return raw, target.isoformat(timespec="seconds"), "EXACT"
+
+
+def validate_kickoff_provenance(rows, *, schedule_sha256):
+    """Validate capture-time schedule evidence without mutating input rows."""
+    if re.fullmatch(r"[0-9a-f]{64}", schedule_sha256) is None:
+        raise SuspensionSnapshotError("Invalid snapshot schedule SHA-256.")
+    for row in rows:
+        if row.get("schedule_sha256") != schedule_sha256:
+            raise SuspensionSnapshotError("Processed row schedule SHA-256 mismatch.")
+        status = row.get("kickoff_link_status")
+        if status not in KICKOFF_LINK_STATUSES:
+            raise SuspensionSnapshotError(f"Invalid kickoff linkage status: {status!r}.")
+        kickoff_at = row.get("target_kickoff_at", "")
+        parsed = None
+        if kickoff_at:
+            try:
+                parsed = datetime.fromisoformat(kickoff_at)
+            except ValueError as exc:
+                raise SuspensionSnapshotError(
+                    f"Invalid target_kickoff_at: {kickoff_at!r}."
+                ) from exc
+            if (
+                parsed.tzinfo is None
+                or parsed.utcoffset() != timedelta(hours=9)
+                or not kickoff_at.endswith("+09:00")
+            ):
+                raise SuspensionSnapshotError(
+                    "target_kickoff_at must be an ISO 8601 instant with +09:00."
+                )
+        if status == "EXACT":
+            if row.get("match_link_status") != "EXACT":
+                raise SuspensionSnapshotError(
+                    "Exact kickoff linkage requires exact match linkage."
+                )
+            if parsed is None or KICKOFF_TIME_RE.fullmatch(
+                row.get("target_kickoff_time", "")
+            ) is None:
+                raise SuspensionSnapshotError(
+                    "Exact kickoff linkage requires a valid time and timestamp."
+                )
+        elif kickoff_at:
+            raise SuspensionSnapshotError(
+                "Unresolved kickoff linkage cannot carry a timestamp."
+            )
+        if row.get("match_link_status") == "EXACT" and status not in {
+            "EXACT", "UNRESOLVED_MISSING", "UNRESOLVED_INVALID"
+        }:
+            raise SuspensionSnapshotError(
+                "Exact match linkage has an inconsistent kickoff status."
+            )
+
+
+def link_rows(
+    rows,
+    *,
+    schedule_path=SCHEDULE,
+    master=None,
+    player_identity_keys=None,
+    _schedule_evidence=None,
+):
     """Apply exact club and match linkage; unresolved records remain explicit."""
     master = master or load_team_master()
-    schedule = _schedule_rows(schedule_path, master)
+    evidence = _schedule_evidence or _read_schedule_evidence(schedule_path)
+    schedule = _schedule_rows(evidence["raw"], master)
     player_identity_keys = set(player_identity_keys or ())
     linked = []
     for source in rows:
@@ -278,6 +406,8 @@ def link_rows(rows, *, schedule_path=SCHEDULE, master=None, player_identity_keys
                           and team_id in (match["home_team_id"], match["away_team_id"])]
         target_match_id = ""
         opponent = ""
+        target_kickoff_time = ""
+        target_kickoff_at = ""
         if len(candidates) == 1:
             candidate = candidates[0]
             if team_id == candidate["home_team_id"]:
@@ -291,10 +421,17 @@ def link_rows(rows, *, schedule_path=SCHEDULE, master=None, player_identity_keys
             else:
                 target_match_id = candidate["match_id"]
                 match_status = "EXACT"
+            (
+                target_kickoff_time,
+                target_kickoff_at,
+                kickoff_status,
+            ) = _kickoff_evidence(candidate, match_link_status=match_status)
         elif not candidates:
             match_status = "UNRESOLVED"
+            kickoff_status = "UNRESOLVED_NO_MATCH"
         else:
             match_status = "AMBIGUOUS"
+            kickoff_status = "AMBIGUOUS"
         player_key = (row["season"], team_id, row["player_name_raw"])
         player_status = "EXACT" if team_id and player_key in player_identity_keys else "UNRESOLVED"
         row.update({
@@ -302,10 +439,15 @@ def link_rows(rows, *, schedule_path=SCHEDULE, master=None, player_identity_keys
             "team_link_status": team_status,
             "target_match_id": target_match_id,
             "opponent_name": opponent,
+            "target_kickoff_time": target_kickoff_time,
+            "target_kickoff_at": target_kickoff_at,
+            "schedule_sha256": evidence["sha256"],
             "match_link_status": match_status,
+            "kickoff_link_status": kickoff_status,
             "player_link_status": player_status,
         })
         linked.append(row)
+    validate_kickoff_provenance(linked, schedule_sha256=evidence["sha256"])
     return linked
 
 
@@ -344,6 +486,8 @@ def collect_snapshot(*, urls, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
         "retrieved_at": retrieved_at,
         "season": SEASON,
         "status": "INCOMPLETE",
+        "schedule_path": _schedule_path_label(schedule_path),
+        "schedule_sha256": "",
         "source_urls": list(urls),
         "pages": [],
         "notice_count": 0,
@@ -351,6 +495,9 @@ def collect_snapshot(*, urls, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
     }
     all_rows = []
     try:
+        schedule_evidence = _read_schedule_evidence(schedule_path)
+        manifest["schedule_path"] = schedule_evidence["path"]
+        manifest["schedule_sha256"] = schedule_evidence["sha256"]
         for index, (url, notice_id) in enumerate(zip(urls, notice_ids)):
             if index:
                 pause(0.25)
@@ -379,11 +526,15 @@ def collect_snapshot(*, urls, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
             all_rows.extend(parsed)
         master = master or load_team_master()
         all_rows = link_rows(all_rows, schedule_path=schedule_path, master=master,
-                             player_identity_keys=player_identity_keys)
+                             player_identity_keys=player_identity_keys,
+                             _schedule_evidence=schedule_evidence)
         keys = [(row["source_url"], row["player_name_raw"], row["official_club_name"],
                  row["target_match_date"], row["target_round"]) for row in all_rows]
         if len(keys) != len(set(keys)):
             raise SuspensionSnapshotError("Duplicate source/target record in one snapshot.")
+        validate_kickoff_provenance(
+            all_rows, schedule_sha256=manifest["schedule_sha256"]
+        )
         Path(processed_root).mkdir(parents=True, exist_ok=True)
         with output.open("x", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS, extrasaction="ignore")
@@ -397,6 +548,12 @@ def collect_snapshot(*, urls, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
             "exact_team_linkage_count": sum(row["team_link_status"] == "EXACT" for row in all_rows),
             "exact_match_linkage_count": sum(row["match_link_status"] == "EXACT" for row in all_rows),
             "unresolved_match_count": sum(row["match_link_status"] != "EXACT" for row in all_rows),
+            "exact_kickoff_linkage_count": sum(
+                row["kickoff_link_status"] == "EXACT" for row in all_rows
+            ),
+            "unresolved_kickoff_count": sum(
+                row["kickoff_link_status"] != "EXACT" for row in all_rows
+            ),
             "exact_player_linkage_count": sum(row["player_link_status"] == "EXACT" for row in all_rows),
         })
     except Exception as exc:
@@ -418,6 +575,8 @@ def collect_snapshot(*, urls, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
         "exact_team_linkage_count": manifest["exact_team_linkage_count"],
         "exact_match_linkage_count": manifest["exact_match_linkage_count"],
         "unresolved_match_count": manifest["unresolved_match_count"],
+        "exact_kickoff_linkage_count": manifest["exact_kickoff_linkage_count"],
+        "unresolved_kickoff_count": manifest["unresolved_kickoff_count"],
         "exact_player_linkage_count": manifest["exact_player_linkage_count"],
     }
 

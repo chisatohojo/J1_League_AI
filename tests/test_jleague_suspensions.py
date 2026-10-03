@@ -2,12 +2,14 @@
 
 import csv
 from datetime import date, datetime, timezone
+import hashlib
 import json
 
 import pytest
 
 from src.collect.jleague_suspensions import (
     CSV_FIELDS, SuspensionSnapshotError, collect_snapshot, link_rows, parse_notice,
+    validate_kickoff_provenance,
 )
 from src.collect.teams import TeamAlias, TeamMaster
 
@@ -24,12 +26,15 @@ def master():
     ])
 
 
-def schedule(path, *, blank_id=False):
-    fields = ["match_id", "match_date", "round_label", "home_team", "away_team", "competition_key"]
-    rows = [
-        ["" if blank_id else "m1", "2026-09-19", "第８節第１日", "清水", "千葉", "j1_2026_2027"],
-        ["m2", "2026-09-20", "第８節第２日", "町田", "岡山", "j1_2026_2027"],
-        ["m3", "2026-09-26", "第９節第１日", "千葉", "町田", "j1_2026_2027"],
+def schedule(path, *, blank_id=False, rows=None):
+    fields = [
+        "match_id", "match_date", "round_label", "home_team", "away_team",
+        "competition_key", "kickoff_time",
+    ]
+    rows = rows or [
+        ["" if blank_id else "m1", "2026-09-19", "第８節第１日", "清水", "千葉", "j1_2026_2027", "14:00"],
+        ["m2", "2026-09-20", "第８節第２日", "町田", "岡山", "j1_2026_2027", "19:00"],
+        ["m3", "2026-09-26", "第９節第１日", "千葉", "町田", "j1_2026_2027", "18:00"],
     ]
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
@@ -101,8 +106,133 @@ def test_exact_club_and_match_linkage_and_raw_player_name(tmp_path):
     assert linked[0]["target_match_id"] == "m2"
     assert linked[0]["opponent_name"] == "岡山"
     assert linked[0]["match_link_status"] == "EXACT"
+    assert linked[0]["target_kickoff_time"] == "19:00"
+    assert linked[0]["target_kickoff_at"] == "2026-09-20T19:00:00+09:00"
+    assert linked[0]["kickoff_link_status"] == "EXACT"
     assert linked[0]["player_name_raw"] == "明本 考浩"
     assert linked[0]["player_link_status"] == "EXACT"
+
+
+def test_exact_capture_time_kickoff_uses_asia_tokyo_and_does_not_mutate_inputs(tmp_path):
+    schedule_path = tmp_path / "schedule.csv"
+    schedule(schedule_path, rows=[
+        ["m10", "2026-10-09", "第１１節第１日", "町田", "岡山", "j1_2026_2027", "19:00"],
+    ])
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    source = dict(rows[0])
+    source["target_match_date"] = "2026-10-09"
+    source["target_round"] = "第１１節第１日"
+    original = dict(source)
+    schedule_before = schedule_path.read_bytes()
+
+    linked = link_rows([source], schedule_path=schedule_path, master=master())
+
+    assert source == original
+    assert schedule_path.read_bytes() == schedule_before
+    assert linked[0]["target_kickoff_time"] == "19:00"
+    assert linked[0]["target_kickoff_at"] == "2026-10-09T19:00:00+09:00"
+    assert linked[0]["kickoff_link_status"] == "EXACT"
+
+
+@pytest.mark.parametrize(
+    ("kickoff_time", "expected_status"),
+    [
+        ("", "UNRESOLVED_MISSING"),
+        ("19時00分", "UNRESOLVED_INVALID"),
+        ("24:00", "UNRESOLVED_INVALID"),
+        (" 19:00", "UNRESOLVED_INVALID"),
+    ],
+)
+def test_exact_match_with_missing_or_invalid_kickoff_is_never_guessed(
+    tmp_path, kickoff_time, expected_status
+):
+    schedule_path = tmp_path / "schedule.csv"
+    schedule(schedule_path, rows=[
+        ["m2", "2026-09-20", "第８節第２日", "町田", "岡山", "j1_2026_2027", kickoff_time],
+    ])
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+
+    linked = link_rows([rows[0]], schedule_path=schedule_path, master=master())
+
+    assert linked[0]["match_link_status"] == "EXACT"
+    assert linked[0]["target_kickoff_time"] == kickoff_time
+    assert linked[0]["target_kickoff_at"] == ""
+    assert linked[0]["kickoff_link_status"] == expected_status
+
+
+def test_no_match_and_ambiguous_match_emit_no_kickoff_timestamp(tmp_path):
+    no_match_path = tmp_path / "no_match.csv"
+    schedule(no_match_path, rows=[
+        ["m2", "2026-09-21", "第８節第２日", "町田", "岡山", "j1_2026_2027", "19:00"],
+    ])
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    no_match = link_rows([rows[0]], schedule_path=no_match_path, master=master())[0]
+    assert no_match["match_link_status"] == "UNRESOLVED"
+    assert no_match["kickoff_link_status"] == "UNRESOLVED_NO_MATCH"
+    assert no_match["target_kickoff_time"] == ""
+    assert no_match["target_kickoff_at"] == ""
+
+    ambiguous_path = tmp_path / "ambiguous.csv"
+    schedule(ambiguous_path, rows=[
+        ["m2", "2026-09-20", "第８節第２日", "町田", "岡山", "j1_2026_2027", "19:00"],
+        ["m4", "2026-09-20", "第８節第２日", "清水", "町田", "j1_2026_2027", "20:00"],
+    ])
+    ambiguous = link_rows([rows[0]], schedule_path=ambiguous_path, master=master())[0]
+    assert ambiguous["match_link_status"] == "AMBIGUOUS"
+    assert ambiguous["kickoff_link_status"] == "AMBIGUOUS"
+    assert ambiguous["target_kickoff_time"] == ""
+    assert ambiguous["target_kickoff_at"] == ""
+
+
+def test_kickoff_timezone_and_date_rollover_are_independent_of_machine_timezone(tmp_path):
+    schedule_path = tmp_path / "schedule.csv"
+    schedule(schedule_path, rows=[
+        ["m4", "2027-01-01", "第２０節第１日", "町田", "岡山", "j1_2026_2027", "00:30"],
+    ])
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    source = {**rows[0], "target_match_date": "2027-01-01", "target_round": "第２０節第１日"}
+
+    linked = link_rows([source], schedule_path=schedule_path, master=master())
+
+    assert linked[0]["target_kickoff_at"] == "2027-01-01T00:30:00+09:00"
+    assert datetime.fromisoformat(linked[0]["target_kickoff_at"]).utcoffset().total_seconds() == 9 * 3600
+
+
+def test_schedule_sha256_uses_exact_bytes_and_changes_with_bytes(tmp_path):
+    schedule_path = tmp_path / "schedule.csv"
+    schedule(schedule_path)
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    first_bytes = schedule_path.read_bytes()
+    first_hash = hashlib.sha256(first_bytes).hexdigest()
+    first = link_rows(rows, schedule_path=schedule_path, master=master())
+    assert {row["schedule_sha256"] for row in first} == {first_hash}
+
+    schedule_path.write_bytes(first_bytes + b"\r\n")
+    second_hash = hashlib.sha256(schedule_path.read_bytes()).hexdigest()
+    second = link_rows(rows, schedule_path=schedule_path, master=master())
+    assert first_hash != second_hash
+    assert {row["schedule_sha256"] for row in second} == {second_hash}
+
+
+@pytest.mark.parametrize(
+    ("changes", "message"),
+    [
+        ({"schedule_sha256": "0" * 64}, "SHA-256 mismatch"),
+        ({"target_kickoff_at": "2026-09-20T10:00:00Z"}, r"with \+09:00"),
+        ({"target_kickoff_at": ""}, "requires a valid time"),
+        ({"kickoff_link_status": "UNRESOLVED_MISSING"}, "cannot carry a timestamp"),
+    ],
+)
+def test_kickoff_provenance_consistency_gates(tmp_path, changes, message):
+    schedule_path = tmp_path / "schedule.csv"
+    schedule(schedule_path)
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    linked = link_rows(rows, schedule_path=schedule_path, master=master())
+    expected_hash = linked[0]["schedule_sha256"]
+    changed = [{**row, **changes} for row in linked]
+
+    with pytest.raises(SuspensionSnapshotError, match=message):
+        validate_kickoff_provenance(changed, schedule_sha256=expected_hash)
 
 
 def test_unresolved_identity_or_missing_match_id_is_never_guessed(tmp_path):
@@ -141,8 +271,16 @@ def test_snapshot_provenance_common_id_duplicate_reject_and_no_overwrite(tmp_pat
     assert tuple(output[0]) == CSV_FIELDS
     assert {row["snapshot_id"] for row in output} == {result["snapshot_id"]}
     assert {row["retrieved_at"] for row in output} == {"2026-09-21T01:02:03Z"}
+    expected_schedule_hash = hashlib.sha256(schedule_path.read_bytes()).hexdigest()
+    assert {row["schedule_sha256"] for row in output} == {expected_schedule_hash}
     manifest = json.loads((result["raw_dir"] / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "COMPLETE"
+    assert manifest["schedule_path"] == schedule_path.resolve().as_posix()
+    assert manifest["schedule_sha256"] == expected_schedule_hash
+    assert manifest["exact_kickoff_linkage_count"] == 3
+    assert manifest["unresolved_kickoff_count"] == 0
+    assert result["exact_kickoff_linkage_count"] == 3
+    assert result["unresolved_kickoff_count"] == 0
     with pytest.raises(SuspensionSnapshotError, match="already exists"):
         collect_snapshot(**kwargs)
     assert len(calls) == 1
@@ -166,6 +304,8 @@ def test_incomplete_snapshot_keeps_raw_but_never_publishes_csv(tmp_path):
     manifest_path = next((tmp_path / "raw").glob("*/manifest.json"))
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["status"] == "INCOMPLETE"
+    assert manifest["schedule_sha256"] == hashlib.sha256(schedule_path.read_bytes()).hexdigest()
+    assert manifest["schedule_path"] == schedule_path.resolve().as_posix()
     assert (manifest_path.parent / "notice_99999.html").exists()
     assert not list((tmp_path / "processed").glob("*.csv")) if (tmp_path / "processed").exists() else True
 
@@ -181,3 +321,29 @@ def test_invalid_publication_time_is_rejected():
     raw = fixture_html().replace(b"2026-09-14T10:00:00.000Z", b"2026-09-14")
     with pytest.raises(SuspensionSnapshotError, match="Timezone missing"):
         parse_notice(raw, source_url=URL)
+
+
+def test_schedule_must_be_regular_file_and_require_kickoff_column(tmp_path):
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    with pytest.raises(SuspensionSnapshotError, match="not a regular file"):
+        link_rows(rows, schedule_path=tmp_path / "missing.csv", master=master())
+
+    schedule_path = tmp_path / "schedule.csv"
+    schedule_path.write_text(
+        "match_id,match_date,round_label,home_team,away_team,competition_key\n"
+        "m2,2026-09-20,第８節第２日,町田,岡山,j1_2026_2027\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(SuspensionSnapshotError, match="kickoff_time"):
+        link_rows(rows, schedule_path=schedule_path, master=master())
+
+
+def test_schedule_rejects_invalid_or_noncanonical_iso_date(tmp_path):
+    rows, _ = parse_notice(fixture_html(second_explicit=False), source_url=URL)
+    for index, invalid_date in enumerate(("2026-02-30", "2026-9-20")):
+        schedule_path = tmp_path / f"schedule_{index}.csv"
+        schedule(schedule_path, rows=[
+            ["m2", invalid_date, "第８節第２日", "町田", "岡山", "j1_2026_2027", "19:00"],
+        ])
+        with pytest.raises(SuspensionSnapshotError, match="match_date"):
+            link_rows(rows, schedule_path=schedule_path, master=master())
