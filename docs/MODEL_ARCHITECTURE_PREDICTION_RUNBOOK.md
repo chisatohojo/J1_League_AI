@@ -1,9 +1,9 @@
 # Model Architecture Prospective Prediction Runbook
 
-## Scope and frozen Candidate P
+## Scope and frozen candidates
 
 `src/modeling/model_architecture_prediction.py` generates prospective
-Away/Draw/Home probabilities from the immutable Candidate P artifact:
+Away/Draw/Home probabilities from one explicitly selected immutable artifact:
 
 ```text
 model_version: architecture_independent_poisson_v1
@@ -12,13 +12,25 @@ artifact_hash: 655b5e46678c8ccce81b45b63833da5888fab94b4f5e267257c7496877b356f0
 training_cutoff: 2025-12-06
 ```
 
+```text
+selector: lightgbm
+model_version: architecture_lightgbm_form_v1
+artifact: models/model_architecture/architecture_lightgbm_form_v1/
+artifact_hash: 767ae8bce062386079118994182d067f782ad98576e3351890edf7586cecc516
+training_cutoff: 2025-12-06
+```
+
 The predictor validates the complete artifact bundle through
 `load_poisson_artifact()`: payload checksums, metadata, training population,
 pipeline structure, fitted state, version, cutoff, and the frozen artifact
 hash. It never fits or updates Candidate P.
 
-Candidate G is not implemented. It may later use the same output schema, but
-must have its own frozen model version and artifact review.
+Candidate G is loaded only through `load_lightgbm_artifact()`, which validates
+the complete bundle, fitted LightGBM state, version, cutoff, 3,588-row training
+population, and frozen artifact hash. The predictor never fits either
+candidate or regenerates either artifact. Omitting `--model` retains the
+Candidate P default. Accepted selectors are exactly `poisson` and `lightgbm`;
+there is no combined mode.
 
 ## Cohort and next-date batch
 
@@ -52,6 +64,32 @@ For target date `D`, only completed history with `match_date < D` is replayed.
 Completed results on `D`, later results, target results, and same-date peer
 results cannot enter the target state.
 
+## Candidate G form state
+
+Candidate G uses the same target identity and `elo_diff` path as Candidate P,
+plus exactly these ordered fields:
+
+```text
+home_last5_matches_available
+away_last5_matches_available
+home_last5_points
+away_last5_points
+home_last5_goals_for
+away_last5_goals_for
+home_last5_goals_against
+away_last5_goals_against
+```
+
+Together with the leading `elo_diff`, these are the frozen nine model inputs.
+Form is replayed through `add_form_features_to_targets()` over the supplied
+chain `2015–2025 ordinary J1 → 2026 Hyakunen → completed 2026/27`. For target
+date `D`, every history row must satisfy `match_date < D`; results on `D` and
+later are excluded. Home/away appearances share one last-five history across
+seasons and competitions. Availability is exactly wins + draws + losses.
+
+Targets are read-only. No target score, result, synthetic 0-0, sentinel, or
+dummy outcome is appended to history to obtain form state.
+
 ## Kickoff and no-backfill guard
 
 Schedule dates and kickoff times are interpreted using the repository's J.League
@@ -67,14 +105,18 @@ Dry-run crosses schedule, cohort, identity, Elo, artifact, kickoff,
 probability, existing-output, and append-plan validation, but writes nothing:
 
 ```powershell
-.\.venv\Scripts\python.exe -m src.modeling.model_architecture_prediction --dry-run
+.\.venv\Scripts\python.exe -m src.modeling.model_architecture_prediction --model poisson --dry-run
+.\.venv\Scripts\python.exe -m src.modeling.model_architecture_prediction --model lightgbm --dry-run
 ```
 
 Production append:
 
 ```powershell
-.\.venv\Scripts\python.exe -m src.modeling.model_architecture_prediction
+.\.venv\Scripts\python.exe -m src.modeling.model_architecture_prediction --model poisson
+.\.venv\Scripts\python.exe -m src.modeling.model_architecture_prediction --model lightgbm
 ```
+
+The legacy commands without `--model` remain aliases for Candidate P.
 
 Review and push the implementation before running either command against the
 real production paths.
@@ -113,12 +155,17 @@ p_home
 predicted_class
 ```
 
-Candidate P probabilities are used exactly in `[Away, Draw, Home]` order.
-There is no recalibration, draw threshold, blending, or lambda output.
+Both candidates use probabilities exactly in `[Away, Draw, Home]` order and
+plain argmax. There is no recalibration, draw threshold, blending, feature
+output, feature importance, or lambda output. Existing Candidate P rows remain
+immutable when Candidate G rows with the same `match_id` are appended under
+their different model version.
 
 ## Operational prohibitions
 
-- Never refit Candidate P or regenerate its artifact from this predictor.
+- Never refit Candidate P or Candidate G, or regenerate either artifact from
+  this predictor.
+- Never backfill Candidate G and never fabricate target outcomes for form.
 - Never backfill after kickoff.
 - Never inspect outcomes or calculate Accuracy, Log Loss, Brier, or other
   performance metrics during prediction.

@@ -20,12 +20,26 @@ from src.features.elo_history import (
     build_elo_history_with_ongoing,
     load_elo_history_with_ongoing,
 )
-from src.modeling.architecture_poisson import CLASS_ORDER, predict_proba
+from src.features.form import FORM_COLUMNS, add_form_features_to_targets
+from src.modeling.architecture_lightgbm import (
+    FEATURE_COLUMNS as LIGHTGBM_FEATURE_COLUMNS,
+    predict_proba as predict_lightgbm_proba,
+    validate_lightgbm_features,
+)
+from src.modeling.architecture_lightgbm_artifact import (
+    EXPECTED_ROWS as LIGHTGBM_TRAINING_ROWS,
+    MODEL_VERSION as LIGHTGBM_MODEL_VERSION,
+    OUTPUT_DIR as LIGHTGBM_ARTIFACT_DIR,
+    TRAINING_CUTOFF as LIGHTGBM_TRAINING_CUTOFF,
+    LoadedLightGBMArtifact,
+    load_lightgbm_artifact,
+)
+from src.modeling.architecture_poisson import CLASS_ORDER, predict_proba as predict_poisson_proba
 from src.modeling.architecture_poisson_artifact import (
-    EXPECTED_ROWS as ARTIFACT_TRAINING_ROWS,
-    MODEL_VERSION,
-    OUTPUT_DIR as ARTIFACT_DIR,
-    TRAINING_CUTOFF,
+    EXPECTED_ROWS as POISSON_TRAINING_ROWS,
+    MODEL_VERSION as POISSON_MODEL_VERSION,
+    OUTPUT_DIR as POISSON_ARTIFACT_DIR,
+    TRAINING_CUTOFF as POISSON_TRAINING_CUTOFF,
     LoadedPoissonArtifact,
     load_poisson_artifact,
 )
@@ -38,7 +52,14 @@ OUTPUT_PATH = ROOT / "data/processed/predictions/model_architecture_prospective.
 PROSPECTIVE_BOUNDARY = "2026-09-22T07:16:21+09:00"
 EXPECTED_PROSPECTIVE_ROWS = 300
 EXPECTED_SCHEDULE_ROWS = 380
-EXPECTED_ARTIFACT_HASH = "655b5e46678c8ccce81b45b63833da5888fab94b4f5e267257c7496877b356f0"
+POISSON_ARTIFACT_HASH = "655b5e46678c8ccce81b45b63833da5888fab94b4f5e267257c7496877b356f0"
+LIGHTGBM_ARTIFACT_HASH = "767ae8bce062386079118994182d067f782ad98576e3351890edf7586cecc516"
+# Backward-compatible Candidate P constant names.
+MODEL_VERSION = POISSON_MODEL_VERSION
+TRAINING_CUTOFF = POISSON_TRAINING_CUTOFF
+ARTIFACT_DIR = POISSON_ARTIFACT_DIR
+ARTIFACT_TRAINING_ROWS = POISSON_TRAINING_ROWS
+EXPECTED_ARTIFACT_HASH = POISSON_ARTIFACT_HASH
 SAFE_SCHEDULE_COLUMNS = (
     "match_id",
     "match_date",
@@ -55,6 +76,14 @@ TARGET_COLUMNS = (
     "home_team_id",
     "away_team_id",
     "elo_diff",
+)
+LIGHTGBM_TARGET_COLUMNS = (
+    "match_id",
+    "match_date",
+    "kickoff",
+    "home_team_id",
+    "away_team_id",
+    *LIGHTGBM_FEATURE_COLUMNS,
 )
 PREDICTION_COLUMNS = (
     "match_id",
@@ -80,6 +109,36 @@ class ArchitecturePredictionError(ValueError):
 
 
 @dataclass(frozen=True)
+class CandidateContract:
+    selector: str
+    model_version: str
+    artifact_hash: str
+    training_cutoff: str
+    training_rows: int
+    artifact_dir: Path
+
+
+CANDIDATES = {
+    "poisson": CandidateContract(
+        "poisson",
+        POISSON_MODEL_VERSION,
+        POISSON_ARTIFACT_HASH,
+        POISSON_TRAINING_CUTOFF,
+        POISSON_TRAINING_ROWS,
+        POISSON_ARTIFACT_DIR,
+    ),
+    "lightgbm": CandidateContract(
+        "lightgbm",
+        LIGHTGBM_MODEL_VERSION,
+        LIGHTGBM_ARTIFACT_HASH,
+        LIGHTGBM_TRAINING_CUTOFF,
+        LIGHTGBM_TRAINING_ROWS,
+        LIGHTGBM_ARTIFACT_DIR,
+    ),
+}
+
+
+@dataclass(frozen=True)
 class PredictionRun:
     status: str
     target_date: str
@@ -90,6 +149,15 @@ class PredictionRun:
     saved: bool
     dry_run: bool
     records: pd.DataFrame
+
+
+def _candidate(selector: str) -> CandidateContract:
+    try:
+        return CANDIDATES[selector]
+    except KeyError as exc:
+        raise ArchitecturePredictionError(
+            f"Unknown architecture candidate {selector!r}; expected poisson or lightgbm"
+        ) from exc
 
 
 def read_schedule_without_results(path: str | Path = SCHEDULE_PATH) -> pd.DataFrame:
@@ -195,33 +263,46 @@ def _without_elo_columns(frame: pd.DataFrame) -> pd.DataFrame:
     return frame.drop(columns=[column for column in ADDED_COLUMNS if column in frame.columns]).copy(deep=True)
 
 
-def add_strictly_prior_elo(
+def _strictly_prior_history(
     targets: pd.DataFrame,
     *,
-    processed_dir: str | Path = J1_DIR,
-    team_master: TeamMaster | None = None,
-) -> pd.DataFrame:
-    """Attach Elo from the verified chain using only dates before the target date."""
+    processed_dir: str | Path,
+    team_master: TeamMaster,
+) -> tuple[pd.Timestamp, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     if tuple(targets.columns) != TARGET_COLUMNS[:-1] or targets.empty:
         raise ArchitecturePredictionError("Target identity frame schema mismatch")
     if targets["match_date"].nunique() != 1:
-        raise ArchitecturePredictionError("Elo targets must be one calendar-date batch")
+        raise ArchitecturePredictionError("Targets must be one calendar-date batch")
     try:
         target_date = pd.to_datetime(targets["match_date"].iloc[0], format="%Y-%m-%d", errors="raise")
     except (TypeError, ValueError) as exc:
         raise ArchitecturePredictionError("Invalid target match_date") from exc
-    master = load_team_master() if team_master is None else team_master
-    verified = load_elo_history_with_ongoing(processed_dir, team_master=master)
-    ordinary = _without_elo_columns(verified.historical.matches)
-    hyakunen = _without_elo_columns(verified.hyakunen.matches)
-    ongoing = _without_elo_columns(verified.ongoing.matches)
-    ongoing_dates = pd.to_datetime(ongoing["match_date"], errors="raise")
+    verified = load_elo_history_with_ongoing(processed_dir, team_master=team_master)
+    ordinary = verified.historical.matches.copy(deep=True)
+    hyakunen = verified.hyakunen.matches.copy(deep=True)
+    ongoing = verified.ongoing.matches.copy(deep=True)
+    try:
+        ongoing_dates = pd.to_datetime(ongoing["match_date"], errors="raise")
+    except (TypeError, ValueError) as exc:
+        raise ArchitecturePredictionError("Malformed ongoing history match_date") from exc
     strictly_prior = ongoing.loc[ongoing_dates.lt(target_date)].copy(deep=True)
+    return target_date, ordinary, hyakunen, strictly_prior
+
+
+def _attach_elo_from_history(
+    targets: pd.DataFrame,
+    target_date: pd.Timestamp,
+    ordinary: pd.DataFrame,
+    hyakunen: pd.DataFrame,
+    strictly_prior: pd.DataFrame,
+    *,
+    team_master: TeamMaster,
+) -> pd.DataFrame:
     replayed = build_elo_history_with_ongoing(
-        ordinary,
-        hyakunen,
-        strictly_prior,
-        team_master=master,
+        _without_elo_columns(ordinary),
+        _without_elo_columns(hyakunen),
+        _without_elo_columns(strictly_prior),
+        team_master=team_master,
         observed_at=f"{target_date.strftime('%Y-%m-%d')}T00:00:00+09:00",
     )
     ratings = replayed.ongoing.final_ratings
@@ -241,20 +322,159 @@ def add_strictly_prior_elo(
     return result.loc[:, list(TARGET_COLUMNS)]
 
 
-def load_frozen_artifact(path: str | Path = ARTIFACT_DIR) -> LoadedPoissonArtifact:
-    """Load Candidate P only through its full validating artifact loader."""
+def add_strictly_prior_elo(
+    targets: pd.DataFrame,
+    *,
+    processed_dir: str | Path = J1_DIR,
+    team_master: TeamMaster | None = None,
+) -> pd.DataFrame:
+    """Attach Elo from the verified chain using only dates before the target date."""
+    master = load_team_master() if team_master is None else team_master
+    target_date, ordinary, hyakunen, strictly_prior = _strictly_prior_history(
+        targets, processed_dir=processed_dir, team_master=master
+    )
+    return _attach_elo_from_history(
+        targets,
+        target_date,
+        ordinary,
+        hyakunen,
+        strictly_prior,
+        team_master=master,
+    )
+
+
+def _canonical_form_history(
+    ordinary: pd.DataFrame,
+    hyakunen: pd.DataFrame,
+    strictly_prior: pd.DataFrame,
+    *,
+    target_date: pd.Timestamp,
+    team_master: TeamMaster,
+) -> pd.DataFrame:
+    required = (
+        "match_id",
+        "match_date",
+        "home_team_id",
+        "away_team_id",
+        "home_score",
+        "away_score",
+        "result",
+    )
+    segments = (ordinary, hyakunen, strictly_prior)
+    if any(not isinstance(frame, pd.DataFrame) or frame.columns.has_duplicates for frame in segments):
+        raise ArchitecturePredictionError("Verified history segments must have unique columns")
+    if any(set(required) - set(frame.columns) for frame in segments):
+        raise ArchitecturePredictionError("Verified history segment schema mismatch")
+    history = pd.concat(
+        [frame.loc[:, list(required)] for frame in segments], ignore_index=True
+    )
+    if history["match_id"].isna().any() or history["match_id"].astype(str).str.strip().eq("").any():
+        raise ArchitecturePredictionError("History match_id must be nonblank")
+    if history["match_id"].duplicated().any():
+        raise ArchitecturePredictionError("Duplicate match_id across Candidate G history")
     try:
-        loaded = load_poisson_artifact(path)
+        dates = pd.to_datetime(history["match_date"], errors="raise")
+    except (TypeError, ValueError) as exc:
+        raise ArchitecturePredictionError("Malformed Candidate G history match_date") from exc
+    if dates.isna().any() or dates.ge(target_date).any():
+        raise ArchitecturePredictionError("Candidate G history must be strictly before target date")
+    history = history.assign(_date=dates).sort_values(
+        ["_date", "match_id"], kind="stable"
+    ).drop(columns="_date").reset_index(drop=True)
+    master_ids = {alias.team_id for alias in team_master.aliases}
+    observed = set(history["home_team_id"]) | set(history["away_team_id"])
+    if not observed.issubset(master_ids):
+        raise ArchitecturePredictionError("Candidate G history contains an unknown TeamMaster ID")
+    return history
+
+
+def add_strictly_prior_lightgbm_state(
+    targets: pd.DataFrame,
+    *,
+    processed_dir: str | Path = J1_DIR,
+    team_master: TeamMaster | None = None,
+) -> pd.DataFrame:
+    """Attach the exact frozen Candidate G state from strictly-prior history."""
+    master = load_team_master() if team_master is None else team_master
+    target_date, ordinary, hyakunen, strictly_prior = _strictly_prior_history(
+        targets, processed_dir=processed_dir, team_master=master
+    )
+    with_elo = _attach_elo_from_history(
+        targets,
+        target_date,
+        ordinary,
+        hyakunen,
+        strictly_prior,
+        team_master=master,
+    )
+    history = _canonical_form_history(
+        ordinary,
+        hyakunen,
+        strictly_prior,
+        target_date=target_date,
+        team_master=master,
+    )
+    try:
+        with_form = add_form_features_to_targets(
+            history,
+            targets.loc[:, ["match_id", "match_date", "home_team_id", "away_team_id"]],
+        )
+    except (TypeError, ValueError) as exc:
+        raise ArchitecturePredictionError(f"Candidate G form state construction failed: {exc}") from exc
+    for side in ("home", "away"):
+        with_form[f"{side}_last5_matches_available"] = sum(
+            with_form[f"{side}_last5_{outcome}"] for outcome in ("wins", "draws", "losses")
+        )
+    result = targets.copy(deep=True)
+    result["elo_diff"] = with_elo["elo_diff"].to_numpy(copy=True)
+    for column in LIGHTGBM_FEATURE_COLUMNS[1:]:
+        result[column] = with_form[column].to_numpy(copy=True)
+    try:
+        validate_lightgbm_features(result)
+    except (TypeError, ValueError) as exc:
+        raise ArchitecturePredictionError(f"Candidate G feature validation failed: {exc}") from exc
+    if set(FORM_COLUMNS) & set(LIGHTGBM_FEATURE_COLUMNS):
+        allowed = {
+            "home_last5_points",
+            "away_last5_points",
+            "home_last5_goals_for",
+            "away_last5_goals_for",
+            "home_last5_goals_against",
+            "away_last5_goals_against",
+        }
+        if (set(FORM_COLUMNS) & set(LIGHTGBM_FEATURE_COLUMNS)) != allowed:
+            raise ArchitecturePredictionError("Candidate G feature vector contains forbidden form fields")
+    return result.loc[:, list(LIGHTGBM_TARGET_COLUMNS)]
+
+
+def load_frozen_artifact(
+    path: str | Path | None = None,
+    *,
+    model: str = "poisson",
+) -> LoadedPoissonArtifact | LoadedLightGBMArtifact:
+    """Load one selected candidate only through its full artifact validator."""
+    contract = _candidate(model)
+    source = contract.artifact_dir if path is None else Path(path)
+    try:
+        loaded = (
+            load_poisson_artifact(source)
+            if model == "poisson"
+            else load_lightgbm_artifact(source)
+        )
     except Exception as exc:
-        raise ArchitecturePredictionError(f"Candidate P artifact validation failed: {exc}") from exc
+        raise ArchitecturePredictionError(
+            f"Candidate {model} artifact validation failed: {exc}"
+        ) from exc
     metadata = loaded.metadata
     if (
-        metadata.get("model_version") != MODEL_VERSION
-        or metadata.get("training_cutoff") != TRAINING_CUTOFF
-        or metadata.get("training_row_count") != ARTIFACT_TRAINING_ROWS
-        or loaded.artifact_hash != EXPECTED_ARTIFACT_HASH
+        metadata.get("model_version") != contract.model_version
+        or metadata.get("training_cutoff") != contract.training_cutoff
+        or metadata.get("training_row_count") != contract.training_rows
+        or loaded.artifact_hash != contract.artifact_hash
     ):
-        raise ArchitecturePredictionError("Candidate P artifact does not match the frozen prospective contract")
+        raise ArchitecturePredictionError(
+            f"Candidate {model} artifact does not match the frozen prospective contract"
+        )
     return loaded
 
 
@@ -305,27 +525,46 @@ def _validate_probabilities(records: pd.DataFrame) -> None:
 
 def generate_prediction_records(
     targets: pd.DataFrame,
-    artifact: LoadedPoissonArtifact,
+    artifact: LoadedPoissonArtifact | LoadedLightGBMArtifact,
     *,
+    model: str = "poisson",
     generated_at: str | datetime | None = None,
 ) -> pd.DataFrame:
-    """Generate Candidate P records without exposing lambdas or post-processing."""
-    if tuple(targets.columns) != TARGET_COLUMNS:
-        raise ArchitecturePredictionError("Candidate P target feature schema mismatch")
+    """Generate one candidate's records without exposing internal model state."""
+    contract = _candidate(model)
+    expected_columns = TARGET_COLUMNS if model == "poisson" else LIGHTGBM_TARGET_COLUMNS
+    if tuple(targets.columns) != expected_columns:
+        raise ArchitecturePredictionError(f"Candidate {model} target feature schema mismatch")
     if {"result", "home_score", "away_score", "actual_class"} & set(targets.columns):
         raise ArchitecturePredictionError("Target outcomes must not enter prospective prediction")
+    metadata = artifact.metadata
+    if (
+        metadata.get("model_version") != contract.model_version
+        or metadata.get("training_cutoff") != contract.training_cutoff
+        or metadata.get("training_row_count") != contract.training_rows
+        or artifact.artifact_hash != contract.artifact_hash
+    ):
+        raise ArchitecturePredictionError(f"Candidate {model} artifact provenance mismatch")
     timestamp = validate_pre_kickoff(targets, generated_at)
     try:
-        predicted = predict_proba(
-            artifact.model,
-            targets.loc[:, [
-                "match_id", "match_date", "home_team_id", "away_team_id", "elo_diff"
-            ]],
-        )
+        if model == "poisson":
+            predicted = predict_poisson_proba(
+                artifact.model,
+                targets.loc[:, [
+                    "match_id", "match_date", "home_team_id", "away_team_id", "elo_diff"
+                ]],
+            )
+        else:
+            predicted = predict_lightgbm_proba(
+                artifact.model,
+                targets.loc[:, ["match_id", *LIGHTGBM_FEATURE_COLUMNS]],
+            )
     except Exception as exc:
-        raise ArchitecturePredictionError(f"Candidate P probability generation failed: {exc}") from exc
+        raise ArchitecturePredictionError(
+            f"Candidate {model} probability generation failed: {exc}"
+        ) from exc
     if not predicted["match_id"].astype(str).equals(targets["match_id"].astype(str)):
-        raise ArchitecturePredictionError("Candidate P prediction identity/order mismatch")
+        raise ArchitecturePredictionError(f"Candidate {model} prediction identity/order mismatch")
     target_date = targets["match_date"].iloc[0]
     records = pd.DataFrame(
         {
@@ -336,8 +575,8 @@ def generate_prediction_records(
             "away_team_id": targets["away_team_id"].to_numpy(copy=True),
             "prediction_generated_at": timestamp,
             "prospective_boundary": PROSPECTIVE_BOUNDARY,
-            "model_version": MODEL_VERSION,
-            "training_cutoff": TRAINING_CUTOFF,
+            "model_version": contract.model_version,
+            "training_cutoff": contract.training_cutoff,
             "history_cutoff_exclusive": target_date,
             "artifact_hash": artifact.artifact_hash,
             "p_away": predicted["p_away"].to_numpy(),
@@ -368,13 +607,17 @@ def _validate_prediction_frame(records: pd.DataFrame, *, require_frozen_model: b
         raise ArchitecturePredictionError("Prediction chronology fields are malformed") from exc
     if generated.isna().any() or not dates.equals(cutoffs):
         raise ArchitecturePredictionError("Prediction history cutoff must equal target match_date")
-    if require_frozen_model and (
-        not records["model_version"].eq(MODEL_VERSION).all()
-        or not records["training_cutoff"].eq(TRAINING_CUTOFF).all()
-        or not records["prospective_boundary"].eq(PROSPECTIVE_BOUNDARY).all()
-        or not records["artifact_hash"].eq(EXPECTED_ARTIFACT_HASH).all()
-    ):
-        raise ArchitecturePredictionError("Generated Candidate P provenance mismatch")
+    contracts_by_version = {value.model_version: value for value in CANDIDATES.values()}
+    for row in records.itertuples(index=False):
+        contract = contracts_by_version.get(row.model_version)
+        if require_frozen_model and contract is None:
+            raise ArchitecturePredictionError("Generated candidate provenance mismatch")
+        if contract is not None and (
+            row.training_cutoff != contract.training_cutoff
+            or row.prospective_boundary != PROSPECTIVE_BOUNDARY
+            or row.artifact_hash != contract.artifact_hash
+        ):
+            raise ArchitecturePredictionError("Frozen candidate provenance mismatch")
     _validate_probabilities(records)
 
 
@@ -418,23 +661,31 @@ def persist_predictions(
 
 def run_prediction(
     *,
+    model: str = "poisson",
     dry_run: bool = False,
     schedule_path: str | Path = SCHEDULE_PATH,
     output_path: str | Path = OUTPUT_PATH,
-    artifact_dir: str | Path = ARTIFACT_DIR,
+    artifact_dir: str | Path | None = None,
     processed_dir: str | Path = J1_DIR,
     generated_at: str | datetime | None = None,
 ) -> PredictionRun:
+    contract = _candidate(model)
     schedule = read_schedule_without_results(schedule_path)
     _cohort, batch = select_next_date_batch(schedule)
     require_official_target_ids(batch)
     master = load_team_master()
     identities = resolve_targets(batch, team_master=master)
-    targets = add_strictly_prior_elo(
-        identities, processed_dir=processed_dir, team_master=master
+    targets = (
+        add_strictly_prior_elo(identities, processed_dir=processed_dir, team_master=master)
+        if model == "poisson"
+        else add_strictly_prior_lightgbm_state(
+            identities, processed_dir=processed_dir, team_master=master
+        )
     )
-    artifact = load_frozen_artifact(artifact_dir)
-    records = generate_prediction_records(targets, artifact, generated_at=generated_at)
+    artifact = load_frozen_artifact(artifact_dir, model=model)
+    records = generate_prediction_records(
+        targets, artifact, model=model, generated_at=generated_at
+    )
     appended, existing = persist_predictions(records, dry_run=dry_run, path=output_path)
     status = (
         "DRY_RUN"
@@ -447,7 +698,7 @@ def run_prediction(
         status=status,
         target_date=str(batch["match_date"].iloc[0]),
         target_count=len(batch),
-        model_version=MODEL_VERSION,
+        model_version=contract.model_version,
         appended_count=appended,
         already_predicted_count=existing,
         saved=bool(appended),
@@ -458,9 +709,10 @@ def run_prediction(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", choices=tuple(CANDIDATES), default="poisson")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    run = run_prediction(dry_run=args.dry_run)
+    run = run_prediction(model=args.model, dry_run=args.dry_run)
     print(
         json.dumps(
             {
