@@ -492,6 +492,8 @@ def collect_snapshot(*, urls, raw_root=RAW_ROOT, processed_root=PROCESSED_ROOT,
         "pages": [],
         "notice_count": 0,
         "processed_target_rows": 0,
+        "exact_kickoff_linkage_count": 0,
+        "unresolved_kickoff_count": 0,
     }
     all_rows = []
     try:

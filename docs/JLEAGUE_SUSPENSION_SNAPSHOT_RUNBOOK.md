@@ -113,3 +113,5 @@ Snapshots created before this schema extension remain immutable in their origina
 A later research cycle may combine eligible pre-kickoff snapshots with previous-match starters, previous squads, or lagged player minutes. Unresolved player identities must remain an explicit coverage limitation. Target-match lineups and post-match data are prohibited.
 
 No workload feature, suspension feature, eligibility flag, historical backfill, model evaluation, or prediction is produced by this collector.
+
+The immutable snapshot archive can be audited without network or filesystem mutation through the read-only registry documented in [JLEAGUE_SUSPENSION_REGISTRY.md](JLEAGUE_SUSPENSION_REGISTRY.md). The registry preserves both `LEGACY_V1` and `KICKOFF_V2` observations and never reconstructs legacy kickoff evidence from the current schedule.

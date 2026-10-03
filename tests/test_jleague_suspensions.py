@@ -306,6 +306,8 @@ def test_incomplete_snapshot_keeps_raw_but_never_publishes_csv(tmp_path):
     assert manifest["status"] == "INCOMPLETE"
     assert manifest["schedule_sha256"] == hashlib.sha256(schedule_path.read_bytes()).hexdigest()
     assert manifest["schedule_path"] == schedule_path.resolve().as_posix()
+    assert manifest["exact_kickoff_linkage_count"] == 0
+    assert manifest["unresolved_kickoff_count"] == 0
     assert (manifest_path.parent / "notice_99999.html").exists()
     assert not list((tmp_path / "processed").glob("*.csv")) if (tmp_path / "processed").exists() else True
 
