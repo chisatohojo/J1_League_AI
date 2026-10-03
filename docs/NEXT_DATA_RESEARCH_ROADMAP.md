@@ -9,11 +9,11 @@ for final lane status.
 In particular, Team Draw Propensity is now **CLOSED** after its frozen one-shot
 evaluation; see [TEAM_DRAW_PROPENSITY_EVALUATION.md](TEAM_DRAW_PROPENSITY_EVALUATION.md).
 
-The separate Model Architecture Phase 0 contract is documented in
-[MODEL_ARCHITECTURE_FEASIBILITY.md](MODEL_ARCHITECTURE_FEASIBILITY.md) and
-[MODEL_ARCHITECTURE_BENCHMARK_SPEC.md](MODEL_ARCHITECTURE_BENCHMARK_SPEC.md).
-It freezes only A/P/G for future implementation/preflight; no fit, prediction,
-or evaluation has been authorized by that docs-only task.
+## Model Architecture cycle: CLOSED
+
+The frozen A/P/G architecture cycle completed its explicit historical benchmark exactly once; see [MODEL_ARCHITECTURE_BENCHMARK_RESULT.md](MODEL_ARCHITECTURE_BENCHMARK_RESULT.md). Candidate P and Candidate G both received `CLOSE_ARCHITECTURE_CANDIDATE`, the retained candidate is none, and A remains Champion/reference. No parameter tuning, architecture variants, adaptive follow-up, or formal rerun are authorized.
+
+Architecture search is not an active roadmap lane. Current work returns to the prospective information/data platform: J Stats FULL_37 snapshots, rolling xG prospective observations, suspension/PIT sources, and other provenance-complete new information layers. Existing P/G artifacts and their first pre-kickoff 2026-10-09 prospective rows remain immutable records, not active ongoing challengers.
 
 ## Starting point and evaluation discipline
 

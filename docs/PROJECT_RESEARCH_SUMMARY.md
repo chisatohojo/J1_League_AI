@@ -1,6 +1,6 @@
 # J1 League AI 研究サマリー
 
-- 最終更新: **2026-10-02 (JST)**
+- 最終更新: **2026-10-03 (JST)**
 - Project purpose: ordinary J1の試合前に`0=Away / 1=Draw / 2=Home`の3-class確率を再現可能な形で出力する。
 - Current research phase: **new information layer / data platform**。2020–2024 OOFでの小さなretrospective feature探索を閉じ、PIT provenanceを持つprospective dataを蓄積する段階。
 - Current baseline/champion: **Model A — Elo-only Logistic**。
@@ -8,7 +8,18 @@
 
 現在のChampionはModel A、既存ChallengerはDomestic Competitive Restを加えたModel Bである。2025はspent test、最初の70件の2026/27 ordinary J1はopened interim lockboxであり、どちらも新しいfeature選択やtuningには使わない。直近までにformal retrospective evaluationへ進んだ10 feature laneはすべてclosed decisionとなった。一方、J Stats team cumulative snapshots、suspension notices、rolling xGは、historical backfillと混同しないprospective/operational資産として管理されている。詳細なdata pathは[DATA_ASSET_INVENTORY.md](DATA_ASSET_INVENTORY.md)、運用順序は[NEXT_DATA_RESEARCH_ROADMAP.md](NEXT_DATA_RESEARCH_ROADMAP.md)を参照する。
 
-Architecture Phase 0では、feature-family探索と分離したA/P/Gの3-candidate contractをdocs-onlyでfreezeした。Aは現行Model A、PはIndependent Poisson、Gはfixed basic-state LightGBMであり、fit・prediction・evaluationは未実行。Source feasibilityとexact benchmark contractは[MODEL_ARCHITECTURE_FEASIBILITY.md](MODEL_ARCHITECTURE_FEASIBILITY.md)および[MODEL_ARCHITECTURE_BENCHMARK_SPEC.md](MODEL_ARCHITECTURE_BENCHMARK_SPEC.md)を参照する。
+## Architecture cycle: CLOSED
+
+Frozen A/P/G architecture cycleのformal one-shotはexactly once完了し、A reference gateは**PASS**した。Ordinary J1 2015–2024のfrozen folds（3,208 source rows、1,678 pooled validation rows）に対する決定は以下のとおりである。
+
+| Candidate | Frozen decision | Pooled Log Loss | Delta LL vs A | Pooled Brier | Delta Brier vs A | LL improved folds |
+|---|---|---:|---:|---:|---:|---:|
+| P — Independent Poisson | `CLOSE_ARCHITECTURE_CANDIDATE` | `1.057627904608732` | `+0.001562503284968` | `0.637511156849117` | `+0.001778814919845` | 3/5 |
+| G — fixed basic-state LightGBM | `CLOSE_ARCHITECTURE_CANDIDATE` | `1.065176823032195` | `+0.009111421708431` | `0.641591020119920` | `+0.005858678190648` | 0/5 |
+
+`retained_candidate = null`であり、**A remains Champion/reference**。Pは3/5 foldsでLog Lossを改善したが、frozen pooled Log Lossおよびpooled Brier gateを満たさなかったためclosedであり、retained・eligible・ongoing challengerではない。Gもclosedである。Authoritative resultは[MODEL_ARCHITECTURE_BENCHMARK_RESULT.md](MODEL_ARCHITECTURE_BENCHMARK_RESULT.md)、事前freezeは[MODEL_ARCHITECTURE_FEASIBILITY.md](MODEL_ARCHITECTURE_FEASIBILITY.md)および[MODEL_ARCHITECTURE_BENCHMARK_SPEC.md](MODEL_ARCHITECTURE_BENCHMARK_SPEC.md)を参照する。
+
+P/G operational artifactsはformal historical benchmark前にfreeze済みで、最初の2026-10-09 prospective batchもpre-kickoffに生成済みである。これらのprospective rowsはimmutable historical recordsとして保持し、両candidateのcloseを理由に削除・再生成しない。
 
 ## A. 現行baselineとevaluation discipline
 

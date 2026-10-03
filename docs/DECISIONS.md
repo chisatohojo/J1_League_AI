@@ -1,5 +1,13 @@
 # Design Decisions
 
+## 2026-10-03: Frozen Model Architecture benchmarkをclose
+
+Decision: Frozen ordinary-J1 2015–2024 foldsでA/P/Gを比較するformal benchmarkをexactly once実行し、A reference gateはPASSした。Pはpooled Log Loss delta `+0.001562503284968`、pooled Brier delta `+0.001778814919845`、Log Loss改善3/5 foldsで`CLOSE_ARCHITECTURE_CANDIDATE`。Gはpooled Log Loss delta `+0.009111421708431`、pooled Brier delta `+0.005858678190648`、改善0/5 foldsで`CLOSE_ARCHITECTURE_CANDIDATE`とする。
+
+Result: `retained_candidate = null`で、AはChampion/referenceのまま維持する。Pの3/5 fold改善をretention、adoption、eligibilityとは解釈しない。Formal resultは[MODEL_ARCHITECTURE_BENCHMARK_RESULT.md](MODEL_ARCHITECTURE_BENCHMARK_RESULT.md)をauthoritative recordとする。
+
+Follow-up: Adaptive tuning、parameter変更、architecture variant、retry、formal rerunは行わない。P/Gのfrozen artifactsとbenchmark前に生成済みの2026-10-09 prospective rowsはimmutable recordとして保持し、今後の作業はprospective information/data researchへ戻す。
+
 ## 2026-09-17: 既存Elo系列の保存を独立した出力層に置く
 
 Decision: `export_elo_history`は既存`load_elo_history_with_ongoing`の結果から2つのCSVだけを生成する。
