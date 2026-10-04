@@ -192,6 +192,7 @@ fixture_key = j1_2026_2027:<home_club_slug>:<away_club_slug>
 同一方向のカードは年間1回という確認済み大会方式に基づき、日程変更でも同一キーを保つ。
 公式ID出現後もキーを維持し、`fixture_identity.csv` に対応を保存。IDなしを仮のmatch_idで補完しない。URL由来IDは、operatorが明示したofficial match pageをcanonical・competition・date・round・home/awayまで検証した場合だけscheduled fixtureへ付与する。
 既存IDの再割当、別カードへの移動、矛盾するID変更は自動統合せず採用を保留する。ただし、previous accepted revisionでoperator指定のofficial pre-match pageによりexact provenanceが確立したscheduled identityは、新listingが同じfixture_key・competition・home/away・開催日・節を保持し、IDだけを掲載しなくなった場合に限り、既存immutable provenanceをcarry-forwardできる。これは新IDの推測・生成ではない。現在のexplicit evidenceまたはData Site IDを常に優先し、開催日・節の変更、別fixtureでのID使用、candidate/completedへの遷移には適用しない。
+Scheduled match-page IDとcandidate/completed Data Site `match_card_id`のseparate namespace設計、immutable prediction keyとのbridge、将来migration案は [JLEAGUE_2026_27_ID_NAMESPACE_TRANSITION_SPEC.md](JLEAGUE_2026_27_ID_NAMESPACE_TRANSITION_SPEC.md) を参照する。実装までは異なるIDへのtransitionを従来どおり`identity_conflict`として保留する。
 過去の対応は各revisionおよび差分のbefore/afterに残る。
 
 原本のクラブ名・会場名・日付表記・節・時刻・得点表記・入場者数・放送・source URLを保持する。
