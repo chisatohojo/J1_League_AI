@@ -39,9 +39,15 @@ EVENT_COLUMNS = (
 )
 _SCORE_FIELDS = ("home_score", "away_score", "result")
 _SCHEDULE_FIELDS = ("match_date", "kickoff_time", "stadium", "round")
+_SCHEDULED_IDENTITY_FIELDS = (
+    "fixture_key", "competition_key", "home_club", "away_club", "match_date", "round",
+)
+_SCHEDULED_IDENTITY_URL = re.compile(
+    r"https://www\.jleague\.jp/match/j1/(2026|2027)/([0-9]{6})/"
+)
 _IGNORE_FIELDS = {
     "evidence_url", "evidence_type", "evidence_sha256", "evidence_fetched_at_utc",
-    "completion_origin_revision", "completion_origin_snapshot",
+    "completion_origin_revision", "completion_origin_snapshot", "identity_origin_revision",
 }
 
 
@@ -236,6 +242,53 @@ def _semantic(record: dict | None) -> dict | None:
     return {key: value for key, value in record.items() if key not in _IGNORE_FIELDS} if record is not None else None
 
 
+def _carry_forward_scheduled_identity(
+    previous: list[dict], current: list[dict], *, explicit_keys: set[str],
+    previous_revision_id: str | None,
+) -> None:
+    """Retain only a previously verified, unchanged scheduled identity.
+
+    This never derives an ID from fixture data. It reuses an immutable accepted
+    official-page provenance only when every field bound by that evidence is
+    unchanged and no current source has assigned the ID to another fixture.
+    """
+    before = {row["fixture_key"]: row for row in previous}
+    current_ids = {
+        row["match_id"]: row["fixture_key"] for row in current if row.get("match_id")
+    }
+    for row in current:
+        old = before.get(row["fixture_key"])
+        if (
+            old is None
+            or row["fixture_key"] in explicit_keys
+            or row.get("status") != "scheduled"
+            or row.get("match_id") not in (None, "")
+            or old.get("status") != "scheduled"
+            or not isinstance(old.get("match_id"), str)
+            or not old["match_id"]
+            or old.get("evidence_type") != "official_completion_unconfirmed"
+        ):
+            continue
+        match = _SCHEDULED_IDENTITY_URL.fullmatch(old.get("evidence_url") or "")
+        if (
+            match is None
+            or match[2] != old["match_id"]
+            or any(old.get(field) != row.get(field) for field in _SCHEDULED_IDENTITY_FIELDS)
+            or (
+                old["match_id"] in current_ids
+                and current_ids[old["match_id"]] != row["fixture_key"]
+            )
+        ):
+            continue
+        row["match_id"] = old["match_id"]
+        row["evidence_url"] = old["evidence_url"]
+        row["evidence_type"] = old["evidence_type"]
+        origin = old.get("identity_origin_revision") or previous_revision_id
+        if origin:
+            row["identity_origin_revision"] = origin
+        current_ids[row["match_id"]] = row["fixture_key"]
+
+
 def _changes(previous: list[dict], current: list[dict], *, comparison: str, previous_snapshot_id: str | None, manifest: dict) -> list[dict]:
     before, after = ({row["fixture_key"]: row for row in rows} for rows in (previous, current))
     events = []
@@ -403,6 +456,10 @@ def process_snapshot(snapshot_dir: Path, output_dir: Path) -> dict:
             for source in manifest["sources"][1:]:
                 proof = parse_completion_evidence((snapshot_dir / source["html"]).read_text(encoding="utf-8-sig"), source_url=source["source_url"])
                 explicit_keys.add(proof["fixture_key"])
+            _carry_forward_scheduled_identity(
+                previous_records, current, explicit_keys=explicit_keys,
+                previous_revision_id=previous_revision.name if previous_revision else None,
+            )
             # A verified finish may be retained only for identical results and
             # identity. A changed score/date requires fresh matching proof.
             for row in current:

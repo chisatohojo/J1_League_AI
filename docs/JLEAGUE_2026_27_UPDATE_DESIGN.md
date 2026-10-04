@@ -191,7 +191,7 @@ fixture_key = j1_2026_2027:<home_club_slug>:<away_club_slug>
 クラブslugはData Siteの公式profile URLから取得する。開催日、KO時刻、会場、節はキーに含めない。
 同一方向のカードは年間1回という確認済み大会方式に基づき、日程変更でも同一キーを保つ。
 公式ID出現後もキーを維持し、`fixture_identity.csv` に対応を保存。IDなしを仮のmatch_idで補完しない。URL由来IDは、operatorが明示したofficial match pageをcanonical・competition・date・round・home/awayまで検証した場合だけscheduled fixtureへ付与する。
-既存IDの再割当、別カードへの移動、IDの消失は自動統合せず採用を保留する。
+既存IDの再割当、別カードへの移動、矛盾するID変更は自動統合せず採用を保留する。ただし、previous accepted revisionでoperator指定のofficial pre-match pageによりexact provenanceが確立したscheduled identityは、新listingが同じfixture_key・competition・home/away・開催日・節を保持し、IDだけを掲載しなくなった場合に限り、既存immutable provenanceをcarry-forwardできる。これは新IDの推測・生成ではない。現在のexplicit evidenceまたはData Site IDを常に優先し、開催日・節の変更、別fixtureでのID使用、candidate/completedへの遷移には適用しない。
 過去の対応は各revisionおよび差分のbefore/afterに残る。
 
 原本のクラブ名・会場名・日付表記・節・時刻・得点表記・入場者数・放送・source URLを保持する。
@@ -209,7 +209,7 @@ v1は今回観測した単一日付表記を解析し、候補日・未知の書
 得点や日付が変われば再確認が必要。古い証拠を変更後の得点の証明には使わない。
 列 `evidence_url`、`evidence_type`、`evidence_sha256`、`evidence_fetched_at_utc`、
 `completion_origin_snapshot`／必要時の `completion_origin_revision` に来歴を残す。
-Scheduled identity linkageでは`evidence_url`と`evidence_type=official_completion_unconfirmed`をscheduleに残し、raw snapshot manifestが取得URL・SHA・取得時刻を保持する。これはcompletion evidenceではなくidentity provenanceである。
+Scheduled identity linkageでは`evidence_url`と`evidence_type=official_completion_unconfirmed`をscheduleに残し、raw snapshot manifestが取得URL・SHA・取得時刻を保持する。これはcompletion evidenceではなくidentity provenanceである。上記の限定carry-forwardではこのURL/typeを継承し、`identity_origin_revision`に最初の継承元accepted revisionを保持する。複数revisionをまたいでもoriginを直近revisionへ上書きせず、provenance-only差分を`metadata_changed`とは扱わない。
 
 ## 6. 差分・訂正履歴
 
@@ -226,7 +226,7 @@ Scheduled identity linkageでは`evidence_url`と`evidence_type=official_complet
 | completed | 終了未確認から公式終了確認へ |
 | result_corrected | 前に終了確認した得点/resultの変更。再確認できなければ保留 |
 | missing_from_snapshot | 前回にあったカードが今回にない。自動削除しない |
-| identity_conflict | 既存ID消失・変更等の対応矛盾 |
+| identity_conflict | 既存ID消失・変更等の対応矛盾。ただしexact provenance済みscheduled identityの限定carry-forward成立時を除く |
 | completion_unconfirmed | 終了根拠の撤回・得点変更等で再確認が必要 |
 | metadata_changed | 上記以外の原表記等の変更 |
 

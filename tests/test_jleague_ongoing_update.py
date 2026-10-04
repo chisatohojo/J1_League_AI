@@ -261,6 +261,186 @@ def test_prematch_evidence_publishes_identity_without_changing_status_and_replay
     assert tree_bytes(output) == before
 
 
+def test_verified_scheduled_identity_carries_forward_repeatedly_with_stable_origin(
+    tmp_path, make_snapshot,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    output = tmp_path / "processed"
+    original = process_snapshot(make_snapshot(fixtures, 1, [evidence]), output)
+    fixture_key = "j1_2026_2027:club00:club19"
+
+    # These listing metadata changes were not bound by the identity evidence.
+    fixtures[0].update(kickoff="20:00", stadium="変更会場", attendance="12,345")
+    second_snapshot = make_snapshot(fixtures, 2)
+    second = process_snapshot(second_snapshot, output)
+    assert second["publication_status"] == "published"
+    assert second["match_id_count"] == 1
+    assert second["source_requests_during_processing"] == 0
+    assert "identity_conflict" not in second["change_counts"]
+    linked = read_csv(output, "schedule.csv").loc[lambda frame: frame.fixture_key.eq(fixture_key)].iloc[0]
+    assert linked.match_id == "080701"
+    assert linked.status == "scheduled"
+    assert linked.home_score == linked.away_score == linked.result == ""
+    assert linked.evidence_url == "https://www.jleague.jp/match/j1/2026/080701/"
+    assert linked.evidence_type == "official_completion_unconfirmed"
+    assert linked.identity_origin_revision == original["revision_id"]
+    assert "schedule_changed" in second["change_counts"]
+
+    third_snapshot = make_snapshot(fixtures, 3)
+    third = process_snapshot(third_snapshot, output)
+    repeated = read_csv(output, "schedule.csv").loc[lambda frame: frame.fixture_key.eq(fixture_key)].iloc[0]
+    assert third["publication_status"] == "published"
+    assert repeated.match_id == "080701"
+    assert repeated.identity_origin_revision == original["revision_id"]
+
+    raw_before = tree_bytes(third_snapshot)
+    output_before = tree_bytes(output)
+    assert process_snapshot(third_snapshot, output) == third
+    assert tree_bytes(third_snapshot) == raw_before
+    assert tree_bytes(output) == output_before
+
+
+@pytest.mark.parametrize("changed_field,new_value", [
+    ("date", date(2026, 8, 8)),
+    ("round", 2),
+])
+def test_date_or_round_change_does_not_inherit_scheduled_identity(
+    tmp_path, make_snapshot, changed_field, new_value,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    output = tmp_path / "processed"
+    process_snapshot(make_snapshot(fixtures, 1, [evidence]), output)
+    previous_pointer = (output / "latest.json").read_bytes()
+    fixtures[0][changed_field] = new_value
+
+    summary = process_snapshot(make_snapshot(fixtures, 2), output)
+
+    assert summary["publication_status"] == "held"
+    assert "identity_conflict" in summary["publication_blocks"]
+    assert (output / "latest.json").read_bytes() == previous_pointer
+    held = output / "revisions" / summary["revision_id"]
+    row = read_csv(held, "schedule.csv").loc[
+        lambda frame: frame.fixture_key.eq("j1_2026_2027:club00:club19")
+    ].iloc[0]
+    assert row.match_id == ""
+    changes = read_csv(held, "change_log.csv")
+    current = changes.loc[
+        changes.snapshot_id.eq("snapshot-02")
+        & changes.fixture_key.eq("j1_2026_2027:club00:club19")
+    ]
+    assert {"identity_conflict", "schedule_changed"} <= set(current.event_type)
+
+
+def test_current_explicit_identity_evidence_takes_precedence_over_carry_forward(
+    tmp_path, make_snapshot,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    output = tmp_path / "processed"
+    first_evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    process_snapshot(make_snapshot(fixtures, 1, [first_evidence]), output)
+    current_evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 2)
+
+    summary = process_snapshot(make_snapshot(fixtures, 2, [current_evidence]), output)
+
+    assert summary["publication_status"] == "published"
+    assert "identity_conflict" not in summary["change_counts"]
+    linked = read_csv(output, "schedule.csv").loc[
+        lambda frame: frame.fixture_key.eq("j1_2026_2027:club00:club19")
+    ].iloc[0]
+    assert linked.match_id == "080701"
+    assert linked.evidence_type == "official_completion_unconfirmed"
+    assert (
+        "identity_origin_revision" not in linked.index
+        or linked.identity_origin_revision == ""
+    )
+
+
+def test_current_listing_identity_conflict_is_not_replaced_by_previous_identity(
+    tmp_path, make_snapshot,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    output = tmp_path / "processed"
+    evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    process_snapshot(make_snapshot(fixtures, 1, [evidence]), output)
+    fixtures[0]["match_id"] = "999999"
+
+    summary = process_snapshot(make_snapshot(fixtures, 2), output)
+
+    assert summary["publication_status"] == "held"
+    assert "identity_conflict" in summary["publication_blocks"]
+    held = output / "revisions" / summary["revision_id"]
+    current = read_csv(held, "schedule.csv").loc[
+        lambda frame: frame.fixture_key.eq("j1_2026_2027:club00:club19")
+    ].iloc[0]
+    assert current.match_id == "999999"
+
+
+def test_carried_identity_is_not_duplicated_when_current_source_moves_it(
+    tmp_path, make_snapshot,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    fixtures[0]["date"] = date(2026, 10, 9)
+    output = tmp_path / "processed"
+    evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    process_snapshot(make_snapshot(fixtures, 1, [evidence]), output)
+    fixtures[1]["match_id"] = "100901"
+
+    summary = process_snapshot(make_snapshot(fixtures, 2), output)
+
+    assert summary["publication_status"] == "held"
+    assert "identity_conflict" in summary["publication_blocks"]
+    assert any("different fixture" in block for block in summary["publication_blocks"])
+    held_schedule = read_csv(output / "revisions" / summary["revision_id"], "schedule.csv")
+    assert held_schedule.match_id.tolist().count("100901") == 1
+    original = held_schedule.loc[
+        held_schedule.fixture_key.eq("j1_2026_2027:club00:club19")
+    ].iloc[0]
+    assert original.match_id == ""
+
+
+@pytest.mark.parametrize("with_completion_evidence,expected_status", [
+    (False, "candidate"),
+    (True, "completed"),
+])
+def test_candidate_or_completed_data_site_identity_is_never_overwritten_by_carry_forward(
+    tmp_path, make_snapshot, with_completion_evidence, expected_status,
+):
+    from src.collect.jleague_ongoing import process_snapshot
+
+    fixtures = synthetic_fixtures()
+    output = tmp_path / "processed"
+    prematch = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    process_snapshot(make_snapshot(fixtures, 1, [prematch]), output)
+    fixtures[0].update(score=(1, 0), match_id="42", attendance="1,000")
+    evidence = (
+        [write_completion(tmp_path / "evidence", fixtures[0], 2)]
+        if with_completion_evidence else []
+    )
+
+    summary = process_snapshot(make_snapshot(fixtures, 2, evidence), output)
+
+    assert summary["publication_status"] == "held"
+    assert "identity_conflict" in summary["publication_blocks"]
+    held = output / "revisions" / summary["revision_id"]
+    current = read_csv(held, "schedule.csv").loc[
+        lambda frame: frame.fixture_key.eq("j1_2026_2027:club00:club19")
+    ].iloc[0]
+    assert current.status == expected_status
+    assert current.match_id == "42"
+
+
 def test_schedule_change_keeps_identity_and_numeric_score_only_becomes_candidate(
     tmp_path, make_snapshot,
 ):
