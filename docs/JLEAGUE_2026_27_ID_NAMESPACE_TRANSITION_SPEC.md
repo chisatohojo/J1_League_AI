@@ -331,6 +331,9 @@ read-only audit時点のv1 latestはdeterministically分類できる。
 
 ## 16. Decision status
 
+The exact implementation contract is frozen separately in
+[JLEAGUE_2026_27_ID_NAMESPACE_IMPLEMENTATION_FREEZE_SPEC.md](JLEAGUE_2026_27_ID_NAMESPACE_IMPLEMENTATION_FREEZE_SPEC.md).
+
 ```text
 DESIGN_READY_FOR_REVIEW
 ```
