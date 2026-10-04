@@ -94,6 +94,11 @@ def main(argv=None) -> int:
         "snapshot": str(snapshot), "revision_id": summary["revision_id"],
         "publication_status": summary["publication_status"],
         "counts": summary["counts"], "result_validation": summary["result_validation"],
+        "match_page_id_count": summary["match_page_id_count"],
+        "data_site_match_id_count": summary["data_site_match_id_count"],
+        "identity_bridge_count": summary["identity_bridge_count"],
+        "migration": summary.get("migration"),
+        "prediction_binding_status": summary["prediction_binding_status"],
         "publication_blocks": summary["publication_blocks"],
     }, ensure_ascii=False, indent=2))
     return 0 if summary["publication_status"] == "published" else 2

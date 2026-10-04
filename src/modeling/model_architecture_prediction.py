@@ -43,12 +43,17 @@ from src.modeling.architecture_poisson_artifact import (
     LoadedPoissonArtifact,
     load_poisson_artifact,
 )
+from src.modeling.prediction_identity import (
+    DEFAULT_BINDING_PATH, append_prediction_and_bindings, fixture_duplicates,
+    make_binding_rows, read_prediction_bindings, validate_complete_sidecar,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEDULE_PATH = ROOT / "data/processed/jleague/2026_27/schedule.csv"
 J1_DIR = ROOT / "data/processed/jleague"
 OUTPUT_PATH = ROOT / "data/processed/predictions/model_architecture_prospective.csv"
+PREDICTION_ARTIFACT = "data/processed/predictions/model_architecture_prospective.csv"
 PROSPECTIVE_BOUNDARY = "2026-09-22T07:16:21+09:00"
 EXPECTED_PROSPECTIVE_ROWS = 300
 EXPECTED_SCHEDULE_ROWS = 380
@@ -160,7 +165,10 @@ def _candidate(selector: str) -> CandidateContract:
         ) from exc
 
 
-def read_schedule_without_results(path: str | Path = SCHEDULE_PATH) -> pd.DataFrame:
+def read_schedule_without_results(
+    path: str | Path = SCHEDULE_PATH, *,
+    binding_path: str | Path = DEFAULT_BINDING_PATH,
+) -> pd.DataFrame:
     """Read only safe schedule identity/status fields, never outcomes."""
     source = Path(path)
     if not source.is_file():
@@ -175,16 +183,34 @@ def read_schedule_without_results(path: str | Path = SCHEDULE_PATH) -> pd.DataFr
     missing = set(SAFE_SCHEDULE_COLUMNS) - set(header)
     if missing:
         raise ArchitecturePredictionError(f"Schedule is missing safe columns: {sorted(missing)}")
+    v2 = "match_id_namespace" in header
+    if v2:
+        validate_complete_sidecar(repository_root=ROOT, binding_path=binding_path)
+    columns = [*SAFE_SCHEDULE_COLUMNS, *(("match_id_namespace",) if v2 else ())]
     frame = pd.read_csv(
         source,
         dtype=str,
         keep_default_na=False,
         encoding="utf-8-sig",
-        usecols=list(SAFE_SCHEDULE_COLUMNS),
+        usecols=columns,
     )
     if len(frame) != EXPECTED_SCHEDULE_ROWS or frame["fixture_key"].duplicated().any():
         raise ArchitecturePredictionError("Schedule must contain 380 unique fixture identities")
-    return frame.loc[:, list(SAFE_SCHEDULE_COLUMNS)]
+    if v2:
+        from src.collect.jleague_ongoing import FORMAT_VERSION, _sha, read_latest
+        latest = read_latest(source.parent)
+        if (
+            latest is None or latest[1].get("format_version") != FORMAT_VERSION
+            or latest[1]["files"].get("schedule.csv") != _sha(source.read_bytes())
+        ):
+            raise ArchitecturePredictionError(
+                "V2 schedule is not the accepted latest revision projection"
+            )
+        frame.attrs["identity_witness"] = {
+            "revision_id": latest[0].name,
+            "manifest_sha256": _sha((latest[0] / "manifest.json").read_bytes()),
+        }
+    return frame.loc[:, columns]
 
 
 def select_next_date_batch(
@@ -639,18 +665,36 @@ def persist_predictions(
     *,
     dry_run: bool,
     path: str | Path = OUTPUT_PATH,
+    binding_rows: pd.DataFrame | None = None,
+    binding_path: str | Path = DEFAULT_BINDING_PATH,
 ) -> tuple[int, int]:
     """Validate an append plan and optionally append only previously unseen keys."""
     _validate_prediction_frame(records, require_frozen_model=True)
+    if binding_rows is not None and not dry_run:
+        return append_prediction_and_bindings(
+            records, binding_rows, prediction_path=path, binding_path=binding_path,
+            prediction_columns=PREDICTION_COLUMNS,
+            prediction_validator=lambda frame: _validate_prediction_frame(
+                frame, require_frozen_model=False
+            ),
+        )
     output = Path(path)
     existing = _read_existing(output)
+    if binding_rows is not None:
+        bindings = read_prediction_bindings(binding_path)
+        fixture_duplicate = fixture_duplicates(
+            records, bindings, prediction_artifact=PREDICTION_ARTIFACT,
+            fixture_keys=binding_rows["fixture_key"].tolist(),
+        ).to_numpy(dtype=bool)
+    else:
+        fixture_duplicate = np.zeros(len(records), dtype=bool)
     keys = set(zip(existing["match_id"], existing["model_version"]))
     duplicate = np.asarray(
         [(str(match_id), str(version)) in keys for match_id, version in zip(
             records["match_id"], records["model_version"]
         )],
         dtype=bool,
-    )
+    ) | fixture_duplicate
     new = records.loc[~duplicate]
     if not dry_run and not new.empty:
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -668,9 +712,11 @@ def run_prediction(
     artifact_dir: str | Path | None = None,
     processed_dir: str | Path = J1_DIR,
     generated_at: str | datetime | None = None,
+    binding_path: str | Path = DEFAULT_BINDING_PATH,
 ) -> PredictionRun:
     contract = _candidate(model)
-    schedule = read_schedule_without_results(schedule_path)
+    schedule = read_schedule_without_results(schedule_path, binding_path=binding_path)
+    identity_witness = schedule.attrs.get("identity_witness")
     _cohort, batch = select_next_date_batch(schedule)
     require_official_target_ids(batch)
     master = load_team_master()
@@ -686,7 +732,20 @@ def run_prediction(
     records = generate_prediction_records(
         targets, artifact, model=model, generated_at=generated_at
     )
-    appended, existing = persist_predictions(records, dry_run=dry_run, path=output_path)
+    binding_rows = None
+    if "match_id_namespace" in batch.columns:
+        if identity_witness is None:
+            raise ArchitecturePredictionError("Accepted v2 schedule identity witness is missing")
+        binding_rows = make_binding_rows(
+            records, batch,
+            prediction_artifact=PREDICTION_ARTIFACT,
+            identity_witness_revision_id=identity_witness["revision_id"],
+            identity_witness_manifest_sha256=identity_witness["manifest_sha256"],
+        )
+    appended, existing = persist_predictions(
+        records, dry_run=dry_run, path=output_path,
+        binding_rows=binding_rows, binding_path=binding_path,
+    )
     status = (
         "DRY_RUN"
         if dry_run

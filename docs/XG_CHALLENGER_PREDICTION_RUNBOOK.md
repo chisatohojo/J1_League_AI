@@ -131,3 +131,14 @@ Do not precompute all remaining fixtures. Do not inspect outcomes when creating
 records. Later evaluation must join outcomes in a separate workflow after the
 prospective cohort is completed; this prediction module must not import or
 calculate evaluation metrics.
+
+## ongoing-v2 fixture binding
+
+Before reading an ongoing-v2 schedule, the command requires the complete,
+validated common sidecar
+`data/processed/predictions/2026_27_prediction_fixture_bindings.csv`. Duplicate
+prevention checks both the immutable `(match_id, model_version)` key and the
+sidecar `(prediction_artifact, fixture_key, model_version)` key. A namespace
+transition therefore cannot create a second prediction for the same fixture.
+New prediction and binding rows are committed together through the recoverable
+append boundary; existing prediction rows and their schema remain unchanged.

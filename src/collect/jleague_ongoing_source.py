@@ -22,6 +22,8 @@ SOURCE_URL = (
     "&competition_years=2026&tv_relay_station_name="
 )
 COMPLETION_POLICY_VERSION = "official-game-over-v1"
+MATCH_PAGE_NAMESPACE = "jleague_match_page"
+DATA_SITE_NAMESPACE = "jleague_data_site"
 _CLUB = r"[a-z0-9_-]+"
 _MATCH_URL = r"https://www\.jleague\.jp/match/j1/(2026|2027)/([0-9]{6})/"
 
@@ -48,7 +50,35 @@ def _season_date(year: int, month: int, day: int) -> str:
     return parsed.isoformat()
 
 
-def parse_listing(html: str) -> list[dict]:
+def apply_operational_identity(record: dict) -> dict:
+    """Derive the legacy scalar identity from the frozen typed-ID state."""
+    status = record.get("status")
+    page = record.get("match_page_id")
+    data_site = record.get("data_site_match_id")
+    if page is not None and (not isinstance(page, str) or re.fullmatch(r"[0-9]{6}", page) is None):
+        raise ValueError("Invalid match_page_id.")
+    if data_site is not None and (
+        not isinstance(data_site, str) or re.fullmatch(r"[1-9][0-9]*", data_site) is None
+    ):
+        raise ValueError("Invalid data_site_match_id.")
+    if status == "scheduled":
+        value, namespace = (
+            (page, MATCH_PAGE_NAMESPACE) if page is not None else
+            (data_site, DATA_SITE_NAMESPACE) if data_site is not None else
+            (None, None)
+        )
+    elif status in {"candidate", "completed"}:
+        if data_site is None:
+            raise ValueError(f"{status} fixture requires data_site_match_id.")
+        value, namespace = data_site, DATA_SITE_NAMESPACE
+    else:
+        raise ValueError("Invalid fixture status.")
+    record["match_id"] = value
+    record["match_id_namespace"] = namespace
+    return record
+
+
+def parse_listing(html: str, *, enforce_unique_ids: bool = True) -> list[dict]:
     """Keep source order and original labels; never infer completion from scores."""
     parser = _SearchTableParser()
     parser.feed(html)
@@ -86,27 +116,27 @@ def parse_listing(html: str) -> list[dict]:
             raise ValueError(f"Duplicate fixture_key: {fixture_key}.")
         seen_keys.add(fixture_key)
         links = row[6][2]
-        match_id = None
+        data_site_match_id = None
         source_url = SOURCE_URL
         if links:
             link = re.fullmatch(r"/SFMS02/\?match_card_id=([1-9][0-9]*)", links[0]) if len(links) == 1 else None
             if link is None:
                 raise ValueError(f"Source row {position}: invalid match-card link.")
-            match_id, source_url = link[1], SOURCE_BASE + links[0]
-            if match_id in seen_ids:
-                raise ValueError(f"Duplicate match_id: {match_id}.")
-            seen_ids.add(match_id)
+            data_site_match_id, source_url = link[1], SOURCE_BASE + links[0]
+            if enforce_unique_ids and data_site_match_id in seen_ids:
+                raise ValueError(f"Duplicate data_site_match_id: {data_site_match_id}.")
+            seen_ids.add(data_site_match_id)
         if values[6] == "vs":
             status, home_score, away_score, result = "scheduled", None, None, None
         else:
             parts = _numeric_syntax(r"([0-9]+)-([0-9]+)", values[6])
-            if match_id is None:
-                raise ValueError(f"Source row {position}: score candidate has no official match_id.")
+            if data_site_match_id is None:
+                raise ValueError(f"Source row {position}: score candidate has no official data_site_match_id.")
             home_score, away_score = map(int, parts.groups())
             result = 1 if home_score == away_score else 2 if home_score > away_score else 0
             status = "candidate"
-        records.append({
-            "fixture_key": fixture_key, "match_id": match_id, "season": 2026,
+        record = {
+            "fixture_key": fixture_key, "season": 2026,
             "competition_key": COMPETITION_KEY, "source_season_label": season,
             "source_year_id": 2026, "source_frame_id": 1,
             "competition": competition, "stage": "full_season", "round": round_number,
@@ -120,7 +150,13 @@ def parse_listing(html: str) -> list[dict]:
             "attendance_raw": values[9], "broadcast_raw": values[10],
             "source_url": source_url, "listing_source_url": SOURCE_URL,
             "evidence_url": "", "evidence_type": "",
-        })
+            "match_page_id": None, "data_site_match_id": data_site_match_id,
+            "match_id": None, "match_id_namespace": None,
+            "match_page_origin_snapshot": None, "match_page_origin_revision": None,
+            "data_site_origin_snapshot": None, "data_site_origin_revision": None,
+            "identity_origin_revision": None,
+        }
+        records.append(apply_operational_identity(record))
     return records
 
 
@@ -266,7 +302,7 @@ def parse_completion_evidence(html: str, *, source_url: str) -> dict:
         home_score, away_score = displayed
     return {
         "competition_key": COMPETITION_KEY, "fixture_key": fixture_key,
-        "match_id": url[2],
+        "match_page_id": url[2],
         "match_date": match_date, "round": round_number,
         "home_club": clubs[0], "away_club": clubs[1],
         "home_score": home_score, "away_score": away_score,
@@ -276,24 +312,24 @@ def parse_completion_evidence(html: str, *, source_url: str) -> dict:
     }
 
 
-def apply_completion_evidence(records: list[dict], evidence_records: list[dict]) -> list[dict]:
+def apply_completion_evidence(
+    records: list[dict], evidence_records: list[dict], *, enforce_unique_ids: bool = True,
+) -> list[dict]:
     """Link scheduled IDs or promote candidates only after exact agreement.
 
-    Match-page URL IDs are attached only to scheduled fixtures. Candidate and
-    completed rows retain the established Data Site ``match_card_id`` namespace;
-    verified game-over evidence continues to validate their completion without
-    replacing that identity.
+    Match-page URL IDs and Data Site IDs remain separate namespaces. Completion
+    evidence may validate a candidate but can never replace its Data Site ID.
     """
     evidence_by_key = {}
     records_by_key = {record["fixture_key"]: record for record in records}
     if len(records_by_key) != len(records):
         raise ValueError("Ambiguous duplicate fixture keys.")
-    record_ids = {
-        record["match_id"]: record["fixture_key"]
-        for record in records if record.get("match_id")
+    record_page_ids = {
+        record["match_page_id"]: record["fixture_key"]
+        for record in records if record.get("match_page_id")
     }
-    if len(record_ids) != sum(bool(record.get("match_id")) for record in records):
-        raise ValueError("Duplicate official match_id in source fixtures.")
+    if enforce_unique_ids and len(record_page_ids) != sum(bool(record.get("match_page_id")) for record in records):
+        raise ValueError("Duplicate match_page_id in source fixtures.")
     evidence_ids = {}
     for evidence in evidence_records:
         key = evidence["fixture_key"]
@@ -304,18 +340,18 @@ def apply_completion_evidence(records: list[dict], evidence_records: list[dict])
             evidence[field] != record[field] for field in ("home_club", "away_club", "match_date", "round")
         ):
             raise ValueError("Official completion evidence differs from the source fixture identity.")
-        evidence_id = evidence.get("match_id")
+        evidence_id = evidence.get("match_page_id")
         if not isinstance(evidence_id, str) or re.fullmatch(r"[0-9]{6}", evidence_id) is None:
-            raise ValueError("Official match-page evidence has an invalid match_id.")
-        if evidence_id in evidence_ids and evidence_ids[evidence_id] != key:
+            raise ValueError("Official match-page evidence has an invalid match_page_id.")
+        if enforce_unique_ids and evidence_id in evidence_ids and evidence_ids[evidence_id] != key:
             raise ValueError("Official evidence match_id is duplicated across fixtures.")
-        if evidence_id in record_ids and record_ids[evidence_id] != key:
-            raise ValueError("Official evidence match_id is already assigned to another fixture.")
+        if enforce_unique_ids and evidence_id in record_page_ids and record_page_ids[evidence_id] != key:
+            raise ValueError("Official evidence match_page_id is already assigned to another fixture.")
         evidence_ids[evidence_id] = key
-        if record["status"] == "scheduled" and record.get("match_id") not in (None, evidence_id):
-            raise ValueError("Official match-page evidence conflicts with the scheduled fixture match_id.")
+        if record.get("match_page_id") not in (None, evidence_id):
+            raise ValueError("Official match-page evidence conflicts with the fixture match_page_id.")
         if evidence["verified"] and (
-            record["status"] != "candidate" or not record["match_id"] or any(
+            record["status"] != "candidate" or not record.get("data_site_match_id") or any(
                 evidence[field] != record[field] for field in ("home_score", "away_score")
             )
         ):
@@ -328,11 +364,10 @@ def apply_completion_evidence(records: list[dict], evidence_records: list[dict])
         if evidence:
             copy["evidence_url"] = evidence["source_url"]
             copy["evidence_type"] = evidence["evidence_type"]
-            if copy["status"] == "scheduled":
-                copy["match_id"] = evidence["match_id"]
+            copy["match_page_id"] = evidence["match_page_id"]
             if evidence["verified"]:
                 copy["status"] = "completed"
-        result.append(copy)
+        result.append(apply_operational_identity(copy))
     return result
 
 
@@ -352,6 +387,12 @@ def validate_fixture_coverage(records: list[dict]) -> dict:
         appearances = Counter(record[side] for record in records if record["round"] == number for side in ("home_club", "away_club"))
         if appearances != Counter(dict.fromkeys(clubs, 1)):
             raise ValueError(f"Invalid club appearances in round {number}.")
+    page_ids = [record["match_page_id"] for record in records if record.get("match_page_id") is not None]
+    data_ids = [record["data_site_match_id"] for record in records if record.get("data_site_match_id") is not None]
+    if len(set(page_ids)) != len(page_ids):
+        raise ValueError("Duplicate match_page_id in fixture coverage.")
+    if len(set(data_ids)) != len(data_ids):
+        raise ValueError("Duplicate data_site_match_id in fixture coverage.")
     ids = [record["match_id"] for record in records if record["match_id"] is not None]
     if len(set(ids)) != len(ids):
         raise ValueError("Duplicate official match_id in fixture coverage.")

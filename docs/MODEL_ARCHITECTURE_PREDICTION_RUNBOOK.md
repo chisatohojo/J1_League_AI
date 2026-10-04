@@ -172,3 +172,12 @@ their different model version.
 - Never merge or modify `xg_challenger_prospective.csv`.
 - Never add Model A rows solely to populate this architecture output.
 - Never fetch schedule, identity, history, or model data over the network.
+
+## ongoing-v2 fixture binding
+
+Before reading an ongoing-v2 schedule, both architecture candidates require the
+complete common fixture-binding sidecar. Duplicate prevention is fixture-aware
+in addition to preserving each prediction CSV's `(match_id, model_version)`
+key. New prediction and sidecar rows use one recoverable append operation;
+namespace transitions never rewrite or duplicate an existing Candidate P or G
+prediction row.

@@ -335,9 +335,9 @@ The exact implementation contract is frozen separately in
 [JLEAGUE_2026_27_ID_NAMESPACE_IMPLEMENTATION_FREEZE_SPEC.md](JLEAGUE_2026_27_ID_NAMESPACE_IMPLEMENTATION_FREEZE_SPEC.md).
 
 ```text
-DESIGN_READY_FOR_REVIEW
+IMPLEMENTED_CODE_ONLY_OPERATIONAL_MIGRATION_NOT_RUN
 ```
 
 Repository内の80 exact completed observationsとsource/test contractにより、match-page URL suffixとData Site `match_card_id`がseparate source namespacesであり、同一fixtureに異なる値で共存し得ることは十分に裏付けられている。このためdesign自体はexternal identifier evidence待ちではない。
 
-ただしimplementationは本taskでは**NOT AUTHORIZED**である。別taskでschema/version、migration、prediction sidecar、event contractをfreezeしてから実装する。各live transitionのpublicationには、その時点のnew immutable Data Site listing observationとSection 7の全gateが必要であり、未来のIDを事前に推測してはならない。
+Implementation code and synthetic tests now follow the separately frozen contract. Production migration, production sidecar bootstrap, and live transition publication remain **NOT AUTHORIZED** by this document. Each live transition still requires a new immutable Data Site listing observation and every Section 7 gate; future IDs must never be guessed.

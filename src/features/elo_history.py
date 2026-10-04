@@ -13,7 +13,9 @@ import pandas as pd
 
 from src.collect.matches import REQUIRED_COLUMNS, load_matches, validate_matches
 from src.collect.jleague_hyakunen import MATCH_DTYPES, validate_competition
-from src.collect.jleague_ongoing import COMPLETION_POLICY, FORMAT_VERSION, read_latest
+from src.collect.jleague_ongoing import (
+    COMPLETION_POLICY, FORMAT_VERSION, LEGACY_FORMAT_VERSION, read_latest,
+)
 from src.collect.jleague_ongoing_source import COMPETITION_KEY
 from src.collect.teams import TeamMaster, load_team_master
 from src.features.elo import EloRatings
@@ -311,7 +313,10 @@ def load_elo_history_with_ongoing(
     if latest is None:
         raise FileNotFoundError("No published 2026/27 latest.json.")
     revision, manifest = latest
-    if manifest["format_version"] != FORMAT_VERSION or manifest["completion_policy"] != COMPLETION_POLICY:
+    if (
+        manifest["format_version"] not in {LEGACY_FORMAT_VERSION, FORMAT_VERSION}
+        or manifest["completion_policy"] != COMPLETION_POLICY
+    ):
         raise EloHistoryError("Unsupported ongoing publication format or completion policy.")
     if not {"schedule.csv", "completed_matches.csv"}.issubset(manifest["files"]):
         raise EloHistoryError("Published manifest does not cover both ongoing CSVs.")

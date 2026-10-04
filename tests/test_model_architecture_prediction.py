@@ -600,7 +600,7 @@ def test_full_synthetic_dry_run_crosses_pipeline_and_writes_nothing(tmp_path, mo
     schedule = _schedule()
     frozen = _artifact()
     monkeypatch.setattr(
-        prediction, "read_schedule_without_results", lambda _path: schedule.copy(deep=True)
+        prediction, "read_schedule_without_results", lambda _path, **_kwargs: schedule.copy(deep=True)
     )
     monkeypatch.setattr(prediction, "load_frozen_artifact", lambda _path, **_kwargs: frozen)
 
@@ -634,7 +634,7 @@ def test_full_synthetic_lightgbm_dry_run_crosses_pipeline_and_writes_nothing(
     schedule = _schedule()
     frozen = _lightgbm_artifact()
     monkeypatch.setattr(
-        prediction, "read_schedule_without_results", lambda _path: schedule.copy(deep=True)
+        prediction, "read_schedule_without_results", lambda _path, **_kwargs: schedule.copy(deep=True)
     )
     monkeypatch.setattr(
         prediction,

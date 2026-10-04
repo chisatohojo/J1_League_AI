@@ -45,6 +45,10 @@ from src.modeling.model_a_artifact import (
     MODEL_VERSION as MODEL_A_VERSION,
     OUTPUT_DIR as MODEL_A_ARTIFACT_DIR,
 )
+from src.modeling.prediction_identity import (
+    DEFAULT_BINDING_PATH, append_prediction_and_bindings, fixture_duplicates,
+    make_binding_rows, read_prediction_bindings, validate_complete_sidecar,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -52,6 +56,7 @@ SCHEDULE_PATH = ROOT / "data/processed/jleague/2026_27/schedule.csv"
 XG_DIR = ROOT / "data/processed/jleague_match_xg"
 J1_DIR = ROOT / "data/processed/jleague"
 OUTPUT_PATH = ROOT / "data/processed/predictions/xg_challenger_prospective.csv"
+PREDICTION_ARTIFACT = "data/processed/predictions/xg_challenger_prospective.csv"
 EXPECTED_SCHEDULE_ROWS = 380
 EXPECTED_PROSPECTIVE_ROWS = 300
 TARGET_COMPETITION = "j1_2026_2027"
@@ -122,7 +127,9 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _read_schedule_without_results(path: str | Path) -> pd.DataFrame:
+def _read_schedule_without_results(
+    path: str | Path, *, binding_path: str | Path = DEFAULT_BINDING_PATH,
+) -> pd.DataFrame:
     """Read only fixture identity/status columns; outcome columns are not loaded."""
     path = Path(path)
     if not path.is_file():
@@ -132,12 +139,28 @@ def _read_schedule_without_results(path: str | Path) -> pd.DataFrame:
     missing = set(SAFE_SCHEDULE_COLUMNS) - set(header)
     if missing:
         raise XGPredictionError(f"Schedule is missing safe columns: {sorted(missing)}")
+    v2 = "match_id_namespace" in header
+    if v2:
+        validate_complete_sidecar(repository_root=ROOT, binding_path=binding_path)
+    columns = [*SAFE_SCHEDULE_COLUMNS, *(("match_id_namespace",) if v2 else ())]
     frame = pd.read_csv(
         path, dtype=str, keep_default_na=False, encoding="utf-8-sig",
-        usecols=list(SAFE_SCHEDULE_COLUMNS),
+        usecols=columns,
     )
     if len(frame) != EXPECTED_SCHEDULE_ROWS or frame.fixture_key.duplicated().any():
         raise XGPredictionError("Schedule must contain 380 unique fixture identities")
+    if v2:
+        from src.collect.jleague_ongoing import FORMAT_VERSION, _sha, read_latest
+        latest = read_latest(path.parent)
+        if (
+            latest is None or latest[1].get("format_version") != FORMAT_VERSION
+            or latest[1]["files"].get("schedule.csv") != _sha(path.read_bytes())
+        ):
+            raise XGPredictionError("V2 schedule is not the accepted latest revision projection")
+        frame.attrs["identity_witness"] = {
+            "revision_id": latest[0].name,
+            "manifest_sha256": _sha((latest[0] / "manifest.json").read_bytes()),
+        }
     return frame
 
 
@@ -408,13 +431,23 @@ def generate_prediction_records(
     return records.loc[:, list(PREDICTION_COLUMNS)]
 
 
-def append_predictions(records: pd.DataFrame, path: str | Path = OUTPUT_PATH) -> tuple[int, int]:
+def append_predictions(
+    records: pd.DataFrame, path: str | Path = OUTPUT_PATH, *,
+    binding_rows: pd.DataFrame | None = None,
+    binding_path: str | Path = DEFAULT_BINDING_PATH,
+) -> tuple[int, int]:
     """Append new `(match_id, model_version)` rows and never overwrite history."""
     output = Path(path)
     if tuple(records.columns) != PREDICTION_COLUMNS:
         raise XGPredictionError("Prediction output schema mismatch")
     if records.duplicated(["match_id", "model_version"]).any():
         raise XGPredictionError("Duplicate prediction key in generated records")
+    if binding_rows is not None:
+        return append_prediction_and_bindings(
+            records, binding_rows, prediction_path=path, binding_path=binding_path,
+            prediction_columns=PREDICTION_COLUMNS,
+            prediction_validator=lambda frame: _validate_append_frame(frame),
+        )
     existing = pd.DataFrame(columns=PREDICTION_COLUMNS)
     if output.is_file():
         existing = pd.read_csv(output, dtype=str, keep_default_na=False, encoding="utf-8-sig")
@@ -431,21 +464,41 @@ def append_predictions(records: pd.DataFrame, path: str | Path = OUTPUT_PATH) ->
     return len(new), int(duplicate.sum())
 
 
+def _validate_append_frame(frame: pd.DataFrame) -> None:
+    if tuple(frame.columns) != PREDICTION_COLUMNS:
+        raise XGPredictionError("Prediction output schema mismatch")
+    if frame.duplicated(["match_id", "model_version"]).any():
+        raise XGPredictionError("Duplicate prediction key in generated records")
+
+
 def persist_predictions(
     records: pd.DataFrame, *, dry_run: bool, path: str | Path = OUTPUT_PATH,
+    binding_rows: pd.DataFrame | None = None,
+    binding_path: str | Path = DEFAULT_BINDING_PATH,
 ) -> tuple[int, int]:
     """Keep dry-run and production on one explicit write boundary."""
     if dry_run:
-        return 0, 0
-    return append_predictions(records, path)
+        if binding_rows is None:
+            return 0, 0
+        existing = read_prediction_bindings(binding_path)
+        duplicate = fixture_duplicates(
+            records, existing, prediction_artifact=PREDICTION_ARTIFACT,
+            fixture_keys=binding_rows["fixture_key"].tolist(),
+        )
+        return 0, int(duplicate.sum())
+    return append_predictions(
+        records, path, binding_rows=binding_rows, binding_path=binding_path,
+    )
 
 
 def run_prediction(
     *, dry_run: bool = False, schedule_path: str | Path = SCHEDULE_PATH,
     output_path: str | Path = OUTPUT_PATH, artifact_dir: str | Path = ARTIFACT_DIR,
     model_a_artifact_dir: str | Path = MODEL_A_ARTIFACT_DIR,
+    binding_path: str | Path = DEFAULT_BINDING_PATH,
 ) -> PredictionRun:
-    schedule = _read_schedule_without_results(schedule_path)
+    schedule = _read_schedule_without_results(schedule_path, binding_path=binding_path)
+    identity_witness = schedule.attrs.get("identity_witness")
     cohort, batch = select_next_date_batch(schedule)
     if len(cohort) != EXPECTED_PROSPECTIVE_ROWS:
         raise XGPredictionError(
@@ -465,8 +518,19 @@ def run_prediction(
         targets, xg_features, elo_features, artifacts,
         model_a_predictor=model_a.predict_proba,
     )
+    binding_rows = None
+    if "match_id_namespace" in batch.columns:
+        if identity_witness is None:
+            raise XGPredictionError("Accepted v2 schedule identity witness is missing")
+        binding_rows = make_binding_rows(
+            records, batch,
+            prediction_artifact=PREDICTION_ARTIFACT,
+            identity_witness_revision_id=identity_witness["revision_id"],
+            identity_witness_manifest_sha256=identity_witness["manifest_sha256"],
+        )
     appended, duplicates = persist_predictions(
-        records, dry_run=dry_run, path=output_path,
+        records, dry_run=dry_run, path=output_path, binding_rows=binding_rows,
+        binding_path=binding_path,
     )
     eligible = int(records.xg_pair_available.sum())
     return PredictionRun(

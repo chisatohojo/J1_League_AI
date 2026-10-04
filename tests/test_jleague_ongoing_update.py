@@ -193,6 +193,116 @@ def test_snapshot_is_immutable_and_reusing_identical_input_is_safe(tmp_path):
     assert tree_bytes(raw_root) == before
 
 
+def test_unprocessed_v1_stops_but_materialized_v1_replay_is_read_only(tmp_path, make_snapshot):
+    from src.collect.jleague_ongoing import _json, _sha, process_snapshot
+
+    snapshot = make_snapshot(synthetic_fixtures(), 1)
+    manifest_path = snapshot / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["format_version"] = "ongoing-v1"
+    manifest_path.write_bytes(_json(manifest))
+    output = tmp_path / "processed"
+    with pytest.raises(ValueError, match="unprocessed ongoing-v1"):
+        process_snapshot(snapshot, output)
+    assert not (output / "runs").exists()
+
+    run = {
+        "snapshot_id": manifest["snapshot_id"],
+        "snapshot_sha256": _sha(manifest_path.read_bytes()),
+        "format_version": "ongoing-v1",
+    }
+    run_path = output / "runs" / f"{manifest['snapshot_id']}-ongoing-v1.json"
+    run_path.parent.mkdir(parents=True)
+    run_path.write_bytes(_json(run))
+    revision = output / "revisions" / _sha(_json(run))
+    revision.mkdir(parents=True)
+    expected = {"publication_status": "published", "legacy": True}
+    (revision / "manifest.json").write_bytes(_json({
+        "format_version": "ongoing-v1", "files": {}, "summary": expected,
+    }))
+    before = tree_bytes(output)
+    assert process_snapshot(snapshot, output) == expected
+    assert tree_bytes(output) == before
+
+
+def test_offline_v1_migration_recovers_typed_origins_without_mutating_v1(tmp_path):
+    from src.collect.jleague_ongoing import _json, _sha, migrate_v1_to_v2
+
+    output = tmp_path / "processed"
+    revision = output / "revisions" / "accepted-v1"
+    revision.mkdir(parents=True)
+    page_completed = "https://www.jleague.jp/match/j1/2026/100901/"
+    page_scheduled = "https://www.jleague.jp/match/j1/2026/101002/"
+    listing = {
+        "kind": "listing", "source_url": LISTING_URL,
+        "sha256": "1" * 64, "fetched_at_utc": "2026-10-01T00:00:00+00:00",
+    }
+    completed_evidence = {
+        "kind": "evidence", "source_url": page_completed,
+        "sha256": "2" * 64, "fetched_at_utc": "2026-10-01T00:01:00+00:00",
+    }
+    scheduled_evidence = {
+        "kind": "evidence", "source_url": page_scheduled,
+        "sha256": "3" * 64, "fetched_at_utc": "2026-10-01T00:02:00+00:00",
+    }
+    base = {
+        "season": 2026, "competition_key": "j1_2026_2027", "round": 1,
+        "match_date": "2026-10-09", "home_club": "a", "away_club": "b",
+        "home_team": "A", "away_team": "B", "home_score": None,
+        "away_score": None, "result": None, "source_url": LISTING_URL,
+        "listing_source_url": LISTING_URL, "evidence_url": "", "evidence_type": "",
+    }
+    rows = [
+        {
+            **base, "fixture_key": "j1_2026_2027:a:b", "status": "completed",
+            "match_id": "42", "source_url":
+            "https://data.j-league.or.jp/SFMS02/?match_card_id=42",
+            "evidence_url": page_completed, "evidence_type": "official_game_over_section",
+            "home_score": 1, "away_score": 0, "result": 2,
+        },
+        {
+            **base, "fixture_key": "j1_2026_2027:c:d", "home_club": "c",
+            "away_club": "d", "status": "scheduled", "match_id": "101002",
+            "evidence_url": page_scheduled,
+            "evidence_type": "official_completion_unconfirmed",
+        },
+        {
+            **base, "fixture_key": "j1_2026_2027:e:f", "home_club": "e",
+            "away_club": "f", "status": "scheduled", "match_id": None,
+        },
+    ]
+    observations = _json(rows)
+    schedule = b"legacy-schedule\n"
+    (revision / "observations.json").write_bytes(observations)
+    (revision / "schedule.csv").write_bytes(schedule)
+    manifest = {
+        "format_version": "ongoing-v1", "completion_policy": "official-game-over-v1",
+        "snapshot_id": "accepted-snapshot", "sequence": 1,
+        "files": {"observations.json": _sha(observations), "schedule.csv": _sha(schedule)},
+        "summary": {
+            "publication_status": "published",
+            "sources": [listing, completed_evidence, scheduled_evidence],
+        },
+    }
+    (revision / "manifest.json").write_bytes(_json(manifest))
+    before = tree_bytes(revision)
+
+    migrated, bridges, migration = migrate_v1_to_v2(
+        revision, output, established_snapshot="boundary-snapshot",
+        established_revision="boundary-revision", enforce_frozen_baseline=False,
+    )
+
+    assert tree_bytes(revision) == before
+    assert [(row["match_page_id"], row["data_site_match_id"]) for row in migrated] == [
+        ("100901", "42"), ("101002", None), (None, None),
+    ]
+    assert len(bridges) == 1
+    assert bridges[0]["match_page_origin_revision"] == "accepted-v1"
+    assert bridges[0]["data_site_origin_revision"] == "accepted-v1"
+    assert migration["migrated_bridge_count"] == 1
+    assert migration["migrated_match_page_only_count"] == 1
+
+
 @pytest.mark.parametrize("field,value", [("sha256", "0" * 64), ("bytes", 1)])
 def test_snapshot_rejects_metadata_that_does_not_match_raw(tmp_path, field, value):
     from src.collect.jleague_ongoing import create_snapshot
@@ -357,13 +467,11 @@ def test_current_explicit_identity_evidence_takes_precedence_over_carry_forward(
     ].iloc[0]
     assert linked.match_id == "080701"
     assert linked.evidence_type == "official_completion_unconfirmed"
-    assert (
-        "identity_origin_revision" not in linked.index
-        or linked.identity_origin_revision == ""
-    )
+    assert linked.identity_origin_revision == summary["revision_id"]
+    assert linked.match_page_origin_revision == summary["revision_id"]
 
 
-def test_current_listing_identity_conflict_is_not_replaced_by_previous_identity(
+def test_current_listing_data_site_identity_bridges_with_previous_page_identity(
     tmp_path, make_snapshot,
 ):
     from src.collect.jleague_ongoing import process_snapshot
@@ -376,13 +484,16 @@ def test_current_listing_identity_conflict_is_not_replaced_by_previous_identity(
 
     summary = process_snapshot(make_snapshot(fixtures, 2), output)
 
-    assert summary["publication_status"] == "held"
-    assert "identity_conflict" in summary["publication_blocks"]
-    held = output / "revisions" / summary["revision_id"]
-    current = read_csv(held, "schedule.csv").loc[
+    assert summary["publication_status"] == "published"
+    assert summary["identity_bridge_count"] == 1
+    assert summary["change_counts"]["identity_bridge_established"] == 2
+    current = read_csv(output, "schedule.csv").loc[
         lambda frame: frame.fixture_key.eq("j1_2026_2027:club00:club19")
     ].iloc[0]
-    assert current.match_id == "999999"
+    assert current.match_id == "080701"
+    assert current.match_page_id == "080701"
+    assert current.data_site_match_id == "999999"
+    assert current.match_id_namespace == "jleague_match_page"
 
 
 def test_carried_identity_is_not_duplicated_when_current_source_moves_it(
@@ -431,14 +542,53 @@ def test_candidate_or_completed_data_site_identity_is_never_overwritten_by_carry
 
     summary = process_snapshot(make_snapshot(fixtures, 2, evidence), output)
 
-    assert summary["publication_status"] == "held"
-    assert "identity_conflict" in summary["publication_blocks"]
-    held = output / "revisions" / summary["revision_id"]
-    current = read_csv(held, "schedule.csv").loc[
+    assert summary["publication_status"] == "published"
+    assert "identity_conflict" not in summary["publication_blocks"]
+    current = read_csv(output, "schedule.csv").loc[
         lambda frame: frame.fixture_key.eq("j1_2026_2027:club00:club19")
     ].iloc[0]
     assert current.status == expected_status
     assert current.match_id == "42"
+    assert current.match_page_id == "080701"
+    assert current.data_site_match_id == "42"
+    assert current.match_id_namespace == "jleague_data_site"
+    assert summary["change_counts"]["identity_bridge_established"] == 2
+    assert summary["change_counts"]["identity_namespace_transition"] == 2
+
+
+def test_v2_exact_schema_equal_scalar_bridge_and_manifest_artifact(tmp_path, make_snapshot):
+    from src.collect.jleague_ongoing import (
+        BRIDGE_COLUMNS, FORMAT_VERSION, OBSERVATION_COLUMNS, process_snapshot,
+    )
+
+    fixtures = synthetic_fixtures()
+    fixtures[0]["date"] = date(2026, 10, 9)
+    output = tmp_path / "processed"
+    evidence = write_prematch_identity(tmp_path / "evidence", fixtures[0], 1)
+    first = process_snapshot(make_snapshot(fixtures, 1, [evidence]), output)
+    page_id = "100901"
+    fixtures[0].update(score=(1, 0), match_id=page_id, attendance="1,000")
+    completion = write_completion(tmp_path / "evidence", fixtures[0], 2)
+
+    summary = process_snapshot(make_snapshot(fixtures, 2, [completion]), output)
+
+    assert summary["publication_status"] == "published"
+    assert summary["identity_bridge_count"] == 1
+    revision = output / "revisions" / summary["revision_id"]
+    manifest = json.loads((revision / "manifest.json").read_bytes())
+    assert manifest["format_version"] == FORMAT_VERSION == "ongoing-v2"
+    assert "identity_bridges.csv" in manifest["files"]
+    assert tuple(read_csv(output, "schedule.csv").columns) == OBSERVATION_COLUMNS
+    assert tuple(read_csv(output, "completed_matches.csv").columns) == OBSERVATION_COLUMNS
+    bridge = read_csv(output, "identity_bridges.csv")
+    assert tuple(bridge.columns) == BRIDGE_COLUMNS
+    assert bridge.match_page_id.tolist() == [page_id]
+    assert bridge.data_site_match_id.tolist() == [page_id]
+    assert bridge.bridge_id.str.fullmatch(r"[0-9a-f]{64}").all()
+    row = read_csv(output, "schedule.csv").iloc[0]
+    assert row.match_id == page_id
+    assert row.match_id_namespace == "jleague_data_site"
+    assert first["revision_id"] != summary["revision_id"]
 
 
 def test_schedule_change_keeps_identity_and_numeric_score_only_becomes_candidate(

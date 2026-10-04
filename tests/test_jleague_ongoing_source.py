@@ -10,6 +10,9 @@ import pytest
 from src.collect.jleague import HEADERS
 from src.collect.jleague_ongoing_source import (
     COMPETITION_KEY,
+    DATA_SITE_NAMESPACE,
+    MATCH_PAGE_NAMESPACE,
+    apply_operational_identity,
     apply_completion_evidence,
     parse_completion_evidence,
     parse_listing,
@@ -70,6 +73,34 @@ def test_scheduled_fixture_keeps_unknown_results_with_or_without_match_id(match_
     assert row["home_score"] is None and row["away_score"] is None and row["result"] is None
 
 
+@pytest.mark.parametrize(
+    "status,page,data,operational,namespace",
+    [
+        ("scheduled", "001234", None, "001234", MATCH_PAGE_NAMESPACE),
+        ("scheduled", None, "42", "42", DATA_SITE_NAMESPACE),
+        ("scheduled", "001234", "42", "001234", MATCH_PAGE_NAMESPACE),
+        ("scheduled", None, None, None, None),
+        ("candidate", "001234", "42", "42", DATA_SITE_NAMESPACE),
+        ("completed", "001234", "42", "42", DATA_SITE_NAMESPACE),
+    ],
+)
+def test_exact_typed_operational_projection(status, page, data, operational, namespace):
+    row = {"status": status, "match_page_id": page, "data_site_match_id": data}
+    apply_operational_identity(row)
+    assert row["match_id"] == operational
+    assert row["match_id_namespace"] == namespace
+
+
+def test_candidate_and_completed_require_data_site_identity_and_page_leading_zero_is_preserved():
+    for status in ("candidate", "completed"):
+        with pytest.raises(ValueError, match="requires data_site_match_id"):
+            apply_operational_identity({
+                "status": status, "match_page_id": "001234", "data_site_match_id": None,
+            })
+    evidence = parse_completion_evidence(official_html(completed=False), source_url=URL)
+    assert evidence["match_page_id"] == "091302"
+
+
 def test_fixture_key_does_not_change_with_date_kickoff_round_or_stadium():
     before = parse_listing(listing_html(score="vs", match_id=None))[0]
     html = listing_html(score="vs", match_id=None, date_label="27/02/13(土)", kickoff="")
@@ -87,7 +118,7 @@ def test_unknown_or_special_score_syntax_stops(score):
 
 
 def test_numeric_score_requires_official_match_id():
-    with pytest.raises(ValueError, match="no official match_id"):
+    with pytest.raises(ValueError, match="no official data_site_match_id"):
         parse_listing(listing_html(match_id=None))
 
 
@@ -115,7 +146,7 @@ def test_duplicate_fixture_and_match_ids_stop():
     with pytest.raises(ValueError, match="Duplicate fixture_key"):
         parse_listing(original.replace("</table>", data_row + "</table>"))
     other = data_row.replace("tokyov", "urawa").replace("東京Ｖ", "浦和")
-    with pytest.raises(ValueError, match="Duplicate match_id"):
+    with pytest.raises(ValueError, match="Duplicate data_site_match_id"):
         parse_listing(original.replace("</table>", other + "</table>"))
 
 
@@ -125,9 +156,12 @@ def test_explicit_match_bound_evidence_promotes_candidate_without_mutating_input
     evidence = parse_completion_evidence(official_html(), source_url=URL)
     completed = apply_completion_evidence(records, [evidence])
     assert evidence["verified"] is True
-    assert evidence["match_id"] == "091302"
+    assert evidence["match_page_id"] == "091302"
     assert completed[0]["status"] == "completed"
     assert completed[0]["match_id"] == "34583"
+    assert completed[0]["data_site_match_id"] == "34583"
+    assert completed[0]["match_page_id"] == "091302"
+    assert completed[0]["match_id_namespace"] == "jleague_data_site"
     assert completed[0]["evidence_url"] == URL
     assert completed[0]["evidence_type"] == "official_game_over_section"
     assert records == before
@@ -141,8 +175,11 @@ def test_prematch_page_links_official_id_without_completing_scheduled_fixture():
     updated = apply_completion_evidence(records, [evidence])
 
     assert evidence["verified"] is False
-    assert evidence["match_id"] == "091302"
+    assert evidence["match_page_id"] == "091302"
     assert updated[0]["match_id"] == "091302"
+    assert updated[0]["match_page_id"] == "091302"
+    assert updated[0]["data_site_match_id"] is None
+    assert updated[0]["match_id_namespace"] == "jleague_match_page"
     assert updated[0]["status"] == "scheduled"
     assert updated[0]["home_score"] is None
     assert updated[0]["away_score"] is None
@@ -155,12 +192,12 @@ def test_prematch_page_links_official_id_without_completing_scheduled_fixture():
 def test_prematch_identity_accepts_same_id_and_rejects_conflicting_id():
     evidence = parse_completion_evidence(official_html(completed=False), source_url=URL)
     same = parse_listing(listing_html(score="vs", match_id=None))
-    same[0]["match_id"] = "091302"
+    same[0]["match_page_id"] = "091302"
     assert apply_completion_evidence(same, [evidence])[0]["match_id"] == "091302"
 
     conflict = parse_listing(listing_html(score="vs", match_id=None))
-    conflict[0]["match_id"] = "091303"
-    with pytest.raises(ValueError, match="conflicts with the scheduled fixture match_id"):
+    conflict[0]["match_page_id"] = "091303"
+    with pytest.raises(ValueError, match="conflicts with the fixture match_page_id"):
         apply_completion_evidence(conflict, [evidence])
 
 
@@ -189,7 +226,7 @@ def test_match_page_id_cannot_collide_with_another_listing_fixture():
     other = deepcopy(records[0])
     other.update(
         fixture_key=f"{COMPETITION_KEY}:urawa:kashima",
-        match_id="091302",
+        match_page_id="091302",
         home_club="urawa",
         away_club="kashima",
     )
