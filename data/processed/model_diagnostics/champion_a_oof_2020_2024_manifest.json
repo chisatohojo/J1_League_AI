@@ -1,0 +1,622 @@
+{
+  "schema_version": "champion_a_oof_diagnostic_v1",
+  "purpose": "diagnostic_only_not_formal_evaluation_not_model_input",
+  "reviewed_source_commit": "376973e1f2238bbd29799386ec100dd400648ce4",
+  "freeze_spec": {
+    "path": "docs/CHAMPION_A_OOF_DIAGNOSTIC_FREEZE_SPEC.md",
+    "sha256": "3167daf9ddff78ef4c3dceec64ed36782c6c36424baed239d83ce1191c023663",
+    "commit": "159ca0c7d71dfd10b9d3888971fb05c9f681855e"
+  },
+  "generation_authorization": {
+    "reviewed_implementation_commit": "6481780f208ffe95294bdb426a3e572a82a34a98",
+    "task_reference": "champion-a-oof-one-time-generation-approved-2026-10-05"
+  },
+  "generator": {
+    "path": "src/modeling/champion_a_oof_diagnostic.py",
+    "commit": "6481780f208ffe95294bdb426a3e572a82a34a98",
+    "sha256": "40bfb9f724deb0dc8ec4e6f0b9ee04fdd0a36f6addc4faa0318f416eaf3bae78",
+    "git_dirty": false,
+    "fits": 5,
+    "prediction_batches": 5,
+    "automatic_retries": 0
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "requirements_sha256": "887f566527f6a10da4e1ac6fcfc66810634c5e82f0ddc2b232084c9880753eda",
+    "lock_sha256": "3aea21392b63f9fc3dfbcf00e44cb825a3eb7453d130492dde8bcb5da14ddc04"
+  },
+  "inputs": [
+    {
+      "path": "data/processed/jleague/2015_matches_probe.csv",
+      "season": 2015,
+      "rows": 306,
+      "sha256": "ea0ab9e1788373702d9ce425f83c74bae21a7afd35752d9c24481f4bc9400353"
+    },
+    {
+      "path": "data/processed/jleague/2016_matches_probe.csv",
+      "season": 2016,
+      "rows": 306,
+      "sha256": "4a3bcd4f0beaa20192abc60071e5153c846c1ca132b1876d174a2e46a5dde45f"
+    },
+    {
+      "path": "data/processed/jleague/2017_matches_probe.csv",
+      "season": 2017,
+      "rows": 306,
+      "sha256": "d2f8ae9959762d172c4afb209e1916afd2dfadbcb0955a99b281aab2fb07f59b"
+    },
+    {
+      "path": "data/processed/jleague/2018_matches_probe.csv",
+      "season": 2018,
+      "rows": 306,
+      "sha256": "f6d90f5dec3461fca230ca487233c63273fb69156970af3940d32b1455672681"
+    },
+    {
+      "path": "data/processed/jleague/2019_matches_probe.csv",
+      "season": 2019,
+      "rows": 306,
+      "sha256": "3b2090ec38e064457ec4ae0f9981ae457350af268f75886150b6f05d95d6fe2f"
+    },
+    {
+      "path": "data/processed/jleague/2020_matches_probe.csv",
+      "season": 2020,
+      "rows": 306,
+      "sha256": "fd295aca0097ee0041659cdbe42ec9375227969e9b0c51efa8993753cccbfe17"
+    },
+    {
+      "path": "data/processed/jleague/2021_matches_probe.csv",
+      "season": 2021,
+      "rows": 380,
+      "sha256": "298c3d4c4eb66fa6d6d00748e19382e5f304899355297acdbf42f251e11114b6"
+    },
+    {
+      "path": "data/processed/jleague/2022_matches_probe.csv",
+      "season": 2022,
+      "rows": 306,
+      "sha256": "d4861930524d5e171b3c93f18361af7b17c6055ae27d9055a6e9a9ab266ba2c2"
+    },
+    {
+      "path": "data/processed/jleague/2023_matches_probe.csv",
+      "season": 2023,
+      "rows": 306,
+      "sha256": "6a1e002dd7e9d0187d014e517057ad3d79430eece66fcb6b5239e9db590085c9"
+    },
+    {
+      "path": "data/processed/jleague/2024_matches_probe.csv",
+      "season": 2024,
+      "rows": 380,
+      "sha256": "4b2fa48f762e04316c7ded093d3919642d62d3c2b5edc92a55e012cf6ce410d1"
+    }
+  ],
+  "team_master": {
+    "path": "data/master/teams.csv",
+    "sha256": "ec255eb65e9fa2c310e3fbcfeecf7a7d201ca4f458a15bb0d129fa0ca9e1b89f"
+  },
+  "champion_a_contract": {
+    "initial_elo": 1500.0,
+    "k": 30.0,
+    "home_advantage": 175.0,
+    "reset": false,
+    "feature": [
+      "elo_diff"
+    ],
+    "batching": "all date reads before result updates",
+    "home_advantage_in_feature": false,
+    "scaler": {
+      "class": "StandardScaler",
+      "copy": true,
+      "with_mean": true,
+      "with_std": true,
+      "fit_scope": "training_only"
+    },
+    "logistic": {
+      "C": 1.0,
+      "solver": "lbfgs",
+      "max_iter": 1000,
+      "random_state": 0,
+      "unspecified_parameters": "locked_defaults"
+    },
+    "metrics": {
+      "accuracy": "argmax",
+      "log_loss": "sklearn log_loss labels=[0,1,2]",
+      "brier": "sum over classes, no division",
+      "nll_clipping": "float64 epsilon for loss only"
+    },
+    "rtol": 0.0,
+    "atol": 1e-12
+  },
+  "folds": [
+    {
+      "validation_year": 2020,
+      "training_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "training_rows": 1530,
+      "validation_rows": 306,
+      "train_ids_sha256": "65b199341adc5ff9c7fc9c09dcfd73b1c4087e5d4f73cd71571fd4a69cddb158",
+      "validation_ids_sha256": "66e2faeb3a51f0ea8e49bd76d1c484d191054997d8753c5acbc8663d3bbf1d35"
+    },
+    {
+      "validation_year": 2021,
+      "training_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "training_rows": 1836,
+      "validation_rows": 380,
+      "train_ids_sha256": "a5a1265db672da0747a01fe0a69ab548ae684871be4f45efc4d1d1563e4ea266",
+      "validation_ids_sha256": "9cd6cfa337ffb0477108775595a56bedb1edca7d05c4f099888bad54f41ded1e"
+    },
+    {
+      "validation_year": 2022,
+      "training_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021
+      ],
+      "training_rows": 2216,
+      "validation_rows": 306,
+      "train_ids_sha256": "dcd657ec4693b73a32fc27a6ee3dfc6b4c7c6efcde0c90328cdaeed9ce4b6cab",
+      "validation_ids_sha256": "970c316240ee1597bf823d90711995bce334ba3e767f24d6c2d971088fc11803"
+    },
+    {
+      "validation_year": 2023,
+      "training_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022
+      ],
+      "training_rows": 2522,
+      "validation_rows": 306,
+      "train_ids_sha256": "405d0a8913098d6509381825a2299f494649b804af4528585d200e85c8c7013d",
+      "validation_ids_sha256": "7a7e5f5dbf26a0ba046dbf8a59a441a05df535bd9b3730299e2e2b2bc9f46cc9"
+    },
+    {
+      "validation_year": 2024,
+      "training_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "training_rows": 2828,
+      "validation_rows": 380,
+      "train_ids_sha256": "54a43cb0b98414d0768f1ad55f4e2adf474cf154080b0af1043792bed8f2304a",
+      "validation_ids_sha256": "40ccf48bbadc5398d54f11e79f9f2c5f1e914a4ecede086caa3eef77dd72d915"
+    }
+  ],
+  "class_order": [
+    0,
+    1,
+    2
+  ],
+  "columns": [
+    "validation_year",
+    "match_id",
+    "match_date",
+    "home_team_id",
+    "away_team_id",
+    "result",
+    "elo_diff",
+    "p_away",
+    "p_draw",
+    "p_home",
+    "predicted_class",
+    "max_p",
+    "p_true",
+    "nll",
+    "brier",
+    "abs_elo_diff",
+    "round",
+    "home_team",
+    "away_team",
+    "season_phase",
+    "home_season_appearance",
+    "away_season_appearance",
+    "home_first5",
+    "away_first5",
+    "any_team_first5",
+    "both_team_first5",
+    "home_status",
+    "away_status",
+    "promoted_involved",
+    "returning_involved",
+    "established_only",
+    "home_favorite",
+    "away_favorite",
+    "near_even"
+  ],
+  "column_dtypes": {
+    "validation_year": "int64",
+    "match_id": "string",
+    "match_date": "string",
+    "home_team_id": "string",
+    "away_team_id": "string",
+    "result": "int64",
+    "elo_diff": "float64",
+    "p_away": "float64",
+    "p_draw": "float64",
+    "p_home": "float64",
+    "predicted_class": "int64",
+    "max_p": "float64",
+    "p_true": "float64",
+    "nll": "float64",
+    "brier": "float64",
+    "abs_elo_diff": "float64",
+    "round": "int64",
+    "home_team": "string",
+    "away_team": "string",
+    "season_phase": "string",
+    "home_season_appearance": "int64",
+    "away_season_appearance": "int64",
+    "home_first5": "int64",
+    "away_first5": "int64",
+    "any_team_first5": "int64",
+    "both_team_first5": "int64",
+    "home_status": "string",
+    "away_status": "string",
+    "promoted_involved": "int64",
+    "returning_involved": "int64",
+    "established_only": "int64",
+    "home_favorite": "int64",
+    "away_favorite": "int64",
+    "near_even": "int64"
+  },
+  "row_count": 1678,
+  "csv": {
+    "path": "data/processed/model_diagnostics/champion_a_oof_2020_2024.csv",
+    "sha256": "cd8157303789fe2e929ccb74aeaabab09fa3c1a3a26338b10addaa2183a74f59",
+    "encoding": "utf-8",
+    "line_ending": "LF",
+    "float_format": "%.17g",
+    "ordered_ids_sha256": "0546d0e440f159b8507579933e0cca8deba635f1179b233bcd5e64c889547fe6"
+  },
+  "references": {
+    "values": {
+      "2020": {
+        "n": 306,
+        "accuracy": 0.5065359477124183,
+        "log_loss": 1.023119734659012,
+        "brier": 0.6117572218710644
+      },
+      "2021": {
+        "n": 380,
+        "accuracy": 0.5078947368421053,
+        "log_loss": 1.0253437210487792,
+        "brier": 0.6149829138674616
+      },
+      "2022": {
+        "n": 306,
+        "accuracy": 0.4019607843137255,
+        "log_loss": 1.0940186385371449,
+        "brier": 0.6610224339161608
+      },
+      "2023": {
+        "n": 306,
+        "accuracy": 0.46078431372549017,
+        "log_loss": 1.0604285568595655,
+        "brier": 0.638530529273072
+      },
+      "2024": {
+        "n": 380,
+        "accuracy": 0.45,
+        "log_loss": 1.079241181120235,
+        "brier": 0.6531695943664019
+      },
+      "pooled": {
+        "n": 1678,
+        "accuracy": 0.466626936829559,
+        "log_loss": 1.056065401323764,
+        "brier": 0.6357323419292724
+      }
+    },
+    "sources": [
+      "docs/H2H_EVALUATION.md",
+      "docs/MODEL_ARCHITECTURE_BENCHMARK_RESULT.md"
+    ],
+    "rtol": 0.0,
+    "atol": 1e-12
+  },
+  "observed_metrics": {
+    "2020": {
+      "n": 306,
+      "accuracy": 0.5065359477124183,
+      "log_loss": 1.023119734659012,
+      "brier": 0.6117572218710644
+    },
+    "2021": {
+      "n": 380,
+      "accuracy": 0.5078947368421053,
+      "log_loss": 1.0253437210487792,
+      "brier": 0.6149829138674616
+    },
+    "2022": {
+      "n": 306,
+      "accuracy": 0.4019607843137255,
+      "log_loss": 1.0940186385371449,
+      "brier": 0.6610224339161608
+    },
+    "2023": {
+      "n": 306,
+      "accuracy": 0.46078431372549017,
+      "log_loss": 1.0604285568595655,
+      "brier": 0.638530529273072
+    },
+    "2024": {
+      "n": 380,
+      "accuracy": 0.45,
+      "log_loss": 1.079241181120235,
+      "brier": 0.6531695943664019
+    },
+    "pooled": {
+      "n": 1678,
+      "accuracy": 0.466626936829559,
+      "log_loss": 1.056065401323764,
+      "brier": 0.6357323419292724
+    }
+  },
+  "diagnostic_contract": {
+    "probability_edges": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      1.0
+    ],
+    "max_p_edges": [
+      0.0,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      1.0
+    ],
+    "abs_elo_edges": [
+      0,
+      50,
+      100,
+      200,
+      300,
+      "+infinity"
+    ],
+    "signed_elo_edges": [
+      "-infinity",
+      -200,
+      -50,
+      50,
+      200,
+      "+infinity"
+    ],
+    "closure": "left_closed_right_open_final_finite_right_inclusive",
+    "phase_rounds": [
+      5,
+      29
+    ],
+    "first5": {
+      "n": 5,
+      "home": "ordinal<=5",
+      "away": "ordinal<=5",
+      "any": "OR",
+      "both": "AND"
+    },
+    "status": {
+      "entrant": "M_y-M_previous",
+      "returning": "entrant in prior scoped union",
+      "established": "in M_previous"
+    },
+    "favorites": {
+      "home": "p_home>p_away",
+      "away": "p_away>p_home",
+      "near_even": "abs(p_home-p_away)<0.05",
+      "independent": true
+    },
+    "sparse": {
+      "empty": 0,
+      "non_sparse_min": 30,
+      "merge": false,
+      "intervals": false
+    },
+    "localization": {
+      "narrow": "promoted_involved OR any_team_first5",
+      "core": "established_only AND NOT any_team_first5",
+      "mass": "max(direction*(1[result=c]-p_c),0)",
+      "concentrated_at": 0.8
+    },
+    "decision": {
+      "priority": [
+        "PROCEED_TO_CALIBRATION_RESEARCH_SPEC",
+        "PROCEED_TO_SEASON_TRANSITION_DIAGNOSTIC_SPEC",
+        "NO_LANE_OPENED_DIAGNOSTIC_INCONCLUSIVE"
+      ],
+      "sign_zero_atol": 1e-12,
+      "denominator_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "A": {
+        "overall": 4,
+        "same_class_sign_bin": true,
+        "same_bin": 3,
+        "nonsparse": 4,
+        "core_not_localized": 3
+      },
+      "B": {
+        "opening": 3,
+        "first5": 3,
+        "established_joint_with_brier": 3,
+        "pairs": [
+          [
+            "phase:opening",
+            "phase:middle"
+          ],
+          [
+            "any_first5",
+            "neither_first5"
+          ],
+          [
+            "established_only:phase:opening",
+            "established_only:phase:middle"
+          ],
+          [
+            "established_only:first5:1",
+            "established_only:first5:0"
+          ]
+        ],
+        "established_brier_min_delta": -1e-12
+      }
+    },
+    "club": {
+      "attribution": "both participants",
+      "share_denominator": "2*match_total",
+      "top": 5,
+      "tie": "year,team_id",
+      "quantile": "linear"
+    },
+    "report_views": {
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        "pooled"
+      ],
+      "transition": [
+        "phase:opening",
+        "phase:middle",
+        "phase:closing",
+        "any_first5",
+        "neither_first5",
+        "both_first5",
+        "home_first5",
+        "home_6plus",
+        "away_first5",
+        "away_6plus",
+        "promoted_involved",
+        "not:promoted_involved",
+        "promoted_involved:phase:opening",
+        "promoted_involved:phase:middle",
+        "promoted_involved:phase:closing",
+        "promoted_involved:first5:0",
+        "promoted_involved:first5:1",
+        "returning_involved",
+        "not:returning_involved",
+        "returning_involved:phase:opening",
+        "returning_involved:phase:middle",
+        "returning_involved:phase:closing",
+        "returning_involved:first5:0",
+        "returning_involved:first5:1",
+        "established_only",
+        "established_only:phase:opening",
+        "established_only:phase:middle",
+        "established_only:phase:closing",
+        "established_only:first5:0",
+        "established_only:first5:1",
+        "core",
+        "home:ESTABLISHED:first5:0",
+        "home:ESTABLISHED:first5:1",
+        "home:RETURNING:first5:0",
+        "home:RETURNING:first5:1",
+        "home:FIRST_TIME_IN_SCOPE:first5:0",
+        "home:FIRST_TIME_IN_SCOPE:first5:1",
+        "away:ESTABLISHED:first5:0",
+        "away:ESTABLISHED:first5:1",
+        "away:RETURNING:first5:0",
+        "away:RETURNING:first5:1",
+        "away:FIRST_TIME_IN_SCOPE:first5:0",
+        "away:FIRST_TIME_IN_SCOPE:first5:1"
+      ],
+      "reliability": {
+        "classes": [
+          0,
+          1,
+          2
+        ],
+        "bin_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "max_p_predicted_classes": [
+          null,
+          0,
+          1,
+          2
+        ]
+      },
+      "favorite": {
+        "flags": [
+          "home_favorite",
+          "away_favorite",
+          "near_even"
+        ],
+        "true_classes": [
+          0,
+          1,
+          2
+        ]
+      },
+      "elo": [
+        "elo_diff",
+        "abs_elo_diff"
+      ],
+      "ece": false,
+      "p_values": false,
+      "calibrator": false
+    }
+  },
+  "gates": {
+    "input": "PASS",
+    "source": "PASS",
+    "chronology": "PASS",
+    "folds": "PASS",
+    "identity": "PASS",
+    "classes": "PASS",
+    "probabilities": "PASS",
+    "references": "PASS",
+    "serialization": "PASS"
+  },
+  "generated_at": "2026-10-04T23:05:43.130471Z"
+}
