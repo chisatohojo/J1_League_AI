@@ -30,8 +30,8 @@ import warnings
 ROOT = Path(__file__).parents[2]
 MODULE_PATH = "src/modeling/champion_a_season_transition_evaluation.py"
 SPEC_PATH = "docs/CHAMPION_A_SEASON_TRANSITION_RESEARCH_SPEC.md"
-SPEC_COMMIT = "f8c25128c5f96b4f99476dfd05477286de1e01c9"
-SPEC_SHA = "61b26afb768a8a7197c19ddc3734c918ad369be038f41c775153c5cc93e4330d"
+SPEC_COMMIT = "88b6d28ac12ae2232f29d5084e8d9ebf395292a9"
+SPEC_SHA = "efbf7995d2a8f5611d4002f5f9fe2299201d1d24c6e100dbf8662081e163cdd2"
 CSV_PATH = "data/processed/model_diagnostics/champion_a_oof_2020_2024.csv"
 MANIFEST_PATH = "data/processed/model_diagnostics/champion_a_oof_2020_2024_manifest.json"
 CSV_SHA = "cd8157303789fe2e929ccb74aeaabab09fa3c1a3a26338b10addaa2183a74f59"
@@ -458,10 +458,43 @@ def input_hashes():
     return {**SOURCE_HASHES, TEAM_MASTER_PATH: TEAM_MASTER_SHA, CSV_PATH: CSV_SHA, MANIFEST_PATH: MANIFEST_SHA}
 
 
+def validate_source_file_semantics(source, year):
+    """Pure per-file checks; physical CSV order is NOT a semantic gate.
+
+    Completed-match validation covers schema/unique IDs/fixtures, finite integer
+    scores/results and valid dates/teams. Exact TeamMaster IDs are added next by
+    the loader; canonical-stream validation follows concat and stable sort.
+    """
+    from src.collect.matches import validate_matches
+    require(isinstance(year, Integral) and not isinstance(year, bool) and year in YEARS,
+            "Forbidden per-file season")
+    normalized = validate_matches(source)
+    require(len(normalized) == SEASON_COUNTS[year] and normalized.season.eq(year).all(),
+            "Explicit per-file season/count")
+    require(normalized.match_date.dt.year.eq(normalized.season).all(),
+            "Per-file calendar date/season coherence")
+    require(source.match_id.tolist() == normalized.match_id.tolist(), "IDs must not be normalized")
+    return normalized
+
+
+def canonicalize_source(frames):
+    """Pure loader-boundary canonicalization, not evidence repair or replay.
+
+    Caller must have verified ALL frozen bytes and per-file semantics first.
+    Exact ten-file season concat; no outcome keys, filtering or deduplication.
+    Canonical validation/hashes/OOF identity remain mandatory after this helper.
+    """
+    _, pd = libs()
+    require(len(frames) == len(YEARS), "Exactly ten source files")
+    require(all(frame.season.eq(year).all() and len(frame) == SEASON_COUNTS[year]
+                for year, frame in zip(YEARS, frames)), "Exact season concat sequence/counts")
+    source = pd.concat(frames, ignore_index=True)
+    return source.sort_values(["match_date", "match_id"], ascending=True, kind="stable").reset_index(drop=True)
+
+
 def load_inputs(root):
     """Only explicit frozen paths; all byte gates precede parse. Future tasks ONLY."""
     _, pd = libs()
-    from src.collect.matches import validate_matches
     from src.collect.teams import load_team_master
     snapshots = {path: (root / path).read_bytes() for path in input_hashes()}
     require(all(sha256(snapshots[p]) == h for p, h in input_hashes().items()), "Frozen input SHA mismatch")
@@ -471,11 +504,10 @@ def load_inputs(root):
     for year, path in zip(YEARS, SOURCE_HASHES):
         values = list(csv.reader(io.StringIO(snapshots[path].decode("utf-8-sig")), strict=True))
         require(bool(values) and all(len(v) == len(values[0]) for v in values), "CSV field count")
-        frame = master.add_team_ids(validate_matches(pd.DataFrame(values[1:], columns=values[0])))
-        require(len(frame) == SEASON_COUNTS[year] and frame.season.eq(year).all(), "Explicit per-file season/count")
-        validate_schedule(frame)  # Reject reordered input; do not silently repair it.
+        frame = validate_source_file_semantics(pd.DataFrame(values[1:], columns=values[0]), year)
+        frame = master.add_team_ids(frame)  # Exact alias/date/registered-ID resolution.
         frames.append(frame)
-    source = pd.concat(frames, ignore_index=True)
+    source = canonicalize_source(frames)
     source = validate_source(source, master)
     data = snapshots[CSV_PATH]
     require(not data.startswith(b"\xef\xbb\xbf") and b"\r\n" not in data

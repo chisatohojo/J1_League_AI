@@ -202,7 +202,9 @@ def inputs(toy, tmp_path, monkeypatch):
     source, rows, roster = toy
     hashes = {}
     for y, rel in zip(st.YEARS, st.SOURCE_HASHES):
-        data = source[source.season == y].drop(columns=["home_team_id", "away_team_id"]).to_csv(index=False, lineterminator="\n").encode()
+        # Freeze the INTENTIONALLY NONCANONICAL physical bytes themselves.
+        # Canonical source/accepted toy OOF above remain independent of that order.
+        data = source[source.season == y].iloc[::-1].drop(columns=["home_team_id", "away_team_id"]).to_csv(index=False, lineterminator="\n").encode()
         write_bytes(tmp_path, rel, data)
         hashes[rel] = st.sha256(data)
     monkeypatch.setattr(st, "SOURCE_HASHES", hashes)
@@ -262,10 +264,10 @@ def test_contract_01_exact_registry_spec_pins(tmp_path, monkeypatch):
     assert tuple(st.CANDIDATES) == ("ST0", "ST1", "ST2", "ST3")
     assert [c.mechanisms for c in st.CANDIDATES.values()] == [0, 1, 1, 2]
     assert st.FEATURES == ("elo_diff",)
-    assert st.SPEC_COMMIT == "f8c25128c5f96b4f99476dfd05477286de1e01c9"
+    assert st.SPEC_COMMIT == "88b6d28ac12ae2232f29d5084e8d9ebf395292a9"
     # Committed SPEC only; no production input hashes are recomputed.
     spec = subprocess.run(["git", "show", f"{st.SPEC_COMMIT}:{st.SPEC_PATH}"], cwd=REPO, check=True, capture_output=True).stdout
-    assert st.sha256(spec) == st.SPEC_SHA == "61b26afb768a8a7197c19ddc3734c918ad369be038f41c775153c5cc93e4330d"
+    assert st.sha256(spec) == st.SPEC_SHA == "efbf7995d2a8f5611d4002f5f9fe2299201d1d24c6e100dbf8662081e163cdd2"
     for value in (*st.SOURCE_HASHES.values(), st.TEAM_MASTER_SHA, st.CSV_SHA, st.MANIFEST_SHA,
                   *st.SEMANTIC_HASHES.values(), *st.REQUIREMENTS_HASHES.values(), *st.TRAIN_ID_HASHES.values(), *st.VALID_ID_HASHES.values(), st.POOLED_ID_SHA):
         assert value.encode() in spec
@@ -430,7 +432,20 @@ def test_contract_13_state_isolation_determinism_prefix():
     assert source.columns.tolist() == list(match(2015, 0, 0))
 
 
-def test_contract_14_batch_order_and_malformed_rejection(monkeypatch):
+def test_contract_14_batch_order_and_malformed_rejection(monkeypatch, inputs):
+    from src.collect.matches import validate_matches
+    root, expected, rows, _, _ = inputs
+    rel = next(iter(st.SOURCE_HASHES))
+    frozen = (root/rel).read_bytes()
+    physical = pd.read_csv(io.BytesIO(frozen), keep_default_na=False)
+    assert physical.match_id.tolist() != expected.loc[expected.season.eq(2015), "match_id"].tolist()
+    semantic = st.validate_source_file_semantics(physical, 2015)
+    assert semantic.match_id.tolist() == physical.match_id.tolist()  # No per-file reorder.
+    canonical, accepted, _, _ = st.load_inputs(root)
+    pd.testing.assert_frame_equal(canonical, st.validate_schedule(validate_matches(expected)))
+    assert canonical.index.tolist() == list(range(len(canonical)))
+    st.validate_identity(canonical, accepted)
+    assert (root/rel).read_bytes() == frozen  # Loader never rewrites the source.
     source = frame(match(2015, 0, 1, 3, 4), match(2015, 0, 0), match(2015, 1, 2))
     import src.features.elo as elo
     events = []
@@ -496,15 +511,40 @@ def test_contract_18_full_frozen_counts_ids_dates_synthetic(monkeypatch):
     assert [(y, len(t), len(v)) for y, t, v in folds] == [(2020, 1530, 306), (2021, 1836, 380), (2022, 2216, 306), (2023, 2522, 306), (2024, 2828, 380)]
     for _, train, valid in folds:
         assert train.match_date.max() < valid.match_date.min() and set(train.match_id).isdisjoint(valid.match_id)
+    for seed in (0, 7):
+        physical_frames = [source.loc[source.season.eq(y)].sample(frac=1., random_state=seed) for y in st.YEARS]
+        canonical = st.canonicalize_source(physical_frames)
+        pd.testing.assert_frame_equal(canonical, source)
+        canonical_folds = st.extract_folds(st.validate_schedule(canonical))
+        for (y, train, valid), (_, reference_train, reference_valid) in zip(canonical_folds, folds):
+            assert train.match_id.tolist() == reference_train.match_id.tolist()
+            assert valid.match_id.tolist() == reference_valid.match_id.tolist()
+            assert st.id_hash(train.match_id) == st.TRAIN_ID_HASHES[y]
+            assert st.id_hash(valid.match_id) == st.VALID_ID_HASHES[y]
+        assert st.id_hash([i for _, _, v in canonical_folds for i in v.match_id]) == st.POOLED_ID_SHA
+        st.validate_identity(canonical, toy_oof(source))
+    assert_reject(lambda: st.canonicalize_source(physical_frames[:-1]), "ten source")
+    assert_reject(lambda: st.canonicalize_source(physical_frames[::-1]), "concat sequence")
     for bad in (source.iloc[:-1], source.iloc[::-1], source.drop(index=0)):
         assert_reject(lambda: st.extract_folds(bad))
 
 
-@pytest.mark.parametrize("corruption", ["missing", "bytes", "partial", "source_order", "oof_order", "schema", "provenance", "reference", "source_identity"])
+@pytest.mark.parametrize("corruption", ["missing", "bytes", "partial", "source_order", "oof_order", "schema", "provenance", "reference", "source_identity",
+                                        "source_schema", "source_count", "source_season", "source_date", "source_invalid_date", "source_result", "source_nonfinite_score", "source_score_result", "source_duplicate_id", "source_fixture", "source_self", "source_team", "source_same_date_team"])
 def test_contract_19_integrity_gates_before_replay(inputs, monkeypatch, corruption):
     root, source, rows, manifest, roster = inputs
+    before = {p: (root/p).read_bytes() for p in st.input_hashes()}
+    rel = next(iter(st.SOURCE_HASHES))
+    physical = pd.read_csv(io.BytesIO(before[rel]), keep_default_na=False)
+    assert st.sha256(before[rel]) == st.SOURCE_HASHES[rel]
+    assert physical.match_id.tolist() != source.loc[source.season.eq(2015), "match_id"].tolist()
     loaded, accepted, actual_manifest, used = st.load_inputs(root)
+    repeated, _, _, _ = st.load_inputs(root)
+    pd.testing.assert_frame_equal(loaded, repeated)
     assert loaded.match_id.tolist() == source.match_id.tolist() and used == list(roster)
+    assert len(loaded) == len(source) and loaded.match_id.is_unique
+    assert loaded.match_id.tolist() == loaded.sort_values(["match_date", "match_id"], kind="stable").match_id.tolist()
+    assert {p: (root/p).read_bytes() for p in st.input_hashes()} == before
     st.baseline_gate(accepted, actual_manifest)
     monkeypatch.setattr(st, "replay_candidate", forbid)
     if corruption == "missing":
@@ -516,12 +556,55 @@ def test_contract_19_integrity_gates_before_replay(inputs, monkeypatch, corrupti
         (root / st.CSV_PATH).write_bytes(b"" if corruption == "partial" else b"corrupt")
         assert_reject(lambda: st.load_inputs(root), "SHA mismatch")
     elif corruption == "source_order":
-        rel = next(iter(st.SOURCE_HASHES))
         values = (root / rel).read_bytes().splitlines(keepends=True)
         data = values[0] + b"".join(values[:0:-1])
+        assert data != before[rel]
         (root / rel).write_bytes(data)
+        # ORIGINAL frozen hash is retained. Even now-canonical physical bytes
+        # must fail BEFORE TeamMaster/CSV parse and canonicalization.
+        import src.collect.teams as teams
+        monkeypatch.setattr(teams, "load_team_master", forbid)
+        monkeypatch.setattr(st, "validate_source_file_semantics", forbid)
+        monkeypatch.setattr(st, "canonicalize_source", forbid)
+        assert_reject(lambda: st.load_inputs(root), "SHA mismatch")
+    elif corruption.startswith("source_") and corruption != "source_identity":
+        bad = physical.copy()
+        if corruption == "source_schema":
+            bad = bad.drop(columns="stadium")
+        elif corruption == "source_count":
+            bad = bad.iloc[:-1]
+        elif corruption == "source_season":
+            bad["season"] = 2016
+        elif corruption == "source_date":
+            bad.loc[0, "match_date"] = "2016-01-01"
+        elif corruption == "source_invalid_date":
+            bad.loc[0, "match_date"] = "not-a-date"
+        elif corruption == "source_result":
+            bad.loc[0, "result"] = 4
+        elif corruption == "source_nonfinite_score":
+            bad["home_score"] = bad.home_score.astype(float)
+            bad.loc[0, "home_score"] = np.inf
+        elif corruption == "source_score_result":
+            bad.loc[0, "result"] = 0 if bad.loc[0, "result"] == 2 else 2
+        elif corruption == "source_duplicate_id":
+            bad.loc[0, "match_id"] = bad.loc[1, "match_id"]
+        elif corruption == "source_fixture":
+            for c in ("match_date", "home_team", "away_team"):
+                bad.loc[0, c] = bad.loc[1, c]
+        elif corruption == "source_self":
+            bad.loc[0, "home_team"] = bad.loc[0, "away_team"]
+        elif corruption == "source_team":
+            bad.loc[0, "home_team"] = "Unregistered toy club"
+        else:
+            # Different fixture but one team appears twice on the same date.
+            bad.loc[0, "match_date"] = bad.loc[1, "match_date"]
+            bad.loc[0, "away_team"] = bad.loc[1, "away_team"]
+        data = bad.to_csv(index=False, lineterminator="\n").encode()
+        (root/rel).write_bytes(data)
+        # Synthetic frozen equivalence only: a correct SHA cannot excuse
+        # semantic corruption. Original production constants are never changed.
         monkeypatch.setitem(st.SOURCE_HASHES, rel, st.sha256(data))
-        assert_reject(lambda: st.load_inputs(root), "Noncanonical")
+        assert_reject(lambda: st.load_inputs(root))
     elif corruption == "oof_order":
         assert_reject(lambda: st.validate_oof(rows.iloc[::-1]), "ordered")
     elif corruption == "schema":
