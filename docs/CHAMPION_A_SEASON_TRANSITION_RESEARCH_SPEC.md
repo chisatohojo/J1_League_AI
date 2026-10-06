@@ -1,18 +1,30 @@
 # Champion A Season Transition Research Specification
 
-Freeze date: 2026-10-05 (JST).
+Original freeze date: 2026-10-05 (JST). Ordering correction date: 2026-10-06 (JST).
 
-Reviewed source HEAD: `533579c61ce18d602eabceadaa9ab48a0c44b092`
+Original reviewed source HEAD: `533579c61ce18d602eabceadaa9ab48a0c44b092`
 (`docs: record Champion A calibration evaluation`). Initial working tree: clean.
-Task reference: dedicated docs-only instruction attachment
+Original task reference: dedicated docs-only instruction attachment
 `4bc26f0c-ed1c-4fe1-9c95-85a80c71d5d6`.
 
-Final freeze gate: `FROZEN_FOR_ONE_CHAMPION_A_SEASON_TRANSITION_IMPLEMENTATION`.
+Ordering-correction reviewed HEAD: `beda5cc326c5d5e942bb810e4195d9138835ca78`.
+Initial ordering-correction working tree: clean. Correction task reference:
+`0a38735f-91f0-4248-a17b-51f14f65f7f1`.
+Original spec commit: `f8c25128c5f96b4f99476dfd05477286de1e01c9`;
+original committed-byte SHA-256:
+`61b26afb768a8a7197c19ddc3734c918ad369be038f41c775153c5cc93e4330d`.
+The original gate `FROZEN_FOR_ONE_CHAMPION_A_SEASON_TRANSITION_IMPLEMENTATION`
+is historical; the current final gate is
+`FROZEN_FOR_ONE_CHAMPION_A_SEASON_TRANSITION_ORDERING_FIX_IMPLEMENTATION`.
 
-This DOCS-ONLY freeze authorizes later evaluator implementation and synthetic/unit
-tests ONLY. No real candidate replay, alternative Elo feature generation, fitting,
-scoring, preflight, formal evaluation, marker/result creation, or activation occurs
-or is authorized now.
+This DOCS-ONLY correction changes the INPUT ORDERING contract only, aligning it
+with accepted Champion A OOF generation. It is NOT a model/candidate contract
+change. It authorizes ONLY later evaluator correction and corresponding
+synthetic/unit test correction. The current evaluator/tests remain unchanged in
+this task and must be corrected/reviewed separately before any NEW preflight
+authorization. No preflight rerun, candidate replay, alternative Elo generation,
+fit, performance inspection, formal evaluation, marker/result creation, or
+activation occurs or is authorized now. Failed preflight provenance is in section 22.
 
 ## 1. Question and scope
 
@@ -168,10 +180,13 @@ Ordinal 5 qualifies; 6 does not, unless the opponent still qualifies. Asynchrono
 club schedules therefore need not share round/ordinal. A midseason first-appearing
 club has its own first five; no special promoted/returning handling is added.
 
-Canonical order is stable `match_date, match_id`. Preserve the existing rejection
-of any `(calendar date, team ID)` appearing more than once; do not invent sequential
-within-day behavior for duplicate-team fixtures. All same-date rows belong to one
-season; malformed/interleaved season/date input is rejected, never silently fixed.
+Canonical replay order is the in-memory stream produced by section 8's stable
+ascending `match_date, match_id` canonicalization, NOT raw physical CSV row order.
+Preserve the existing rejection of any `(calendar date, team ID)` appearing more
+than once; do not invent sequential within-day behavior for duplicate-team fixtures.
+All same-date rows belong to one season. Semantic season/date mismatch or malformed
+season/date interleaving in the canonical stream is rejected, never silently fixed;
+noncanonical physical row order alone is not semantic corruption.
 
 At every date:
 
@@ -198,7 +213,8 @@ No globbing, broader directory discovery, silent extra-year filtering, or fallba
 
 The following hashes and counts are copied from the accepted OOF manifest and the
 reviewed generator constants, NOT guessed. Ten local byte hashes were checked
-read-only in this docs task; no match table was parsed for candidate features.
+read-only in the original freeze task; no match table was parsed for candidate
+features. This ordering-correction task does not reread production inputs.
 
 | Season | Exact source CSV path | Rows | SHA-256 |
 | --- | --- | ---: | --- |
@@ -220,11 +236,71 @@ case/Unicode/ID normalization, remapping, inferred IDs, or status-based identiti
 The replay roster is the sorted union of registered home/away IDs actually used by
 these frozen source seasons, as in `_add_elo`; unused master entries are not matches.
 
-Future loader verifies all byte hashes before parsing, the existing processed
-match validation/schema contract, exact seasons/counts/unique IDs, completed result
-classes, finite/valid fields, no self match, calendar date/season coherence,
-canonical order, and no same-date team duplicate. Unrecognized IDs, partial input,
-or any mismatch is technical STOP, not an eligible subset or repaired source.
+### 8.1 Byte identity FIRST
+
+Before parsing ANY input, verify every exact frozen 2015-2024 source CSV against
+its unchanged SHA-256 above. TeamMaster and the accepted OOF CSV/manifest pair
+(section 9) must likewise match their unchanged frozen hashes. Missing/partial
+inputs or any hash mismatch remain a technical STOP. No altered bytes, fallback,
+source regeneration, or broader discovery are accepted.
+
+### 8.2 Per-file semantic validation, NOT physical-order validation
+
+Parse each exact byte-verified season file using the reviewed completed-match
+schema/validation contract, and add exact IDs through reviewed TeamMaster alias
+resolution. Validate, without dropping or modifying observations:
+
+- The exact file season and exact row count.
+- Required schema, unique match IDs, and finite/valid fields.
+- Completed result 0/1/2 consistent with scores, valid calendar dates and
+  season/date coherence.
+- Valid teams and exact registered TeamMaster alias/date/ID identity.
+- No self match and no duplicate fixture.
+
+Do NOT require that a file's physical row order already equals canonical replay
+order. Semantic corruption remains a technical STOP; it is never repaired by sort.
+
+### 8.3 One deterministic canonical in-memory source
+
+After validating ALL ten exact files, concatenate their complete tables in season
+order 2015, 2016, ..., 2024. Stable-sort by `match_date` ascending, then `match_id`
+ascending, and `reset_index(drop=True)`, matching the accepted generation path
+`src/modeling/champion_a_oof_diagnostic.py::load_source`:
+
+```python
+source = (
+    pd.concat(frames, ignore_index=True)
+    .sort_values(["match_date", "match_id"], ascending=True, kind="stable")
+    .reset_index(drop=True)
+)
+```
+
+This resulting in-memory table is the ONLY canonical source stream for source
+validation, schedule metadata, appearance ordinals, same-date batching, ordered-ID
+hashes, source-to-accepted-OOF identity, and future ST1/ST2/ST3 replay. All candidates
+consume the same canonical identities/order; none has a different ordering rule.
+
+### 8.4 Post-canonicalization gates
+
+On the canonical stream require exact 3208 rows / 6416 sides, exact season counts,
+globally unique match IDs, no same-date team duplicate, and season/date coherence.
+Require the unchanged frozen train/validation ordered-ID hashes and pooled
+validation ordered-ID hash (section 10), and source-to-accepted-OOF equality on
+every target row (section 9). The replay/fold validator still rejects a noncanonical
+stream supplied directly to it; canonicalization belongs to the source loader.
+No silent row dropping, filtering, deduplication, identity remapping, or eligible
+subset is allowed. Unknown IDs, semantic corruption, or any gate mismatch STOP.
+
+### 8.5 Meaning and limits of sorting
+
+Stable sort is deterministic canonicalization of already byte-verified frozen
+evidence. It is NOT repair of corrupt evidence, feature engineering,
+candidate-specific behavior, model tuning, use of outcomes for ordering, or
+permission to accept altered source bytes. Only date and match identity determine
+order; results, scores, ratings, and predictions are not sorting keys. No source
+file is rewritten. A physically reordered production file would change its bytes
+and still fail its frozen SHA gate FIRST; the legitimately frozen physical order
+is accepted and canonicalized only in memory.
 
 ## 9. Accepted ST0 reference: one strategy, zero new baseline fits
 
@@ -255,7 +331,8 @@ Do not substitute calibration output, prospective predictions, or another A0.
 Before challenger replay, verify source-to-OOF equality on EVERY validation row:
 ordered ID, season/year, calendar date, exact home/away IDs, result, round, and
 home/away name fields. Derive appearance ordinals/first-five masks from schedule
-identity only and check against accepted metadata. No Elo replay is needed for this
+identity in section 8's canonicalized stream only and check against accepted
+metadata. Do not reorder or rewrite the accepted OOF pair. No Elo replay is needed for this
 identity gate; stored ST0 `elo_diff` remains accepted provenance, not recomputed.
 The source identity/reference gates are mandatory even if aggregate scores match.
 
@@ -286,6 +363,9 @@ state at a validation boundary, seed from 2019/2020 checkpoints, or run extra
 fold-specific/confirmation replays. Full-stream generation is leakage-safe only
 because every feature is captured strictly before its target/date outcomes and is
 prefix-invariant to subsequent outcomes, including future validation rows.
+The section-8 canonicalized source, not raw physical file order, supplies every
+replay and fold extraction. Train/validation/pooled ID hashes below are unchanged
+and are computed from that same canonical stream.
 
 Then select training/validation rows from each candidate's own features using:
 
@@ -455,7 +535,8 @@ Freeze the sequence:
 No real candidate replay/fit/performance in steps 1-4; step 2 permits isolated
 synthetic toy replays/fits only. No push is authorized in this task.
 
-Future paths (NONE created now):
+Dedicated paths (the implementation/test already exist; none is created or
+modified in this docs-only correction):
 
 ```text
 src/modeling/champion_a_season_transition_evaluation.py
@@ -466,7 +547,12 @@ docs/CHAMPION_A_SEASON_TRANSITION_EVALUATION_RESULT.md
 ```
 
 Default future CLI is read-only preflight; formal requires BOTH `--formal` and
-`--confirm-one-shot`. These are design only; no CLI is implemented/executed now.
+`--confirm-one-shot`. The existing implementation is not corrected/executed here.
+The first real default preflight blocked (section 22); it must not be rerun on
+the same implementation/spec state. After this corrected spec AND a corrected
+evaluator implementation are reviewed, a NEW separately authorized read-only
+preflight may run exactly once on the new reviewed HEAD. This ordering-correction
+gate itself supplies neither that preflight authority nor formal authority.
 
 Preflight validates reviewed HEAD/clean tree/spec/implementation hashes, scoped
 source/master/accepted-pair SHA/schema/provenance/counts/IDs/date separation, labels,
@@ -557,12 +643,12 @@ source/OOF/model/prediction paths and network are guarded against access in test
 | 11 | Single symmetric K/expectation/delta for both teams; zero-sum match update and no home/away K distinction. |
 | 12 | ST3 composes the exact ST1 boundary and ST2 early-K rules, no additional intervention. |
 | 13 | Independent candidate state/counters, repeat toy replay determinism and future-prefix invariance; no state/feature reuse. |
-| 14 | All same-date reads precede all updates, canonical order; reject same-date team duplicates and malformed season/date interleaving. |
+| 14 | All same-date reads precede all updates on the deterministic stable match_date/match_id canonicalized in-memory stream; reject same-date team duplicates and semantic season/date corruption/interleaving. Raw physical file order is not a replay-order gate. |
 | 15 | Current-target and same-date peer result mutations cannot change target features; earlier validation results affect later dates only. |
 | 16 | Exact initial1500, explicit baselineK30, HA175 and reviewed stable scale400 expectation; never generic K20 defaults. |
 | 17 | Raw elo_diff excludes HA; one feature only, no round/ordinal/status/metadata/classifier interaction. |
-| 18 | Exact five folds/counts/source-target ordered IDs and strict date separation; no eligible subset/extra/missing fold. |
-| 19 | Explicit source/master/OOF SHA/schema/provenance gates reject corrupt/missing/partial/reordered evidence; accepted ST0 reference mismatch stops before replay. |
+| 18 | Exact five folds/counts/source-target ordered IDs and strict date separation; all replay/fold/pooled hashes and source-to-OOF identity use section 8's canonicalized stream; no eligible subset/extra/missing fold. |
+| 19 | Source/master/OOF SHA gates precede parsing and reject altered bytes (including physically reordered production files), missing/partial evidence; semantic/schema/provenance corruption is rejected. Byte-verified frozen files need not be physically canonical: per-file semantic validation, exact-season concat, deterministic stable ascending match_date/match_id sort and reset_index precede canonical-stream validation. Accepted OOF order is unchanged and ST0 reference mismatch stops before replay. |
 | 20 | Exact stable TeamMaster IDs/alias mapping/registered roster; unknown/self-match IDs rejected, no implicit insertion/remapping. |
 | 21 | Reject 2025 source/OOF/lookups/discovery; no silent filtering or selection use. |
 | 22 | Reject 2026+ and opened results/prediction lookup/rewrite; no lockbox-dependent design/selection. |
@@ -592,8 +678,9 @@ source/OOF/model/prediction paths and network are guarded against access in test
 | 46 | No calibration evaluator dependency/execution; closed calibration result/marker untouched. |
 | 47 | No architecture/P/G, workload/xG/player/suspension evaluator execution/dependency; explicit offline source-only access. |
 
-No tests/code are implemented or run in this task. Future tests may stub frozen
-counts/hashes with synthetic equivalents, never add production bypass options.
+Existing tests/code are not modified or run in this docs-only correction. Future
+tests may stub frozen counts/hashes with synthetic equivalents, never add
+production bypass options.
 
 ## 21. 2025, 2026+, and prospective firewalls
 
@@ -609,24 +696,85 @@ ONLY a separately frozen NEW prospective boundary on previously unseen future
 matches, with its own training/update/comparison/one-shot rules before outcomes.
 Opened evidence cannot be relabeled unseen. No prospective work is authorized here.
 
-## 22. This-task evidence and final freeze gate
+## 22. Failed preflight provenance, ordering correction, and final gate
 
-Only reviewed code/docs and frozen input hashes/counts/provenance were inspected.
-Source SHA values came from reviewed generator constants/accepted manifest and
-were verified as bytes; no alternative Elo values, replay, classifier/calibrator
-fit, prediction, candidate metric/delta/ranking, or formal decision was computed.
-Existing accepted sources/master/OOF, diagnostic, closed calibration result/marker,
-reviewed code/tests/spec/preflight and requirements remain byte-identical.
+### 22.1 Prior failed real read-only preflight (NOT rerun here)
 
-No ST module/test/preflight/marker/result, permanent derived dataset/model/cache,
-2025/2026+ access, network, tuning, pytest, or push. Calibration was not rerun or
-modified. Sole new file is this specification; static content/identity/count/test
-numbering checks and `git diff --check` only. Commit message:
-`docs: freeze Champion A season transition research`.
+Implementation HEAD: `beda5cc326c5d5e942bb810e4195d9138835ca78`
+(`feat: implement Champion A season transition evaluation`). Original spec commit:
+`f8c25128c5f96b4f99476dfd05477286de1e01c9`; original spec SHA:
+`61b26afb768a8a7197c19ddc3734c918ad369be038f41c775153c5cc93e4330d`.
+Failed-preflight task reference: `ebd0d266-0091-473f-bb18-c2a015078038`.
+Reviewed evaluator SHA at that attempt:
+`b7d92d6c5d6ee8ddade44671e29db195e77e3651d96544cb5b2b59b599f25b61`.
 
-`FROZEN_FOR_ONE_CHAMPION_A_SEASON_TRANSITION_IMPLEMENTATION`
+The default command was executed exactly ONCE with no flags:
 
-This gate authorizes ONLY future evaluator implementation and synthetic/unit
-tests. It does NOT authorize real candidate replay/fit, preflight, formal evaluation,
-marker/result creation, production artifact creation, prediction, or activation.
-No ST candidate improvement or causality is asserted.
+```text
+.\.venv\Scripts\python.exe -m src.modeling.champion_a_season_transition_evaluation
+```
+
+Start: `2026-10-06T01:48:24.2472490+00:00`;
+end: `2026-10-06T01:48:25.1320353+00:00`
+(10:48:24-10:48:25 JST). Exit code=1, automatic retries=0, stdout empty.
+Task blocker: `BLOCKED_CHAMPION_A_SEASON_TRANSITION_PREFLIGHT`.
+Exact stderr:
+
+```text
+BLOCKED_SEASON_TRANSITION_ARTIFACT_INTEGRITY: Noncanonical date/ID order; technical STOP; no retry and no research decision
+```
+
+Frozen 2015-2024 source files, TeamMaster, and accepted OOF pair passed their byte
+SHA gates. The attempt blocked before candidate replay, real alternative Elo/state
+generation, scaler/classifier fit, prediction, ST0 metric recomputation, candidate
+metrics/deltas/pass/selection, or any formal execution. No formal marker/result or
+successful preflight evidence document was created. These are prior-attempt facts,
+not a claim that preflight succeeded or a new validation run in this correction.
+
+### 22.2 Root cause and unchanged research contract
+
+The accepted generator's `load_source` loads each exact source, adds TeamMaster
+IDs, concatenates seasons, stable-sorts by `match_date, match_id`, resets the index,
+THEN validates the canonical stream. Raw physical CSV row order is not itself
+accepted Champion A replay order.
+
+The original season-transition spec left the distinction ambiguous, and its
+implementation enforced per-file `validate_schedule(frame)` before concat/sort,
+incorrectly requiring parsed physical CSV rows to already be canonical. This is
+an INPUT ORDERING protocol inconsistency with accepted generation, NOT evidence
+of source corruption. Sections 7-10 and affected requirements 14/18/19 now freeze
+byte identity, per-file semantics, and canonical in-memory ordering separately.
+There is no hash relaxation or source repair.
+
+ST0/ST1/ST2/ST3, carry=0.75, K30/K45, first-five definition, initial1500, HA175,
+scale400, same-date all-read-before-update, feature/classifier contracts, fold
+years/counts, pooled1678, frozen IDs/hashes, metrics, pass rule, tie-break, two
+research decisions, saved-OOF ST0 strategy, 15 formal challenger fits, immutable
+one-shot marker semantics, and 2025/2026+ firewalls are UNCHANGED. No new candidate,
+parameter change, performance inspection, or research decision is introduced.
+Exactly 47 mandatory requirements retain their original 1-47 numbering; only
+source-order-related language is corrected. This is not a model research change.
+
+### 22.3 This docs-only correction and next authority boundary
+
+Only this specification is changed. Evaluator/tests, sources/master/accepted OOF,
+requirements, existing predictions, and other lanes are untouched. No production
+input reread, preflight rerun, formal execution, ST replay/fit/prediction/metrics,
+alternative Elo/state generation, marker/result creation, 2025/2026+ access,
+network, pytest, or push is performed here. Static document/contract/numbering
+checks and `git diff --check` only. Commit message:
+`docs: correct season transition source ordering contract`.
+
+The failed preflight must NOT be rerun on the same implementation/spec state.
+Only AFTER this corrected spec is reviewed AND a corrected evaluator implementation
+is reviewed may a NEW, separately authorized read-only preflight run exactly once
+on the NEW reviewed HEAD. No formal marker was consumed by the failed preflight;
+that future authorized preflight is NOT a retry of a consumed formal attempt.
+Nothing here resets/repairs any immutable marker or grants formal authority.
+
+`FROZEN_FOR_ONE_CHAMPION_A_SEASON_TRANSITION_ORDERING_FIX_IMPLEMENTATION`
+
+This current gate authorizes ONLY evaluator correction and corresponding
+synthetic/unit test correction. It does NOT authorize a new real preflight yet,
+real replay/fit/performance, formal evaluation, marker/result creation, production
+artifact creation, prediction, or activation. No ST improvement/causality is asserted.
