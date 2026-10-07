@@ -658,19 +658,19 @@ def run_prediction(*, root=ROOT, dry_run=False, authorization=None, clock=None):
                     for c in ("home_team_id", "away_team_id")), "Existing comparison frozen team identity mismatch")
     validate_target_time(targets, now)  # ENTIRE date batch, never ID-available subset.
     already = targets.fixture_key.isin(existing.fixture_key)
+    already_count = int(already.sum())
+    require(already_count in (0, len(targets)),
+            "Partial existing comparison date batch; journal recovery required")
     # A same-ID/different-fixture key is conflict, not a duplicate skip.
     id_to_fixture = dict(zip(existing.match_id, existing.fixture_key))
     require(all(id_to_fixture.get(r.match_id, r.fixture_key) == r.fixture_key
                 for r in targets.itertuples(index=False)), "Existing match ID belongs to another fixture")
-    summary["already_predicted_count"] = int(already.sum())
-    if already.all():
+    summary["already_predicted_count"] = already_count
+    if already_count == len(targets):
         return summary  # No probabilities regenerated for existing rows.
     history = load_live_history(root, revision, completed, master, target_date=target_date)
     states = replay_live_states(*history, sorted({a.team_id for a in master.aliases}), target_date=target_date)
     a, st2 = load_model_pair(root)
-    indices = [i for i in range(len(targets)) if not already.iloc[i]]
-    targets = targets.iloc[indices].reset_index(drop=True)
-    witnesses = [witnesses[i] for i in indices]
     generated_at = timestamp(clock())
     require(generated_at >= now, "Trusted clock moved backwards")
     records = generate_prediction_records(targets, states, a, st2, now=generated_at,

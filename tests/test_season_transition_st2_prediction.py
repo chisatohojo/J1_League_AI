@@ -639,6 +639,39 @@ def test_conflicting_partial_append_stops_before_probability(operational, monkey
         p.run_prediction(root=root, authorization=auth(), clock=lambda: NOW)
 
 
+@pytest.mark.parametrize("dry_run", [True, False], ids=["dry-run", "authorized-production"])
+def test_consistent_partial_date_batch_requires_journal_before_any_work(operational, monkeypatch, dry_run):
+    root, sidecar = operational
+    current = p.read_current_revision(root)
+    current_targets = targets()
+    assert len(current_targets) == 2
+    comparison = records().iloc[[0]].reset_index(drop=True)
+    binding_rows = p.make_comparison_bindings(
+        comparison, current_targets.iloc[[0]], [(current.revision_id, current.manifest_sha)])
+    output = root / p.PREDICTION_ARTIFACT
+    p.append_records(comparison).to_csv(output, index=False, lineterminator="\n")
+    binding_rows.to_csv(sidecar, mode="a", header=False, index=False, lineterminator="\n")
+    assert not sidecar.with_name(f".{sidecar.name}.journal.json").exists()
+    assert not sidecar.with_name(f".{sidecar.name}.lock").exists()
+    # Prove this is a valid matched row, not the orphan/conflict failure case.
+    existing = p.existing_comparisons(root, identity.read_prediction_bindings(sidecar))
+    assert len(existing) == 1 and existing.fixture_key.tolist() == [current_targets.fixture_key.iloc[0]]
+    before = {path: path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Partial non-journal date batch reached replay/model/prediction/append")
+
+    for name in ("load_live_history", "replay_live_states", "load_model_pair",
+                 "generate_prediction_records", "predict_branch", "append_records"):
+        monkeypatch.setattr(p, name, forbidden)
+    monkeypatch.setattr(identity, "append_prediction_and_bindings", forbidden)
+    monkeypatch.setattr(identity, "recover_prediction_append", forbidden)
+    with pytest.raises(p.ST2PredictionError, match="Partial existing comparison date batch; journal recovery required"):
+        p.run_prediction(root=root, dry_run=dry_run,
+                         authorization=None if dry_run else auth(), clock=lambda: NOW)
+    assert before == {path: path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+
 def test_writer_lock_blocks_even_recovery(operational):
     root, sidecar = operational
     lock = sidecar.with_name(f".{sidecar.name}.lock")
