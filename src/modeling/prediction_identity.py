@@ -124,11 +124,15 @@ def validate_complete_sidecar(
     *, repository_root: str | Path, binding_path: str | Path = DEFAULT_BINDING_PATH,
     prediction_artifacts: Sequence[str] = tuple(FROZEN_PREDICTIONS),
 ) -> pd.DataFrame:
-    """Require one exact binding for every immutable prediction row."""
+    """Require exact requested coverage; allow append-only future artifacts.
+
+    Global schema and both uniqueness keys still cover ALL sidecar rows.
+    Extra artifacts cannot replace, weaken, or hide a requested baseline row.
+    """
     root = Path(repository_root)
     bindings = read_prediction_bindings(binding_path)
-    if set(bindings["prediction_artifact"]) != set(prediction_artifacts):
-        raise PredictionIdentityError("Prediction binding artifact set is incomplete or extra")
+    if not set(prediction_artifacts).issubset(set(bindings["prediction_artifact"])):
+        raise PredictionIdentityError("Prediction binding artifact set is incomplete")
     for artifact in prediction_artifacts:
         path = root / Path(artifact)
         if not path.is_file():
@@ -146,8 +150,11 @@ def validate_complete_sidecar(
             right_on=["prediction_match_id", "model_version"],
             how="left", validate="one_to_one", suffixes=("_prediction", "_binding"),
         )
-        if len(merged) != len(predictions) or merged["fixture_key"].isna().any():
+        binding_fixture_column = "fixture_key_binding" if "fixture_key" in predictions else "fixture_key"
+        if len(merged) != len(predictions) or merged[binding_fixture_column].isna().any():
             raise PredictionIdentityError(f"Prediction binding coverage is incomplete: {artifact}")
+        if "fixture_key" in predictions and merged["fixture_key_prediction"].ne(merged["fixture_key_binding"]).any():
+            raise PredictionIdentityError(f"Prediction binding fixture identity mismatch: {artifact}")
         if (
             merged["match_date_prediction"].ne(merged["match_date_binding"]).any()
             or merged["home_team_id_prediction"].ne(merged["home_team_id_binding"]).any()

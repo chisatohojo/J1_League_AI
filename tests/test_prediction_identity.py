@@ -2,11 +2,36 @@
 
 import hashlib
 import json
+import builtins
+import io
+import os
+from pathlib import Path
+import socket
 
 import pandas as pd
 import pytest
 
 import src.modeling.prediction_identity as identity
+
+
+@pytest.fixture(autouse=True)
+def production_io_and_network_firewall(monkeypatch):
+    root = Path(identity.__file__).resolve().parents[2]
+    forbidden = [root / p for p in ("data/processed/jleague", "data/master", "models", "data/processed/predictions")]
+    def guard(original):
+        def wrapped(file, *args, **kwargs):
+            if isinstance(file, (str, bytes, Path)):
+                path = Path(file).resolve()
+                assert not any(path.is_relative_to(p) for p in forbidden), f"Production IO forbidden: {path}"
+            return original(file, *args, **kwargs)
+        return wrapped
+    monkeypatch.setattr(builtins, "open", guard(builtins.open))
+    monkeypatch.setattr(io, "open", guard(io.open))
+    monkeypatch.setattr(os, "open", guard(os.open))
+    def denied(*args, **kwargs):
+        raise AssertionError("Network forbidden")
+    monkeypatch.setattr(socket, "create_connection", denied)
+    monkeypatch.setattr(socket.socket, "connect", denied)
 
 
 def _bindings(match_id="page1", fixture="fixture:a:b", model="model-v1"):
@@ -53,6 +78,91 @@ def test_binding_schema_and_both_uniqueness_keys_are_strict():
     ], ignore_index=True)
     with pytest.raises(identity.PredictionIdentityError, match="fixture"):
         identity.validate_prediction_bindings(duplicate_fixture)
+
+
+def _six_row_baseline(tmp_path):
+    all_bindings = []
+    artifacts = ("baseline-a.csv", "baseline-b.csv")
+    for artifact, count in zip(artifacts, (2, 4)):
+        frames = []
+        for i in range(count):
+            frames.append(_predictions(f"{artifact}-{i}"))
+            all_bindings.append(_bindings(f"{artifact}-{i}", fixture=f"fixture:{i}:away").assign(prediction_artifact=artifact))
+        pd.concat(frames, ignore_index=True).to_csv(tmp_path / artifact, index=False)
+    sidecar = tmp_path / "bindings.csv"
+    bindings = pd.concat(all_bindings, ignore_index=True)
+    bindings.to_csv(sidecar, index=False)
+    return artifacts, sidecar, bindings
+
+
+def test_complete_six_row_sidecar_allows_additional_st2_artifact(tmp_path):
+    artifacts, sidecar, bindings = _six_row_baseline(tmp_path)
+    assert len(identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar, prediction_artifacts=artifacts)) == 6
+    extra = _bindings("official-st2", "fixture:new:away", "season_transition_st2_vs_a_20261006_v1").assign(
+        prediction_artifact="data/processed/predictions/season_transition_st2_prospective.csv")
+    pd.concat([bindings, extra], ignore_index=True).to_csv(sidecar, index=False)
+    assert len(identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar, prediction_artifacts=artifacts)) == 7
+
+
+def test_complete_sidecar_checks_fixture_when_prediction_contains_it(tmp_path):
+    prediction = _predictions().assign(fixture_key="fixture:a:b")
+    prediction.to_csv(tmp_path / "predictions.csv", index=False)
+    sidecar = tmp_path / "bindings.csv"
+    _bindings().to_csv(sidecar, index=False)
+    identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar, prediction_artifacts=("predictions.csv",))
+    prediction.assign(fixture_key="fixture:wrong:away").to_csv(tmp_path / "predictions.csv", index=False)
+    with pytest.raises(identity.PredictionIdentityError, match="fixture identity"):
+        identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar, prediction_artifacts=("predictions.csv",))
+
+
+def test_frozen_default_six_row_schemas_and_future_append(tmp_path):
+    """Actual frozen schema/path/count contracts, entirely synthetic temp bytes."""
+    binding_frames = []
+    for artifact, (_, count) in identity.FROZEN_PREDICTIONS.items():
+        rows = []
+        fixtures = list(identity.FROZEN_FIXTURES.items())
+        for i in range(count):
+            match_id, (fixture, day, home, away) = fixtures[i % 2]
+            model = f"synthetic-baseline-{i // 2}"
+            record = dict.fromkeys(identity.FROZEN_PREDICTION_COLUMNS[artifact], "synthetic")
+            record.update(match_id=match_id, model_version=model, match_date=day,
+                          home_team_id=home, away_team_id=away,
+                          prediction_generated_at="2026-10-01T00:00:00+00:00")
+            rows.append(record)
+            binding_frames.append(_bindings(match_id, fixture, model).assign(
+                prediction_artifact=artifact, match_date=day, home_team_id=home, away_team_id=away))
+        path = tmp_path / artifact
+        path.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(rows, columns=identity.FROZEN_PREDICTION_COLUMNS[artifact]).to_csv(path, index=False)
+    sidecar = tmp_path / identity.DEFAULT_BINDING_PATH
+    bindings = pd.concat(binding_frames, ignore_index=True)
+    bindings.to_csv(sidecar, index=False)
+    assert len(identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar)) == 6
+    extra = _bindings("42", "fixture:future:away", "season_transition_st2_vs_a_20261006_v1").assign(
+        prediction_artifact="data/processed/predictions/season_transition_st2_prospective.csv")
+    pd.concat([bindings, extra], ignore_index=True).to_csv(sidecar, index=False)
+    assert len(identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar)) == 7
+
+
+@pytest.mark.parametrize("problem", ["missing_artifact", "missing_binding", "conflict", "orphan", "duplicate_id", "duplicate_fixture"])
+def test_complete_sidecar_extra_rows_never_weaken_baseline(tmp_path, problem):
+    artifacts, sidecar, bindings = _six_row_baseline(tmp_path)
+    extra = _bindings("extra", "fixture:new:away").assign(prediction_artifact="st2.csv")
+    if problem == "missing_artifact":
+        bindings = bindings.loc[bindings.prediction_artifact.ne(artifacts[0])]
+    elif problem == "missing_binding":
+        bindings = bindings.iloc[1:]
+    elif problem == "conflict":
+        bindings.loc[0, "home_team_id"] = "wrong"
+    elif problem == "orphan":
+        bindings = pd.concat([bindings, _bindings("orphan", "fixture:orphan:away").assign(prediction_artifact=artifacts[0])])
+    elif problem == "duplicate_id":
+        bindings = pd.concat([bindings, bindings.iloc[[0]]])
+    else:
+        bindings = pd.concat([bindings, bindings.iloc[[0]].assign(prediction_match_id="different")])
+    pd.concat([bindings, extra], ignore_index=True).to_csv(sidecar, index=False)
+    with pytest.raises(identity.PredictionIdentityError):
+        identity.validate_complete_sidecar(repository_root=tmp_path, binding_path=sidecar, prediction_artifacts=artifacts)
 
 
 def test_atomic_prediction_binding_append_and_fixture_aware_duplicate(tmp_path):
