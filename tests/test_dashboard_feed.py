@@ -205,6 +205,208 @@ def republish_current(repo):
     }), encoding="utf-8")
 
 
+def republish_witness(repo, *, version="ongoing-v1", observed="2026-08-02T15:00:00+00:00"):
+    digest = publish(repo["source_dir"], repo["rows"], observed=observed, version=version)
+    for binding in repo["bindings"]:
+        binding["identity_witness_manifest_sha256"] = digest
+    save_bindings(repo)
+
+
+@pytest.fixture
+def url_only_v1_repository(repository):
+    for row in repository["rows"][:8]:
+        row.update(evidence_type="official_completion_unconfirmed", evidence_sha256="", evidence_fetched_at_utc="")
+    republish_witness(repository)
+    return repository
+
+
+@pytest.mark.parametrize("status", ["scheduled", "candidate"])
+@pytest.mark.parametrize("evidence_type", ["official_scheduled_identity", "official_completion_unconfirmed", "official_game_over_section"])
+def test_v1_url_only_identity_witness_accepts_exact_unfinished_publication(url_only_v1_repository, status, evidence_type):
+    repo = url_only_v1_repository
+    for row in repo["rows"][:8]:
+        row.update(status=status, evidence_type=evidence_type)
+    republish_witness(repo)
+    before = {path: path.read_bytes() for path in repo["root"].rglob("*") if path.is_file()}
+    payload = adapter.build_dashboard_feed(repo["root"])
+    assert validate_dashboard_data(payload) is payload
+    assert payload["schemaVersion"] == 1
+    assert payload["previousRound"]["label"] == "前節 · 2026-08-15"
+    assert payload["nextRound"]["label"] == "次節 · 2026-08-22"
+    assert len(payload["previousRound"]["matches"]) == len(payload["nextRound"]["matches"]) == 2
+    assert {path: path.read_bytes() for path in repo["root"].rglob("*") if path.is_file()} == before
+    assert not (repo["root"] / adapter.OUTPUT_PATH).exists()
+    assert all(row["evidence_sha256"] == row["evidence_fetched_at_utc"] == "" for row in repo["rows"][:8])
+
+
+@pytest.mark.parametrize("present", ["sha_only", "time_only"])
+def test_v1_url_only_exception_never_accepts_partial_evidence(url_only_v1_repository, present):
+    repo = url_only_v1_repository
+    row = repo["rows"][0]
+    if present == "sha_only":
+        row["evidence_sha256"] = "a" * 64
+    else:
+        row["evidence_fetched_at_utc"] = "2026-08-02T12:00:00+00:00"
+    republish_witness(repo)
+    with pytest.raises(adapter.DashboardFeedError, match="Partial v1 witness evidence"):
+        adapter.build_dashboard_feed(repo["root"])
+
+
+@pytest.mark.parametrize("fetched_at", ["2026-08-02T12:00:00+00:00", "2026-08-02T15:00:00+00:00"])
+def test_v1_nonblank_evidence_pair_remains_validated(url_only_v1_repository, fetched_at):
+    repo = url_only_v1_repository
+    for row in repo["rows"][:8]:
+        row.update(evidence_sha256="b" * 64, evidence_fetched_at_utc=fetched_at)
+    republish_witness(repo)
+    assert validate_dashboard_data(adapter.build_dashboard_feed(repo["root"]))["schemaVersion"] == 1
+
+
+@pytest.mark.parametrize("sha_value,fetched_at", [
+    ("invalid", "2026-08-02T12:00:00+00:00"),
+    ("A" * 64, "2026-08-02T12:00:00+00:00"),
+    ("a" * 63, "2026-08-02T12:00:00+00:00"),
+    ("a" * 64, "2026-08-02T15:00:00.000001+00:00"),
+    ("a" * 64, "2026-08-02T12:00:00"),
+    ("a" * 64, "invalid"),
+])
+def test_v1_nonblank_pair_rejects_invalid_sha_or_time(url_only_v1_repository, sha_value, fetched_at):
+    repo = url_only_v1_repository
+    repo["rows"][0].update(evidence_sha256=sha_value, evidence_fetched_at_utc=fetched_at)
+    republish_witness(repo)
+    with pytest.raises(adapter.DashboardFeedError):
+        adapter.build_dashboard_feed(repo["root"])
+
+
+@pytest.mark.parametrize("url", [
+    "https://example.invalid/match/j1/2026/100001/",
+    "https://www.jleague.jp/match/j1/2026/999999/",
+    "http://www.jleague.jp/match/j1/2026/100001/",
+    "https://www.jleague.jp/match/j1/2026/100001/?extra=1",
+])
+def test_v1_blank_pair_requires_canonical_official_url_and_exact_page_id(url_only_v1_repository, url):
+    repo = url_only_v1_repository
+    repo["rows"][0]["evidence_url"] = url
+    republish_witness(repo)
+    with pytest.raises(adapter.DashboardFeedError, match="Witness v1 explicit page namespace"):
+        adapter.build_dashboard_feed(repo["root"])
+
+
+@pytest.mark.parametrize("problem", [
+    "match_id", "fixture_key", "home_identity", "away_identity", "date", "kickoff",
+    "evidence_type", "namespace", "sidecar_witness_id", "sidecar_witness_sha",
+    "prediction_after_kickoff", "source_after_prediction", "witness_after_source",
+])
+def test_v1_blank_pair_cannot_bypass_identity_sidecar_or_chronology(url_only_v1_repository, problem):
+    repo = url_only_v1_repository
+    if problem in {"match_id", "kickoff", "evidence_type"}:
+        if problem == "match_id": repo["rows"][0]["match_id"] = "999999"
+        if problem == "kickoff": repo["rows"][0]["kickoff_time"] = "20:00"
+        if problem == "evidence_type": repo["rows"][0]["evidence_type"] = "unreviewed_identity"
+        republish_witness(repo)
+    elif problem in {"fixture_key", "home_identity", "away_identity", "date", "prediction_after_kickoff"}:
+        field, value = {
+            "fixture_key": ("fixture_key", repo["rows"][8]["fixture_key"]),
+            "home_identity": ("home_team_id", "team_0019"),
+            "away_identity": ("away_team_id", "team_0018"),
+            "date": ("match_date", "2026-08-09"),
+            "prediction_after_kickoff": ("prediction_generated_at", "2026-08-08T19:00:01+09:00"),
+        }[problem]
+        repo["predictions"][0][field] = repo["bindings"][0][field] = value
+        save_predictions(repo)
+        save_bindings(repo)
+    elif problem in {"namespace", "sidecar_witness_id", "sidecar_witness_sha"}:
+        field, value = {
+            "namespace": ("prediction_id_namespace", adapter.DATA_SITE_NAMESPACE),
+            "sidecar_witness_id": ("identity_witness_revision_id", "f" * 64),
+            "sidecar_witness_sha": ("identity_witness_manifest_sha256", "f" * 64),
+        }[problem]
+        repo["bindings"][0][field] = value
+        save_bindings(repo)
+    elif problem == "source_after_prediction":
+        republish_witness(repo, observed="2026-08-04T15:00:00+00:00")
+    else:
+        witness_id = "3" * 64
+        witness_sha = publish(repo["root"] / adapter.ONGOING_PATH / "revisions" / witness_id,
+                              repo["rows"], observed="2026-08-03T00:00:00+00:00")
+        repo["bindings"][0].update(identity_witness_revision_id=witness_id, identity_witness_manifest_sha256=witness_sha)
+        save_bindings(repo)
+    with pytest.raises((ValueError, OSError)):
+        adapter.build_dashboard_feed(repo["root"])
+
+
+@pytest.mark.parametrize("problem", ["manifest_sha", "file_sha", "unpublished"])
+def test_v1_blank_pair_still_requires_exact_published_witness_hashes(url_only_v1_repository, problem):
+    repo = url_only_v1_repository
+    manifest_path = repo["source_dir"] / "manifest.json"
+    if problem == "file_sha":
+        path = repo["source_dir"] / "schedule.csv"
+        path.write_bytes(path.read_bytes() + b"\n")
+    else:
+        manifest = json.loads(manifest_path.read_bytes())
+        if problem == "unpublished":
+            manifest["summary"]["publication_status"] = "held"
+        else:
+            manifest["snapshot_id"] = "changed-synthetic-manifest"
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        if problem == "unpublished":
+            for binding in repo["bindings"]:
+                binding["identity_witness_manifest_sha256"] = adapter.sha(manifest_path.read_bytes())
+            save_bindings(repo)
+    with pytest.raises(adapter.DashboardFeedError):
+        adapter.build_dashboard_feed(repo["root"])
+
+
+@pytest.mark.parametrize("location", ["witness", "current"])
+def test_blank_v1_identity_evidence_is_never_completed_result_provenance(url_only_v1_repository, location):
+    repo = url_only_v1_repository
+    if location == "witness":
+        row = repo["rows"][0]
+        set_completed(row)
+        row.update(evidence_sha256="", evidence_fetched_at_utc="")
+        republish_witness(repo)
+    else:
+        repo["current_rows"][0].update(evidence_sha256="", evidence_fetched_at_utc="")
+        republish_current(repo)
+    with pytest.raises(adapter.DashboardFeedError, match="Completed provenance incomplete"):
+        adapter.build_dashboard_feed(repo["root"])
+
+
+@pytest.mark.parametrize("problem", ["blank_pair", "sha_only", "time_only", "invalid_sha", "future_time", "valid_pair"])
+def test_v2_match_page_provenance_is_not_relaxed_by_v1_exception(url_only_v1_repository, problem):
+    repo = url_only_v1_repository
+    for row in repo["rows"]:
+        row["match_id_namespace"] = adapter.MATCH_PAGE_NAMESPACE
+    for row in repo["rows"][:8]:
+        row.update(evidence_sha256="a" * 64, evidence_fetched_at_utc="2026-08-02T12:00:00+00:00")
+    row = repo["rows"][0]
+    if problem in {"blank_pair", "time_only"}: row["evidence_sha256"] = ""
+    if problem in {"blank_pair", "sha_only"}: row["evidence_fetched_at_utc"] = ""
+    if problem == "invalid_sha": row["evidence_sha256"] = "bad"
+    if problem == "future_time": row["evidence_fetched_at_utc"] = "2026-08-03T12:00:00+00:00"
+    republish_witness(repo, version="ongoing-v2")
+    if problem == "valid_pair":
+        assert validate_dashboard_data(adapter.build_dashboard_feed(repo["root"]))["schemaVersion"] == 1
+    else:
+        with pytest.raises(adapter.DashboardFeedError):
+            adapter.build_dashboard_feed(repo["root"])
+
+
+def test_v1_blank_pair_keeps_champion_only_schema_firewall_and_sources_read_only(url_only_v1_repository):
+    repo = url_only_v1_repository
+    before_payload = adapter.build_dashboard_feed(repo["root"])
+    for row in repo["predictions"]:
+        for column in set(adapter.MIXED_COLUMNS) - set(adapter.PROJECTION_COLUMNS) - {"comparison_version"}:
+            row[column] = "UNUSABLE_RESEARCH_PROBABILITY_CLASS_ELO_SENTINEL"
+    save_predictions(repo)
+    before_files = {path: path.read_bytes() for path in repo["root"].rglob("*") if path.is_file()}
+    payload = adapter.build_dashboard_feed(repo["root"])
+    assert payload == before_payload
+    assert validate_dashboard_data(payload) is payload
+    assert not any(token in json.dumps(payload).lower() for token in ("st2", "sentinel", "elo", "predicted_class"))
+    assert {path: path.read_bytes() for path in repo["root"].rglob("*") if path.is_file()} == before_files
+    assert not (repo["root"] / adapter.OUTPUT_PATH).exists()
+
+
 def test_end_to_end_exact_schema_firewall_selection_identity_and_no_writes(repository):
     before = {path: path.read_bytes() for path in repository["root"].rglob("*") if path.is_file()}
     payload = adapter.build_dashboard_feed(repository["root"])

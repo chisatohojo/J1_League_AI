@@ -175,6 +175,27 @@ timing. Candidate scores never become results. A v1 witness needs explicit
 official page namespace evidence; v2 follows the typed identity contract.
 Journal/lock presence stops the adapter; it never performs recovery.
 
+For an ongoing-v1 witness only, an exactly blank pair of `evidence_sha256` and
+`evidence_fetched_at_utc` is accepted on a scheduled/candidate row. This requires
+an immutable published revision with matching sidecar witness ID/manifest SHA
+and every manifested file hash; exact fixture_key, saved match ID, TeamMaster
+home/away IDs, date and kickoff; `jleague_match_page` namespace; an allowed
+`official_scheduled_identity`, `official_completion_unconfirmed` or
+`official_game_over_section` evidence type; and the canonical J.League J1 page
+URL whose ID exactly matches the saved prediction. Witness observation must be
+no later than source observation, then saved generation, strictly before kickoff.
+These existing identity/publication/chronology gates are not bypassed. This is
+a URL-and-immutable-publication identity witness, not proof of fetched page-body
+content: missing SHA/time are never invented, filled in, or persisted.
+
+For v1, a partially blank pair always fails. With both fields present, SHA must
+be 64 lowercase hex characters and fetched_at a timezone-qualified timestamp
+no later than witness observed_at. The exception never applies to completed
+rows. Existing ongoing-v2 typed identity/provenance validation and all completed
+result game-over/SHA/time provenance checks are unchanged. Regression tests use
+synthetic repositories only; real-data preflight and feed generation require a
+separate authorized task.
+
 Current official rows are joined **only by fixture_key**, not scalar match_id.
 Each fixture is one-to-one and home/away TeamMaster IDs must agree. Output ID is
 fixture_key, so a namespace transition does not change UI identity. Prediction

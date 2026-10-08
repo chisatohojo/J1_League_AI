@@ -360,6 +360,7 @@ def build_dashboard_feed(repository_root=ROOT):
         witness_row = witness.schedule.loc[witness.schedule.fixture_key.eq(row.fixture_key)].iloc[0]
         require(witness_row.match_id == row.match_id, "Witness prediction ID conflict")
         namespace = binding.prediction_id_namespace
+        v1_url_only_witness = False
         if witness.manifest["format_version"] == "ongoing-v2":
             require(witness_row.match_id_namespace == namespace, "Witness namespace conflict")
         else:
@@ -367,7 +368,15 @@ def build_dashboard_feed(repository_root=ROOT):
             require(namespace == MATCH_PAGE_NAMESPACE and page is not None and page[2] == row.match_id
                     and witness_row.evidence_type in {"official_scheduled_identity", "official_completion_unconfirmed", "official_game_over_section"},
                     "Witness v1 explicit page namespace proof missing")
-        if namespace == MATCH_PAGE_NAMESPACE or witness_row.evidence_fetched_at_utc:
+            require(bool(witness_row.evidence_sha256) == bool(witness_row.evidence_fetched_at_utc),
+                    "Partial v1 witness evidence provenance")
+            v1_url_only_witness = not witness_row.evidence_sha256 and not witness_row.evidence_fetched_at_utc
+            if v1_url_only_witness:
+                require(witness_row.status in {"scheduled", "candidate"},
+                        "URL-only v1 witness must be scheduled or candidate")
+                # Immutable publication + exact official URL/identity above are
+                # the witness, NOT a claim that page-body SHA evidence exists.
+        if not v1_url_only_witness and (namespace == MATCH_PAGE_NAMESPACE or witness_row.evidence_fetched_at_utc):
             require(HEX64.fullmatch(witness_row.evidence_sha256)
                     and timestamp(witness_row.evidence_fetched_at_utc) <= timestamp(witness.observed_at),
                     "Witness evidence provenance invalid")
