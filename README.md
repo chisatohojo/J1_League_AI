@@ -16,6 +16,11 @@ Phase 1の入力検証と、33クラブの安定したteam_id・名称aliasを�
 `scripts/build_dashboard_feed.py` に承認済みChampion列投影adapterを実装済み（review待ち）。本番feed生成は別taskで行います。
 起動: `.\.venv\Scripts\python.exe -m scripts.serve_dashboard` → `http://127.0.0.1:8765/`。
 詳細・データ契約・検証手順は [UI_HOME.md](docs/UI_HOME.md) を参照してください。
+Windows用の独立ウィンドウlauncherとDesktop shortcut installerを実装しました（review待ち）。
+ユーザーが `.\scripts\install_dashboard_shortcut.ps1` を一度実行して「J1 AI Predict」を作成できます。
+Edge/Chrome app mode・動的loopback port・pythonwを使用。既定は空画面、feed生成は行いません。
+終了時はbrowser windowを閉じて `pythonw.exe -m scripts.launch_dashboard --stop` を実行します。
+セットアップ・安全な停止・制約は [UI_WINDOWS_LAUNCHER.md](docs/UI_WINDOWS_LAUNCHER.md) を参照してください。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
 開発時は `DEVELOPMENT_GUIDE.md` と `STATUS.md` も確認してください。
 元の日本語仕様書・手順書は変更せず保存しています。

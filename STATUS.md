@@ -1,5 +1,16 @@
 # J1 Match Predictor Status
 
+## Windows dashboard launcher — 2026-10-09
+
+- stdlib Python launcher、pythonw用Desktop shortcut installer、synthetic/mocked testsを実装（review待ち）。
+- Edge優先/Chrome fallbackのapp mode、port 0、loopback readiness、named mutex/eventによるsingle instanceと明示停止。
+- browser起動PIDから終了を推測せず、windowを閉じてもserverは `--stop` まで残す。所有するserverだけを終了。
+- Windows標準アイコンを使用。custom iconと実GUI smokeは残課題。Desktop shortcutはユーザーのinstaller実行まで未作成。
+- 本番feed未生成、モデル/予想/metrics/ST2 performance/networkは未実施。既存web/server/adapter/研究/dataは変更なし。
+- focused tests: launcher 105 passed / server 85 passed。実Windowsの空server hidden起動・loopback・停止とmutex/eventを確認。GUIは未起動。
+- CLI help、installer構文/純粋所有判定、git diff --checkはPASS。full pytestとDesktopへのinstaller実行は未実施。
+- 初回セットアップと制約: `docs/UI_WINDOWS_LAUNCHER.md`。
+
 ## Champion display adapter — 2026-10-08
 
 - Champion-only read-only display feed adapterとsynthetic/unit testsを実装（review待ち）。

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-09（Windows dashboard launcher）
+
+- 独立Python launcherとopt-in Desktop shortcut installerを追加。pythonw、Edge/Chrome app mode、専用profile、動的loopback portを使用。
+- readiness timeout・安全な固定診断log・named mutex/eventの二重起動防止/明示停止を実装。browserをkillせず自身のserverだけを終了。
+- synthetic/mocked testsと `docs/UI_WINDOWS_LAUNCHER.md` を追加。標準Windowsアイコン使用、shortcut作成/GUI確認/custom iconは別途。
+- 既存UI/server/adapter/data/modelは変更なし。real feed生成・モデル実行・metrics・ST2 performance・外部networkは未実施。
+
 ## 2026-10-08（Champion dashboard feed adapter）
 
 - `scripts/build_dashboard_feed.py` とsynthetic/unit testsを追加。保存済みmixed CSVのChampion allowlistを先に投影し、fixture_key経由で出版済み公式sourceへ結合。
