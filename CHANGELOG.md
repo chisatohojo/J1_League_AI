@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-08（Champion dashboard feed adapter）
+
+- `scripts/build_dashboard_feed.py` とsynthetic/unit testsを追加。保存済みmixed CSVのChampion allowlistを先に投影し、fixture_key経由で出版済み公式sourceへ結合。
+- common sidecar・witness・TeamMaster・公式完了根拠・同日saved batchを検証。schema v1のJSONをtmp/fsync/replaceでatomic出力。
+- ST2列を結合・出力・ログ・指標計算へ渡さない。実データ読取・本番feed生成・モデル実行・metrics・networkは未実施。
+
 ## 2026-10-08（J1AI home UI）
 
 - 前節の予想結果→次節の予想を表示するresponsiveなHTML/CSS/JavaScriptホーム画面を追加。

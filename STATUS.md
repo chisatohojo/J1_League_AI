@@ -1,5 +1,12 @@
 # J1 Match Predictor Status
 
+## Champion display adapter — 2026-10-08
+
+- Champion-only read-only display feed adapterとsynthetic/unit testsを実装（review待ち）。
+- mixed CSVの許可されたChampion列だけを投影し、sidecar/witnessと公式sourceの検証後にfixture_keyで結合する。
+- 既存UI schema v1へatomic export。更新時刻は公式sourceのobserved_at。ST2列・aggregate metricsは出力しない。
+- 本番feedは未生成。UIの実データ接続はpush/review後の別taskで実行。詳細は `docs/UI_HOME.md`。
+
 ## UI update — 2026-10-08
 
 - `web/` に依存追加なしのホームUIを実装。前節→次節を縦に配置し、共通のHOME/DRAW/AWAY積み上げバーを使用。

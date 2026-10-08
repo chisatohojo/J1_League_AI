@@ -7,14 +7,14 @@ HTML/CSS/JavaScript with native ES modules and Node's built-in test runner.
 No framework migration or npm install is needed. `scripts/serve_dashboard.py`
 uses only Python's standard library.
 
-This implementation does not load models, regenerate predictions, export CSVs,
-join outcomes, collect data, or execute evaluations. Existing data, artifacts,
-prediction identity sidecars, research protocols, and model/evaluation code are
-unchanged.
+The UI server does not load models, regenerate predictions, export CSVs, join
+outcomes, collect data, or execute evaluations. The separate display adapter
+described below joins only the approved Champion projection to validated official
+results. Existing data, artifacts, sidecars, protocols and model code are unchanged.
 
-There is currently **no dedicated saved Champion-only prediction feed**. Existing
-prospective CSVs belong to research lanes, even where they include Champion A
-columns, and are not inputs to this UI. The default operational view is empty.
+No production Champion-only feed has been generated yet. The approved adapter
+can project Champion A from the saved ST2 comparison artifact; the mixed CSV is
+never a direct input to the UI. The default operational view remains empty.
 The opt-in UI demo uses entirely synthetic 2030 fixtures and probabilities, with
 a persistent demo banner and per-card DEMO/synthetic labels. It is not Champion
 performance. ST2 is a static `Research Models / ST2 / SEALED` status only: no
@@ -93,11 +93,10 @@ A separately approved display export can be read explicitly:
 .\.venv\Scripts\python.exe -m scripts.serve_dashboard --data C:\path\champion-dashboard.json
 ```
 
-No production export is created in this task. The server validates/snapshots only
-the specified JSON at startup; restart to load an updated export. It never searches
-for data, reads research CSVs, or joins results. Source probabilities must already
-have been saved before kickoff; extracting A from a mixed research artifact is
-not an approved feed.
+No production export is created in the implementation task. The server snapshots
+only the specified JSON at startup; restart to load an updated export. It never
+searches for data, reads research CSVs, or joins results. Ad hoc extraction from a
+mixed research artifact is not approved: use only the validated adapter below.
 
 Schema v1 (exact keys, extra fields rejected recursively):
 
@@ -119,11 +118,94 @@ startup or UI; no automatic demo/research fallback. GET routes are an explicit
 static-asset/API allowlist, not a directory server. Arbitrary repository/model/
 data/test files are not served.
 
-This schema validates shape and asserted provenance, **not** independent fixture
-identity, TeamMaster membership, source hashes or result timing. The future
-Champion-only export needs a separately approved adapter that validates saved
-fixture provenance and completed-outcome identity before supplying data.
+The server's schema validator checks shape and asserted provenance, not independent
+source identity. The adapter performs the additional source/binding checks below.
 A hand-edited JSON tag is not proof of saved-prediction provenance.
+
+## Champion-only display feed adapter (awaiting review)
+
+`scripts/build_dashboard_feed.py` is a projection/export component, not a model.
+Implementation and tests use temporary synthetic data only. Real feed generation
+requires a separately reviewed/authorized task; do not run the production command
+as part of implementation validation.
+
+Fixed inputs relative to the repository:
+
+- `data/processed/predictions/season_transition_st2_prospective.csv`
+- `data/processed/predictions/2026_27_prediction_fixture_bindings.csv`
+- Published revisions under `data/processed/jleague/2026_27/`
+- `data/master/teams.csv`
+
+The frozen comparison version is `season_transition_st2_vs_a_20261006_v1`.
+Champion metadata must equal `operational_champion_20260922_v1` and artifact hash
+`2d2e50dbfc4d71ec2cdaf5fe1a6e48953c160c388f1740cfe538f29f593646d1`.
+No model artifact is opened. The mixed CSV's current two-row digest is deliberately
+not pinned: the same frozen schema may receive future complete-date appends.
+
+Champion allowlist, applied while parsing and **before any result join**:
+
+```text
+fixture_key, match_id, match_date, kickoff,
+home_team_id, away_team_id, home_team_name, away_team_name,
+prediction_generated_at, source_revision,
+champion_a_model_version, champion_a_artifact_hash,
+a_p_away, a_p_draw, a_p_home
+```
+
+`comparison_version` is checked and discarded. All other mixed cells remain
+opaque, including research probabilities/classes and Elo/class fields. They are
+not converted into named columns or joined, logged, evaluated or exported.
+Champion probabilities are finite 0..1 values summing to 1 within 1e-12; output
+uses exactly `float(value) * 100` in HOME/DRAW/AWAY order, without rounding or
+renormalization. The frontend computes AI PICK.
+
+The common sidecar's exact schema and global uniqueness keys are checked. For the
+requested artifact/version, every saved row needs exactly one matching binding;
+missing, orphan, duplicate and conflicting identities stop the adapter. Coverage
+of unrelated artifacts is not inferred by opening their research CSVs. Namespace,
+witness revision and manifest SHA are verified against accepted witness data.
+The witness can be older than the prediction's source revision; both must have
+been observed before generation, and no later than the current publication.
+
+`read_latest()` is reused for the accepted pointer, manifest and file hashes.
+Additional gates validate publication/policy, the full 20-club/380-fixture/38-round
+population, fixture identity projection, typed v2 IDs, completed subset equality,
+score/result consistency, explicit official game-over provenance and evidence
+timing. Candidate scores never become results. A v1 witness needs explicit
+official page namespace evidence; v2 follows the typed identity contract.
+Journal/lock presence stops the adapter; it never performs recovery.
+
+Current official rows are joined **only by fixture_key**, not scalar match_id.
+Each fixture is one-to-one and home/away TeamMaster IDs must agree. Output ID is
+fixture_key, so a namespace transition does not change UI identity. Prediction
+display names must be canonical or exact, date-valid registered aliases resolving
+to their stated IDs; output uses canonical names. No fuzzy matching or guessed
+correction. All saved fixtures are validated; unresolved IDs are not dropped.
+
+Saved date batches must be complete against their prediction-source revision's
+unfinished fixtures for that day, with one source revision/generation time per
+batch. Selection then uses **current official calendar dates**: latest completed
+date with saved predictions for previous, earliest unfinished predicted date for
+next. Every saved eligible fixture on the selected day is included. A validated
+official reschedule may change the displayed date/kickoff, never probabilities;
+saved generation must still precede current kickoff. Unsaved fixtures are not
+predicted or added. No eligible rows means an empty array, not demo fallback.
+Date-based labels avoid guessing round numbers. `updatedAt` is the official
+publication's observed_at, never adapter execution time.
+
+Output is exactly the schema v1 above, revalidated with
+`scripts.serve_dashboard.validate_dashboard_data()`. Only previous matches receive
+official home/away scores. No aggregate metrics are computed. The CLI's errors
+are generic and never echo mixed source cell values.
+
+After separate production authorization, the entry point is
+`python -m scripts.build_dashboard_feed`, with optional `--output PATH`.
+Default output: `data/processed/dashboard/champion_home.json` (ignored, never
+force-add). Build and validate the entire payload first, then write a temporary
+file in the destination directory, flush, fsync and atomically replace. Failure
+preserves the previous valid JSON and removes the owned temporary file. Protected
+input/model directories cannot be CLI output destinations. To view a subsequently
+approved feed, serve with `--data data/processed/dashboard/champion_home.json`.
 
 ## Validation
 
@@ -131,6 +213,8 @@ A hand-edited JSON tag is not proof of saved-prediction provenance.
 node --test web/tests/probability-bar.test.mjs web/tests/dashboard.test.mjs
 node --test web/tests/browser.test.mjs
 .\.venv\Scripts\python.exe -m pytest tests/test_dashboard_server.py -q
+.\.venv\Scripts\python.exe -m pytest tests/test_dashboard_feed.py tests/test_dashboard_server.py -q
+.\.venv\Scripts\python.exe -m scripts.build_dashboard_feed --help
 .\.venv\Scripts\python.exe -m scripts.serve_dashboard --help
 git diff --check
 ```
@@ -141,5 +225,5 @@ set `J1AI_BROWSER_PATH` to a local Chromium executable; absent a browser the sui
 explicitly skips. `J1AI_SCREENSHOT_DIR` optionally saves demo screenshots to a
 specified local directory (not required or committed). No production/model IO.
 
-Remaining work: approved dedicated Champion-only feed/identity validation,
-official color confirmation, and any separately requested production hosting.
+Remaining work: adapter push/review, separately authorized production feed
+generation, official color confirmation, and any separately requested hosting.

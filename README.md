@@ -12,7 +12,8 @@ J1リーグ戦のホーム勝利・引き分け・アウェイ勝利の確率を
 Phase 1の入力検証と、33クラブの安定したteam_id・名称aliasを持つチームマスターも実装済みです。
 終了確認済み3,858試合の試合前Eloと全33クラブの現在ratingを再生成できます。研究・モデル関連の最新状況は上記canonical mapを参照してください。
 ホームUIは `web/` に実装済みです。前節の結果→次節の予想を共通の積み上げ確率バーで表示します。
-Champion専用の保存済み表示データは未接続で、通常画面は空表示、明示的なデモは架空データです。研究CSVは読みません。
+通常画面は表示データ未接続の空表示、明示的なデモは架空データです。UIサーバーは研究CSVを読みません。
+`scripts/build_dashboard_feed.py` に承認済みChampion列投影adapterを実装済み（review待ち）。本番feed生成は別taskで行います。
 起動: `.\.venv\Scripts\python.exe -m scripts.serve_dashboard` → `http://127.0.0.1:8765/`。
 詳細・データ契約・検証手順は [UI_HOME.md](docs/UI_HOME.md) を参照してください。
 このREADMEを現在の正式仕様として管理し、以下にv0.1の目標仕様を掲載します。
