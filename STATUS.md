@@ -1,5 +1,14 @@
 # J1 Match Predictor Status
 
+## UI update — 2026-10-08
+
+- `web/` に依存追加なしのホームUIを実装。前節→次節を縦に配置し、共通のHOME/DRAW/AWAY積み上げバーを使用。
+- ローカルread-onlyサーバー、Champion専用表示JSON契約、syntheticデモ、component/API/browser testsを追加。
+- 通常画面は保存済みChampion専用データ未接続の空表示。研究CSV・モデル・既存データを読み書きせず、ST2はSEALED状態だけ表示。
+- 実データ接続には別途承認済みChampion-only adapterが必要。起動・詳細は `docs/UI_HOME.md` を参照。
+
+以下は以前のPhase 2記録。最新の研究状況は `docs/PROJECT_RESEARCH_SUMMARY.md` を参照。
+
 ## 現在のフェーズ
 
 Phase 1: 試合データ読み込み・入力検証 — 完了（実装コミット `21994d1`）。

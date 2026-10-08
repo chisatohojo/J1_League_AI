@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>J1AI — Matchday</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23101c2c'/%3E%3Ctext x='5' y='23' font-family='sans-serif' font-weight='700' font-size='20' fill='%23ffffff'%3EJ1%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="J1AI ホーム"><span class="brand-mark">J1</span>J1<span class="brand-ai">AI</span></a>
+      <nav aria-label="ページ内ナビゲーション">
+        <a href="#previous-round">前節の結果</a><a href="#next-round">次節の予想</a>
+      </nav>
+      <span class="header-label">FOOTBALL / PROBABILITY</span>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <div class="page-heading">
+      <div><p class="eyebrow">J1 LEAGUE · MATCHDAY INTELLIGENCE</p><h1>試合を読む。<br class="mobile-break">次の一戦へ。</h1><p class="intro">前節の答え合わせから、次節の予想まで。</p></div>
+      <div class="champion-status"><span class="status-dot"></span><div><strong>Champion A</strong><span>正式運用モデル</span></div></div>
+    </div>
+    <aside id="data-status" class="data-notice" aria-live="polite" data-state="loading">表示データを確認しています…</aside>
+    <div id="dashboard-error" class="error-notice" role="alert" hidden></div>
+    <div class="dashboard-layout">
+      <div class="rounds">
+        <section id="previous-round" class="round-section" aria-labelledby="previous-title">
+          <div class="section-heading"><div><p class="eyebrow">01 / REVIEW</p><h2 id="previous-title">前節の予想結果</h2></div><span id="previous-label" class="round-label">前節</span></div>
+          <p class="section-note">試合前の保存済み予想と、実際の結果を並べて確認。</p>
+          <div id="previous-matches" class="match-grid" aria-live="polite"></div>
+        </section>
+        <section id="next-round" class="round-section" aria-labelledby="next-title">
+          <div class="section-heading"><div><p class="eyebrow">02 / PREVIEW</p><h2 id="next-title">次節の予想</h2></div><span id="next-label" class="round-label">次節</span></div>
+          <p class="section-note">HOME・DRAW・AWAYのバランスから、一戦の見通しを。</p>
+          <div id="next-matches" class="match-grid" aria-live="polite"></div>
+        </section>
+      </div>
+      <aside class="dashboard-aside" aria-label="表示の案内">
+        <section class="guide-card"><p class="eyebrow">HOW TO READ</p><h2>確率で見る、3つの結果。</h2><p>バーは左からHOME勝ち、引き分け、AWAY勝ち。数字が大きいほど、AIが起こりやすいと見ている結果です。</p><div class="legend-row"><span>HOME</span><span>DRAW</span><span>AWAY</span></div><div class="legend-track" aria-hidden="true"><i></i><i></i><i></i></div><p class="fine-print">確率は勝利を保証するものではありません。表示の丸めは、保存済み予想を変更しません。</p></section>
+        <section id="research-status" class="research-card"><p class="eyebrow">RESEARCH MODELS</p><div class="research-status"><h2>ST2</h2><span class="sealed">🔒 SEALED</span></div><p>研究モデルは別枠で管理。途中成績・予想・試合結果はここには表示しません。</p></section>
+        <a id="preview-link" class="preview-link" href="/?demo=1">UIデモを見る <span aria-hidden="true">↗</span></a>
+      </aside>
+    </div>
+    <footer class="page-footer"><span>J1AI / MATCHDAY</span><span>保存済み予想を表示 · キックオフ時刻は日本時間</span></footer>
+  </main>
+  <noscript><p class="noscript">この画面の表示にはJavaScriptを有効にしてください。予測やデータ更新は行いません。</p></noscript>
+</body>
+</html>

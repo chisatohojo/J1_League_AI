@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-08（J1AI home UI）
+
+- 前節の予想結果→次節の予想を表示するresponsiveなHTML/CSS/JavaScriptホーム画面を追加。
+- HOME/DRAW/AWAYの共通積み上げバー、TeamMaster IDベースの暫定カラー、数値ラベル、AI PICK/RESULT/HIT/MISSを実装。
+- Python標準ライブラリのローカルread-onlyサーバーと厳格なChampion-only表示JSON契約を追加。既定は空表示、デモはsynthetic data。
+- component/API/browser testsと `docs/UI_HOME.md` を追加。モデル・保存済み予想・sidecar・研究プロトコルは変更なし。
+
 ## 2026-09-17（Phase 2: Elo成果物出力）
 
 ### Added
