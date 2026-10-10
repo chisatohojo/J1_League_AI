@@ -19,6 +19,7 @@ internal static class Program
     public static async Task<int> Main(string[] args)
     {
         if (args.Length > 0 && args[0] == "--synthetic-owner") return await CrashOwner(args);
+        if (args.Length > 0 && args[0] == "--synthetic-cleanup-owner") return await CleanupFaults.CrashOwner(args);
         if (args is ["--runner-self-test"])
         {
             await Test("intentional_assertion_failure", () => { Check(false); return Task.CompletedTask; });
@@ -64,6 +65,14 @@ internal static class Program
         await Test("startup_timeout_cleanup", MockTimeout);
         await Test("uncancellable_stdout_total_deadline_cleanup", UncancellableStdout);
         await Test("cleanup_failure_is_failure", CleanupFailure);
+        await Test("cleanup_timeout_retains_resources_and_gate", () => CleanupFaults.WaitFailure(python, Child, 0));
+        await Test("cleanup_wait_failed_retains_resources_and_gate", () => CleanupFaults.WaitFailure(python, Child, 1));
+        await Test("cleanup_wait_exception_retains_resources_and_gate", () => CleanupFaults.WaitFailure(python, Child, 2));
+        await Test("cleanup_lifecycle_failure_stays_failed", () => CleanupFaults.LifecycleFailure(python, Child));
+        await Test("cleanup_concurrent_close_idempotent", () => CleanupFaults.ConcurrentClose(python, Child));
+        await Test("cleanup_unconfirmed_owner_survives_gc", () => CleanupFaults.GcOwnership(python, Child));
+        await Test("cleanup_failed_cycles_no_handle_leak", () => CleanupFaults.HandleLeaks(python, Child));
+        await Test("cleanup_quarantined_host_crash_reclaims_child", () => CleanupFaults.HostCrash(python, Child));
         await Test("unexpected_failure_sanitized", Sanitized);
         await Test("help_default_and_options_no_side_effects", Help);
         await Test("bounded_startup_stdout", Stdout);
@@ -87,7 +96,7 @@ internal static class Program
         await Test("bad_utf8_payload", () => Throws(() => Readiness.ValidatePayload([0xff]), EventCode.InvalidResponse));
         await Test("http_status_content_type_size_redirect", Responses);
         await Test("http_unknown_content_length_body_cap", UnknownLength);
-        return Summary(60);
+        return Summary(68);
     }
 
     private static int Summary(int expected)

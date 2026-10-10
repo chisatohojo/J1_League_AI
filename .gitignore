@@ -10,6 +10,8 @@ htmlcov/
 /windows/**/bin/
 /windows/**/obj/
 /windows/**/packages.lock.json
+!/windows/J1AI.DashboardHost/packages.lock.json
+!/windows/J1AI.DashboardHost.Tests/packages.lock.json
 build/
 dist/
 *.egg-info/

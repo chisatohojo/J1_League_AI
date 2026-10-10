@@ -41,16 +41,29 @@ public interface IServer : IDisposable
 
 public sealed class OwnedServer : IServer
 {
-    private readonly KernelHandle job, process;
-    private readonly StreamReader output;
-    private bool closed;
+    private readonly KernelHandle job, process, gateLease;
+    private readonly StreamReader? output;
+    private readonly CleanupCalls cleanupCalls;
+    private readonly object cleanupSync = new();
+    private bool closed, outputClosed;
+    private Task? deferredCleanup;
+    // A failed wait must not leave ownership to GC/finalizer timing. Retain the
+    // process, stdout and a non-inherited gate until a REAL wait confirms exit.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<OwnedServer, byte> pending = new();
     internal bool AssignedBeforeResume { get; }
     internal nint ProcessHandle => process.DangerousGetHandle();
-    public TextReader Output => output;
-    public bool Exited => Wait(0);
+    public TextReader Output => output ?? throw new HostError(EventCode.SpawnFailed);
+    public bool Exited { get { lock (cleanupSync) return closed || Wait(0); } }
+    internal Task DeferredCleanup { get { lock (cleanupSync) return deferredCleanup ?? Task.CompletedTask; } }
+    internal (bool JobClosed, bool ProcessClosed, bool OutputClosed, bool GateClosed, bool Closed) Resources
+    { get { lock (cleanupSync) return (job.IsClosed, process.IsClosed, outputClosed, gateLease.IsClosed, closed); } }
 
-    private OwnedServer(KernelHandle job, KernelHandle process, StreamReader output, bool assigned)
-    { this.job = job; this.process = process; this.output = output; AssignedBeforeResume = assigned; }
+    private OwnedServer(KernelHandle job, KernelHandle process, StreamReader? output,
+        KernelHandle gateLease, bool assigned, CleanupCalls cleanupCalls)
+    {
+        this.job = job; this.process = process; this.output = output;
+        this.gateLease = gateLease; this.cleanupCalls = cleanupCalls; AssignedBeforeResume = assigned;
+    }
 
     public static OwnedServer Start(ServerCommand command, InstanceControls controls) =>
         Start(command, controls, null);
@@ -58,13 +71,17 @@ public sealed class OwnedServer : IServer
     // Test observer supplies only numeric handle values to a synthetic child's
     // argv; it cannot add inheritance. Production never has an observer.
     internal static OwnedServer Start(ServerCommand command, InstanceControls controls,
-        Func<nint, nint, nint, nint, ServerCommand>? observer, SpawnCalls? calls = null)
+        Func<nint, nint, nint, nint, ServerCommand>? observer, SpawnCalls? calls = null,
+        CleanupCalls? cleanupCalls = null)
     {
         calls ??= new SpawnCalls();
+        cleanupCalls ??= new CleanupCalls();
         KernelHandle? job = null;
         KernelHandle? process = null;
+        KernelHandle? gateLease = null;
         try
         {
+            gateLease = Native.Duplicate(controls.Gate, false);
             job = calls.CreateJob();
             Native.Require(!job.IsInvalid);
             var limits = new Native.ExtendedLimits
@@ -112,23 +129,22 @@ public sealed class OwnedServer : IServer
                 var streamHandle = new SafeFileHandle(duplicateRead.Detach(), true);
                 var stream = new FileStream(streamHandle, FileAccess.Read, 4096, false);
                 var reader = new StreamReader(stream, new UTF8Encoding(false, true));
-                return new OwnedServer(job, process, reader, inside);
+                return new OwnedServer(job, process, reader, gateLease, inside, cleanupCalls);
             }
         }
         catch
         {
-            job?.Dispose();
-            bool reclaimed = true;
             if (process != null)
             {
                 // Creation succeeded but validation may not have. This retained
                 // handle is exclusively ours, including the suspended failure case.
                 if (Native.WaitForSingleObject(process, 0) == Native.WaitTimeout)
                     Native.TerminateProcess(process, 1);
-                reclaimed = Native.WaitForSingleObject(process, 5000) == Native.WaitObject;
-                process.Dispose();
+                var failedOwner = new OwnedServer(job!, process, null, gateLease!, false, cleanupCalls);
+                failedOwner.CloseAndWait(); // Also quarantines an unconfirmed spawn.
             }
-            throw new HostError(reclaimed ? EventCode.SpawnFailed : EventCode.CleanupFailed);
+            else { job?.Dispose(); gateLease?.Dispose(); }
+            throw new HostError(EventCode.SpawnFailed);
         }
     }
 
@@ -140,13 +156,70 @@ public sealed class OwnedServer : IServer
     }
     public void CloseAndWait()
     {
-        if (closed) return;
-        job.Dispose(); // Never inherited; host crash also closes the last Job handle.
-        if (!Wait(5000)) throw new HostError(EventCode.CleanupFailed);
-        closed = true;
-        try { output.Dispose(); }
-        catch (Exception) { throw new HostError(EventCode.CleanupFailed); }
-        finally { process.Dispose(); }
+        lock (cleanupSync)
+        {
+            if (closed) return;
+            try
+            {
+                job.Dispose(); // Never inherited; host crash also closes the last Job handle.
+                if (cleanupCalls.Wait(process, 5000) != Native.WaitObject)
+                    throw new HostError(EventCode.CleanupFailed);
+                ReleaseConfirmedExit();
+            }
+            catch (Exception)
+            {
+                if (!closed && deferredCleanup == null)
+                {
+                    pending.TryAdd(this, 0);
+                    deferredCleanup = Task.Run(ReapAsync);
+                    _ = deferredCleanup.ContinueWith(t => { _ = t.Exception; }, CancellationToken.None,
+                        TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+                }
+                // The original caller/Lifecycle must still fail, even when the
+                // reaper subsequently confirms exit and releases resources.
+                throw new HostError(EventCode.CleanupFailed);
+            }
+        }
+    }
+
+    private async Task ReapAsync()
+    {
+        while (true)
+        {
+            lock (cleanupSync)
+            {
+                if (closed) { pending.TryRemove(this, out _); return; }
+                // No injected wait here and no PID lookup/kill. A failed native
+                // observation keeps ownership + exclusion; it is never success.
+                if (Native.WaitForSingleObject(process, 0) == Native.WaitObject)
+                {
+                    try { ReleaseConfirmedExit(); }
+                    finally { pending.TryRemove(this, out _); }
+                    return;
+                }
+            }
+            await Task.Delay(100);
+        }
+    }
+
+    private void ReleaseConfirmedExit()
+    {
+        try { output?.Dispose(); }
+        finally
+        {
+            outputClosed = true;
+            process.Dispose();
+            gateLease.Dispose();
+            closed = true;
+        }
     }
     public void Dispose() => CloseAndWait();
+}
+
+// Instance-scoped fault seam only; public startup always uses the concrete
+// retained-process Win32 wait. Deferred confirmation is not overridable.
+internal class CleanupCalls
+{
+    internal virtual uint Wait(KernelHandle process, uint milliseconds) =>
+        Native.WaitForSingleObject(process, milliseconds);
 }

@@ -11,6 +11,8 @@ kernel = ctypes.WinDLL("kernel32", use_last_error=True)
 kernel.GetHandleInformation.argtypes = (wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD))
 kernel.GetHandleInformation.restype = wintypes.BOOL
 kernel.GetCurrentProcess.restype = wintypes.HANDLE
+kernel.CloseHandle.argtypes = (wintypes.HANDLE,)
+kernel.CloseHandle.restype = wintypes.BOOL
 kernel.IsProcessInJob.argtypes = (wintypes.HANDLE, wintypes.HANDLE, ctypes.POINTER(wintypes.BOOL))
 kernel.IsProcessInJob.restype = wintypes.BOOL
 
@@ -34,6 +36,11 @@ elif mode == "cwd":
     print(json.dumps(os.getcwd(), ensure_ascii=True), flush=True)
 elif mode == "exit":
     raise SystemExit(7)
+elif mode == "close-gate":
+    # Test-only early child gate release: the host's cleanup lease must still
+    # exclude duplicates until retained-process exit has been confirmed.
+    assert kernel.CloseHandle(int(sys.argv[2]))
+    print("READY", flush=True)
 elif mode == "ready":
     payload = {
         "schemaVersion": 1, "mode": "operational",

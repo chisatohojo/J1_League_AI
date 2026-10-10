@@ -9,6 +9,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <UseSharedCompilation>false</UseSharedCompilation>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>

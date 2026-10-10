@@ -84,16 +84,39 @@ does not read that JSON. CreateProcess receives an explicit executable and
 CRT-quoted arguments; there is no shell or process-name/PID search.
 
 Cleanup closes the Job and waits up to five seconds on the retained process
-handle before releasing the host gate. Cleanup timeout is failure, not
-success; any surviving child retains its own gate until Windows reclaims it.
-A partially created suspended process can only be terminated through the
-retained, self-created process handle. No browser termination exists.
+handle. An additional **non-inherited host gate lease**, created before spawning,
+is owned by `OwnedServer`; it is separate from both InstanceControls' original
+gate and the child's inherited gate. Successful exit confirmation closes stdout,
+the process handle and this lease. Close/Dispose is serialized and idempotent.
+
+On timeout, WAIT_FAILED, or a wait exception, `CloseAndWait` throws
+`CleanupFailed`. Lifecycle remains FAILED, does not emit Cleanup/Stopped and
+does not report success. Although Lifecycle releases its own IPC handles, the
+server's host gate lease still excludes both native and old Python launches.
+The closed Job cannot be reused; stdout/process/lease remain strongly owned in
+a pending-cleanup collection, not abandoned to GC/finalizers. A background
+observer uses the actual retained-process Win32 wait (not the fault seam),
+with 100 ms between nonblocking probes. Only WAIT_OBJECT_0 authorizes resource
+release and removal from that collection. A failed native observation retains
+ownership/exclusion rather than guessing that the child exited. Later confirmed
+cleanup never rewrites the original failed Lifecycle run as success.
+
+If native exit observation remains impossible, the host keeps this bounded set
+of resources and the gate until exit; it does not permit a second server or
+claim cleanup. On host death Windows releases those handles; the child's own
+inherited gate still excludes another owner until the child exits, and last Job
+close reclaims that owned process tree. This is deliberately fail-closed, not
+unconditional reclamation under persistent OS failure. A partially created
+suspended process uses the same pending-cleanup path if termination cannot be
+confirmed; only its retained, self-created process handle may be terminated.
+No PID lookup, browser termination, or unknown-server adoption exists.
 
 ## State and readiness
 
 ```text
 STOPPED -> STARTING -> RUNNING -> CLOSING -> CLEANUP -> STOPPED
                    \ failure -> FAILED -> CLEANUP -> STOPPED
+cleanup wait failure -> FAILED + pending ownership/gate -> confirmed exit -> resource release
 host crash -> OS closes last Job handle -> owned child reclaimed
 ```
 
@@ -126,7 +149,14 @@ confirm the recorded SDK/package approval, single local source and cached
 archive SHA; missing verified warm cache must stop instead of downloading.
 Only the package's unused WPF assembly reference is removed from these
 WinForms-only builds, resolving WindowsBase conflicts without suppressing
-warnings or changing the package. bin/obj/local restore lock files are ignored.
+warnings or changing the package. bin/obj remain ignored. The two
+`packages.lock.json` files for Host and Tests are tracked: Host locks the direct
+WebView2 dependency, while Tests locks its project/transitive graph. Both
+projects set `RestorePackagesWithLockFile=true` and `RestoreLockedMode=true`.
+The lock files freeze exact version, dependency graph and NuGet content hash;
+they do not replace package signature verification. Intentional dependency
+updates require separately authorized review and lock regeneration. Other
+incidental lock files remain ignored; no package/binary is vendored.
 
 Run these commands directly in PowerShell (no script-policy override). The
 manifest/config/cache must be the reviewed environment-preparation outputs:
@@ -143,7 +173,7 @@ $env:NUGET_PACKAGES = Join-Path $tools 'nuget\packages'
 $dotnet = Join-Path $env:DOTNET_ROOT 'dotnet.exe'
 $root = (Get-Location).Path
 Push-Location windows
-& $dotnet restore J1AI.DashboardHost.Tests/J1AI.DashboardHost.Tests.csproj --configfile (Join-Path $tools 'NuGet.offline.config') --no-http-cache
+& $dotnet restore J1AI.DashboardHost.Tests/J1AI.DashboardHost.Tests.csproj --locked-mode --configfile (Join-Path $tools 'NuGet.offline.config') --no-http-cache
 & $dotnet build J1AI.DashboardHost.Tests/J1AI.DashboardHost.Tests.csproj --no-restore -c Release --disable-build-servers -warnaserror
 & $dotnet test J1AI.DashboardHost.Tests/J1AI.DashboardHost.Tests.csproj --no-restore -c Release -warnaserror "-p:TestPython=$root\.venv\Scripts\python.exe" "-p:TestLauncher=$root\scripts\launch_dashboard.py"
 Pop-Location
@@ -159,7 +189,7 @@ runner. These are real assertions and Windows process tests, not VSTest adapter
 discovery. Any failed assertion returns nonzero. Do not report them as xUnit,
 MSTest, or GUI tests.
 
-The runner checks unique case names and the expected case count (60). A
+The runner checks unique case names and the expected case count (68). A
 separate negative control runs an intentional assertion failure and an
 unexpected exception through the **same** MSBuild execution path:
 
@@ -179,6 +209,22 @@ they are not claimed as spontaneous OS failures. Inheritable Job/non-inheritable
 gate corruption is rejected before child creation. Repeated failed spawns are
 measured after priming CLR exception initialization (32 repetitions, no handle
 growth); successful Job/child cleanup is separately measured over 20 cycles.
+
+Eight cleanup regression cases use actual Windows synthetic processes/Jobs:
+timeout, WAIT_FAILED, wait exception, failed Lifecycle state, concurrent close,
+GC ownership retention, repeated failure-cycle handle counts and host death
+while cleanup is pending. Fault **routing** is injected: a test-only extra,
+non-inherited Job handle delays child termination; a zero-duration real wait
+produces WAIT_TIMEOUT, and a separate invalid probe handle produces actual
+WAIT_FAILED/ERROR_INVALID_HANDLE without corrupting the owned process handle.
+The wait-exception case is entirely injected. These are not claims that the OS
+spontaneously exceeded the production five-second deadline. After releasing
+the test Job handle, real retained-handle waits confirm OS termination and
+stdout/process/gate reclamation, restart, and survival of an independent
+synthetic instance in a separate Job. One child explicitly closes its inherited
+gate early, proving that the host cleanup lease independently prevents a
+duplicate. The abnormal-host test is jobless at the test-parent level, as before.
+No mock substitutes for these process/gate assertions.
 
 Coverage includes Python identity (Unicode, ASCII-case alias, `..`, directory
 junction, symlink), old/new gate/Stop interoperability, Show coalescing and
@@ -203,8 +249,8 @@ and equal resolved identity; it is not silently skipped. No privilege/policy
 change is made. These observations are for this Windows 11 x64 environment,
 not proof that every Windows/policy combination supports the required Job API.
 
-Validation on this environment: offline restore/build PASS (0 warnings/errors),
-60/60 runner cases PASS including real Windows integration, negative-control
+Validation on this environment: offline locked restore/build PASS (0 warnings/errors),
+68/68 runner cases PASS including real Windows integration, negative-control
 exit propagation PASS, Python launcher/server regression 190/190 PASS. No
 production server/feed/GUI was used. The protected feed's SHA-256 remains
 `a14216d22717dcb384c149c712e424511d0f0af7ad8d5f25ffee4bd026c53af8`.
