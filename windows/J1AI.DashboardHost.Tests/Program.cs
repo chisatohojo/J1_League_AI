@@ -81,6 +81,9 @@ internal static class Program
         await Test("startup_timeout_cleanup", MockTimeout);
         await Test("uncancellable_stdout_total_deadline_cleanup", UncancellableStdout);
         await Test("cleanup_failure_is_failure", CleanupFailure);
+        await Test("cleanup_setup_observer_exception_releases_job", () => CleanupFaults.SetupFailure(python, Child, 0));
+        await Test("cleanup_setup_win32_spawn_failure_releases_job", () => CleanupFaults.SetupFailure(python, Child, 1));
+        await Test("cleanup_setup_spawn_exception_releases_job", () => CleanupFaults.SetupFailure(python, Child, 2));
         await Test("cleanup_timeout_retains_resources_and_gate", () => CleanupFaults.WaitFailure(python, Child, 0));
         await Test("cleanup_wait_failed_retains_resources_and_gate", () => CleanupFaults.WaitFailure(python, Child, 1));
         await Test("cleanup_wait_exception_retains_resources_and_gate", () => CleanupFaults.WaitFailure(python, Child, 2));
@@ -114,7 +117,7 @@ internal static class Program
         await Test("http_unknown_content_length_body_cap", UnknownLength);
         var guiCases = GuiTests.Cases();
         foreach (var item in guiCases) await Test(item.Name, item.Run);
-        return Summary(68 + guiCases.Count);
+        return Summary(68 + 3 + guiCases.Count); // original Phase 1 + setup failures + GUI-policy cases
     }
 
     private static int Summary(int expected)

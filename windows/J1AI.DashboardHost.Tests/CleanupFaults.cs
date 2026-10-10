@@ -6,6 +6,28 @@ namespace J1AI.DashboardHost.Tests;
 
 internal static class CleanupFaults
 {
+    // Declare before Start, not after it: the observer can acquire a duplicate
+    // even when the factory never returns. Only this scope owns that duplicate.
+    private sealed class CapturedJob : IDisposable
+    {
+        private KernelHandle? handle;
+        private bool disposed;
+        internal int Releases { get; private set; }
+        internal KernelHandle Handle => handle ?? throw new InvalidOperationException("job_not_captured");
+        internal void Capture(nint job)
+        {
+            Program.Check(!disposed && handle == null);
+            handle = Native.Duplicate(job, false);
+        }
+        public void Dispose()
+        {
+            if (disposed) return;
+            disposed = true;
+            var owned = handle; handle = null;
+            if (owned != null) { owned.Dispose(); Releases++; }
+        }
+    }
+
     [DllImport("kernel32", SetLastError = true)]
     private static extern KernelHandle OpenProcess(uint access, bool inherit, uint pid);
 
@@ -68,9 +90,9 @@ internal static class CleanupFaults
         Program.Check(Native.WaitForSingleObject(retained, 0) == Native.WaitTimeout);
     }
 
-    private static async Task Reclaim(OwnedServer child, KernelHandle? heldJob)
+    private static async Task Reclaim(OwnedServer child, CapturedJob heldJob)
     {
-        heldJob?.Dispose();
+        heldJob.Dispose();
         // On assertion/setup failure, still reclaim only this test's child.
         try { child.CloseAndWait(); }
         catch (HostError error) { Program.Check(error.Code == EventCode.CleanupFailed); }
@@ -80,6 +102,54 @@ internal static class CleanupFaults
         Program.Check(child.Output is StreamReader reader && !reader.BaseStream.CanRead);
     }
 
+    private sealed class SetupCalls(int mode) : SpawnCalls
+    {
+        internal int Creations, Error;
+        internal override bool CreateProcess(ServerCommand command, ref Native.StartupEx startup, out Native.ProcessInfo info)
+        {
+            Creations++;
+            if (mode == 2) throw new IOException("synthetic_create_failure");
+            bool success = base.CreateProcess(command, ref startup, out info);
+            if (!success) Error = Marshal.GetLastWin32Error();
+            return success;
+        }
+    }
+
+    internal static Task SetupFailure(string python, string script, int mode)
+    {
+        using var temp = new TempRepository(); using var controls = Gate(temp);
+        var captured = new CapturedJob();
+        KernelHandle? borrowed = null; bool failed = false;
+        var calls = new SetupCalls(mode);
+        var command = Command(python, script, temp, "silent");
+        // A real CreateProcessW failure, but no interpreter is ever resumed.
+        if (mode == 1) command = command with { Executable = Path.Combine(temp.Root, "nonexistent-python.exe") };
+        try
+        {
+            using (captured) // MUST cover observer and Start, not just its return.
+            {
+                using var unexpected = OwnedServer.Start(command, controls, (job, gate, output, nul) =>
+                {
+                    captured.Capture(job); borrowed = captured.Handle;
+                    Program.Check(Native.GetHandleInformation(borrowed.DangerousGetHandle(), out uint flags) && (flags & 1) == 0);
+                    if (mode == 0) throw new IOException("synthetic_observer_failure");
+                    return command;
+                }, calls);
+                throw new InvalidOperationException("expected_setup_failure");
+            }
+        }
+        catch (HostError error) { Program.Check(error.Code == EventCode.SpawnFailed); failed = true; }
+        Program.Check(failed && borrowed != null && borrowed.IsClosed && captured.Releases == 1);
+        // No GC/finalizer, delay, deletion retry or PID lookup is involved.
+        Program.Check(!Native.GetHandleInformation(borrowed!.DangerousGetHandle(), out _));
+        Program.Check(Marshal.GetLastWin32Error() == 6); // ERROR_INVALID_HANDLE
+        captured.Dispose(); Program.Check(captured.Releases == 1); // no second OS close
+        Program.Check(calls.Creations == (mode == 0 ? 0 : 1));
+        if (mode == 1) Program.Check(calls.Error == 2); // real ERROR_FILE_NOT_FOUND
+        controls.Dispose(); using var restarted = Gate(temp);
+        return Task.CompletedTask;
+    }
+
     internal static async Task WaitFailure(string python, string script, int mode)
     {
         using var temp = new TempRepository(); using var controls = Gate(temp);
@@ -87,36 +157,36 @@ internal static class CleanupFaults
         // Stopping only a venv bootstrap PID can leave its interpreter running
         // with the temporary cwd open, so do not use a jobless broker fixture.
         using var otherTemp = new TempRepository(); using var otherControls = Gate(otherTemp);
-        KernelHandle? otherJob = null;
-        using var other = OwnedServer.Start(Command(python, script, otherTemp, "cleanup-probe"), otherControls,
-            (job, gate, output, nul) => { otherJob = Native.Duplicate(job, false); return Command(python, script, otherTemp, "cleanup-probe"); });
-        using var otherJobCapture = otherJob!;
-        using var otherInterpreter = Interpreter((await other.Output.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(5)))!, otherJobCapture);
-        otherJobCapture.Dispose();
-        KernelHandle? heldJob = null;
-        KernelHandle? childInterpreter = null;
-        var fault = new WaitFault(mode);
-        // A test-only, NON-INHERITED duplicate delays actual Job termination.
-        // Production never duplicates its Job. This is not a spontaneous OS
-        // five-second shutdown timeout, nor corruption of the owned handle.
-        var child = OwnedServer.Start(Command(python, script, temp), controls,
-            (job, gate, output, nul) =>
-            {
-                heldJob = Native.Duplicate(job, false);
-                return mode == 0 ? Command(python, script, temp, "cleanup-probe", gate.ToString())
-                    : Command(python, script, temp);
-            }, cleanupCalls: fault);
+        using var otherJob = new CapturedJob();
+        using var heldJob = new CapturedJob();
+        OwnedServer? other = null, child = null;
+        KernelHandle? otherInterpreter = null, childInterpreter = null;
         try
         {
+            other = OwnedServer.Start(Command(python, script, otherTemp, "cleanup-probe"), otherControls,
+                (job, gate, output, nul) => { otherJob.Capture(job); return Command(python, script, otherTemp, "cleanup-probe"); });
+            otherInterpreter = Interpreter((await other.Output.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(5)))!, otherJob.Handle);
+            otherJob.Dispose();
+            var fault = new WaitFault(mode);
+            // A test-only, NON-INHERITED duplicate delays actual Job termination.
+            // Production never duplicates its Job. This is not a spontaneous OS
+            // five-second shutdown timeout, nor corruption of the owned handle.
+            child = OwnedServer.Start(Command(python, script, temp), controls,
+                (job, gate, output, nul) =>
+                {
+                    heldJob.Capture(job);
+                    return mode == 0 ? Command(python, script, temp, "cleanup-probe", gate.ToString())
+                        : Command(python, script, temp);
+                }, cleanupCalls: fault);
             var line = await child.Output.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(5));
             Program.Check(mode == 0 ? line != null && line.Contains("pid") : line != null && line.Contains("in_job"));
-            childInterpreter = Interpreter(line!, heldJob!);
+            childInterpreter = Interpreter(line!, heldJob.Handle);
             Fails(child.CloseAndWait);
             controls.Dispose();
             Retained(child); Excluded(temp);
             await Task.Delay(150); // deferred observer must NOT release a live child
             Retained(child); Excluded(temp); Program.Check(!other.Exited);
-            heldJob!.Dispose();
+            heldJob.Dispose();
             await child.DeferredCleanup.WaitAsync(TimeSpan.FromSeconds(7));
             Program.Check(child.Resources == (true, true, true, true, true));
             Program.Check(child.Exited && !other.Exited);
@@ -127,18 +197,25 @@ internal static class CleanupFaults
         {
             try
             {
-                await Reclaim(child, heldJob);
+                heldJob.Dispose();
+                if (child != null) await Reclaim(child, heldJob);
                 if (childInterpreter != null)
                     Program.Check(Native.WaitForSingleObject(childInterpreter, 5000) == Native.WaitObject);
             }
             finally
             {
                 childInterpreter?.Dispose();
-                other.CloseAndWait();
-                // A venv redirector's exit does not prove its interpreter has
-                // released cwd. Wait on the validated interpreter HANDLE before
-                // deleting either fresh temp namespace. No deletion retries.
-                Program.Check(Native.WaitForSingleObject(otherInterpreter, 5000) == Native.WaitObject);
+                try
+                {
+                    otherJob.Dispose();
+                    if (other != null) await Reclaim(other, otherJob);
+                    // A venv redirector's exit does not prove its interpreter has
+                    // released cwd. Wait on the validated interpreter HANDLE before
+                    // deleting either fresh temp namespace. No deletion retries.
+                    if (otherInterpreter != null)
+                        Program.Check(Native.WaitForSingleObject(otherInterpreter, 5000) == Native.WaitObject);
+                }
+                finally { otherInterpreter?.Dispose(); }
             }
         }
     }
@@ -146,10 +223,10 @@ internal static class CleanupFaults
     internal static async Task LifecycleFailure(string python, string script)
     {
         using var temp = new TempRepository(); using var controls = new InstanceControls(temp.Identity);
-        KernelHandle? heldJob = null; OwnedServer? child = null;
+        using var heldJob = new CapturedJob(); OwnedServer? child = null;
         var events = new RecordingEvents();
         var engine = new Lifecycle(controls, () => child = OwnedServer.Start(Command(python, script, temp), controls,
-            (job, gate, output, nul) => { heldJob = Native.Duplicate(job, false); return Command(python, script, temp); },
+            (job, gate, output, nul) => { heldJob.Capture(job); return Command(python, script, temp); },
             cleanupCalls: new WaitFault(1)), new FakeReadiness(), events);
         try
         {
@@ -166,7 +243,7 @@ internal static class CleanupFaults
             Program.Check(engine.State == HostState.FAILED); // deferred success does not rewrite the run
             using var restarted = Gate(temp);
         }
-        finally { if (child != null) await Reclaim(child, heldJob); else heldJob?.Dispose(); }
+        finally { if (child != null) await Reclaim(child, heldJob); }
     }
 
     internal static async Task ConcurrentClose(string python, string script)
@@ -181,11 +258,12 @@ internal static class CleanupFaults
     internal static async Task GcOwnership(string python, string script)
     {
         using var temp = new TempRepository(); using var controls = Gate(temp);
-        KernelHandle? heldJob = null, retainedProcess = null;
+        using var heldJob = new CapturedJob();
+        KernelHandle? retainedProcess = null;
         WeakReference<OwnedServer> Quarantine()
         {
             var child = OwnedServer.Start(Command(python, script, temp), controls,
-                (job, gate, output, nul) => { heldJob = Native.Duplicate(job, false); return Command(python, script, temp); },
+                (job, gate, output, nul) => { heldJob.Capture(job); return Command(python, script, temp); },
                 cleanupCalls: new WaitFault(1));
             retainedProcess = Native.Duplicate(child.ProcessHandle, false);
             Fails(child.CloseAndWait);
@@ -201,7 +279,7 @@ internal static class CleanupFaults
         }
         finally
         {
-            heldJob?.Dispose();
+            heldJob.Dispose();
             if (weak != null && weak.TryGetTarget(out var retained)) await Reclaim(retained, heldJob);
             if (retainedProcess != null)
             {
@@ -217,9 +295,9 @@ internal static class CleanupFaults
         async Task Cycle()
         {
             using var temp = new TempRepository(); using var controls = Gate(temp);
-            KernelHandle? heldJob = null;
+            using var heldJob = new CapturedJob();
             var child = OwnedServer.Start(Command(python, script, temp), controls,
-                (job, gate, output, nul) => { heldJob = Native.Duplicate(job, false); return Command(python, script, temp); },
+                (job, gate, output, nul) => { heldJob.Capture(job); return Command(python, script, temp); },
                 cleanupCalls: new WaitFault(1));
             try { Fails(child.CloseAndWait); }
             finally { await Reclaim(child, heldJob); }
@@ -252,10 +330,10 @@ internal static class CleanupFaults
     {
         var identity = new RepositoryIdentity(args[3], args[4]);
         using var controls = new InstanceControls(identity); Program.Check(controls.Acquire());
-        KernelHandle? heldJob = null;
+        using var heldJob = new CapturedJob();
         var command = new ServerCommand(args[1], ["-I", "-S", "-u", args[2], "probe"], identity.Root);
         var child = OwnedServer.Start(command, controls,
-            (job, gate, output, nul) => { heldJob = Native.Duplicate(job, false); return command; },
+            (job, gate, output, nul) => { heldJob.Capture(job); return command; },
             cleanupCalls: new WaitFault(1));
         try
         {

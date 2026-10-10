@@ -191,7 +191,7 @@ discovery. Any failed assertion returns nonzero. Do not report them as xUnit,
 MSTest, or GUI tests.
 
 The runner checks unique case names and the expected case count (68 in Phase 1;
-113 with the Phase 2 non-GUI cases). A
+124 with the Phase 2 non-GUI and cleanup-setup cases). A
 separate negative control runs an intentional assertion failure and an
 unexpected exception through the **same** MSBuild execution path:
 
@@ -434,8 +434,9 @@ Evergreen runtime/updater never performs its own background communication.
 
 ### Phase 2 validation and remaining manual checks
 
-Normal `dotnet test` runs **113** cases: all 68 original Phase 1 cases plus 45
-GUI lifecycle/policy/mock assertions, without opening GUI. The assertion runner
+Normal `dotnet test` runs **124** cases: all 68 original Phase 1 cases, 53
+GUI lifecycle/policy/mock assertions, and three cleanup-setup failure cases,
+without opening GUI. The assertion runner
 still checks unique names, exact count and nonzero exit on failures. The
 negative-control intentionally reports 2 failed cases and exit 1. Both tracked
 lock files, approved package/cache and signature configuration are unchanged.
@@ -450,13 +451,45 @@ Explicit synthetic GUI mode is separate from normal tests:
 It copies implementation-only UI assets to a fresh OS-temp repository, starts
 only a synthetic Python loopback server, and uses empty synthetic API data and
 a deliberately nonexistent explicit --data path. No production server/feed
-is used. Its five actual-Windows cases cover STA/await/marshal, minimized
+is used. Its **10** cases cover STA/await/marshal, minimized
 restore, HWND recreation vs disposal, actual WebView2/UI loading, single-fetch
 HTML interception, CSP enforcement (inline script/worker/connect), popup and
 download prevention, permission denial, route filtering, explicit demo, real
 IPC duplicate/Show/Stop, X/cleanup/restart, unrelated server survival, retained
 handle synthetic-server crash and startup Show/Stop competition. Each GUI case
 checks actual window/server/runtime completion and gate reuse where applicable.
+
+The suite distinguishes actual WebView2 from mocks:
+
+- Seven cases use the real WebView2 Runtime, including document initialization
+  interrupted by Close/Stop, an HTTP failure, and the five-second HTTP timeout.
+- Two cases use real WinForms/IPC without initializing WebView2 (STA ownership
+  and Stop/Show during server readiness).
+- One case uses a real Form and cleanup deadline with a **mock unresolved SDK
+  Task**. It does not stall an actual `CreateAsync` or
+  `EnsureCoreWebView2Async` operation.
+- The actual allowed-navigation negative control must fail the same rejection
+  assertion used for the blocked navigation. The standalone negative-control
+  CLI intentionally exits 1; it is not a passing test run.
+
+The review run passed 121/121 non-GUI assertions, 10/10 synthetic GUI cases,
+and cleanup 30/30 twice. This Low-fix run passed **124/124** non-GUI cases
+(including the three new setup failures), **30/30** cleanup repetitions,
+a no-restore build with zero warnings/errors, and **190/190** Python focused
+cases. The runner negative control reported the expected two failures and
+exit 1. Synthetic GUI is **not rerun** for this Low fix: the previous
+attempt to remove eight newly created synthetic profiles was blocked by
+environment policy, and this task must not add more such profiles or bypass
+that policy. The previous GUI PASS is historical evidence, not a new run.
+
+Cleanup fixtures now scope observer-created Job duplicates **before** calling
+`OwnedServer.Start`, including setup exceptions before it returns. Each scope
+owns and closes its duplicate once; early release and final cleanup are
+idempotent. Three non-GUI Windows tests inject an observer exception, a real
+`CreateProcessW` missing-executable failure, and a synthetic creation exception.
+They confirm a non-inherited duplicate becomes an invalid OS handle without
+GC, delays or deletion retries, and that the gate can be reacquired. Product
+Job ownership, retained interpreter waits and the pending reaper are unchanged.
 
 The original single-threaded synthetic HTTP fixture could stall behind a
 Chromium speculative idle connection in the expanded security test; the
@@ -470,6 +503,13 @@ unit/mock fault injections, **not** a claim that an actual runtime crash was
 induced. Real host-crash/Job cleanup is covered by the preserved Phase 1 tests;
 GUI runtime crash/visual behavior and Windows focus restrictions remain manual
 smoke items. Visual GUI smoke and production-feed GUI are not executed here.
+Actual renderer/browser crash recovery, a stalled real SDK initialization
+Task, production-feed GUI smoke, and user-visible GUI error notification and
+manual foreground/minimize/DPI/taskbar smoke remain **unproven**, despite
+synthetic minimized-Form assertions. Mock coverage does
+not establish actual SDK cancellation or runtime crash recovery. Production
+smoke must also confirm no impact on existing shortcuts or personal browsers;
+shortcut migration and production use remain separately gated.
 Python launcher/server focused regression: 190 cases. Build must finish with
 zero warnings/errors; mandatory failures prohibit commit.
 
