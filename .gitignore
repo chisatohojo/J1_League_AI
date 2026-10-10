@@ -7,6 +7,9 @@ __pycache__/
 .ipynb_checkpoints/
 .coverage
 htmlcov/
+/windows/**/bin/
+/windows/**/obj/
+/windows/**/packages.lock.json
 build/
 dist/
 *.egg-info/

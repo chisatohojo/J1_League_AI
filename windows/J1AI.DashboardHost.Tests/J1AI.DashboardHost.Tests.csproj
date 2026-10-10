@@ -1,0 +1,32 @@
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../J1AI.DashboardHost/J1AI.DashboardHost.csproj" />
+    <None Include="synthetic_child.py" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <Target Name="RemoveUnusedWebView2WpfReference" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Reference.Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+    </ItemGroup>
+  </Target>
+  <!-- Offline, dependency-free executable assertions. No Test SDK/adapter is
+       cached or downloaded. dotnet test invokes this explicit test target. -->
+  <Target Name="VSTest" DependsOnTargets="Build">
+    <Error Condition="'$(RunnerSelfTest)' != 'true' And ('$(TestPython)' == '' Or '$(TestLauncher)' == '')" Text="Set TestPython and TestLauncher to implementation-only paths." />
+    <Error Condition="'$(VSTestTestCaseFilter)' != ''" Text="This offline assertion runner does not support VSTest filters." />
+    <Exec Condition="'$(RunnerSelfTest)' != 'true'" Command="&quot;$(NetCoreRoot)dotnet.exe&quot; &quot;$(TargetPath)&quot; --tests &quot;$(TestPython)&quot; &quot;$(TestLauncher)&quot;" />
+    <Exec Condition="'$(RunnerSelfTest)' == 'true'" Command="&quot;$(NetCoreRoot)dotnet.exe&quot; &quot;$(TargetPath)&quot; --runner-self-test" />
+  </Target>
+</Project>
