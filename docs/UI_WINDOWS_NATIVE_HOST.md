@@ -1,12 +1,13 @@
-# Windows Dashboard NativeHost — Phase 1 core
+# Windows Dashboard NativeHost — Phase 1 core / Phase 2 opt-in GUI
 
 ## Scope
 
 Baseline: `1091d03c2dd52b9cde09e91a313417aac4ed967f`.
-This is lifecycle infrastructure, **not a finished GUI**. The WinExe targets
+The following core sections record the reviewed **Phase 1** contract;
+the Phase 2 opt-in GUI and its validation are documented below. The WinExe targets
 `net10.0-windows`, WinForms, x64, SDK `10.0.401`, with WebView2 SDK pinned to
-`[1.0.4258.31]`. No Form/WebView2 instance, browser, CDP, desktop integration,
-model, feed builder or research evaluator is started.
+`[1.0.4258.31]`. Phase 1 itself starts no Form/WebView2 instance, browser, CDP,
+desktop integration, model, feed builder or research evaluator.
 
 Default invocation and `--help` perform no identity lookup, IPC, file access or
 process creation. `--core` is an explicit headless opt-in, not the desktop app.
@@ -189,7 +190,8 @@ runner. These are real assertions and Windows process tests, not VSTest adapter
 discovery. Any failed assertion returns nonzero. Do not report them as xUnit,
 MSTest, or GUI tests.
 
-The runner checks unique case names and the expected case count (68). A
+The runner checks unique case names and the expected case count (68 in Phase 1;
+113 with the Phase 2 non-GUI cases). A
 separate negative control runs an intentional assertion failure and an
 unexpected exception through the **same** MSBuild execution path:
 
@@ -255,7 +257,7 @@ exit propagation PASS, Python launcher/server regression 190/190 PASS. No
 production server/feed/GUI was used. The protected feed's SHA-256 remains
 `a14216d22717dcb384c149c712e424511d0f0af7ad8d5f25ffee4bd026c53af8`.
 
-## Phase 2 review gates (not implemented)
+## Phase 1 handoff checklist (historical)
 
 - Native Form/WebView2 ownership, close/crash handling and profile isolation.
 - Navigation/popup/permission/host-object/DevTools security restrictions.
@@ -268,3 +270,212 @@ production server/feed/GUI was used. The protected feed's SHA-256 remains
 
 No shortcut migration, production JSON read/generation, real GUI, source update,
 model/prediction/Elo/evaluation or performance inspection is part of Phase 1.
+
+## Phase 2: explicit native GUI
+
+Implementation baseline: `0e8eb0481df57fa8670278a04c3d70e48dc31706`.
+Only explicit `--gui [--repository ROOT] [--data EXPLICIT_JSON]` starts the
+native `J1 AI Predict` Form. No arguments remain a no-op; `--help` does not
+resolve identity, create IPC/profile or start a process. `--gui`, `--core`
+and `--stop` are mutually exclusive. Phase 1 Core, Python launcher/server,
+shortcut installer and web files are unchanged. There is no desktop shortcut
+migration or production-feed GUI authorization in this phase.
+
+`GuiEntry` acquires the existing repository/session gate **before** preflight
+or Form creation. A duplicate signals the existing Show event and returns,
+without another server/Form/profile. This also excludes an old Python or Core
+owner: legacy owners without a displayable native window are left unchanged.
+`--stop` continues to signal the same Stop event; its meaning for Python is
+unchanged. A GUI owner closes its own native window and owned server.
+
+### STA and lifecycle
+
+`StaPump` starts a dedicated STA thread before any Form/WebView2 construction,
+installs `WindowsFormsSynchronizationContext`, and runs `Application.Run`
+with an `ApplicationContext` that has **no MainForm**. Closing a Form must not
+prematurely end the pump while cleanup awaits. Async initialization/readiness
+returns to that STA context; no assumption is made about async Main's thread.
+Only the retained-process cleanup wait runs in `Task.Run`. The pump's thread
+exit is joined before GUI entry completes. `DashboardForm.RequireUi` checks
+STA and thread identity. `OnUiAsync` marshals through `BeginInvoke` only after
+Show creates the handle; it never creates an HWND from a background thread.
+
+```text
+gate -> preflight -> Form/loading -> server/readiness -> WebView2 -> RUNNING
+STARTING + SHOW -> one pending flag -> one restore after initialization
+RUNNING + SHOW -> restore own minimized Form; Activate best effort
+X or STOP -> coalesced close request -> WebView2 disposal -> Form.IsDisposed
+          -> runtime exit observation -> owned server exit confirmation -> gate release
+failure -> FAILED -> same disposal/owned-server cleanup (no automatic restart)
+```
+
+FormClosing requests closure but is cancelled until the coordinator handles
+it. Neither FormClosing, FormClosed nor HandleDestroyed proves disposal.
+The control/controller is disposed before the Form; `IsDisposed` and its
+disposal completion signal provide evidence. HWND recreation is not a close.
+Stop is checked before Show during startup and running. Only this Form is
+restored/activated, with no foreign-window lookup or focus coercion.
+
+Runtime `ProcessFailed` is distinct from a user's close request and produces
+a failed run; browser/renderer failures do not mean the Form was destroyed.
+A fixed error notification and enum-only local log are used, without exception
+messages, paths, stdout, response bodies or prediction values. Browser-process
+exit is observed through WebView2's environment event, never a startup PID.
+Controller initialization/exit cleanup is bounded (five seconds each). Failure
+is not reported as successful shutdown; no browser PID is searched or killed.
+
+If Form disposal throws before disposal is confirmed, the STA pump, server
+and controls stay strongly owned awaiting that confirmation; a second server
+is not allowed. If disposal is confirmed but runtime exit cannot be confirmed,
+the owned server is still reclaimed and the run fails. If server cleanup wait
+fails, the unchanged Phase 1 pending reaper retains its stdout/process/gate
+lease until real exit confirmation. Failure never becomes success afterward.
+
+### Policy preflight and isolated environment
+
+Before starting a server, inspect the process's nonempty `WEBVIEW2_*`
+environment variables and all configured WebView2 policy values in HKLM/HKCU,
+Registry64/Registry32. Nonempty loader/browser/profile/channel/debug overrides
+are rejected, not erased or overridden. Registry override checks conservatively
+reject even entries naming other apps, rather than relying on precedence
+guesses for AppId, EXE or wildcard. Other unknown configured WebView2 policies
+also fail closed. No registry, policy, permissions, PATH or trust setting is
+modified. Inspection is repeated before environment creation.
+
+The sole reviewed legacy exception is the root DWORD
+`RendererCodeIntegrityEnabled` with value 0 or 1. Environment review on
+2026-10-10 found value **0** at both:
+
+- HKLM / Registry64: `SOFTWARE\Policies\Microsoft\Edge\WebView2`.
+- HKLM / Registry32: the same logical path, exposed physically under
+  `SOFTWARE\WOW6432Node\Policies\Microsoft\Edge\WebView2`.
+
+HKCU had no corresponding value; no additional loader, AppId/EXE/wildcard,
+debugger, browser-argument or profile override was present. This entry is
+classified as **legacy/undocumented for WebView2**, not an active supported
+WebView2 policy. Microsoft's [Edge legacy policy documentation](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/renderercodeintegrityenabled)
+states that Edge ignores it from 119 onward. [Enterprise management](https://learn.microsoft.com/en-us/deployedge/webview2-enterprise)
+separates browser policies from WebView2 policies; the [WebView2 supported list](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-webview-policies)
+does not include this entry. Loader/environment overrides are independently
+documented by [CreateAsync](https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2environment.createasync)
+and the pinned SDK's API XML.
+
+Preflight GO is based on that **official supported-policy scope**, not proof
+that an undocumented value is internally ignored or that any particular
+renderer mitigation is enabled. Runtime process mitigation flags were not
+measured. Additional dangerous overrides still cause STOP. No protection is
+disabled and no debug/security-bypass arguments are added.
+
+Use installed Evergreen Runtime 154 or newer, stable channel only, with the
+pinned SDK. Missing/preview/older runtime, profile or initialization failure
+is fail-closed. `CreateAsync` receives a dedicated
+`%LOCALAPPDATA%\J1AI\Dashboard\<repo-id>\webview2-profile`, exclusive access,
+extensions disabled, OS primary-account SSO disabled and empty extra arguments.
+Reparse-point profile ancestry and an unwritable profile are rejected; the
+resulting environment's profile path is verified. Profiles are **not deleted**,
+including synthetic-test profiles. Personal Edge/Chrome profiles are unused.
+There is no CDP, external browser or `--app` fallback.
+
+### Navigation, resource policy and CSP
+
+`DashboardNavigation` parses the URI and compares scheme, host and dynamic
+port exactly, also checking canonical raw authority. No URL-prefix check
+authorizes a request. Userinfo, encoded paths, backslashes, malformed URLs,
+numeric host aliases, other ports/schemes and arbitrary paths are rejected.
+Document navigation permits only `/` and `/index.html`, anchors, and the exact
+optional `/?demo=1`; demo is never an automatic fallback.
+
+The resource route allowlist is exactly:
+
+```text
+/
+/index.html
+/styles.css
+/app.js
+/components/prediction-probability-bar.js
+/dashboard-data.js
+/team-colors.js
+/demo-data.js
+/api/dashboard
+```
+
+NavigationStarting checks redirects and documents. FrameNavigationStarting
+cancels all frame navigation. The **three-argument** WebResourceRequested
+filter covers all supported resource contexts and request-source kinds;
+only GETs from document sources on allowed routes pass. Worker-source requests
+are denied. Missing mandatory SDK/runtime APIs cause initialization failure,
+not a permissive fallback. Popup/new-window, download, permission, external
+protocol, authentication and certificate-error handlers deny their requests.
+Default download location is isolated within the dedicated profile as an
+additional precaution, not a replacement for cancellation. DevTools, browser
+accelerator keys, context menus, default script dialogs, host objects, web
+messaging, error pages, autofill and password autosave are disabled.
+
+WebResourceRequested does **not** intercept every scheme (notably data/ws).
+CSP therefore supplements, and never replaces, these request guards. Only an
+allowed HTML document GET is intercepted using a deferral **before** WebView2
+sends its pending request. A strict, no-proxy/no-cookie/no-redirect HttpClient
+makes one owned-loopback fetch. HTTP 200, text/html, a five-second deadline and
+1 MiB cap are required. Exact entity bytes/MIME and end-to-end response headers
+are preserved; hop-by-hop transport headers are omitted. CSP and no-store are
+added using `CreateWebResourceResponse`, assigned to the pending request's
+`Response`, and the deferral is completed. This replaces that request; it is
+not a second fetch or a response-received header mutation. No other route is
+proxy-fetched, particularly `/api/dashboard`. JSON display-file contents are
+not read by the host; the unchanged readiness probe validates basic API schema.
+
+CSP defaults to none, allows scripts/styles/connect only at the owned origin,
+disallows frames/workers/objects/base/form actions, and uses a sandbox without
+popup/download permissions. Inline styles remain necessary for the existing
+probability-bar implementation; inline scripts are not allowed. Data **images**
+support the existing fixed SVG favicon, but general data document navigation
+is denied. These are page-level controls, not an OS firewall or proof that the
+Evergreen runtime/updater never performs its own background communication.
+
+### Phase 2 validation and remaining manual checks
+
+Normal `dotnet test` runs **113** cases: all 68 original Phase 1 cases plus 45
+GUI lifecycle/policy/mock assertions, without opening GUI. The assertion runner
+still checks unique names, exact count and nonzero exit on failures. The
+negative-control intentionally reports 2 failed cases and exit 1. Both tracked
+lock files, approved package/cache and signature configuration are unchanged.
+
+Explicit synthetic GUI mode is separate from normal tests:
+
+```powershell
+# Same explicit dotnet environment; announce synthetic GUI use before running.
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --synthetic-gui-tests "$root\.venv\Scripts\python.exe" "$root\scripts\launch_dashboard.py" "$root\web"
+```
+
+It copies implementation-only UI assets to a fresh OS-temp repository, starts
+only a synthetic Python loopback server, and uses empty synthetic API data and
+a deliberately nonexistent explicit --data path. No production server/feed
+is used. Its five actual-Windows cases cover STA/await/marshal, minimized
+restore, HWND recreation vs disposal, actual WebView2/UI loading, single-fetch
+HTML interception, CSP enforcement (inline script/worker/connect), popup and
+download prevention, permission denial, route filtering, explicit demo, real
+IPC duplicate/Show/Stop, X/cleanup/restart, unrelated server survival, retained
+handle synthetic-server crash and startup Show/Stop competition. Each GUI case
+checks actual window/server/runtime completion and gate reuse where applicable.
+
+The original single-threaded synthetic HTTP fixture could stall behind a
+Chromium speculative idle connection in the expanded security test; the
+synthetic fixture now uses ThreadingHTTPServer and bounded test-client timeout.
+No production server change or security relaxation was needed. The expanded
+suite is rerun after that fixture correction, with no residual synthetic
+server/runner processes. Profiles remain intentionally retained.
+
+Renderer/browser ProcessFailed handling and disposal-failure retention are
+unit/mock fault injections, **not** a claim that an actual runtime crash was
+induced. Real host-crash/Job cleanup is covered by the preserved Phase 1 tests;
+GUI runtime crash/visual behavior and Windows focus restrictions remain manual
+smoke items. Visual GUI smoke and production-feed GUI are not executed here.
+Python launcher/server focused regression: 190 cases. Build must finish with
+zero warnings/errors; mandatory failures prohibit commit.
+
+Future user-run GUI smoke: first launch, duplicate launch during loading,
+minimized Show, X/restart, --stop, failure notification, real renderer/runtime
+failure, external-navigation refusal, taskbar/DPI behavior, no impact on
+personal browsers. Desktop shortcut migration and production-feed display
+require separate explicit authorization. ST2 remains SEALED; no model,
+prediction, Elo, metrics, source update or feed generation occurs in Phase 2.

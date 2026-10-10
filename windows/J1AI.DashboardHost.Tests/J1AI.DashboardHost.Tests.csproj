@@ -2,6 +2,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Exe</OutputType>
     <PlatformTarget>x64</PlatformTarget>
     <Nullable>enable</Nullable>
@@ -15,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="../J1AI.DashboardHost/J1AI.DashboardHost.csproj" />
     <None Include="synthetic_child.py" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="synthetic_gui_server.py" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <Target Name="RemoveUnusedWebView2WpfReference" BeforeTargets="ResolveAssemblyReferences">

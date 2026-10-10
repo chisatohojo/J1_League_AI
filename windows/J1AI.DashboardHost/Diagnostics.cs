@@ -5,7 +5,8 @@ public enum EventCode
     Starting, Running, Closing, Cleanup, Stopped, AlreadyRunning, ShowPending,
     StopRequested, NotRunning, IdentityFailed, IpcFailed, SpawnFailed,
     InvalidUrl, InvalidResponse, StartupTimeout, ServerExited, CleanupFailed,
-    UnexpectedFailure, CoreOnly, InvalidArguments
+    UnexpectedFailure, CoreOnly, InvalidArguments, UnsafeWebViewOverride,
+    ProfileFailed, WebViewFailed, RendererFailed, BrowserFailed, NavigationBlocked
 }
 
 public sealed class HostError(EventCode code) : Exception(code.ToString())

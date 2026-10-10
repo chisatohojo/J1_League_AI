@@ -18,6 +18,8 @@ internal static class Program
 
     public static async Task<int> Main(string[] args)
     {
+        if (args.Length > 0 && args[0] == "--synthetic-gui-tests")
+            return await GuiIntegration.RunAsync(args);
         if (args.Length > 0 && args[0] == "--synthetic-owner") return await CrashOwner(args);
         if (args.Length > 0 && args[0] == "--synthetic-cleanup-owner") return await CleanupFaults.CrashOwner(args);
         if (args is ["--runner-self-test"])
@@ -96,12 +98,14 @@ internal static class Program
         await Test("bad_utf8_payload", () => Throws(() => Readiness.ValidatePayload([0xff]), EventCode.InvalidResponse));
         await Test("http_status_content_type_size_redirect", Responses);
         await Test("http_unknown_content_length_body_cap", UnknownLength);
-        return Summary(68);
+        var guiCases = GuiTests.Cases();
+        foreach (var item in guiCases) await Test(item.Name, item.Run);
+        return Summary(68 + guiCases.Count);
     }
 
     private static int Summary(int expected)
     {
-        Console.WriteLine($"Native core assertions: {passed + failed} executed / {passed} passed / {failed} failed (no GUI).");
+        Console.WriteLine($"Native core + GUI-policy assertions: {passed + failed} executed / {passed} passed / {failed} failed (no GUI).");
         return failed == 0 && passed > 0 && executed.Count == passed + failed && executed.Count == expected ? 0 : 1;
     }
 
