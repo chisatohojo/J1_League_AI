@@ -1,10 +1,29 @@
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using J1AI.DashboardHost;
 
 namespace J1AI.DashboardHost.Tests;
 
 internal static class CleanupFaults
 {
+    [DllImport("kernel32", SetLastError = true)]
+    private static extern KernelHandle OpenProcess(uint access, bool inherit, uint pid);
+
+    private static KernelHandle Interpreter(string line, KernelHandle job)
+    {
+        using var metadata = JsonDocument.Parse(line);
+        // PID comes only from our synthetic child's private stdout. Open for
+        // observation, validate membership in our exact Job, then retain HANDLE.
+        // Never terminate a process by PID or infer it from a process name.
+        var process = OpenProcess(0x00101000, false, metadata.RootElement.GetProperty("pid").GetUInt32());
+        try
+        {
+            Native.Require(!process.IsInvalid);
+            Native.Require(Native.IsProcessInJob(process, job, out bool member) && member);
+            return process;
+        }
+        catch { process.Dispose(); throw; }
+    }
     // Fault routing is injected, but TIMEOUT / WAIT_FAILED below are actual
     // Win32 results. The owned process handle itself is NEVER invalidated.
     private sealed class WaitFault(int mode) : CleanupCalls
@@ -68,8 +87,14 @@ internal static class CleanupFaults
         // Stopping only a venv bootstrap PID can leave its interpreter running
         // with the temporary cwd open, so do not use a jobless broker fixture.
         using var otherTemp = new TempRepository(); using var otherControls = Gate(otherTemp);
-        using var other = OwnedServer.Start(Command(python, script, otherTemp, "silent"), otherControls);
+        KernelHandle? otherJob = null;
+        using var other = OwnedServer.Start(Command(python, script, otherTemp, "cleanup-probe"), otherControls,
+            (job, gate, output, nul) => { otherJob = Native.Duplicate(job, false); return Command(python, script, otherTemp, "cleanup-probe"); });
+        using var otherJobCapture = otherJob!;
+        using var otherInterpreter = Interpreter((await other.Output.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(5)))!, otherJobCapture);
+        otherJobCapture.Dispose();
         KernelHandle? heldJob = null;
+        KernelHandle? childInterpreter = null;
         var fault = new WaitFault(mode);
         // A test-only, NON-INHERITED duplicate delays actual Job termination.
         // Production never duplicates its Job. This is not a spontaneous OS
@@ -78,13 +103,14 @@ internal static class CleanupFaults
             (job, gate, output, nul) =>
             {
                 heldJob = Native.Duplicate(job, false);
-                return mode == 0 ? Command(python, script, temp, "close-gate", gate.ToString())
+                return mode == 0 ? Command(python, script, temp, "cleanup-probe", gate.ToString())
                     : Command(python, script, temp);
             }, cleanupCalls: fault);
         try
         {
             var line = await child.Output.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(5));
-            Program.Check(mode == 0 ? line == "READY" : line != null && line.Contains("in_job"));
+            Program.Check(mode == 0 ? line != null && line.Contains("pid") : line != null && line.Contains("in_job"));
+            childInterpreter = Interpreter(line!, heldJob!);
             Fails(child.CloseAndWait);
             controls.Dispose();
             Retained(child); Excluded(temp);
@@ -97,7 +123,24 @@ internal static class CleanupFaults
             child.CloseAndWait(); child.Dispose(); // idempotent after confirmed cleanup
             using var restarted = Gate(temp);
         }
-        finally { await Reclaim(child, heldJob); }
+        finally
+        {
+            try
+            {
+                await Reclaim(child, heldJob);
+                if (childInterpreter != null)
+                    Program.Check(Native.WaitForSingleObject(childInterpreter, 5000) == Native.WaitObject);
+            }
+            finally
+            {
+                childInterpreter?.Dispose();
+                other.CloseAndWait();
+                // A venv redirector's exit does not prove its interpreter has
+                // released cwd. Wait on the validated interpreter HANDLE before
+                // deleting either fresh temp namespace. No deletion retries.
+                Program.Check(Native.WaitForSingleObject(otherInterpreter, 5000) == Native.WaitObject);
+            }
+        }
     }
 
     internal static async Task LifecycleFailure(string python, string script)

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
 using System.Windows.Forms;
+using Microsoft.Web.WebView2.Core;
 using J1AI.DashboardHost;
 
 namespace J1AI.DashboardHost.Tests;
@@ -20,6 +21,11 @@ internal static class GuiIntegration
             ("real_window_x_server_reclaim_restart_unrelated_survives", CloseRestart),
             ("real_server_crash_is_failure_not_native_close", ServerCrash),
             ("real_startup_named_show_stop_race_cleanup", StartupStop),
+            ("real_webview_document_initialization_close", () => PendingWebView(false)),
+            ("real_webview_document_initialization_stop", () => PendingWebView(true)),
+            ("real_webview_document_initialization_failure", () => PendingWebViewFailure(false)),
+            ("real_webview_document_initialization_five_second_timeout", () => PendingWebViewFailure(true)),
+            ("real_form_cleanup_deadline_mock_unresolved_sdk_task", PendingSdkTask),
         };
         int passed = 0, failed = 0;
         foreach (var item in cases)
@@ -115,8 +121,16 @@ internal static class GuiIntegration
             using var after = JsonDocument.Parse(await client.GetStringAsync(fixture.Url + "__counts"));
             Program.Check(!after.RootElement.TryGetProperty("/not-allowed", out _));
             // An external URL string is policy-tested without performing a network request.
-            await form.OnUiAsync(() => form.Core!.Navigate("http://127.0.0.1:1/"));
-            await GuiTests.Until(() => form.BlockedRequests > 0);
+            var denied = await ObserveNavigation(fixture, "http://127.0.0.1:1/");
+            RequireRejected(denied);
+            // Actual allowed same-origin navigation is the negative control:
+            // the same rejection assertion MUST fail. No guard is disabled.
+            var allowed = await ObserveNavigation(fixture, fixture.Url + "index.html");
+            bool rejectedByAssertion = false;
+            try { RequireRejected(allowed); }
+            catch (InvalidOperationException) { rejectedByAssertion = true; }
+            Program.Check(rejectedByAssertion && !allowed.Cancelled);
+            await fixture.WaitJs("document.querySelector('#data-status')?.dataset.state === 'empty'");
             Program.Check(fixture.Starts == 1);
             // Explicit manual demo remains supported; no automatic fallback.
             await fixture.Js("document.querySelector('#preview-link').click()");
@@ -126,6 +140,46 @@ internal static class GuiIntegration
             fixture.AssertReclaimed();
         }
         finally { await fixture.StopIfNeeded(run); }
+    }
+    internal sealed record NavigationResult(int Before, int After, bool Cancelled, bool SameDocument);
+    internal static void RequireRejected(NavigationResult result) =>
+        Program.Check(result.After > result.Before && result.Cancelled && result.SameDocument);
+
+    private static async Task<NavigationResult> ObserveNavigation(GuiFixture fixture, string target)
+    {
+        var form = await fixture.Form.Task;
+        int before = 0, after = 0; string source = ""; ulong navigationId = 0;
+        var starting = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var completed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        void OnStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            if (e.Uri == target) { navigationId = e.NavigationId; starting.TrySetResult(e.Cancel); }
+        }
+        void OnCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+        { if (e.NavigationId == navigationId) completed.TrySetResult(); }
+        await fixture.Js("window.__navigationWitness = 'synthetic-original-document'");
+        await form.OnUiAsync(() =>
+        {
+            before = form.BlockedRequests; source = form.Core!.Source;
+            // Subscribe AFTER the product guard so e.Cancel is its verdict.
+            form.Core.NavigationStarting += OnStarting;
+            form.Core.NavigationCompleted += OnCompleted;
+            form.Core.Navigate(target);
+        });
+        try
+        {
+            bool cancelled = await starting.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            if (!cancelled) await completed.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            bool sameSource = false;
+            await form.OnUiAsync(() => { after = form.BlockedRequests; sameSource = form.Core!.Source == source; });
+            bool sameDocument = sameSource && await fixture.Js("window.__navigationWitness === 'synthetic-original-document'") == "true";
+            return new(before, after, cancelled, sameDocument);
+        }
+        finally
+        {
+            await form.OnUiAsync(() =>
+            { form.Core!.NavigationStarting -= OnStarting; form.Core.NavigationCompleted -= OnCompleted; });
+        }
     }
     private static async Task CloseRestart()
     {
@@ -183,6 +237,58 @@ internal static class GuiIntegration
         }
         finally { await fixture.StopIfNeeded(run); }
     }
+    private static async Task PendingWebView(bool stop)
+    {
+        using var fixture = await GuiFixture.Create(); fixture.HtmlMode = "hold";
+        var run = fixture.Launch();
+        try
+        {
+            await fixture.HtmlRequested();
+            var form = await fixture.Form.Task;
+            await form.OnUiAsync(() => Program.Check(form.Core != null && form.RuntimeStarted));
+            if (stop) Program.Check(InstanceControls.Signal(fixture.Identity, true));
+            else await form.OnUiAsync(form.Close);
+            Program.Check(await run.WaitAsync(TimeSpan.FromSeconds(15)) == 0);
+            fixture.AssertReclaimed();
+        }
+        finally { await fixture.StopIfNeeded(run); }
+    }
+    private static async Task PendingWebViewFailure(bool timeout)
+    {
+        using var fixture = await GuiFixture.Create(); fixture.HtmlMode = timeout ? "hold" : "fail";
+        var run = fixture.Launch();
+        try
+        {
+            await fixture.HtmlRequested();
+            if (!timeout)
+            {
+                using var handler = Readiness.CreateHandler(); using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(3) };
+                using var response = await client.GetAsync(fixture.Url + "__release_html");
+                Program.Check(response.IsSuccessStatusCode);
+            }
+            Program.Check(await run.WaitAsync(TimeSpan.FromSeconds(15)) == 1 && fixture.Errors == 1);
+            fixture.AssertReclaimed();
+        }
+        finally { await fixture.StopIfNeeded(run); }
+    }
+    private static async Task PendingSdkTask()
+    {
+        Program.Check(await StaPump.RunAsync(async () =>
+        {
+            using var temp = new TempRepository();
+            using var form = new DashboardForm(new(Path.Combine(temp.Root, "unused-profile"), "154.0.4258.62"), new RecordingEvents());
+            form.Show();
+            var unresolved = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            // Real Form/cleanup timer, mocked unresolved SDK initialization.
+            // Do NOT claim that a real CreateAsync/EnsureCore task was stalled.
+            typeof(DashboardForm).GetField("initialization", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(form, unresolved.Task);
+            bool failed = false;
+            try { await form.CloseAndConfirmAsync(); }
+            catch (HostError error) { failed = error.Code == EventCode.CleanupFailed; }
+            Program.Check(failed && !unresolved.Task.IsCompleted && form.IsDisposed && form.DisposalConfirmed.IsCompletedSuccessfully);
+            unresolved.SetResult(); return 0;
+        }) == 0);
+    }
     private sealed class GuiFixture : IDisposable
     {
         private readonly TempRepository temp = new();
@@ -191,6 +297,7 @@ internal static class GuiIntegration
         internal TaskCompletionSource<DashboardForm> Form = new(TaskCreationOptions.RunContinuationsAsynchronously);
         internal int Starts, Errors;
         internal bool HoldReady;
+        internal string? HtmlMode;
         internal readonly TaskCompletionSource ReadyArrived = new(TaskCreationOptions.RunContinuationsAsynchronously);
         internal string Url = "";
         private InstanceControls? controls;
@@ -213,7 +320,23 @@ internal static class GuiIntegration
         }
         internal ServerCommand Command() => new(python, ["-I", "-S", "-u",
             Path.Combine(AppContext.BaseDirectory, "synthetic_gui_server.py"), temp.Root,
-            "--data", Path.Combine(temp.Root, "must-not-be-read.json")], temp.Root);
+            "--data", Path.Combine(temp.Root, "must-not-be-read.json"),
+            .. HtmlMode == null ? Array.Empty<string>() : new[] { "--hold-html", HtmlMode }], temp.Root);
+        internal async Task HtmlRequested()
+        {
+            using var handler = Readiness.CreateHandler(); using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(3) };
+            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            while (true)
+            {
+                deadline.Token.ThrowIfCancellationRequested();
+                if (Url != "")
+                {
+                    using var counts = JsonDocument.Parse(await client.GetStringAsync(Url + "__counts", deadline.Token));
+                    if (counts.RootElement.TryGetProperty("/", out var value) && value.GetInt32() > 0) return;
+                }
+                await Task.Delay(20, deadline.Token);
+            }
+        }
         internal Task<int> Launch()
         {
             controls = new InstanceControls(Identity);

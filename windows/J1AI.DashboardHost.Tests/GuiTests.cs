@@ -15,6 +15,14 @@ internal static class GuiTests
             ("gui_options_explicit_only_and_data_passthrough", OptionsContract),
             ("gui_duplicate_no_form_profile_or_server", Duplicate),
             ("gui_preflight_failure_before_server", PreflightFailure),
+            ("gui_ipc_acquire_failure_notified", AcquireFailure),
+            ("gui_identity_failure_before_logger_notified", IdentityFailure),
+            ("gui_notification_failure_preserves_exit_code", NotificationFailure),
+            ("gui_notification_attempted_once", NotificationOnce),
+            ("gui_navigation_rejection_assertion_negative_controls", NavigationAssertion),
+            ("gui_pending_initialization_close_cleanup", () => PendingInitialization(false)),
+            ("gui_pending_initialization_stop_cleanup", () => PendingInitialization(true)),
+            ("gui_initialization_fault_during_disposal", InitializationDisposalRace),
             ("gui_override_environment_denied", EnvironmentOverrides),
             ("gui_override_registry_denied_legacy_classified", RegistryOverrides),
             ("gui_profile_runtime_path_validation", Profiles),
@@ -91,6 +99,83 @@ internal static class GuiTests
         int result = await GuiEntry.RunAsync(controls, () => throw new HostError(EventCode.ProfileFailed),
             () => throw new InvalidOperationException(), new FakeReadiness(), new RecordingEvents(), TimeSpan.FromSeconds(1), () => errors++);
         Program.Check(result == 1 && errors == 1 && controls.Disposed);
+    }
+    private sealed class BrokenControls : IControls
+    {
+        internal bool Disposed;
+        public bool Acquire() => throw new HostError(EventCode.IpcFailed);
+        public bool StopRequested => throw new InvalidOperationException();
+        public bool ConsumeShow() => throw new InvalidOperationException();
+        public void RequestShow() => throw new InvalidOperationException();
+        public void Dispose() => Disposed = true;
+    }
+    private static async Task AcquireFailure()
+    {
+        var controls = new BrokenControls(); var events = new RecordingEvents(); int notices = 0;
+        int result = await GuiEntry.RunAsync(controls, () => throw new InvalidOperationException(),
+            () => throw new InvalidOperationException(), new FakeReadiness(), events, TimeSpan.FromSeconds(1), () => notices++);
+        Program.Check(result == 1 && notices == 1 && controls.Disposed && events.Codes.Contains(EventCode.IpcFailed));
+    }
+    private static async Task IdentityFailure()
+    {
+        int notices = 0, resolutions = 0;
+        int result = await J1AI.DashboardHost.Program.RunAsync(["--gui"], _ =>
+        { resolutions++; return Task.FromException<RepositoryIdentity>(new IOException("synthetic private path must never be shown")); }, () => notices++);
+        Program.Check(result == 1 && notices == 1 && resolutions == 1);
+        Program.Check(await J1AI.DashboardHost.Program.RunAsync(["--gui", "--help"],
+            _ => throw new InvalidOperationException(), () => throw new InvalidOperationException()) == 0);
+    }
+    private static async Task NotificationFailure()
+    {
+        int attempts = 0;
+        Program.Check(await J1AI.DashboardHost.Program.RunAsync(["--gui"],
+            _ => Task.FromException<RepositoryIdentity>(new HostError(EventCode.IdentityFailed)),
+            () => { attempts++; throw new InvalidOperationException("synthetic notifier failure"); }) == 1 && attempts == 1);
+        var controls = new BrokenControls();
+        Program.Check(await GuiEntry.RunAsync(controls, () => throw new InvalidOperationException(),
+            () => throw new InvalidOperationException(), new FakeReadiness(), new RecordingEvents(), TimeSpan.FromSeconds(1),
+            () => throw new InvalidOperationException()) == 1 && controls.Disposed);
+    }
+    private static Task NotificationOnce()
+    {
+        int attempts = 0; var notification = new GuiFailureNotification(() => { attempts++; throw new InvalidOperationException(); });
+        notification.Show(); notification.Show(); Program.Check(attempts == 1); return Task.CompletedTask;
+    }
+    private static Task NavigationAssertion()
+    {
+        GuiIntegration.RequireRejected(new(7, 8, true, true));
+        foreach (var result in new[] { new GuiIntegration.NavigationResult(7, 7, true, true),
+            new(7, 8, false, true), new(7, 8, true, false), new(7, 7, false, false) })
+        {
+            bool failed = false;
+            try { GuiIntegration.RequireRejected(result); } catch (InvalidOperationException) { failed = true; }
+            Program.Check(failed);
+        }
+        return Task.CompletedTask;
+    }
+    private static async Task PendingInitialization(bool stop)
+    {
+        var controls = new FakeControls(); var server = new FakeServer();
+        var window = new ProbeWindow { InitSource = new(TaskCreationOptions.RunContinuationsAsynchronously) };
+        var life = new GuiLifecycle(controls, () => server, new FakeReadiness(), window, new RecordingEvents());
+        var run = life.RunAsync(TimeSpan.FromSeconds(2));
+        await Until(() => window.InitStarted);
+        if (stop) controls.Stop = true; else window.Requested = true;
+        Program.Check(await run == 0 && window.Closed && server.Closed && controls.Disposed);
+        window.InitSource.TrySetCanceled(); // observe the abandoned mock operation, never a runtime claim
+    }
+    private static async Task InitializationDisposalRace()
+    {
+        var controls = new FakeControls(); var server = new FakeServer();
+        var window = new ProbeWindow { HoldDisposal = true, InitSource = new(TaskCreationOptions.RunContinuationsAsynchronously) };
+        var life = new GuiLifecycle(controls, () => server, new FakeReadiness(), window, new RecordingEvents());
+        var run = life.RunAsync(TimeSpan.FromSeconds(2));
+        await Until(() => window.InitStarted); controls.Stop = true;
+        await Until(() => window.Closed);
+        window.InitSource.SetException(new HostError(EventCode.WebViewFailed));
+        Program.Check(!server.Closed && !controls.Disposed && !run.IsCompleted);
+        window.Disposed.TrySetResult();
+        Program.Check(await run == 0 && server.Closed && controls.Disposed);
     }
     private static Task EnvironmentOverrides()
     {
@@ -209,7 +294,7 @@ internal static class GuiTests
     private static async Task GuiHelp()
     {
         Program.Check(await J1AI.DashboardHost.Program.Main(["--gui", "--help", "--repository", "Z:\\missing-identity-no-lookup"]) == 0);
-        Program.Check(await J1AI.DashboardHost.Program.Main(["--gui", "--core"]) == 1);
+        Program.Check(await J1AI.DashboardHost.Program.RunAsync(["--gui", "--core"], reportFailure: () => { }) == 1);
     }
     private static async Task DisposalOrder()
     {
@@ -263,7 +348,8 @@ internal static class GuiTests
     }
     private sealed class ProbeWindow : IGuiWindow
     {
-        internal bool Requested, Initialized, Closed, HoldDisposal, FailDisposal;
+        internal bool Requested, Initialized, Closed, HoldDisposal, FailDisposal, InitStarted;
+        internal TaskCompletionSource? InitSource;
         internal int Restored, InitDelay;
         internal EventCode? Error, InitFailure;
         internal readonly TaskCompletionSource Disposed = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -271,7 +357,11 @@ internal static class GuiTests
         public EventCode? Failure => Error;
         public Task DisposalConfirmed => Disposed.Task;
         public async Task InitializeAsync(string url, CancellationToken token)
-        { await Task.Delay(InitDelay, token); if (InitFailure is EventCode c) throw new HostError(c); Initialized = true; }
+        {
+            InitStarted = true;
+            if (InitSource != null) await InitSource.Task; else await Task.Delay(InitDelay, token);
+            if (InitFailure is EventCode c) throw new HostError(c); Initialized = true;
+        }
         public void RestoreOwned() => Restored++;
         public Task CloseAndConfirmAsync()
         {

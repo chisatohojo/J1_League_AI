@@ -10,10 +10,11 @@ internal static class GuiEntry
     {
         // Same ownership gate as Python/core. A duplicate never creates Form,
         // profile, environment, or server. Legacy owners safely ignore Show.
-        if (!controls.Acquire())
-        { controls.RequestShow(); events.Record(EventCode.AlreadyRunning); return 0; }
+        var notification = new GuiFailureNotification(reportFailure);
         try
         {
+            if (!controls.Acquire())
+            { controls.RequestShow(); events.Record(EventCode.AlreadyRunning); return 0; }
             var configuration = preflight(); // before server creation
             return await StaPump.RunAsync(async () =>
             {
@@ -24,22 +25,32 @@ internal static class GuiEntry
                 int result;
                 try { result = await lifecycle.RunAsync(timeout); }
                 catch (HostError) { result = 1; }
-                if (result != 0) Report();
+                if (result != 0) notification.Show();
                 return result;
             });
         }
         catch (Exception error)
         {
             events.Record(error is HostError h ? h.Code : EventCode.WebViewFailed);
-            Report(); return 1;
+            notification.Show(); return 1;
         }
         finally { controls.Dispose(); }
 
-        void Report()
+    }
+}
+
+internal sealed class GuiFailureNotification(Action? notify = null)
+{
+    private int attempted;
+    internal void Show()
+    {
+        if (Interlocked.Exchange(ref attempted, 1) != 0) return;
+        try
         {
-            if (reportFailure != null) reportFailure();
+            if (notify != null) notify();
             else MessageBox.Show("J1 AI Dashboardを起動・継続できませんでした。ローカルのnative-core.logを確認してください。",
                 "J1 AI Predict", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        catch { /* Notification failure must not mask the original exit code 1. */ }
     }
 }

@@ -38,9 +38,16 @@ internal sealed record Options(bool Help, bool Core, bool Gui, bool Stop, string
 public static class Program
 {
     [STAThread]
-    public static async Task<int> Main(string[] args)
+    public static Task<int> Main(string[] args) => RunAsync(args);
+
+    // Internal synthetic seam, never configurable by CLI or production data.
+    internal static async Task<int> RunAsync(string[] args,
+        Func<string?, Task<RepositoryIdentity>>? resolveIdentity = null, Action? reportFailure = null)
     {
         IEvents? events = null;
+        bool guiRequested = args.Contains("--gui", StringComparer.Ordinal) &&
+            !args.Contains("--help", StringComparer.Ordinal) && !args.Contains("--stop", StringComparer.Ordinal);
+        var notification = new GuiFailureNotification(reportFailure);
         try
         {
             var options = Options.Parse(args);
@@ -52,8 +59,8 @@ public static class Program
             }
             if (!options.Core && !options.Gui && !options.Stop) return 0;
             if (!OperatingSystem.IsWindows()) return 1;
-            string root = options.Root ?? RepositoryIdentity.FindRoot(AppContext.BaseDirectory);
-            var identity = await RepositoryIdentity.ResolveAsync(root);
+            var identity = resolveIdentity != null ? await resolveIdentity(options.Root) :
+                await RepositoryIdentity.ResolveAsync(options.Root ?? RepositoryIdentity.FindRoot(AppContext.BaseDirectory));
             events = new FileEvents(identity.Id);
             if (options.Stop)
             {
@@ -65,7 +72,7 @@ public static class Program
                 return await GuiEntry.RunAsync(controls,
                     () => WebViewPreflight.Check(identity.Id),
                     () => OwnedServer.Start(ServerCommand.Dashboard(identity, options.Data), controls),
-                    new Readiness(), events, TimeSpan.FromSeconds(options.Timeout));
+                    new Readiness(), events, TimeSpan.FromSeconds(options.Timeout), notification.Show);
             // Duplicate owners signal SHOW (legacy has no Show: harmless false).
             // Lifecycle owns acquisition, so no second mutex acquisition here.
             var core = new Lifecycle(controls,
@@ -75,7 +82,9 @@ public static class Program
         }
         catch (Exception error)
         {
-            events?.Record(error is HostError h ? h.Code : EventCode.UnexpectedFailure);
+            try { events?.Record(error is HostError h ? h.Code : EventCode.UnexpectedFailure); }
+            catch { /* Best-effort diagnostics cannot mask the original failure. */ }
+            if (guiRequested) notification.Show();
             return 1;
         }
     }

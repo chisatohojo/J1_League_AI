@@ -5,11 +5,15 @@ from pathlib import Path
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Lock
+from threading import Event
 from urllib.parse import urlsplit
 
 root = Path(sys.argv[1]).resolve()
 assert root.name.startswith("J1AI-native-test-")
-assert len(sys.argv) == 2 or (len(sys.argv) == 4 and sys.argv[2] == "--data" and Path(sys.argv[3]).is_absolute())
+assert len(sys.argv) == 2 or (len(sys.argv) in (4, 6) and sys.argv[2] == "--data" and Path(sys.argv[3]).is_absolute())
+html_mode = sys.argv[5] if len(sys.argv) == 6 else None
+assert html_mode is None or (sys.argv[4] == "--hold-html" and html_mode in ("hold", "fail"))
+html_release = Event()
 # --data is deliberately never opened. The only API response is synthetic empty.
 counts = {}
 counts_lock = Lock()
@@ -31,6 +35,9 @@ class Handler(BaseHTTPRequestHandler):
             counts[path] = counts.get(path, 0) + 1
         if path == "/api/dashboard":
             content, mime = json.dumps(payload).encode(), "application/json"
+        elif path == "/__release_html":
+            html_release.set()
+            content, mime = b"released", "text/plain"
         elif path == "/__counts":
             with counts_lock:
                 content, mime = json.dumps(counts).encode(), "application/json"
@@ -39,6 +46,10 @@ class Handler(BaseHTTPRequestHandler):
             if route not in routes:
                 self.send_error(404)
                 return
+            if route == "/index.html" and html_mode is not None:
+                if not html_release.wait(12) or html_mode == "fail":
+                    self.send_error(503)
+                    return
             content = (root / "web" / route.lstrip("/")).read_bytes()
             mime = {".html": "text/html", ".js": "text/javascript", ".css": "text/css"}[Path(route).suffix]
         self.send_response(200)

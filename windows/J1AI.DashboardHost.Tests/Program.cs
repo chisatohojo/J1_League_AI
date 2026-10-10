@@ -18,6 +18,20 @@ internal static class Program
 
     public static async Task<int> Main(string[] args)
     {
+        if (args is ["--cleanup-repeat", var interpreter, var repetitions] &&
+            int.TryParse(repetitions, out int count) && count is > 0 and <= 1000)
+        {
+            for (int iteration = 0; iteration < count; iteration++)
+                await Test("cleanup_timeout_retains_resources_and_gate_" + iteration,
+                    () => CleanupFaults.WaitFailure(interpreter, Child, 0));
+            return Summary(count);
+        }
+        if (args is ["--navigation-negative-control"])
+        {
+            await Test("intentional_allowed_navigation_rejection_failure", () =>
+            { GuiIntegration.RequireRejected(new(7, 7, false, false)); return Task.CompletedTask; });
+            return Summary(1); // expected nonzero; a permitting guard must fail
+        }
         if (args.Length > 0 && args[0] == "--synthetic-gui-tests")
             return await GuiIntegration.RunAsync(args);
         if (args.Length > 0 && args[0] == "--synthetic-owner") return await CrashOwner(args);
@@ -116,8 +130,13 @@ internal static class Program
         catch (Exception error)
         {
             failed++;
-            // Deliberately no exception messages/stack traces or captured output.
+            // Fixed codes by default; synthetic cleanup stack diagnostics below
+            // never forward exception messages or captured output.
             Console.WriteLine("FAIL " + name + " " + (error is HostError h ? h.Code.ToString() : error.GetType().Name));
+            // Explicit synthetic cleanup diagnostics only: stack frames, never
+            // arbitrary exception messages, captured streams or prediction data.
+            if (name.StartsWith("cleanup_timeout_retains_resources_and_gate", StringComparison.Ordinal))
+                Console.WriteLine(error.StackTrace);
         }
     }
     internal static void Check(bool value) { if (!value) throw new InvalidOperationException("assertion_failed"); }
@@ -579,7 +598,12 @@ internal sealed class TempRepository : IDisposable
         var path = Path.GetFullPath(Root);
         if (!path.StartsWith(Path.GetFullPath(Path.GetTempPath()), StringComparison.OrdinalIgnoreCase) ||
             !Path.GetFileName(path).StartsWith("J1AI-native-test-", StringComparison.Ordinal)) throw new InvalidOperationException();
-        Directory.Delete(path, true);
+        try { Directory.Delete(path, true); }
+        catch (IOException error)
+        {
+            Console.WriteLine("INFO synthetic_temp_delete_hresult " + error.HResult.ToString("X8"));
+            throw;
+        }
     }
 }
 

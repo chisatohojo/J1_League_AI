@@ -29,7 +29,7 @@ if mode == "probe":
     valid = [bool(kernel.GetHandleInformation(value, ctypes.byref(flags))) for value in handles]
     inside = wintypes.BOOL()
     assert kernel.IsProcessInJob(kernel.GetCurrentProcess(), None, ctypes.byref(inside))
-    print(json.dumps({"valid": valid, "in_job": bool(inside.value)}), flush=True)
+    print(json.dumps({"valid": valid, "in_job": bool(inside.value), "pid": os.getpid()}), flush=True)
 elif mode == "argv":
     print(json.dumps(sys.argv[2:], ensure_ascii=True), flush=True)
 elif mode == "cwd":
@@ -41,6 +41,10 @@ elif mode == "close-gate":
     # exclude duplicates until retained-process exit has been confirmed.
     assert kernel.CloseHandle(int(sys.argv[2]))
     print("READY", flush=True)
+elif mode == "cleanup-probe":
+    if len(sys.argv) == 3:
+        assert kernel.CloseHandle(int(sys.argv[2]))
+    print(json.dumps({"pid": os.getpid()}), flush=True)
 elif mode == "ready":
     payload = {
         "schemaVersion": 1, "mode": "operational",
