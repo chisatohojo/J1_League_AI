@@ -96,11 +96,16 @@ internal static class SmokeRunner
     }
     private static async Task<int> Worker(SmokeFixture fixture, SmokeInspection inspection, string? approval)
     {
-        using var lease = fixture.Begin(inspection, approval);
-        fixture.BindDirectories(inspection, lease);
         var identity = new RepositoryIdentity(fixture.Root, inspection.Manifest.Identity);
         using var controls = new InstanceControls(identity);
-        var parentControls = new SmokeParentControls(controls);
+        await using var coordination = await SmokeCoordination.Connect(inspection.Manifest, fixture);
+        SmokeFixture.Require(!coordination.Gate.Aborted && controls.Acquire(), "coordination_or_instance_unavailable");
+        // The native Stop event exists BEFORE RUNNING is persisted. The link's
+        // abort latch exists even earlier, while the observer is being contacted.
+        using var lease = fixture.Begin(inspection, approval);
+        fixture.BindDirectories(inspection, lease);
+        await coordination.Armed(lease.Run);
+        var parentControls = new SmokeParentControls(new CoordinatedControls(controls, coordination));
         OwnedServer? server = null; DashboardForm? form = null;
         bool mapped = false, initializationEntered = false, notified = false;
         using var monitorStop = new CancellationTokenSource();
@@ -114,18 +119,11 @@ internal static class SmokeRunner
         int result;
         try
         {
-            result = await GuiEntry.RunAsync(parentControls, () =>
-                {
-                    var configuration = WebViewPreflight.Check(identity.Id);
-                    SmokeFixture.Require(configuration.Profile == inspection.Manifest.Udf && configuration.Runtime == inspection.Manifest.Runtime, "runtime_configuration_changed");
-                    return configuration;
-                },
+            var configuration = WebViewPreflight.Check(identity.Id);
+            SmokeFixture.Require(configuration.Profile == inspection.Manifest.Udf && configuration.Runtime == inspection.Manifest.Runtime, "runtime_configuration_changed");
+            result = await CoordinatedGuiEntry.Run(parentControls, configuration,
                 () => server = OwnedServer.Start(fixture.Server(inspection.Manifest), controls),
-                new Readiness(), new RecordingEvents(), TimeSpan.FromSeconds(20), () =>
-                {
-                    notified = true;
-                    new GuiFailureNotification().Show(); // actual fixed-text notification in manual smoke
-                }, created =>
+                new RecordingEvents(), coordination, created =>
                 {
                     form = created;
                     var timer = new System.Windows.Forms.Timer { Interval = 20 };
@@ -144,6 +142,10 @@ internal static class SmokeRunner
                     };
                     created.Disposed += (_, _) => { timer.Stop(); timer.Dispose(); };
                     timer.Start();
+                }, () =>
+                {
+                    notified = true;
+                    new GuiFailureNotification().Show(); // actual fixed-text notification in manual smoke
                 });
         }
         finally { monitorStop.Cancel(); }

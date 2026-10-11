@@ -9,26 +9,48 @@ internal interface IBlobStore
     byte[] ReadPending(string name);
     void Commit(string name);
     byte[] ReadCommitted(string name);
+    BlobIdentity Identity(string name) => throw new IOException("receipt_identity_unavailable");
 }
+internal sealed record BlobIdentity(string DirectoryIdentity, string FileIdentity);
+public sealed record FileReceipt(J1AI.SmokeCoordination.RunBinding Binding, string Name, string FileSha256,
+    string DirectoryIdentity, string VolumeId, string FileId, bool Flushed, bool PendingReadback,
+    bool FinalReadback, DateTimeOffset SavedUtc, string? RawSha256, bool Complete = true, string? ResultSha256 = null);
 
 // Shared by real disk writer and value-only fault tests. No swallowed write,
 // flush, rename or read-back failures. A result without its verified receipt is
 // incomplete, even if the data file happens to contain a PASS word.
-internal sealed class VerifiedEvidence(IBlobStore store) : IEvidence
+internal sealed class VerifiedEvidence(IBlobStore store, J1AI.SmokeCoordination.RunBinding? binding = null) : IEvidence
 {
     private long used;
+    private readonly Dictionary<string, string> hashes = [];
     public void SaveVerified(string name, object value)
     {
         if (!System.Text.RegularExpressions.Regex.IsMatch(name, "\\A[a-zA-Z0-9-]{1,40}\\z")) throw new IOException("evidence_name");
         byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(value, Approval.Json);
-        used = checked(used + bytes.Length);
-        if (bytes.Length > 4 * 1024 * 1024 || used > 64 * 1024 * 1024) throw new IOException("evidence_capacity");
         Save(name, bytes);
-        if (name == "result")
+        if (binding != null)
+        {
+            var identity = store.Identity(name);
+            if (identity.FileIdentity.Length != 48 || identity.DirectoryIdentity.Length != 48 ||
+                !identity.FileIdentity.All(Uri.IsHexDigit) || !identity.DirectoryIdentity.All(Uri.IsHexDigit) ||
+                identity.FileIdentity[..16] != identity.DirectoryIdentity[..16])
+                throw new IOException("receipt_file_identity");
+            string hash = Approval.Hash(bytes); hashes.Add(name, hash);
+            string? rawHash = null;
+            if (name.EndsWith("-verdict", StringComparison.Ordinal) && !hashes.TryGetValue(name[..^8] + "-raw", out rawHash))
+                throw new IOException("receipt_raw_missing");
+            var receipt = new FileReceipt(binding, name, hash, identity.DirectoryIdentity,
+                identity.FileIdentity[..16], identity.FileIdentity[16..], true, true, true, DateTimeOffset.UtcNow, rawHash,
+                ResultSha256: name == "result" ? hash : null);
+            Save(name + "-receipt", JsonSerializer.SerializeToUtf8Bytes(receipt, Approval.Json));
+        }
+        else if (name == "result")
             Save("result-receipt", JsonSerializer.SerializeToUtf8Bytes(new { ResultSha256 = Approval.Hash(bytes), Complete = true }, Approval.Json));
     }
     private void Save(string name, byte[] bytes)
     {
+        used = checked(used + bytes.Length);
+        if (bytes.Length > 4 * 1024 * 1024 || used > 64 * 1024 * 1024) throw new IOException("evidence_capacity");
         store.CreatePending(name, bytes);
         store.FlushPending(name);
         if (!store.ReadPending(name).AsSpan().SequenceEqual(bytes)) throw new IOException("evidence_verification");
@@ -88,6 +110,13 @@ internal sealed class DiskBlobs(EvidenceDirectory directory) : IBlobStore, IDisp
         using var file = new FileStream(h, FileAccess.Read);
         if (file.Length > 4 * 1024 * 1024) throw new IOException("evidence_size");
         var bytes = new byte[file.Length]; file.ReadExactly(bytes); return bytes;
+    }
+    public BlobIdentity Identity(string name)
+    {
+        directory.Validate(); var entry = committed[name];
+        string actual = EvidenceNative.Identity(entry.Stream.SafeFileHandle);
+        if (actual != entry.Identity) throw new IOException("receipt_file_identity_changed");
+        return new(directory.Identity, actual);
     }
     public void Dispose()
     {

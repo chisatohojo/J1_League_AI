@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace J1AI.SmokeNetworkObserver;
 
-public sealed class FormalSmokeStop(ApprovalPlan plan) : IStop
+public sealed class FormalSmokeStop(ApprovalPlan plan, Func<string?>? fixtureRun = null) : IStop
 {
     public async Task<bool> RequestAsync(string identity, TimeSpan timeout)
     {
@@ -11,6 +11,7 @@ public sealed class FormalSmokeStop(ApprovalPlan plan) : IStop
         // No raw event creation/signaling or PID discovery. The unchanged runner
         // validates manifest, RUNNING+intent, identity and opens its existing event.
         Approval.Validate(plan, false);
+        if (fixtureRun != null && Approval.Read<FixtureState>(Path.Combine(Approval.Control, "run-state.json")).Run != fixtureRun()) return false;
         using var command = OwnedStopCommand.Start(plan.Contract.Dotnet, plan.Contract.Runner);
         bool acknowledged = await command.Wait(timeout - TimeSpan.FromSeconds(1));
         bool helperEnded = await command.CloseAndConfirm(TimeSpan.FromSeconds(1));
@@ -29,7 +30,7 @@ public static class Program
                 Console.WriteLine("Independent fixed-synthetic TCP observer. Does not launch GUI/backend.\n" +
                     "--plan <approved-future-absolute-evidence-directory> : read-only JSON plan and SHA; no monitoring/files.\n" +
                     "--observe <plan.json> --approve <exact-plan-file-sha256> : separately authorized monitoring only.\n" +
-                    "Wait for OBSERVER_READY before manually launching the frozen Smoke runner.\n" +
+                    "Coordinated source requires a separately reviewed/refrozen Smoke runner; stdout is NOT a start grant.\n" +
                     "This implementation task does NOT authorize --observe or another GUI run.");
                 return 0;
             }
@@ -69,9 +70,11 @@ public static class Program
     }
     private static async Task<int> Observe(ApprovalPlan plan)
     {
-        using var evidence = new FileEvidence(plan);
+        var binding = CoordinatedObservation.Bind(plan);
+        using var evidence = new FileEvidence(plan, binding);
         using var collector = new WindowsCollector(plan);
-        var observation = new Observation(plan.Contract, evidence, new FormalSmokeStop(plan));
+        await using var coordination = new CoordinatedObservation(plan, binding, evidence);
+        var observation = new Observation(plan.Contract, evidence, coordination, new ObservationPolicy(), coordination.Session);
         var clock = Stopwatch.StartNew();
         long sequence = 0;
         try
@@ -83,12 +86,15 @@ public static class Program
             await observation.Accept(baseline);
             if (baseline.Processes.Length != 0 || baseline.Run != null || baseline.CollectionErrors.Length != 0 || observation.State != Phase.OBSERVING)
                 throw new IOException("baseline_not_empty_or_unavailable");
+            coordination.CollectorReady();
             Console.WriteLine("OBSERVER_READY: bounded OS TCP scope, fixed synthetic identity only.");
             while (clock.Elapsed < TimeSpan.FromSeconds(plan.MaximumSessionSeconds))
             {
                 await Task.Delay(plan.PeriodMs);
                 var snapshot = await collector.CollectAsync(++sequence, CancellationToken.None);
                 await observation.Accept(snapshot);
+                await coordination.Update(snapshot);
+                if (coordination.CloseRequested) await observation.RequestNormalStop();
                 if (snapshot.EndConfirmed)
                 {
                     var summary = await observation.Complete(snapshot.RuntimeEventConfirmed);

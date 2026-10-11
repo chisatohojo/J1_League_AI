@@ -102,6 +102,28 @@ internal static class NativeEvidenceTests
     internal static void Register(Action<string, Action> add, Action<string, Func<Task>> async, string? selectedMutation)
     {
         mutation = selectedMutation;
+        add("native_coordinated_receipt_matches_actual_file_identity", () =>
+        {
+            using var t = new Temp(); var p = new Policy();
+            var binding = new J1AI.SmokeCoordination.RunBinding(new string('1', 32), J1AI.SmokeCoordination.CoordinationSession.FixedIdentity,
+                J1AI.SmokeCoordination.CoordinationSession.FixedUdf, new string('a', 64), new string('b', 64), new string('c', 64), new string('d', 64), new string('e', 64), new string('f', 64), new string('a', 64), new string('b', 64));
+            using (var store = new FileEvidence(t.Session, p, binding))
+            {
+                store.SaveVerified("000001-raw", new { Synthetic = true });
+                store.SaveVerified("000001-verdict", new { Synthetic = true });
+                FileStream ReadHeld(string name) => new(Path.Combine(t.Session, name), FileMode.Open,
+                    FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                using var receiptFile = ReadHeld("000001-verdict-receipt.json");
+                var receipt = JsonSerializer.Deserialize<FileReceipt>(receiptFile, Approval.Json)!;
+                string HashHeld(string name)
+                { using var input = ReadHeld(name); return Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(input)).ToLowerInvariant(); }
+                string file = Path.Combine(t.Session, "000001-verdict.json");
+                Check(receipt.VolumeId + receipt.FileId == FileId(file) && receipt.DirectoryIdentity == FileId(t.Session) &&
+                    receipt.FileSha256 == HashHeld("000001-verdict.json") && receipt.RawSha256 == HashHeld("000001-raw.json") &&
+                    receipt.Flushed && receipt.PendingReadback && receipt.FinalReadback && receipt.Binding == binding, "actual_receipt_identity_sha_pairing");
+            }
+            p.Released();
+        });
         add("native_new_directory_acl_and_identity", () =>
         {
             using var t = new Temp(); var p = new Policy(); string id;

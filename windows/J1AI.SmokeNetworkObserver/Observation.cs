@@ -6,9 +6,11 @@ public sealed class Observation
     private readonly IEvidence evidence;
     private readonly IStop stop;
     private readonly ObservationPolicy policy;
+    private readonly J1AI.SmokeCoordination.CoordinationSession? coordination;
     public Observation(IdentityContract contract, IEvidence evidence, IStop stop) : this(contract, evidence, stop, new ObservationPolicy()) { }
-    internal Observation(IdentityContract contract, IEvidence evidence, IStop stop, ObservationPolicy policy)
-    { this.contract = contract; this.evidence = evidence; this.stop = stop; this.policy = policy; }
+    internal Observation(IdentityContract contract, IEvidence evidence, IStop stop, ObservationPolicy policy,
+        J1AI.SmokeCoordination.CoordinationSession? coordination = null)
+    { this.contract = contract; this.evidence = evidence; this.stop = stop; this.policy = policy; this.coordination = coordination; }
     public const string Identity = "8f96edbb39b7d4d47cdad47c";
     public const string Scope = "Periodic OS TCP snapshots for exact-UDF/executable/lineage and retained PID+birth identities; not all network traffic or SDK process identity.";
     private readonly Dictionary<int, long> births = [];
@@ -20,6 +22,8 @@ public sealed class Observation
     private long count;
     private bool stopped, stopOk, fault, denied, finished, sawWorker, sawRuntime, endEvidenceConfirmed;
     private Summary? final;
+    private readonly object stopSync = new();
+    private Task? stopDelivery;
     private Phase phase = Phase.READY;
     private readonly List<string> reasons = [];
     public Phase State => phase;
@@ -34,6 +38,7 @@ public sealed class Observation
     {
         if (finished) throw new InvalidOperationException("already_finished");
         count++;
+        coordination?.SnapshotStarted(count);
         Ownership ownership;
         try { ownership = OwnershipRules.Resolve(snapshot.Processes, contract); }
         catch { ownership = new([], [], null, ["ownership_exception"]); }
@@ -74,7 +79,7 @@ public sealed class Observation
             run = snapshot.Run;
         }
         // Raw durability is ALWAYS attempted before endpoint/classification/Stop.
-        try { await policy.BeforeRaw(stop); evidence.SaveVerified($"{count:D6}-raw", raw); }
+        try { await policy.BeforeRaw(stop); evidence.SaveVerified($"{count:D6}-raw", raw); coordination?.RawCommitted(count); }
         catch { await Fail(Phase.WRITE_FAILED, "raw_write_or_flush_failed"); return; }
         try
         {
@@ -93,6 +98,7 @@ public sealed class Observation
             { fault = true; phase = gap ? Phase.GAP : Phase.OWNERSHIP_UNKNOWN; reasons.AddRange(errors); reasons.AddRange(decisions.Where(d => d.Disposition == Disposition.Unknown).Select(d => d.Reason)); }
             else if (!fault && !denied) phase = Phase.OBSERVING;
             evidence.SaveVerified($"{count:D6}-verdict", new SnapshotVerdict(count, endpoint, decisions, phase, errors.ToArray()));
+            coordination?.VerdictCommitted(count);
             if (denied || fault) await RequestStop();
             if (snapshot.EndConfirmed)
             {
@@ -106,13 +112,24 @@ public sealed class Observation
         catch { await Fail(Phase.WRITE_FAILED, "classification_or_verdict_write_failed"); }
     }
 
-    private async Task RequestStop()
+    public Task RequestNormalStop() => RequestStop(false);
+    private Task RequestStop(bool failure = true)
     {
-        if (stopped) return;
-        stopped = true;
-        try { stopOk = await stop.RequestAsync(Identity, TimeSpan.FromSeconds(10)).WaitAsync(TimeSpan.FromSeconds(10)); }
-        catch { stopOk = false; }
-        if (!stopOk) { fault = true; reasons.Add("formal_stop_unconfirmed"); }
+        lock (stopSync)
+        {
+            if (stopDelivery != null) return stopDelivery;
+            coordination?.PrepareStop(failure);
+            stopped = true;
+            return stopDelivery = Deliver();
+        }
+        async Task Deliver()
+        {
+            try { stopOk = await stop.RequestAsync(Identity, TimeSpan.FromSeconds(10)).WaitAsync(TimeSpan.FromSeconds(10)); }
+            catch { stopOk = false; }
+            try { coordination?.StopResult(stopOk); }
+            catch { fault = true; reasons.Add("stop_receipt_failed"); }
+            if (!stopOk) { fault = true; reasons.Add("formal_stop_unconfirmed"); }
+        }
     }
     public async Task Fail(Phase failure, string reason)
     {
@@ -127,6 +144,11 @@ public sealed class Observation
     {
         if (finished) return final!;
         runtimeEndConfirmed &= endEvidenceConfirmed;
+        if (coordination != null && runtimeEndConfirmed)
+        {
+            try { coordination.End(true, true, true, true, true); }
+            catch { fault = true; reasons.Add("coord_cleanup_or_stop_unconfirmed"); }
+        }
         if (!runtimeEndConfirmed || !sawRuntime || count < 2) { fault = true; reasons.Add("observation_incomplete"); }
         if (!fault && !denied) phase = Phase.NORMAL_END;
         var result = Summary(runtimeEndConfirmed);

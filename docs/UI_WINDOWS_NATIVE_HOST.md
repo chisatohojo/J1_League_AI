@@ -883,3 +883,155 @@ Limits and next gate:
   permission for one same-UDF observation. No second GUI run, evidence destination
   provisioning, profile mutation, production-feed smoke or production use is
   authorized by the implementation or its Fake tests.
+
+### Observer coordination Phase 1 (source only; no GUI authorization)
+
+This change adds a test-only coordination path, without changing the product
+host, the ten existing GUI integration cases, or any frozen binary/fixture/UDF.
+The old `OBSERVER_READY` console message is informational, never a start grant.
+The existing frozen runner is deliberately **not compatible with the new live
+protocol** until a separately approved binary/manifest refreeze. Do not run
+`--observe` or the modified Smoke entry against that old binary set.
+
+The shared `CoordinationSession.cs` / `CoordinationPipe.cs` sources are linked
+into the test runner; `SmokeCoordination.cs` wraps the existing product interfaces
+instead of changing `DashboardForm`, `GuiLifecycle`, STA or Job ownership code.
+Only the fixed identity `8f96edbb39b7d4d47cdad47c` and its existing dedicated UDF
+are accepted. There is no arbitrary UDF/backend override.
+
+Control and ordering:
+
+1. Observer creates the first-instance, current-user-only local named pipe
+   `J1AI.SmokeCoordination.8f96edbb39b7d4d47cdad47c`. The pipe's peer PID comes
+   from Windows, with a retained process handle, birth time and held executable
+   SHA. Binding includes a fresh observer Run ID, worker challenge, fixed UDF,
+   manifest and Observer/runner/apphost/dotnet/Runtime/interpreter/backend hashes.
+   Frames have increasing per-direction sequences, an 8 KiB bound and a 4,096
+   frame bound; duplicate/unknown JSON fields and stale/foreign bindings fail.
+   These checks are **not DLL attestation or authentication against malicious
+   same-user code**. Nonces correlate a run; they are not access credentials.
+2. An empty successful OS collector baseline is durably recorded before READY.
+   Worker verifies the live bound peer and READY. Its Abort latch exists before
+   native IPC acquisition. Native controls/Stop event are acquired **before**
+   `fixture.Begin()` writes RUNNING; only then does worker send Armed with the
+   exact fixture run. No SDK initialization is possible before a valid Permit.
+3. Backend may start to establish readiness, but WebView2 initialization waits.
+   Worker reports the URL's actual dynamic port. Observer cross-checks the pipe
+   worker PID/birth, approved interpreter/script lineage and exactly one
+   `127.0.0.1` listener from the OS snapshot. Unknown/multiple/changed endpoints,
+   foreign workers and mismatched ports cannot grant initialization.
+4. A durable start-permit record precedes delivery. Worker serializes the SDK
+   call boundary with its Abort/lease checks. Abort ordered before that boundary
+   wins; this does not promise cancellation of an SDK task already entered.
+   Missing peer, malformed message or >1.5 s heartbeat lease latches Abort;
+   later pulses cannot revive it. Session/startup waits remain finite.
+5. Normal native X is a Close request to Observer, not an immediate cleanup
+   bypass. Latest Raw plus verified flush/readback, then Verdict durability,
+   then `stop-before` receipt precede the existing exact-run `--smoke-stop` path.
+   Concurrent/repeated Stop requests share one delivery task. Failure paths latch
+   Abort and attempt evidence, but a broken journal cannot suppress formal Stop;
+   they remain INCONCLUSIVE. The retained native `--smoke-stop`, parent-disconnect
+   and startup safety exits can still interrupt a run; without the coordinated
+   Stop/end proofs such a run cannot receive coordinated PASS.
+6. `stop-after` records acknowledgement, explicitly **not process exit**.
+   `end-after` requires Runtime/backend/Job/CLEAN/no-pending proof. Collector
+   derives that proof from matching fixture run, unchanged inventory, the saved
+   Runtime exit event and retained process handles, not worker PID polling or
+   acknowledgement alone. IPC EOF during normal shutdown is not cleanup proof.
+
+Evidence uses the existing held-directory, handle-relative writer. Every saved
+data/control record has a separately flushed/read-back `*-receipt` containing
+run binding, data SHA, directory identity, Volume/File ID, UTC and flush/pending/
+final readback outcomes. Verdict receipts bind the corresponding Raw SHA. The
+receipt itself goes through the same durable writer (no recursive receipt
+generation). Stop-before, Stop-after and end-after are separate temporal facts.
+File writes are serialized; receipt failure forbids PASS. Limits remain 4 MiB
+per file, 64 MiB total and 4,096 held files, now including receipts: reaching a
+limit is INCONCLUSIVE/Stop, not permission to omit receipts.
+
+Observation limits remain unchanged: 250 ms is a scheduling delay, not guaranteed
+coverage; >1.5 s gaps/query errors are inconclusive. Startup before ownership,
+inter-poll intervals and shutdown before end proof are not silently considered
+observed. TCP polling cannot prove absence of short-lived TCP, UDP/QUIC, shared
+DNS or all external communication. A future event-based supplement would require
+separate ETW/WFP/capture feasibility and authorization; none is added here.
+
+#### Non-GUI verification and isolated output
+
+This Phase 1 execution: **260 registered/executed/PASS; 0 FAIL; 0 NOT_RUN**.
+Composition: previous 203 cases, **56 new deterministic Fake/value coordination
+cases**, and **one new real NTFS receipt identity/Raw-Verdict pairing case**
+(46 native filesystem cases total). Fake worker/collector/backend/Stop share the
+actual decision/gate code and use deterministic barriers/clocks, not race sleeps.
+Coverage includes pre-READY rejection, stale/foreign run, early Abort, dead peer,
+unarmed Stop, unknown/multiple/changed backend, lease loss, snapshot gaps, durable
+Stop barriers, concurrent Stop deduplication, acknowledgement versus exit,
+missing cleanup proofs, parser bounds and receipt identity/flush/readback faults.
+Six existing value mutants, five filesystem mutants and six new coordination
+mutants must each produce an assertion FAIL and exit 1 (17 controls total).
+The new mutants bypass READY, live peer, Abort latch, backend requirement, Verdict
+barrier or Runtime exit requirement. No production CLI exposes these mutations.
+Existing cleanup-blocked runner accounting Low remains open; it was not exercised
+as a success or expanded into this change. No GUI, actual backend, real collector
+or real Stop is invoked by this verification.
+
+All restore/build outputs, including referenced product projects and copied
+assets, were evaluated before building and redirected with global
+`UseArtifactsOutput=true` / `ArtifactsPath` to:
+`C:\Users\megum\AppData\Local\Temp\J1AI-coordination-phase1-20261012`.
+Offline restore uses the verified local package source and unchanged
+`signatureValidationMode=require`; both Release no-restore builds have zero
+warnings/errors. Existing protected 42 files and five inputs remain unchanged.
+Isolated DLL hashes (review artifacts only, **not approved GUI binaries**):
+
+- Runner: `da5c67208138294c090dc5daa23f0aee7a815a59c98413b7cf1100240dec91d5`
+- Observer: `ede3f497f21fa184e1a81e804560e984f524cdeeed6382b6c8c400fcb06acfb7`
+- Rebuilt, source-unchanged product reference:
+  `7c59d69c3a7e572d10f865814bba750619b4d253eb719814f9fbee887439b934`
+
+The latter is not automatically substituted for the frozen product DLL; isolated
+output-path/build-provenance changes may change binary hashes despite unchanged
+source. Isolated artifacts are retained outside the repository for review; native
+case temporary roots are removed once, without policy bypass. The old undeletable
+`J1AI-smoke-rereview-e97cd46217574c79ab33b1939987f3f3` probe is untouched.
+
+#### Later provisioning approval (design only)
+
+Proposed session destination remains exactly:
+`C:\Users\megum\AppData\Local\J1AI\Diagnostics\NetworkObserver\reobserve-20261012-8f96edbb-01`.
+Missing `Diagnostics` and `NetworkObserver` parents are **not created here**.
+Before provisioning, separately approve each absolute path, owner SID, ACL,
+capacity and 30-day retention with deletion requiring another approval.
+Provision from a verified retained parent handle with atomic create/open;
+reject reparse/identity mismatch, retain ancestor Volume/File IDs, verify owner
+SID on the same object and apply/read back a protected DACL. Expected user SID:
+`S-1-5-21-3795752833-3283187962-2586844815-1001`, plus SYSTEM; no unnecessary
+inherited grants to other users. The current session writer grants user/SYSTEM
+FullControl; this is not a claim of least privilege or implemented parent-owner
+verification. Parent provisioning/owner readback needs independent implementation
+review or an explicitly reviewed provisioning procedure. Recheck free space,
+filesystem identity and ACL just before execution; no allowlist expansion or
+different-directory fallback is permitted.
+
+#### Later runner/manifest refreeze (not performed)
+
+Changed runner sources are `SmokeRunner.cs`, new `SmokeCoordination.cs`, the two
+linked coordination sources and the test csproj. After independent source review,
+repeat isolated offline builds from the same commit/toolchain with mapped output
+paths and compare recorded SHA/provenance. Investigate differences, do not accept
+them silently. Validate compatibility against the **frozen product DLL** separately
+or explicitly approve a product binary change; product source remains unchanged.
+
+Prepare a new manifest with approved runner/apphost/related binary hashes while
+retaining fixture assets, fixed repository identity, UDF, directory identities
+and previous provenance. The old CLEAN state is structurally compatible but binds
+the **old manifest SHA**. Updating that state binding and Observer's frozen
+`ManifestSha`/`InitialStateSha` expectations requires explicit migration approval;
+the new source cannot run against the old manifest by silently accepting it.
+Retain old binaries/manifest/state evidence; do not auto-update, delete UDF or
+silently roll back RUNNING/BLOCKED state. A partial migration or any inconsistent
+hash/cleanup proof stops for review. Recalculate the complete approval-plan bytes
+and SHA after migration/provisioning review. Only a further explicit authorization
+may permit a single same-UDF GUI re-observation. Actual IPC/SDK/directory-sharing/
+Stop interoperability, fixed-UDF reuse and the original unclassified connection
+remain unproven; this Phase 1 does not clear those gates.

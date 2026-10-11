@@ -8,19 +8,22 @@ public sealed class FileEvidence : IEvidence, IDisposable
     private readonly EvidenceDirectory directory;
     private readonly DiskBlobs blobs;
     private readonly VerifiedEvidence writer;
+    private readonly object sync = new();
     public FileEvidence(ApprovalPlan plan) : this(ApprovedDirectory(plan), new EvidencePolicy()) { }
+    public FileEvidence(ApprovalPlan plan, J1AI.SmokeCoordination.RunBinding binding)
+        : this(ApprovedDirectory(plan), new EvidencePolicy(), binding) { }
     private static string ApprovedDirectory(ApprovalPlan plan)
     { Approval.Validate(plan, true); return plan.EvidenceDirectory; }
     // Isolated native test entry only, not a CLI or arbitrary-profile override.
-    internal FileEvidence(string path, EvidencePolicy policy)
+    internal FileEvidence(string path, EvidencePolicy policy, J1AI.SmokeCoordination.RunBinding? binding = null)
     {
         directory = new EvidenceDirectory(path, policy);
-        blobs = new DiskBlobs(directory); writer = new VerifiedEvidence(blobs);
+        blobs = new DiskBlobs(directory); writer = new VerifiedEvidence(blobs, binding);
     }
     internal string DirectoryIdentity => directory.Identity;
     public void SaveVerified(string name, object value)
     {
-        writer.SaveVerified(name, value);
+        lock (sync) writer.SaveVerified(name, value);
     }
     public void Dispose() { try { blobs.Dispose(); } finally { directory.Dispose(); } }
 }

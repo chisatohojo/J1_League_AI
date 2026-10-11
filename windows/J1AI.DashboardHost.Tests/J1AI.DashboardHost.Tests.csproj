@@ -14,6 +14,8 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../J1AI.SmokeNetworkObserver/CoordinationSession.cs" Link="CoordinationSession.cs" />
+    <Compile Include="../J1AI.SmokeNetworkObserver/CoordinationPipe.cs" Link="CoordinationPipe.cs" />
     <ProjectReference Include="../J1AI.DashboardHost/J1AI.DashboardHost.csproj" />
     <None Include="synthetic_child.py" CopyToOutputDirectory="PreserveNewest" />
     <None Include="synthetic_gui_server.py" CopyToOutputDirectory="PreserveNewest" />

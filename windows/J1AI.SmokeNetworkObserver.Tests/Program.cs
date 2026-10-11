@@ -17,13 +17,16 @@ internal static class Program
     }
     public static async Task<int> Main(string[] args)
     {
-        string? nativeMutation = null, selectedTest = null;
+        string? nativeMutation = null, selectedTest = null, coordinationMutation = null;
+        bool coordinationOnly = args is ["--coordination-tests"];
         if (args is ["--negative-control", var mutation] && new[] { "private-allowed", "all-loopback-allowed", "pid-only",
             "gap-as-empty", "stop-before-raw", "unknown-backend-pass" }.Contains(mutation)) policy = new MutantPolicy(mutation);
         else if (args is ["--native-negative-control", var native] && NativeEvidenceTests.Mutations.Contains(native)) nativeMutation = native;
         else if (args is ["--test", var selected] && !string.IsNullOrWhiteSpace(selected)) selectedTest = selected;
-        else if (args.Length != 0) { Console.Error.WriteLine("Unknown runner arguments"); return 2; }
-        if (nativeMutation == null) Register();
+        else if (args is ["--coordination-negative-control", var coord] && CoordinationTests.Mutations.Contains(coord)) coordinationMutation = coord;
+        else if (args.Length != 0 && !coordinationOnly) { Console.Error.WriteLine("Unknown runner arguments"); return 2; }
+        if (nativeMutation == null && !coordinationOnly && coordinationMutation == null) Register();
+        if (nativeMutation == null) CoordinationTests.Register(Add, Async, coordinationMutation);
         if (args.Length == 0 || nativeMutation != null || selectedTest != null) NativeEvidenceTests.Register(Add, Async, nativeMutation);
         if (selectedTest != null)
         {
