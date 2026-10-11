@@ -33,8 +33,8 @@ internal static class SmokeFixtureTests
             Reject(() => SmokeFixture.CheckInventory([], [f.Manifest.Udf, "unapproved-second-udf"], f.Manifest.Udf, true));
             f.Clean(); var initial = f.Fixture.Inventory(); var inspection = f.Inspect();
             Program.Check(initial.Length == 1 && !inspection.FirstUse);
-            using (f.Fixture.Begin(inspection, null))
-            { f.Fixture.BindDirectories(inspection); f.Fixture.Finish(inspection, new(true, true, true)); }
+            using (var lease = f.Fixture.Begin(inspection, null))
+            { f.Fixture.BindDirectories(inspection, lease); f.Fixture.Finish(inspection, new(true, true, true), lease); }
             Program.Check(initial.SequenceEqual(f.Fixture.Inventory(), StringComparer.OrdinalIgnoreCase));
             Program.Check(!f.Inspect().FirstUse);
         }),
@@ -176,6 +176,144 @@ internal static class SmokeFixtureTests
             var controls = new SmokeParentControls(new FakeControls { Shows = true });
             controls.Disconnected(); Program.Check(controls.StopRequested && !controls.ConsumeShow());
         }),
+        Case("smoke_inspect_then_udf_replace_rejected_before_running", f =>
+        {
+            f.Clean(); var inspection = f.Inspect();
+            f.ReplaceUdf();
+            Expect("directory_replaced", () => f.Fixture.Begin(inspection, null));
+            Program.Check(f.State().State == SmokeState.CLEAN && f.State().UdfIdentity == inspection.UdfIdentity && !File.Exists(f.Fixture.IntentPath));
+            Expect("directory_replaced", () => f.Inspect());
+        }),
+        Case("smoke_old_review_begin_bind_replacement_never_clean", f =>
+        {
+            f.Clean(); var inspection = f.Inspect();
+            var lease = f.Fixture.Begin(inspection, null);
+            try
+            {
+                Program.Check(f.State().UdfIdentity == inspection.UdfIdentity && f.State().RootIdentity == inspection.RootIdentity);
+                f.ReplaceUdf();
+                Expect("directory_replaced", () => f.Fixture.BindDirectories(inspection, lease));
+                Program.Check(lease.Profile!.Identity != inspection.UdfIdentity);
+                Expect("directory_lease_unbound", () => f.Fixture.Finish(inspection, new(true, true, true), lease));
+                Program.Check(f.State().State == SmokeState.RUNNING && f.State().UdfIdentity == inspection.UdfIdentity && File.Exists(f.Fixture.IntentPath));
+            }
+            finally { lease.Dispose(); }
+            Program.Check(lease.Root!.Closed && lease.Profile!.Closed);
+            Directory.Move(f.Manifest.Udf, f.Manifest.Udf + "-replacement-released");
+            Expect("unfinished_run", () => f.Inspect());
+        }),
+        Case("smoke_inspect_then_root_replace_rejected", f =>
+        {
+            f.Clean(); var inspection = f.Inspect();
+            Directory.Move(f.Fixture.Root, f.Fixture.Root + "-old"); Directory.CreateDirectory(f.Fixture.Root);
+            Expect("directory_replaced", () => f.Fixture.Begin(inspection, null));
+            Program.Check(f.State().RootIdentity == inspection.RootIdentity && f.State().State == SmokeState.CLEAN);
+        }),
+        Case("smoke_bound_udf_root_ancestry_rename_delete_denied", f =>
+        {
+            var inspection = f.Inspect(); var lease = f.Fixture.Begin(inspection, inspection.Fingerprint);
+            try
+            {
+                f.Fixture.BindDirectories(inspection, lease);
+                foreach (string path in new[] { f.Manifest.Udf, f.Fixture.Root, Path.GetDirectoryName(f.Manifest.Udf)!, f.Fixture.Control })
+                {
+                    SharingDenied(() => Directory.Move(path, path + "-moved"));
+                    var security = new Native.Security { Length = System.Runtime.InteropServices.Marshal.SizeOf<Native.Security>() };
+                    using var deletion = Native.CreateFileW(path, 0x10000, 7, ref security, 3, 0x02200000, 0);
+                    Program.Check(deletion.IsInvalid && System.Runtime.InteropServices.Marshal.GetLastWin32Error() == 32);
+                }
+                SharingDenied(() => Directory.Delete(f.Manifest.Udf));
+                lease.ValidateBound();
+                f.Fixture.Finish(inspection, new(true, true, true), lease);
+                // CLEAN does not release the handles before the owner finishes.
+                SharingDenied(() => Directory.Move(f.Manifest.Udf, f.Manifest.Udf + "-early"));
+            }
+            finally { lease.Dispose(); }
+            Program.Check(lease.Root!.Closed && lease.Profile!.Closed);
+            using (var reopened = new FileStream(f.Fixture.LockPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None)) { }
+            Directory.Move(f.Manifest.Udf, f.Manifest.Udf + "-released");
+        }),
+        Case("smoke_bind_reparse_replacement_rejected", f =>
+        {
+            f.Clean(); var inspection = f.Inspect();
+            using var lease = f.Fixture.Begin(inspection, null);
+            Directory.Move(f.Manifest.Udf, f.Manifest.Udf + "-old");
+            try
+            {
+                TestLinks.Junction(f.Manifest.Udf, f.Inputs);
+                Expect("path_reparse", () => f.Fixture.BindDirectories(inspection, lease));
+                Program.Check(f.State().State == SmokeState.RUNNING && f.State().UdfIdentity == inspection.UdfIdentity && !lease.Bound);
+                Expect("directory_lease_unbound", () => f.Fixture.Finish(inspection, new(true, true, true), lease));
+            }
+            finally { if (Directory.Exists(f.Manifest.Udf)) Directory.Delete(f.Manifest.Udf); } // exact isolated junction only
+        }),
+        Case("smoke_inspection_identity_cannot_be_overridden", f =>
+        {
+            f.Clean(); var inspection = f.Inspect();
+            Expect("inspection_changed", () => f.Fixture.Begin(inspection with { UdfIdentity = "unapproved" }, null));
+            Program.Check(f.State().State == SmokeState.CLEAN && !File.Exists(f.Fixture.IntentPath));
+        }),
+        Case("smoke_missing_directory_handle_fails_closed", f =>
+        {
+            Expect("directory_handle_failed", () => SmokePathLease.Acquire(Path.Combine(f.Temp.Root, "missing")));
+            Program.Check(!Directory.Exists(f.Fixture.Control));
+        }),
+        Case("smoke_bind_native_handle_sharing_failure_retains_state", f =>
+        {
+            f.Clean(); var inspection = f.Inspect();
+            using var lease = f.Fixture.Begin(inspection, null);
+            var security = new Native.Security { Length = System.Runtime.InteropServices.Marshal.SizeOf<Native.Security>() };
+            // FILE_READ_ATTRIBUTES alone does not participate in data-sharing
+            // conflicts. Include FILE_LIST_DIRECTORY for a real OS denial.
+            using (var exclusive = Native.CreateFileW(f.Manifest.Udf, 0x81, 0, ref security, 3, 0x02200000, 0))
+            {
+                Program.Check(!exclusive.IsInvalid);
+                Expect("directory_handle_failed", () => f.Fixture.BindDirectories(inspection, lease));
+            }
+            Program.Check(lease.Profile == null && !lease.Bound && f.State().State == SmokeState.RUNNING && f.State().UdfIdentity == inspection.UdfIdentity);
+            Expect("directory_lease_unbound", () => f.Fixture.Finish(inspection, new(true, true, true), lease));
+        }),
+        Case("smoke_bound_identity_mismatch_and_closed_handle_rejected", f =>
+        {
+            var inspection = f.Inspect(); using var lease = f.Fixture.Begin(inspection, inspection.Fingerprint);
+            f.Fixture.BindDirectories(inspection, lease);
+            Expect("directory_replaced", () => lease.Profile!.RequireIdentity("wrong-volume-file-id"));
+            lease.Profile!.Dispose();
+            Expect("directory_lease_closed", () => f.Fixture.Finish(inspection, new(true, true, true), lease));
+            Program.Check(f.State().State == SmokeState.RUNNING && File.Exists(f.Fixture.IntentPath));
+        }),
+        Case("smoke_first_use_does_not_adopt_directory_created_after_begin", f =>
+        {
+            var inspection = f.Inspect(); using var lease = f.Fixture.Begin(inspection, inspection.Fingerprint);
+            Directory.CreateDirectory(f.Manifest.Udf);
+            Expect("unapproved_directory", () => f.Fixture.BindDirectories(inspection, lease));
+            Program.Check(f.State().State == SmokeState.RUNNING && f.State().UdfIdentity == "" && !lease.Bound);
+        }),
+        Case("smoke_directory_pin_allows_read_write_child_files", f =>
+        {
+            var inspection = f.Inspect(); using var lease = f.Fixture.Begin(inspection, inspection.Fingerprint);
+            f.Fixture.BindDirectories(inspection, lease);
+            var security = new Native.Security { Length = System.Runtime.InteropServices.Marshal.SizeOf<Native.Security>() };
+            using var peer = Native.CreateFileW(f.Manifest.Udf, 0x81, 7, ref security, 3, 0x02200000, 0);
+            Program.Check(!peer.IsInvalid);
+            string file = Path.Combine(f.Manifest.Udf, "synthetic-write-probe");
+            File.WriteAllText(file, "synthetic-only"); Program.Check(File.ReadAllText(file) == "synthetic-only"); File.Delete(file);
+            lease.ValidateBound(); f.Fixture.Finish(inspection, new(true, true, true), lease);
+        }),
+        Case("smoke_cleanup_failure_keeps_pins_until_owner_disposes", f =>
+        {
+            var inspection = f.Inspect(); var lease = f.Fixture.Begin(inspection, inspection.Fingerprint);
+            try
+            {
+                f.Fixture.BindDirectories(inspection, lease);
+                Expect("cleanup_unconfirmed", () => f.Fixture.Finish(inspection, new(false, true, true), lease));
+                SharingDenied(() => Directory.Move(f.Manifest.Udf, f.Manifest.Udf + "-early"));
+                Program.Check(f.State().State == SmokeState.BLOCKED && File.Exists(f.Fixture.IntentPath));
+            }
+            finally { lease.Dispose(); }
+            Program.Check(lease.Profile!.Closed && lease.Root!.Closed);
+        }),
+        .. SmokeIdentityTests.Cases(python, launcher),
         ("smoke_supervisor_real_child_normal_exit", () => Supervisor(false)),
         ("smoke_supervisor_real_child_deadline_no_kill", () => Supervisor(true)),
     ];
@@ -201,7 +339,18 @@ internal static class SmokeFixtureTests
         try { operation(); } catch (SmokeError) { return; }
         throw new InvalidOperationException("unsafe_operation_accepted");
     }
-    private sealed class SmokeTemp : IDisposable
+    internal static void Expect(string code, Action operation)
+    {
+        try { operation(); } catch (SmokeError error) { Program.Check(error.Message == code); return; }
+        throw new InvalidOperationException("expected_smoke_stop_missing");
+    }
+    private static void SharingDenied(Action operation)
+    {
+        try { operation(); }
+        catch (IOException error) { Program.Check((error.HResult & 0xffff) == 32); return; }
+        throw new InvalidOperationException("directory_pin_did_not_prevent_mutation");
+    }
+    internal sealed class SmokeTemp : IDisposable
     {
         private static bool cleanupBlocked;
         private readonly TempRepository inner;
@@ -241,16 +390,19 @@ internal static class SmokeFixtureTests
             catch { Dispose(); throw; }
         }
         internal SmokeInspection Inspect() => Fixture.Inspect(Manifest);
+        internal SmokeRecord State() => JsonSerializer.Deserialize<SmokeRecord>(File.ReadAllText(Fixture.StatePath))!;
+        internal void ReplaceUdf()
+        { Directory.Move(Manifest.Udf, Manifest.Udf + "-old"); Directory.CreateDirectory(Manifest.Udf); }
         internal void Clean()
         {
             var inspection = Inspect(); using var lease = Fixture.Begin(inspection, inspection.Fingerprint);
-            Fixture.BindDirectories(inspection); Fixture.Finish(inspection, new(true, true, true));
+            Fixture.BindDirectories(inspection, lease); Fixture.Finish(inspection, new(true, true, true), lease);
         }
         internal void Failed(SmokeEvidence evidence)
         {
             var inspection = Inspect();
-            using (Fixture.Begin(inspection, inspection.Fingerprint))
-            { Fixture.BindDirectories(inspection); Reject(() => Fixture.Finish(inspection, evidence)); }
+            using (var lease = Fixture.Begin(inspection, inspection.Fingerprint))
+            { Fixture.BindDirectories(inspection, lease); Reject(() => Fixture.Finish(inspection, evidence, lease)); }
             Program.Check(File.Exists(Fixture.IntentPath)); Reject(() => Inspect());
             using var state = JsonDocument.Parse(File.ReadAllText(Fixture.StatePath));
             Program.Check(state.RootElement.GetProperty("State").GetInt32() == (int)SmokeState.BLOCKED);

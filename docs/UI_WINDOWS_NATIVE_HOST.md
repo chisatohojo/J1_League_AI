@@ -191,7 +191,7 @@ discovery. Any failed assertion returns nonzero. Do not report them as xUnit,
 MSTest, or GUI tests.
 
 The runner checks unique case names and the expected case count (68 in Phase 1;
-163 with Phase 2, cleanup-setup and fixed-Smoke non-GUI cases). A
+191 with Phase 2, cleanup-setup and fixed-Smoke non-GUI cases). A
 separate negative control runs an intentional assertion failure and an
 unexpected exception through the **same** MSBuild execution path:
 
@@ -434,9 +434,9 @@ Evergreen runtime/updater never performs its own background communication.
 
 ### Phase 2 validation and remaining manual checks
 
-Normal `dotnet test` runs **163** cases: all 68 original Phase 1 cases, 53
+Normal `dotnet test` runs **191** cases: all 68 original Phase 1 cases, 53
 GUI lifecycle/policy/mock assertions, three cleanup-setup failure cases, and
-39 fixed-Smoke non-GUI assertions,
+67 fixed-Smoke non-GUI assertions,
 without opening GUI. The assertion runner
 still checks unique names, exact count and nonzero exit on failures. The
 negative-control intentionally reports 2 failed cases and exit 1. Both tracked
@@ -574,13 +574,22 @@ Safety/state contract:
   RUNNING/BLOCKED state or missing proof prohibits automatic reuse.
 - CLEAN requires the actual Form disposal, exact environment UDF mapping,
   Runtime exit event, complete owned-server resource cleanup and permitted
-  UDF inventory delta. Root/UDF volume/file IDs detect later directory replacement.
+  UDF inventory delta. Inspect's verified root/UDF volume/file IDs remain in
+  RUNNING and are compared with retained directory handles before GUI startup;
+  reuse never registers a replacement ID. Finish revalidates both retained
+  handles and path identities before CLEAN. Missing/mismatched/unbound handles
+  cannot authorize CLEAN. Only approved first use registers new directory IDs.
   Initializing/failed SDK paths lacking proof remain BLOCKED; controller/PID
   disappearance is not proof. The intent is removed only after CLEAN is durable.
 - Reparse points, UNC/ADS/traversal paths and unapproved locations are rejected.
-  Existing verified directory ancestry is held with no share-delete and final
-  handle paths are checked. This is not an authentication boundary against a
-  hostile process with the same user SID.
+  Existing verified directory ancestry is acquired root-to-leaf, held with
+  list/read-attributes access and read/write sharing but no share-delete, and
+  final handle paths are checked. One run lease retains root, UDF, ancestry
+  and the cross-session file lock through GUI use and cleanup. Real Win32 tests
+  verify rename/delete denial and concurrent directory/child-file read/write;
+  actual WebView2 compatibility/reuse still requires separately approved GUI
+  smoke. This is not an authentication boundary against a hostile process with
+  the same user SID.
 - A separate self-created worker owns the GUI, server Job and fixture lease.
   Its supervisor waits at most five minutes, requests the same fixture's Stop,
   then waits at most twenty seconds. No worker/browser is forcibly killed.
@@ -590,6 +599,20 @@ Safety/state contract:
 - No UDF deletion, alternate-profile fallback, registry edits, CDP, security
   flags, production shortcut changes or personal-browser operations are used.
 
+The Smoke identity helper has one monotonic ten-second deadline from invocation
+through output validation: process/tree exit and concurrent bounded stdout and
+stderr reads must all finish within it. Each stream is capped at 4095 decoded
+characters during reading; overflow fails immediately. A test-assembly-only
+create-time, non-inherited KillOnClose Job owns the venv broker, interpreter and
+pipe-holding descendants. Timeout/failure terminates only that owned Job, then
+allows at most five additional seconds to confirm zero active Job processes,
+the retained startup handle's exit, and completion of both stream reads before
+releasing resources. Cleanup never converts a failed deadline into success.
+Unconfirmed cleanup reports `identity_cleanup_unconfirmed` and retains resources
+in an explicit pending reaper, rather than awaiting indefinitely or abandoning
+ownership to GC. No PID/name discovery, personal-browser kill or product Job
+change is involved.
+
 Non-GUI verification:
 
 ```powershell
@@ -598,7 +621,7 @@ Non-GUI verification:
 & $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-negative-control
 ```
 
-The 39 cases use in-memory evidence and fresh OS-temp namespaces, not real UDFs
+The 67 cases use in-memory evidence and fresh OS-temp namespaces, not real UDFs
 or the fixed fixture. Actual Windows tests cover file-handle exclusion across
 processes, named Show/Stop, junction rejection, metadata-only rejection of an
 existing OS symlink, retained directory handles blocking rename, file-ID
@@ -608,13 +631,40 @@ manifest/provenance, unfinished journal/state, cleanup proofs, source/assets,
 readonly non-mutation and validator negative controls. Symlink creation is not
 claimed: no elevation/Developer Mode change is used.
 
+The original 39 cases are retained. Twelve directory-boundary tests cover
+Inspect/Begin/Bind replacement, reparse substitution, identity mismatch, failed
+handle acquisition, retained-handle rename/delete denial, first-use conflict,
+shared read/write compatibility and missing cleanup proof. Sixteen identity
+helper tests use real Windows Jobs/processes/pipes, covering hung helpers,
+descendants holding either stream, concurrent overflow, partial output, exit
+failure, retry after timeout, unrelated-process survival and handle counts.
+The former twelve-second pipe-holding success is rejected using the actual
+ten-second configuration; tree/streams/handles are confirmed reclaimed.
+Injected faults are not spontaneous OS failures or actual WebView2 crashes.
+
 This implementation validation is non-GUI only. The historical GUI 10/10 PASS
-is not a new run. The implementation run passed 163/163 total Native assertions,
+is not a new run. The original implementation run passed 163/163 total Native assertions,
 39/39 Smoke cases and 190/190 focused Python cases; no-restore Release build
 had zero warnings/errors. Both runner and Smoke negative controls reported the
 expected two failures and exit 1. Actual read-only Smoke preflight reported
 UNINITIALIZED without creating the fixed fixture/UDF. The existing 31 UDF paths
 and all five protected input hashes were unchanged.
+
+The subsequent review-fix run passed **191/191** total Native assertions,
+including **67/67** Smoke cases (28 added), and **190/190** focused Python cases.
+No-restore Release build had zero warnings/errors. Both negative controls
+again produced two expected failures and exit 1, including MSBuild failure
+propagation. The old Begin/Bind replacement now fails with `directory_replaced`,
+retains the original IDs in RUNNING and cannot reach CLEAN. The old inherited
+pipe case failed with `identity_timeout` in approximately 10.022 seconds,
+including confirmed tree/stream/handle cleanup. Eight repeated short timeouts
+after priming left the process handle count unchanged (391 to 391).
+Read-only preflight again reported UNINITIALIZED; fixed fixture/UDF remained
+absent, all 31 existing UDF paths and five protected hashes matched, and no
+new test temporary directories or dashboard/helper processes remained.
+No real WebView2/GUI case was run for these fixes. File-sharing compatibility
+is Win32-only evidence, not proof of actual SDK profile reuse.
+
 Fixed-fixture provisioning, actual UDF reuse, renderer/browser
 crashes, real SDK initialization stalls, production-feed smoke and manual
 notification/focus/minimize/DPI/taskbar/personal-browser checks remain unproven.

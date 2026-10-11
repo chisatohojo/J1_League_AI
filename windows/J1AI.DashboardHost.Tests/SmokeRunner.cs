@@ -97,9 +97,7 @@ internal static class SmokeRunner
     private static async Task<int> Worker(SmokeFixture fixture, SmokeInspection inspection, string? approval)
     {
         using var lease = fixture.Begin(inspection, approval);
-        using var rootAnchors = SmokePathLease.Acquire(fixture.Root);
-        fixture.BindDirectories(inspection);
-        using var profileAnchors = SmokePathLease.Acquire(inspection.Manifest.Udf);
+        fixture.BindDirectories(inspection, lease);
         var identity = new RepositoryIdentity(fixture.Root, inspection.Manifest.Identity);
         using var controls = new InstanceControls(identity);
         var parentControls = new SmokeParentControls(controls);
@@ -155,7 +153,7 @@ internal static class SmokeRunner
         if (form == null && server == null && !initializationEntered) runtimeEnded = true;
         var evidence = new SmokeEvidence(runtimeEnded, server != null && server.Resources is (true, true, true, true, true),
             form?.DisposalConfirmed.IsCompletedSuccessfully == true);
-        fixture.Finish(inspection, evidence);
+        fixture.Finish(inspection, evidence, lease);
         Console.WriteLine($"SMOKE_FINISHED exit={result}; cleanup_confirmed; notification={(notified ? "attempted" : "none")}");
         return result;
     }

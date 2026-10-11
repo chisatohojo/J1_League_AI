@@ -14,7 +14,8 @@ internal sealed record SmokeManifest(int Version, string Root, string Identity, 
 internal sealed record SmokeRecord(string ManifestHash, SmokeState State, string Run,
     bool RuntimeEnded, bool ServerEnded, bool WindowDisposed, bool InventoryValid,
     string UdfIdentity = "", string RootIdentity = "");
-internal sealed record SmokeInspection(SmokeManifest Manifest, string Fingerprint, bool FirstUse);
+internal sealed record SmokeInspection(SmokeManifest Manifest, string Fingerprint, bool FirstUse,
+    string UdfIdentity = "", string RootIdentity = "");
 internal sealed record SmokeEvidence(bool RuntimeEnded, bool ServerEnded, bool WindowDisposed);
 
 // This is a test-assembly facility, never a product configuration override.
@@ -124,33 +125,24 @@ internal sealed class SmokeFixture
         Require(after.Count <= 1 && after.All(p => p.Equals(udf, StringComparison.OrdinalIgnoreCase)), "udf_added");
         if (!first) Require(after.SetEquals([udf]), "udf_missing");
     }
-    internal static async Task<RepositoryIdentity> Identity(string root, string python, string launcher)
+    internal static async Task<RepositoryIdentity> Identity(string root, string python, string launcher,
+        TimeSpan? timeout = null, Action<SmokeHelperReport>? report = null)
     {
+        var clock = Stopwatch.StartNew();
+        var budget = timeout ?? TimeSpan.FromSeconds(10);
         CheckPath(root); CheckPath(python); CheckPath(launcher);
-        using var helper = new Process { StartInfo = new(python) { UseShellExecute = false, CreateNoWindow = true,
-            RedirectStandardOutput = true, RedirectStandardError = true, WorkingDirectory = Path.GetDirectoryName(launcher)! } };
         // Reuse the actual Python authority even BEFORE the fixed root exists.
         // There is intentionally no independent hash/casing implementation here.
         const string code = "import json,runpy,sys;from pathlib import Path;p=Path(sys.argv[1]).resolve();f=runpy.run_path(sys.argv[2],run_name='j1ai_smoke_identity_only')['instance_id'];print(json.dumps([str(p),f(p)]))";
-        foreach (string arg in new[] { "-I", "-S", "-B", "-u", "-c", code, root, launcher }) helper.StartInfo.ArgumentList.Add(arg);
-        Require(helper.Start(), "identity_start");
-        var stdout = helper.StandardOutput.ReadToEndAsync(); var stderr = helper.StandardError.ReadToEndAsync();
-        try
-        {
-            await helper.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(10));
-            string output = await stdout, errors = await stderr;
-            Require(helper.ExitCode == 0 && output.Length < 4096 && errors.Length == 0, "identity_failure");
-            var parts = JsonSerializer.Deserialize<string[]>(output)!;
-            Require(parts.Length == 2 && parts[0].Equals(root, StringComparison.OrdinalIgnoreCase) &&
-                System.Text.RegularExpressions.Regex.IsMatch(parts[1], "\\A[0-9a-f]{24}\\z"), "identity_invalid");
-            return new(parts[0], parts[1]);
-        }
-        catch
-        {
-            // Only our retained helper handle, never a PID/name lookup.
-            if (!helper.HasExited) { helper.Kill(); Require(helper.WaitForExit(5000), "identity_cleanup"); }
-            throw;
-        }
+        var command = new ServerCommand(python, ["-I", "-S", "-B", "-u", "-c", code, root, launcher], Path.GetDirectoryName(launcher)!);
+        var reply = await SmokeIdentityHelper.Run(command, clock, budget, report);
+        Require(clock.Elapsed < budget, "identity_timeout");
+        Require(reply.Errors.Length == 0, "identity_failure");
+        var parts = JsonSerializer.Deserialize<string[]>(reply.Output)!;
+        Require(parts.Length == 2 && parts[0].Equals(root, StringComparison.OrdinalIgnoreCase) &&
+            System.Text.RegularExpressions.Regex.IsMatch(parts[1], "\\A[0-9a-f]{24}\\z"), "identity_invalid");
+        Require(clock.Elapsed < budget, "identity_timeout");
+        return new(parts[0], parts[1]);
     }
     internal async Task<SmokeManifest> Describe()
     {
@@ -204,7 +196,7 @@ internal sealed class SmokeFixture
             state.RootIdentity == SmokePathLease.DirectoryIdentity(Root), "directory_replaced");
         CheckInventory(expected.BaselineUdfs, Inventory(), expected.Udf, false);
         ValidateAssets(expected);
-        return new(expected, fingerprint, false);
+        return new(expected, fingerprint, false, state.UdfIdentity, state.RootIdentity);
     }
     internal void ValidateAssets(SmokeManifest manifest)
     {
@@ -212,17 +204,17 @@ internal sealed class SmokeFixture
         { string path = AssetPath(Path.Combine(Root, "web"), asset); CheckPath(path); Require(FileHash(path) == manifest.Hashes["web/" + asset], "asset_mismatch"); }
         Require(!File.Exists(Path.Combine(Root, "must-not-be-read.json")), "data_must_not_exist");
     }
-    internal FileStream Begin(SmokeInspection inspection, string? approval)
+    internal SmokeRunLease Begin(SmokeInspection inspection, string? approval)
     {
         // Recheck immediately before mutation; a first-use token is exact plan approval,
         // not authentication or permission to overwrite unknown directories.
-        Inspect(inspection.Manifest);
+        Require(Inspect(inspection.Manifest) == inspection, "inspection_changed");
         Require(!inspection.FirstUse || approval == inspection.Fingerprint, "first_use_approval_required");
         if (inspection.FirstUse) Directory.CreateDirectory(Control);
-        var lease = new FileStream(LockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+        var lease = new SmokeRunLease(new FileStream(LockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None));
         try
         {
-            using var anchors = SmokePathLease.Acquire(Control);
+            lease.Hold(SmokePathLease.Acquire(Control));
             if (inspection.FirstUse)
                 Require(!Directory.EnumerateFileSystemEntries(Control).Any(p => p != LockPath), "initialization_race");
             else
@@ -230,16 +222,22 @@ internal sealed class SmokeFixture
                 Require(!File.Exists(IntentPath), "unfinished_run");
                 var previous = Read<SmokeRecord>(StatePath);
                 RequireClean(previous, inspection.Fingerprint);
+                Require(previous.UdfIdentity == inspection.UdfIdentity && previous.RootIdentity == inspection.RootIdentity, "directory_replaced");
+                lease.Root = SmokePathLease.Acquire(Root);
+                lease.Root.RequireIdentity(inspection.RootIdentity);
             }
             string run = Guid.NewGuid().ToString("N");
+            lease.Run = run;
             using (var intent = new FileStream(IntentPath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 1, FileOptions.WriteThrough))
             { intent.Write(Encoding.UTF8.GetBytes(run)); intent.Flush(true); }
-            AtomicWrite(StatePath, new SmokeRecord(inspection.Fingerprint, SmokeState.RUNNING, run, false, false, false, false));
+            AtomicWrite(StatePath, new SmokeRecord(inspection.Fingerprint, SmokeState.RUNNING, run, false, false, false, false,
+                inspection.UdfIdentity, inspection.RootIdentity));
             if (inspection.FirstUse)
             {
                 AtomicWrite(ManifestPath, inspection.Manifest);
                 Directory.CreateDirectory(Path.Combine(Root, "web", "components"));
                 foreach (string asset in Assets) File.Copy(AssetPath(Web, asset), AssetPath(Path.Combine(Root, "web"), asset), false);
+                lease.Root = SmokePathLease.Acquire(Root);
             }
             ValidateAssets(inspection.Manifest);
             return lease;
@@ -259,11 +257,14 @@ internal sealed class SmokeFixture
         // No new gate or event: Signal opens an existing event only.
         return InstanceControls.Signal(new(Root, expected.Identity), stop);
     }
-    internal void Finish(SmokeInspection inspection, SmokeEvidence evidence)
+    internal void Finish(SmokeInspection inspection, SmokeEvidence evidence, SmokeRunLease lease)
     {
+        lease.ValidateBound();
         var record = Read<SmokeRecord>(StatePath);
         Require(record.State == SmokeState.RUNNING && record.ManifestHash == inspection.Fingerprint &&
-            File.ReadAllText(IntentPath) == record.Run, "run_identity_mismatch");
+            File.ReadAllText(IntentPath) == record.Run && record.Run == lease.Run, "run_identity_mismatch");
+        Require(record.UdfIdentity == lease.Profile!.Identity && record.RootIdentity == lease.Root!.Identity &&
+            (inspection.FirstUse || record.UdfIdentity == inspection.UdfIdentity && record.RootIdentity == inspection.RootIdentity), "directory_replaced");
         bool valid = false;
         try { CheckInventory(inspection.Manifest.BaselineUdfs, Inventory(), inspection.Manifest.Udf, inspection.FirstUse); valid = true; }
         catch (SmokeError) { }
@@ -274,16 +275,43 @@ internal sealed class SmokeFixture
         if (clean) File.Delete(IntentPath); // only our fixed control file, never a UDF
         Require(clean, "cleanup_unconfirmed");
     }
-    internal void BindDirectories(SmokeInspection inspection)
+    internal void BindDirectories(SmokeInspection inspection, SmokeRunLease lease)
     {
-        CheckPath(inspection.Manifest.Udf);
-        if (inspection.FirstUse) Directory.CreateDirectory(inspection.Manifest.Udf);
-        Require(Directory.Exists(inspection.Manifest.Udf), "udf_missing");
-        CheckTree(inspection.Manifest.Udf);
+        Require(!lease.Bound && lease.Root != null, "directory_lease_unbound");
+        lease.Root!.Revalidate();
         var record = Read<SmokeRecord>(StatePath);
-        Require(record.State == SmokeState.RUNNING && record.ManifestHash == inspection.Fingerprint, "run_identity_mismatch");
-        AtomicWrite(StatePath, record with { UdfIdentity = SmokePathLease.DirectoryIdentity(inspection.Manifest.Udf),
-            RootIdentity = SmokePathLease.DirectoryIdentity(Root) });
+        Require(record.State == SmokeState.RUNNING && record.ManifestHash == inspection.Fingerprint && record.Run == lease.Run &&
+            File.ReadAllText(IntentPath) == lease.Run, "run_identity_mismatch");
+        if (inspection.FirstUse)
+        {
+            Require(record.UdfIdentity == "" && record.RootIdentity == "", "first_identity_already_registered");
+            string udf = inspection.Manifest.Udf;
+            Require(!Directory.Exists(Path.GetDirectoryName(udf)) && !File.Exists(Path.GetDirectoryName(udf)), "unapproved_directory");
+            var missing = new Stack<string>();
+            var ancestor = new DirectoryInfo(udf);
+            while (!ancestor.Exists) { missing.Push(ancestor.FullName); ancestor = ancestor.Parent ?? throw new SmokeError("path_not_local"); }
+            lease.Hold(SmokePathLease.Acquire(ancestor.FullName));
+            while (missing.TryPop(out string? directory))
+            {
+                CheckPath(directory);
+                // Exclusive create: an unexpected existing directory is never adopted.
+                Require(SmokePathLease.CreateDirectoryW(directory, 0), "directory_creation_conflict");
+                lease.Hold(SmokePathLease.Acquire(directory));
+            }
+            lease.Profile = SmokePathLease.Acquire(udf);
+            AtomicWrite(StatePath, record with { UdfIdentity = lease.Profile.Identity, RootIdentity = lease.Root.Identity });
+        }
+        else
+        {
+            Require(record.UdfIdentity == inspection.UdfIdentity && record.RootIdentity == inspection.RootIdentity, "directory_replaced");
+            lease.Root.RequireIdentity(inspection.RootIdentity);
+            lease.Profile = SmokePathLease.Acquire(inspection.Manifest.Udf);
+            // Retained-handle identity, not a newly sampled identity to register.
+            lease.Profile.RequireIdentity(inspection.UdfIdentity);
+        }
+        CheckTree(inspection.Manifest.Udf);
+        lease.Bound = true;
+        lease.ValidateBound();
     }
     internal ServerCommand Server(SmokeManifest manifest)
     {
@@ -298,7 +326,12 @@ internal sealed class SmokeFixture
 // This guards namespace replacement, not a hostile process with the same user SID.
 internal sealed class SmokePathLease : IDisposable
 {
-    private readonly List<KernelHandle> handles = [];
+    private readonly List<(string Path, KernelHandle Handle, string Identity)> handles = [];
+    internal string Identity => handles.Count != 0 ? handles[^1].Identity : throw new SmokeError("directory_lease_closed");
+    internal bool Closed => handles.Count == 0;
+    [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool CreateDirectoryW(string path, nint security);
     [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern uint GetFinalPathNameByHandleW(KernelHandle file, StringBuilder path, uint size, uint flags);
     [StructLayout(LayoutKind.Sequential)]
@@ -315,11 +348,34 @@ internal sealed class SmokePathLease : IDisposable
         SmokeFixture.CheckPath(path);
         var security = new Native.Security { Length = Marshal.SizeOf<Native.Security>() };
         using var handle = Native.CreateFileW(path, 0x80, 3, ref security, 3, 0x02200000, 0);
-        Native.Require(!handle.IsInvalid);
-        Native.Require(GetFileInformationByHandle(handle, out var information));
+        SmokeFixture.Require(!handle.IsInvalid, "directory_handle_failed");
+        return HandleIdentity(handle);
+    }
+    private static string HandleIdentity(KernelHandle handle)
+    {
+        SmokeFixture.Require(!handle.IsClosed && !handle.IsInvalid, "directory_handle_failed");
+        SmokeFixture.Require(GetFileInformationByHandle(handle, out var information), "directory_handle_failed");
         SmokeFixture.Require((information.Attributes & (uint)FileAttributes.ReparsePoint) == 0 &&
             (information.Attributes & (uint)FileAttributes.Directory) != 0, "handle_not_directory");
         return $"{information.Volume:x8}:{information.IndexHigh:x8}{information.IndexLow:x8}";
+    }
+    internal void RequireIdentity(string expected)
+    {
+        SmokeFixture.Require(expected.Length > 0 && Identity == expected, "directory_replaced");
+        Revalidate();
+    }
+    internal void Revalidate()
+    {
+        SmokeFixture.Require(handles.Count != 0, "directory_lease_closed");
+        foreach (var item in handles)
+        {
+            SmokeFixture.CheckPath(item.Path);
+            SmokeFixture.Require(HandleIdentity(item.Handle) == item.Identity && DirectoryIdentity(item.Path) == item.Identity, "directory_replaced");
+            var final = new StringBuilder(32768);
+            uint size = GetFinalPathNameByHandleW(item.Handle, final, (uint)final.Capacity, 0);
+            SmokeFixture.Require(size > 0 && size < final.Capacity && final.ToString().StartsWith(@"\\?\", StringComparison.Ordinal) &&
+                Path.GetFullPath(final.ToString()[4..]).Equals(item.Path, StringComparison.OrdinalIgnoreCase), "path_changed");
+        }
     }
     internal static SmokePathLease Acquire(string path)
     {
@@ -327,24 +383,45 @@ internal sealed class SmokePathLease : IDisposable
         try
         {
             SmokeFixture.CheckPath(path);
-            for (var part = new DirectoryInfo(path); part != null; part = part.Parent)
+            SmokeFixture.Require(Directory.Exists(path), "directory_handle_failed");
+            var ancestry = new Stack<DirectoryInfo>();
+            for (var part = new DirectoryInfo(path); part != null; part = part.Parent) ancestry.Push(part);
+            // Pin ancestors before descendants; revalidate the whole chain after acquisition.
+            foreach (var part in ancestry)
             {
-                if (!part.Exists) continue;
                 var security = new Native.Security { Length = Marshal.SizeOf<Native.Security>() };
                 var handle = Native.CreateFileW(part.FullName, 0x81, 3, ref security, 3, 0x02200000, 0); // list/read attributes; no share-delete
-                Native.Require(!handle.IsInvalid); lease.handles.Add(handle);
-                Native.Require(GetFileInformationByHandle(handle, out var information));
-                SmokeFixture.Require((information.Attributes & (uint)FileAttributes.ReparsePoint) == 0 &&
-                    (information.Attributes & (uint)FileAttributes.Directory) != 0, "handle_not_directory");
-                SmokeFixture.CheckPath(part.FullName);
-                var final = new StringBuilder(32768);
-                uint size = GetFinalPathNameByHandleW(handle, final, (uint)final.Capacity, 0);
-                SmokeFixture.Require(size > 0 && size < final.Capacity && final.ToString().StartsWith(@"\\?\", StringComparison.Ordinal) &&
-                    Path.GetFullPath(final.ToString()[4..]).Equals(Path.GetFullPath(part.FullName), StringComparison.OrdinalIgnoreCase), "path_changed");
+                if (handle.IsInvalid) { handle.Dispose(); throw new SmokeError("directory_handle_failed"); }
+                try { lease.handles.Add((part.FullName, handle, HandleIdentity(handle))); }
+                catch { handle.Dispose(); throw; }
             }
+            lease.Revalidate();
             return lease;
         }
         catch { lease.Dispose(); throw; }
     }
-    public void Dispose() { foreach (var handle in handles) handle.Dispose(); handles.Clear(); }
+    public void Dispose() { foreach (var item in handles.AsEnumerable().Reverse()) item.Handle.Dispose(); handles.Clear(); }
+}
+
+// One lifetime for the cross-session lock and all verified directory handles.
+// No root/UDF handle is released between Bind, GUI use and confirmed cleanup.
+internal sealed class SmokeRunLease(FileStream file) : IDisposable
+{
+    private readonly List<IDisposable> anchors = [];
+    internal SmokePathLease? Root, Profile;
+    internal string Run = "";
+    internal bool Bound;
+    internal void Hold(SmokePathLease anchor) => anchors.Add(anchor);
+    internal void ValidateBound()
+    {
+        SmokeFixture.Require(Bound && Root != null && Profile != null, "directory_lease_unbound");
+        Root!.Revalidate(); Profile!.Revalidate();
+    }
+    public void Dispose()
+    {
+        Bound = false;
+        Profile?.Dispose(); Root?.Dispose();
+        foreach (var anchor in anchors.AsEnumerable().Reverse()) anchor.Dispose();
+        anchors.Clear(); file.Dispose();
+    }
 }
