@@ -679,3 +679,147 @@ failure, external-navigation refusal, taskbar/DPI behavior, no impact on
 personal browsers. Desktop shortcut migration and production-feed display
 require separate explicit authorization. ST2 remains SEALED; no model,
 prediction, Elo, metrics, source update or feed generation occurs in Phase 2.
+
+### Independent fixed-Smoke Network Observer (review only)
+
+`windows/J1AI.SmokeNetworkObserver` is a standalone, package-free .NET 10 Windows
+console project. Its only project reference is from its own new assertion runner;
+neither project references/rebuilds DashboardHost or DashboardHost.Tests. The
+frozen Smoke runner, backend, manifest, state and UDF are not rewritten. The
+initial unknown TCP candidate remains **unclassified**: a new observation
+cannot reconstruct or retroactively clear it.
+
+The new observer has no GUI/backend launch command, HTTP client, CDP, packet
+capture, profile override or browser kill operation. The implementation task
+builds these two projects only and runs **158 value/Fake-only assertions**. No
+real TCP collector, formal Stop, GUI or WebView2 initialization is executed.
+The historical GUI 10/10 and Native/Python results above are not new results.
+
+Future entry points (NOT authorization to execute them):
+
+```powershell
+# Read-only: prints a prospective plan plus its SHA; creates nothing.
+& $dotnet windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.dll --plan <future-approved-absolute-evidence-directory>
+# Only after independent review and explicit approval of the exact saved plan bytes:
+& $dotnet windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.dll --observe <plan.json> --approve <sha256-of-plan-file>
+```
+
+`--plan` does not collect TCP/process data or create directories, locks, manifests,
+state, journal or UDF. Save/approve a plan in a subsequent authorized task; a
+newline/BOM added when saving changes the file SHA and must be accounted for.
+The evidence destination must be one canonical child of
+`%LOCALAPPDATA%\J1AI\Diagnostics\NetworkObserver`, outside Smoke control/UDF.
+**No concrete evidence directory or plan file is created by this implementation.**
+Its exact absolute path, parent preparation, plan SHA, ACL, capacity and retention
+need approval before observation. The writer requires approved ancestors to
+already exist and refuses an existing session directory. It pins ancestry and
+the new directory without share-delete, rejects reparse/ambiguous paths, sets
+an explicit current-user/SYSTEM inheritable DACL and never deletes/overwrites
+evidence. Proposed retention: seven days or until review is complete, then a
+separately authorized cleanup; hard caps are 4 MiB per document and 64 MiB per
+session. No automatic rotation/deletion. Same-user/admin interference is not an
+authentication boundary.
+
+Plans bind identity `8f96edbb39b7d4d47cdad47c`, immutable manifest
+`ce8e230e4deb35b67298f0dcdfecb421cf282125b7ae509de794df91b599cf67`, initial CLEAN
+state `f7f87885a0b5f66f65e065295bc60a9c989a63ce654b5502dac014a36e1d04a7`, its
+existing root/UDF file IDs, all 32 UDF paths, the observer hash, exact executable
+paths/hashes and frozen runner/backend/product/SDK/identity-authority hashes.
+Assets are checked against the unchanged manifest. This is a plan for the next
+observation from that exact baseline, not automatic approval after another run.
+No independent Python identity implementation or new manifest is introduced.
+
+Observation/ownership contract:
+
+- An observer-specific named mutex excludes concurrent observers. Abandonment
+  fails closed. The operator must wait for `OBSERVER_READY` and keep this observer alive before separately
+  starting the approved existing Smoke runner. Ready requires a durable header
+  and successful empty baseline query. No automatic GUI launch follows.
+- Local WMI process metadata is transient, not logged. Exact argv parsing,
+  approved executable hashes (held read-only, no write/delete sharing), exact
+  single UDF argument, worker/supervisor and runtime parent chains, and retained
+  query/synchronize-only process handles establish an **OS-scoped** identity.
+  [GetProcessTimes](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
+  supplies the full PID+creation FILETIME; WMI's microsecond
+  birth must match it. Parent birth ordering, PID reuse and unidentified runtime
+  descendants are checked. Metadata disappearance is recorded separately from
+  a signaled retained process handle. Personal/unrelated TCP rows are discarded
+  in memory before evidence serialization; unknown attribution records an error,
+  not a guessed socket owner.
+- The unchanged runner does not export its readiness URL. The observer therefore
+  uses the OS listener owned by its verified synthetic backend/interpreter chain:
+  exact script/root/nonexistent `--data` argv, approved Python images, same worker,
+  PID+birth and exactly one `127.0.0.1` LISTEN socket with a dynamic valid port.
+  No literal port or header/HTTP-response guessing. Missing, multiple, wildcard,
+  changed or unverified listeners stop the workflow with INCONCLUSIVE evidence;
+  the GUI safety gate stays BLOCKED. Real interoperability is **not yet tested**.
+- [GetExtendedTcpTable](https://learn.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getextendedtcptable)
+  with `TCP_TABLE_OWNER_PID_ALL` queries IPv4 and IPv6 after each
+  250 ms scheduling delay. Actual query interval/duration, UTC bounds, sequence
+  and gaps are persisted; this is not a guaranteed 250 ms sampling frequency.
+  Missing sequences, backwards/nonfinite timing, query failure or >1.5 s query/
+  interval gaps fail closed. A single snapshot cannot authorize PASS. A stalled
+  WMI/native query is bounded by the caller; no replacement collector is started.
+  The session deadline is six minutes, followed by bounded Stop/cleanup handling.
+  Successfully collected partial-family rows are retained even if the other
+  family query fails. No network records from unrelated processes are saved.
+- IP parsing rejects noncanonical IPv4 forms. Mapped IPv6 is normalized explicitly;
+  original addresses, family, scope spelling and native row bytes remain evidence.
+  Loopback/private/link-local/ULA/public/unspecified/invalid are distinct. Only
+  the exact verified backend address **and** port are allowed. Other loopback
+  endpoints are denied. LISTEN/BOUND/CLOSED are not outbound traffic proof and
+  require review rather than automatic permission. SYN, established and closing
+  states do not establish application payload transmission.
+
+Evidence/Stop contract:
+
+1. Capture only attributable raw rows plus acquisition/ownership diagnostics.
+2. Create-new pending JSON, durable flush, read-back equality, atomic no-overwrite
+   rename and final read-back.
+3. Classify and durably save the per-snapshot verdict.
+4. Only then request the unchanged runner's fixed-identity `--smoke-stop` on denial
+   or uncertainty. A write failure attempts a durable failure diagnostic first,
+   requests Stop and remains INCONCLUSIVE; it never produces a success result.
+
+Stop uses argv arrays/Windows quoting, no shell and no guessed PID/event. Only
+the self-created exact Stop CLI/helper tree belongs to a separate create-time,
+non-inherited KillOnClose Job. Its acknowledgement/exit/tree cleanup are bounded
+and distinct from Runtime exit. No GUI/browser is assigned to that Job or killed.
+Unconfirmed cleanup retains the command handle; no success is reported. All Stop
+tests use Fake; this new Win32 adapter is build/static-review evidence only.
+
+Results distinguish `PASS_OBSERVED_SCOPE`, `BLOCKED` and `INCONCLUSIVE`, along
+with READY/OBSERVING/NORMAL_END/UNAUTHORIZED/OWNERSHIP_UNKNOWN/WRITE_FAILED/GAP/
+CRASH phases. A final result requires its matching SHA receipt and successful
+observer exit; missing/pending/failed evidence is not PASS. Only a new matching
+RUNNING run followed by the frozen runner's CLEAN Runtime-event/server/Job/window
+proofs, signaled retained handles and unchanged inventory confirms normal end.
+An arbitrary caller-supplied end flag cannot authorize PASS. Cookies, URLs, HTTP
+payloads, predictions, personal command lines and unrelated traffic are excluded.
+
+Limits and next gate:
+
+- External OS identity is **not** direct SDK `GetProcessInfos` identity. Evidence
+  explicitly says SDK identity is not asserted. The Runtime exit event is read
+  from the unchanged runner's matching CLEAN record, not invented from a PID.
+  If direct SDK PID attestation is required, this independent observer cannot
+  provide it; do not call that unverified property PASS or modify the frozen
+  runner/manifest automatically.
+- TCP polling can miss short-lived connections and processes; UDP/QUIC, shared
+  DNS resolver attribution and payloads are outside scope. PASS_OBSERVED_SCOPE
+  never means absence of all external communication. Observer crash/missing
+  result leaves the observation incomplete; the frozen Smoke supervisor remains
+  responsible for its own bounded lifetime. Real capture/performance, WMI/ACL
+  access, endpoint discovery and Stop interoperability remain unproven.
+- Fake tests cover IP/endpoints/states, PID/birth/lineage, gaps, write/flush/read/
+  commit/receipt faults, evidence-before-Stop, collector/observer failure and
+  exclusion of unrelated sockets. Six internal test-only mutants (private allowed,
+  all loopback ports allowed, PID-only, missing snapshots treated as empty,
+  Stop-before-raw and unknown backend PASS) must fail the SAME assertions and exit 1.
+  There is no CLI/environment switch to activate mutants in the observer.
+- After code review/main integration, require a new read-only approval plan with
+  exact diagnostic path/ACL/retention, fresh plan/binary hashes, unchanged frozen
+  fixture/UDF and baseline, readiness/start/Stop/end evidence procedure and explicit
+  permission for one same-UDF observation. No second GUI run, evidence destination
+  provisioning, profile mutation, production-feed smoke or production use is
+  authorized by the implementation or its Fake tests.
