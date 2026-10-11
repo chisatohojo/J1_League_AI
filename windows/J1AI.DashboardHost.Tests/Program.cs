@@ -18,6 +18,33 @@ internal static class Program
 
     public static async Task<int> Main(string[] args)
     {
+        if (args is ["--smoke-supervisor-probe"])
+        {
+            // Non-GUI self-bounded worker for watchdog tests; never starts WebView2.
+            try { await Console.In.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(3)); }
+            catch (TimeoutException) { return 2; }
+            return 0;
+        }
+        if (args is ["--smoke-lock-probe", var existingLock])
+        {
+            // Synthetic child: open existing only; no arbitrary file creation.
+            try { using var probe = new FileStream(existingLock, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); return 1; }
+            catch (IOException error) when ((error.HResult & 0xffff) == 32) { Console.WriteLine("SMOKE_LOCK_DENIED"); return 0; }
+        }
+        if (args is ["--smoke-fixture-tests", var smokePython, var smokeLauncher])
+        {
+            var cases = SmokeFixtureTests.Cases(smokePython, smokeLauncher);
+            foreach (var item in cases) await Test(item.Name, item.Run);
+            return Summary(cases.Count);
+        }
+        if (args is ["--smoke-negative-control"])
+        {
+            await Test("intentional_unsafe_inventory", () => { SmokeFixture.CheckInventory([], ["unapproved"], "approved", true); return Task.CompletedTask; });
+            await Test("intentional_missing_runtime_evidence", () => { SmokeFixture.RequireClean(new("hash", SmokeState.CLEAN, "run", false, true, true, true, "udf", "root"), "hash"); return Task.CompletedTask; });
+            return Summary(2); // expected exit 1, validators must reject these states
+        }
+        if (args.Length > 0 && args[0].StartsWith("--smoke-", StringComparison.Ordinal))
+            return await SmokeRunner.Run(args);
         if (args is ["--cleanup-repeat", var interpreter, var repetitions] &&
             int.TryParse(repetitions, out int count) && count is > 0 and <= 1000)
         {
@@ -117,7 +144,9 @@ internal static class Program
         await Test("http_unknown_content_length_body_cap", UnknownLength);
         var guiCases = GuiTests.Cases();
         foreach (var item in guiCases) await Test(item.Name, item.Run);
-        return Summary(68 + 3 + guiCases.Count); // original Phase 1 + setup failures + GUI-policy cases
+        var smokeCases = SmokeFixtureTests.Cases(python, launcher);
+        foreach (var item in smokeCases) await Test(item.Name, item.Run);
+        return Summary(68 + 3 + guiCases.Count + smokeCases.Count);
     }
 
     private static int Summary(int expected)
@@ -135,11 +164,12 @@ internal static class Program
             failed++;
             // Fixed codes by default; synthetic cleanup stack diagnostics below
             // never forward exception messages or captured output.
-            Console.WriteLine("FAIL " + name + " " + (error is HostError h ? h.Code.ToString() : error.GetType().Name));
+            Console.WriteLine("FAIL " + name + " " + (error is HostError h ? h.Code.ToString() : error is SmokeError ? error.Message : error.GetType().Name));
             // Explicit synthetic cleanup diagnostics only: stack frames, never
             // arbitrary exception messages, captured streams or prediction data.
             if (name.StartsWith("cleanup_timeout_retains_resources_and_gate", StringComparison.Ordinal))
                 Console.WriteLine(error.StackTrace);
+            if (name.StartsWith("smoke_", StringComparison.Ordinal)) Console.WriteLine(error.StackTrace);
         }
     }
     internal static void Check(bool value) { if (!value) throw new InvalidOperationException("assertion_failed"); }

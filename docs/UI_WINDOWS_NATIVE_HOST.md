@@ -191,7 +191,7 @@ discovery. Any failed assertion returns nonzero. Do not report them as xUnit,
 MSTest, or GUI tests.
 
 The runner checks unique case names and the expected case count (68 in Phase 1;
-124 with the Phase 2 non-GUI and cleanup-setup cases). A
+163 with Phase 2, cleanup-setup and fixed-Smoke non-GUI cases). A
 separate negative control runs an intentional assertion failure and an
 unexpected exception through the **same** MSBuild execution path:
 
@@ -434,8 +434,9 @@ Evergreen runtime/updater never performs its own background communication.
 
 ### Phase 2 validation and remaining manual checks
 
-Normal `dotnet test` runs **124** cases: all 68 original Phase 1 cases, 53
-GUI lifecycle/policy/mock assertions, and three cleanup-setup failure cases,
+Normal `dotnet test` runs **163** cases: all 68 original Phase 1 cases, 53
+GUI lifecycle/policy/mock assertions, three cleanup-setup failure cases, and
+39 fixed-Smoke non-GUI assertions,
 without opening GUI. The assertion runner
 still checks unique names, exact count and nonzero exit on failures. The
 negative-control intentionally reports 2 failed cases and exit 1. Both tracked
@@ -512,6 +513,115 @@ smoke must also confirm no impact on existing shortcuts or personal browsers;
 shortcut migration and production use remain separately gated.
 Python launcher/server focused regression: 190 cases. Build must finish with
 zero warnings/errors; mandatory failures prohibit commit.
+
+### Fixed-profile manual Smoke runner (separate approval required)
+
+The test assembly now has a separate fixed-fixture runner. It does **not**
+change the product, its CLI, or the existing ten random-repository GUI cases.
+Do not use `--synthetic-gui-tests` as a substitute: it still creates new UDFs.
+There are no new packages and no arbitrary repository/UDF/backend/data overrides.
+
+Read-only entry (no GUI, fixture, UDF, lock or state creation):
+
+```powershell
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-preflight
+```
+
+It reports UNINITIALIZED or a validated CLEAN fixture and the exact plan SHA.
+An uninitialized plan is **not** permission to provision or launch. First-use
+requires a subsequent explicit user approval of the reported paths and plan SHA.
+Future, separately authorized commands are:
+
+```powershell
+# NOT authorized/executed by the harness implementation task:
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-run --approve-first-use <approved-plan-sha>
+# After confirmed CLEAN shutdown, reuse the same fixture/UDF:
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-run
+# Existing fixed-fixture event only; no server/window/profile creation:
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-show
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-stop
+```
+
+The fixed root is
+`%LOCALAPPDATA%\J1AI\Smoke\dashboard-v1\fixtures\J1AI-native-test-dashboard-smoke-v1`.
+Identity comes exclusively from the existing Python `instance_id()` (including
+when the path does not exist); `WebViewPreflight.ProfilePath()` selects
+`%LOCALAPPDATA%\J1AI\Dashboard\<that-id>\webview2-profile`.
+The first approved allocation is at most **one** UDF. Subsequent runs add
+**zero** UDFs. All existing UDFs are inventoried by path metadata only and never
+entered, repaired, copied, cleared or deleted. A collision with the product ID,
+an existing unapproved UDF or even its parent directory fails closed.
+
+The immutable fixture manifest binds root/identity/UDF, production identity,
+the original UDF path set, exact UI asset hashes, Python/identity-authority/
+runner/product/SDK/backend hashes and the available Runtime version. Copied
+assets are verified again; code, Runtime, inventory or asset changes require
+review, not automatic manifest refresh or a new profile. Only the existing
+synthetic Python backend can be started, through the existing `OwnedServer`.
+It binds `127.0.0.1:0`, supplies an empty synthetic API response and never opens
+the explicit nonexistent `must-not-be-read.json` data argument. No product
+server, saved feed, model or research artifact is loaded.
+
+Safety/state contract:
+
+- A non-shared file handle excludes concurrent Smoke runs across sessions.
+  The unchanged identity-based named gate/Stop/Show still owns GUI/server IPC.
+- UNINITIALIZED has no persistent fixture. Provisioning needs the exact first-use
+  plan SHA; unknown/partial directories are rejected, not overwritten.
+- Before startup, a write-through `run.intent` and RUNNING state are persisted.
+  State replacement uses a flushed, create-new `.pending` file and rename.
+  A surviving intent, partial write, malformed/duplicate metadata, previous
+  RUNNING/BLOCKED state or missing proof prohibits automatic reuse.
+- CLEAN requires the actual Form disposal, exact environment UDF mapping,
+  Runtime exit event, complete owned-server resource cleanup and permitted
+  UDF inventory delta. Root/UDF volume/file IDs detect later directory replacement.
+  Initializing/failed SDK paths lacking proof remain BLOCKED; controller/PID
+  disappearance is not proof. The intent is removed only after CLEAN is durable.
+- Reparse points, UNC/ADS/traversal paths and unapproved locations are rejected.
+  Existing verified directory ancestry is held with no share-delete and final
+  handle paths are checked. This is not an authentication boundary against a
+  hostile process with the same user SID.
+- A separate self-created worker owns the GUI, server Job and fixture lease.
+  Its supervisor waits at most five minutes, requests the same fixture's Stop,
+  then waits at most twenty seconds. No worker/browser is forcibly killed.
+  A still-live worker retains ownership; unfinished state denies reuse. Parent
+  stdin disconnect is remembered even before IPC acquisition and acts as Stop.
+  `--smoke-worker` is the supervisor's internal entry, not a manual launch mode.
+- No UDF deletion, alternate-profile fallback, registry edits, CDP, security
+  flags, production shortcut changes or personal-browser operations are used.
+
+Non-GUI verification:
+
+```powershell
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-fixture-tests "$root\.venv\Scripts\python.exe" "$root\scripts\launch_dashboard.py"
+# Intentional two invalid states: MUST exit 1 (not a passing suite).
+& $dotnet windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll --smoke-negative-control
+```
+
+The 39 cases use in-memory evidence and fresh OS-temp namespaces, not real UDFs
+or the fixed fixture. Actual Windows tests cover file-handle exclusion across
+processes, named Show/Stop, junction rejection, metadata-only rejection of an
+existing OS symlink, retained directory handles blocking rename, file-ID
+replacement detection and bounded supervision of a non-GUI child without kill.
+Identity uses the real Python authority. Other cases cover allocation limits,
+manifest/provenance, unfinished journal/state, cleanup proofs, source/assets,
+readonly non-mutation and validator negative controls. Symlink creation is not
+claimed: no elevation/Developer Mode change is used.
+
+This implementation validation is non-GUI only. The historical GUI 10/10 PASS
+is not a new run. The implementation run passed 163/163 total Native assertions,
+39/39 Smoke cases and 190/190 focused Python cases; no-restore Release build
+had zero warnings/errors. Both runner and Smoke negative controls reported the
+expected two failures and exit 1. Actual read-only Smoke preflight reported
+UNINITIALIZED without creating the fixed fixture/UDF. The existing 31 UDF paths
+and all five protected input hashes were unchanged.
+Fixed-fixture provisioning, actual UDF reuse, renderer/browser
+crashes, real SDK initialization stalls, production-feed smoke and manual
+notification/focus/minimize/DPI/taskbar/personal-browser checks remain unproven.
+Retained UDF cache size may grow even when the UDF **count** is fixed; a dynamic
+port changes the origin. Future manual smoke must check fresh backend requests,
+not accept cached display as proof. An uncertain crash requires a new explicit
+recovery review; no automatic repair/delete/reallocation is provided.
 
 Future user-run GUI smoke: first launch, duplicate launch during loading,
 minimized Show, X/restart, --stop, failure notification, real renderer/runtime
