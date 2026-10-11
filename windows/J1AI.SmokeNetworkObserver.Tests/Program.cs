@@ -17,17 +17,32 @@ internal static class Program
     }
     public static async Task<int> Main(string[] args)
     {
+        string? nativeMutation = null, selectedTest = null;
         if (args is ["--negative-control", var mutation] && new[] { "private-allowed", "all-loopback-allowed", "pid-only",
             "gap-as-empty", "stop-before-raw", "unknown-backend-pass" }.Contains(mutation)) policy = new MutantPolicy(mutation);
+        else if (args is ["--native-negative-control", var native] && NativeEvidenceTests.Mutations.Contains(native)) nativeMutation = native;
+        else if (args is ["--test", var selected] && !string.IsNullOrWhiteSpace(selected)) selectedTest = selected;
         else if (args.Length != 0) { Console.Error.WriteLine("Unknown runner arguments"); return 2; }
-        Register(); int passed = 0, failed = 0;
+        if (nativeMutation == null) Register();
+        if (args.Length == 0 || nativeMutation != null || selectedTest != null) NativeEvidenceTests.Register(Add, Async, nativeMutation);
+        if (selectedTest != null)
+        {
+            Cases.RemoveAll(test => test.Name != selectedTest);
+            if (Cases.Count != 1) { Console.Error.WriteLine("Unknown or non-unique test name"); return 2; }
+        }
+        int passed = 0, failed = 0, notRun = 0;
         foreach (var (name, test) in Cases)
         {
             try { await test(); Console.WriteLine("PASS " + name); passed++; }
-            catch (Exception e) { Console.WriteLine("FAIL " + name + " " + e.GetType().Name); failed++; }
+            catch (NativeEvidenceTests.NotAvailable e) { Console.WriteLine("NOT_RUN " + name + " " + e.Message); notRun++; }
+            catch (Exception e)
+            {
+                Console.WriteLine("FAIL " + name + " " + e.GetType().Name + " " + e.Message); failed++;
+                if (e is NativeEvidenceTests.CleanupBlocked) break; // no further temp creation after cleanup refusal
+            }
         }
-        Console.WriteLine($"Executed={Cases.Count} PASS={passed} FAIL={failed}; fake/value-only; no GUI/OS collector/files/Stop");
-        return failed == 0 ? 0 : 1;
+        Console.WriteLine($"Registered={Cases.Count} Executed={passed + failed} PASS={passed} FAIL={failed} NOT_RUN={notRun}; value/Fake + isolated native filesystem; no GUI/OS TCP collector/real Stop");
+        return failed == 0 && notRun == 0 ? 0 : 1;
     }
 
     private static void Register()

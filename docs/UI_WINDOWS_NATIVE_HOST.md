@@ -691,7 +691,7 @@ cannot reconstruct or retroactively clear it.
 
 The new observer has no GUI/backend launch command, HTTP client, CDP, packet
 capture, profile override or browser kill operation. The implementation task
-builds these two projects only and runs **158 value/Fake-only assertions**. No
+builds these two projects only. The initial implementation ran **158 value/Fake-only assertions**. No
 real TCP collector, formal Stop, GUI or WebView2 initialization is executed.
 The historical GUI 10/10 and Native/Python results above are not new results.
 
@@ -712,10 +712,36 @@ The evidence destination must be one canonical child of
 **No concrete evidence directory or plan file is created by this implementation.**
 Its exact absolute path, parent preparation, plan SHA, ACL, capacity and retention
 need approval before observation. The writer requires approved ancestors to
-already exist and refuses an existing session directory. It pins ancestry and
-the new directory without share-delete, rejects reparse/ambiguous paths, sets
-an explicit current-user/SYSTEM inheritable DACL and never deletes/overwrites
-evidence. Proposed retention: seven days or until review is complete, then a
+already exist and refuses an existing session directory. The High fix
+uses user-mode `NtCreateFile` with a retained parent handle, `FILE_CREATE`,
+directory/open-reparse-point options and a protected current-user/SYSTEM DACL
+in `OBJECT_ATTRIBUTES`. Creation and receipt of the owned handle are one native
+operation; there is no `CreateDirectory`/open interval or path-based ACL update.
+Existing ancestors are opened one component at a time relative to held handles.
+Every held directory is checked through `FileAttributeTagInfo` and `FileIdInfo`
+(volume serial plus 128-bit file ID), including reparse rejection and final-path
+consistency. Read/write sharing permits child IO; delete sharing is withheld
+through evidence-session disposal, blocking ordinary rename/delete replacement.
+`SetSecurityInfo` updates that same directory handle; protected DACL readback and
+object identity are checked before/after ACL setup.
+
+Raw/verdict files use single-component, handle-relative create-new operations.
+The actual opened file's ID is compared with a second relative open from the
+held parent. Pending IO, durable flush and readback use the owned file handle;
+`NtSetInformationFile` performs a no-overwrite rename relative to the same
+directory. Committed file handles remain held until disposal; final readback
+must match their IDs and bytes. Failures cannot yield a verified success receipt.
+File disposal failures are reported after attempting every file close, and
+directory handles are released in `finally`. No evidence deletion, replacement,
+directory adoption or path-based fallback is introduced.
+
+This is an x64 Windows native implementation, not a portable filesystem API;
+unsupported API/filesystem/security/identity operations fail closed. Held
+namespace handles do **not** create an authentication boundary against malicious
+same-user/admin interference (including ACL or in-place metadata changes).
+Reparse attributes and identities are revalidated at IO boundaries; no claim of
+immunity to arbitrary hostile same-privilege mutation is made.
+Proposed retention: seven days or until review is complete, then a
 separately authorized cleanup; hard caps are 4 MiB per document and 64 MiB per
 session. No automatic rotation/deletion. Same-user/admin interference is not an
 authentication boundary.
@@ -817,6 +843,40 @@ Limits and next gate:
   all loopback ports allowed, PID-only, missing snapshots treated as empty,
   Stop-before-raw and unknown backend PASS) must fail the SAME assertions and exit 1.
   There is no CLI/environment switch to activate mutants in the observer.
+- High-fix verification after the user manually enabled Developer Mode:
+  **203 registered; 203 executed/PASS, 0 FAIL, 0 NOT_RUN; runner exit 0**.
+  This comprises the original 158 value/Fake cases and **45 isolated native
+  filesystem cases (45 PASS)**. The actual
+  Win32 tests cover atomic create ownership, held-directory rename/delete denial,
+  real junction mutation before and after open, ancestor removal, file-ID and
+  destination mismatch, native open/attribute/ACL errors, raw/verdict IO faults,
+  all-writes-failed INCONCLUSIVE/Stop and cleanup-error handle release. Injection
+  uses synchronous checkpoints, not timing sleeps. IO error checkpoints and Fake
+  Stop are explicitly not real disk hardware failures or real GUI Stop tests.
+  Every fresh temporary test directory was removed in one cleanup attempt.
+- The mandatory **real symlink case now PASSes**. Previously it was NOT_RUN
+  (`ERROR_PRIVILEGE_NOT_HELD (1314)`); that prior run was not a success. After
+  the user's manual setting change, the unchanged `CreateSymbolicLinkW(..., 3)`
+  creates an actual directory symlink in an owned temporary root. The test
+  queries the opened link handle for `IO_REPARSE_TAG_SYMLINK` (`0xA000000C`),
+  directory/reparse attributes and its volume/file ID, distinct from the target.
+  It confirms the observer opens that exact link object and rejects it as
+  `evidence_reparse`, target identity remains unchanged, no target evidence is
+  created, all observed handles close and the temporary root is removed.
+  Junction/Fake cases are not substitutes. The symlink test ran alone first
+  (**1 registered/executed/PASS, exit 0**), then as part of the full suite.
+  Test-only selection is supported by `--test native_symlink_ancestor_rejected`;
+  an unknown/non-unique name exits 2. No elevation, policy or Developer Mode
+  setting change is performed by the harness; unavailable mandatory cases
+  still prevent runner exit 0. The local High fix is ready for independent
+  review, not authorization for GUI or network observation.
+- Six original negative-controls still trigger assertion failures. Five new
+  internal filesystem mutants disable held-handle reparse checking, file-ID
+  checking, delete-share protection, held-object rather than path-only
+  validation, or destination checking. All five trigger corresponding FAIL
+  assertions (all 11 negative-controls detected, with 0 NOT_RUN); exit 1 alone
+  is not counted as detection. No GUI, TCP collector, real Stop, fixed fixture/UDF mutation or
+  real diagnostics provisioning was performed for these tests.
 - After code review/main integration, require a new read-only approval plan with
   exact diagnostic path/ACL/retention, fresh plan/binary hashes, unchanged frozen
   fixture/UDF and baseline, readiness/start/Stop/end evidence procedure and explicit

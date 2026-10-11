@@ -37,32 +37,73 @@ internal sealed class VerifiedEvidence(IBlobStore store) : IEvidence
     }
 }
 
-internal sealed class DiskBlobs(string directory) : IBlobStore, IDisposable
+internal sealed class DiskBlobs(EvidenceDirectory directory) : IBlobStore, IDisposable
 {
+    private readonly Dictionary<string, (FileStream Stream, string Identity)> committed = [];
     private FileStream? current;
     private string? pendingName;
-    private string Pending(string name) => Path.Combine(directory, name + ".json.pending");
-    private string Committed(string name) => Path.Combine(directory, name + ".json");
+    private string? currentIdentity;
+    private static string Pending(string name) => name + ".json.pending";
+    private static string Committed(string name) => name + ".json";
+    private void At(string stage, string name)
+    { directory.Validate(); directory.Policy.At(stage, name, current?.SafeFileHandle); }
     public void CreatePending(string name, byte[] bytes)
     {
+        if (committed.Count >= 4096) throw new IOException("evidence_file_capacity");
         current?.Dispose(); current = null;
         pendingName = name;
-        current = new(Pending(name), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.WriteThrough);
-        current.Write(bytes);
+        var h = directory.File(Pending(name), true);
+        try { current = new FileStream(h, FileAccess.ReadWrite); }
+        catch { h.Dispose(); throw; }
+        currentIdentity = EvidenceNative.Identity(current.SafeFileHandle);
+        At("write", name);
+        int first = bytes.Length / 2; current.Write(bytes.AsSpan(0, first));
+        At("write_partial", name); current.Write(bytes.AsSpan(first));
     }
     public void FlushPending(string name)
-    { Approval.Require(pendingName == name && current != null, "pending_mismatch"); current!.Flush(true); }
+    { Approval.Require(pendingName == name && current != null, "pending_mismatch"); At("flush", name); current!.Flush(true); }
     public byte[] ReadPending(string name)
     {
         Approval.Require(pendingName == name && current != null && current.Length <= 4 * 1024 * 1024, "pending_mismatch");
+        At("read_pending", name);
+        if (directory.Policy.IdentityCheck && directory.Policy.SampleIdentity(current!.SafeFileHandle) != currentIdentity)
+            throw new IOException("evidence_pending_identity");
         current!.Position = 0; var bytes = new byte[current.Length]; current.ReadExactly(bytes); return bytes;
     }
     public void Commit(string name)
     {
         Approval.Require(pendingName == name && current != null, "pending_mismatch");
-        current!.Dispose(); current = null;
-        File.Move(Pending(name), Committed(name), false); pendingName = null;
+        At("commit", name);
+        EvidenceNative.Rename(current!.SafeFileHandle, directory.Handle, Committed(name));
+        current.Flush(true);
+        committed.Add(name, (current, currentIdentity!)); current = null; pendingName = null;
     }
-    public byte[] ReadCommitted(string name) => File.ReadAllBytes(Committed(name));
-    public void Dispose() { current?.Dispose(); current = null; }
+    public byte[] ReadCommitted(string name)
+    {
+        At("read_committed", name);
+        var entry = committed[name];
+        using var h = directory.File(Committed(name), false);
+        if (directory.Policy.IdentityCheck && directory.Policy.SampleIdentity(h) != entry.Identity)
+            throw new IOException("evidence_committed_identity");
+        using var file = new FileStream(h, FileAccess.Read);
+        if (file.Length > 4 * 1024 * 1024) throw new IOException("evidence_size");
+        var bytes = new byte[file.Length]; file.ReadExactly(bytes); return bytes;
+    }
+    public void Dispose()
+    {
+        var streams = committed.Values.Select(entry => entry.Stream).ToList();
+        if (current != null) streams.Add(current);
+        current = null; pendingName = null; committed.Clear();
+        Exception? failure = null;
+        foreach (var stream in streams)
+        {
+            try
+            {
+                try { directory.Policy.At("close_file", "", stream.SafeFileHandle); }
+                finally { stream.Dispose(); }
+            }
+            catch (Exception e) { failure ??= e; }
+        }
+        if (failure != null) throw new IOException("evidence_cleanup_failed", failure);
+    }
 }
