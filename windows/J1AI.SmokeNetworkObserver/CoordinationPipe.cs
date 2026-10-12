@@ -61,16 +61,30 @@ public sealed class CoordinationPipe : ICoordinationLink
         }
         catch { held?.Dispose(); peer.Dispose(); throw; }
     }
-    public static NamedPipeServerStream Listen() => new(Name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
+    public static NamedPipeServerStream Listen() => ListenCore(Name);
+    private static NamedPipeServerStream ListenCore(string name) => new(name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
         PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly | PipeOptions.FirstPipeInstance);
+    // Internal transport-only seam. Production entrypoints always use Name.
+    // The disjoint namespace cannot address a fixed Smoke pipe or accept a fallback.
+    private static string TestName(string name)
+    {
+        const string prefix = "J1AI.SmokeCoordination.Tests.";
+        CoordinationSession.Require(name.StartsWith(prefix, StringComparison.Ordinal) &&
+            Guid.TryParseExact(name[prefix.Length..], "N", out _), "coord_test_pipe_name");
+        return name;
+    }
+    internal static NamedPipeServerStream ListenForTest(string name) => ListenCore(TestName(name));
+    internal static Task<CoordinationPipe> ConnectForTest(string name, RunBinding expected, CancellationToken token) =>
+        ConnectCore(TestName(name), expected, token);
     public static async Task<CoordinationPipe> Accept(NamedPipeServerStream listener, RunBinding expected, CancellationToken token)
     {
         try { await listener.WaitForConnectionAsync(token); return new(listener, true, expected); }
         catch { listener.Dispose(); throw; }
     }
-    public static async Task<CoordinationPipe> Connect(RunBinding expected, CancellationToken token)
+    public static Task<CoordinationPipe> Connect(RunBinding expected, CancellationToken token) => ConnectCore(Name, expected, token);
+    private static async Task<CoordinationPipe> ConnectCore(string name, RunBinding expected, CancellationToken token)
     {
-        var client = new NamedPipeClientStream(".", Name, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
+        var client = new NamedPipeClientStream(".", name, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
         try { await client.ConnectAsync(token); return new(client, false, expected); }
         catch { client.Dispose(); throw; }
     }

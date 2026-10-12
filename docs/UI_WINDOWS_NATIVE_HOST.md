@@ -1106,3 +1106,180 @@ No fixed DLL, manifest/state/fixture/UDF, product source or existing GUI synthet
 case is changed. Refreeze, parent-directory provisioning, actual Named Pipe/SDK
 interoperability and same-UDF re-observation still require separate review and
 explicit approval. The original unclassified TCP candidate remains unresolved.
+
+#### Real Windows Named Pipe non-GUI verification
+
+This later test execution adds **33 real OS pipe cases** to the preceding 309:
+**342 registered/executed/PASS, 0 FAIL, 0 NOT_RUN**. This includes the unchanged
+46 native filesystem cases, 56 coordination cases and 49 adapter cases; these
+subsets are not additional tests. The prior execution counts above remain
+historical. The existing GUI synthetic ten cases were **not run** here.
+
+Observer.Tests exposes `--real-pipe-tests`, `--test <registered-name>` and a
+test-only `--real-pipe-peer <pipe> <base64-binding> <challenge> <worker|raw>` child
+entrypoint. An internal transport seam shares the real `CoordinationPipe`
+listener/client factories, peer verification and frame reader with production;
+it accepts only `J1AI.SmokeCoordination.Tests.<32-hex-GUID>`. Public production
+entrypoints still use the fixed name and have no arbitrary-name override or
+fallback. The production adapter, Observation, CoordinationSession, WorkerGate
+and WorkerMessageReceiver are exercised, not a parallel protocol implementation.
+Each listener has a unique name, each binding a unique run/challenge. No fixed
+Smoke IPC, GUI worker, backend, collector, UDF or formal Stop is invoked.
+
+The actual OS checks include:
+
+- `GetNamedPipeClientProcessId` / `GetNamedPipeServerProcessId`, retained process
+  handles, exact process creation time and executable hash on both pipe ends.
+  After peer death the retained kernel object is not treated as a reusable PID;
+  Permit/initialization fail closed. Executable hash means the dotnet host image,
+  **not attestation of every loaded managed DLL**. Claimed binary/run/manifest
+  bindings and OS process identity are separate checks.
+- `CurrentUserOnly` successful same-user connection, `GetSecurityInfo` pipe owner
+  and DACL readback, and `OpenProcessToken` / `GetTokenInformation` SID/elevation
+  type correspondence. Other-user/different-elevation rejection is **unproven**;
+  no account/privilege change is made. Same-user malicious processes are not
+  excluded by a nonce or these checks.
+- Duplicate listener refusal with the actual factory's `FirstPipeInstance` and
+  maximum-instance limit. A separate `CreateNamedPipeW` counterfactual permits
+  two instances: the first-instance flag rejects the second with access denied,
+  whereas removing that flag permits it. This distinguishes the flag from the
+  managed factory's independent one-instance limit.
+- Collector READY, Stop arming/RUNNING, backend verification and Permit ordering;
+  stale/foreign run, challenge, identity, manifest and hash rejection. Early or
+  duplicate Permit and Abort after Permit prevent synthetic initialization.
+- Fake formal Stop success/false/exception/timeout, cached Stop followed by
+  Abort, real Abort delivery, no subsequent Tick/Permit, disconnect during
+  Abort, truncated header/body, early EOF, lease expiry and sticky protocol
+  faults after acknowledgement/cleanup. Acknowledgement is not process exit.
+
+Collector/process/backend facts, evidence storage, Stop and logical clock are
+**Fakes**. Only the authenticated worker key is anchored to the real child.
+Worker initialization is a counter, not WebView2. Barriers and concurrent reads
+bound OS pipe backpressure; a real finite watchdog is independent of Fake time.
+During development, serial write-before-read in the new harness deadlocked and
+was corrected; subsequent completed runs found and corrected two test-only
+assumptions (duplicate-listener exception shape and disposed peer metadata).
+Final counts above refer to the corrected execution, not those earlier failures.
+
+The parent owns its directly created non-spawning peer via a retained handle;
+EOF/disposal is followed by finite exit waits. An exceptional fallback may
+terminate only that retained owned handle and reports test failure, never a
+successful cleanup. No PID-based discovery/kill or browser termination occurs.
+Peer/process/pipe handles are disposed and checked. The old cleanup-blocked
+NOT_RUN accounting Low is unchanged, not counted as resolved by this work.
+
+All **21 existing policy negative-controls** are detected with assertion failure
+and exit 1. Three additional `--real-pipe-negative-control` controls
+(`accept-foreign`, `ignore-abort`, `ignore-lease`) corrupt the test-observed result
+to prove the assertion oracle fails: **3/3 detected**, not production guard
+mutations. Total 24 controls are separate from the ordinary 342-case PASS count.
+
+Offline locked restore and Release no-restore builds of Observer.Tests and
+DashboardHost.Tests (including their dependencies and copied assets) use only
+`C:\Users\megum\AppData\Local\Temp\J1AI-coordination-pipe-tests-20261012-01`
+with global `UseArtifactsOutput=true` / `ArtifactsPath`. Output/intermediate/
+NuGet project-extension paths and copy targets were evaluated before build.
+No cache download, lock/signature-policy change or frozen output overwrite is
+allowed. These are disposable **test binaries**, not formally adopted candidates.
+The temporary root's creation/deletion was checked before tests; final deletion
+must succeed once without bypass before the local commit gate. Existing retained
+160-file artifacts and the old undeletable probe are not used or changed.
+
+Actual SDK/Runtime initialization, Runtime directory-handle compatibility,
+real backend/TCP ownership and observation, formal Stop, fixed-UDF reuse,
+crash recovery, GUI operation and the original unclassified TCP candidate remain
+unproven. Real IPC success alone authorizes none of those operations.
+
+#### Formal binary and manifest switch: future approval procedure only
+
+The following is a **plan**, not an implemented migration tool or permission to
+replace the frozen 42 files. Formal candidates must be built separately after
+review; historical isolated binaries and this test build are not adopted.
+
+1. Approve an exact source revision, SDK/package versions, isolated absolute
+   artifacts path and complete binary inventory. Build
+   `J1AI.DashboardHost.Tests.csproj` with its product ProjectReference and pinned
+   WebView2 SDK; build `J1AI.SmokeNetworkObserver.csproj` separately. Inventory
+   apphosts, DLLs, deps/runtimeconfig, backend/assets and relevant dependencies,
+   not just the two entry DLLs. Evaluate all referenced bin/obj/NuGet/copy paths;
+   use offline locked restore, unchanged signature validation and Release
+   no-restore build. Record `AssemblyInformationalVersion`, source commit/dirty
+   status, SDK, build arguments, source/output locations and actual SHA-256.
+   PDB/document paths and source provenance may affect DLL hashes: use reviewed
+   deterministic `PathMap` settings and repeat-build comparisons, not a claim
+   that unchanged source necessarily produces the frozen DLL. Reject unexplained
+   differences. Product replacement requires its own explicit approval.
+2. Preserve the complete old 42-file inventory and exact manifest/state bytes
+   outside UDF and outside the approved retained temporary area. Prepare new
+   manifest bytes using the **existing exact schema**: update `Hashes.runner`
+   and explicitly approved dependency hashes (`product`, `webview_sdk`, etc.)
+   only when those objects change. Preserve fixed Root/Identity/Udf,
+   ProductionIdentity, BaselineUdfs, fixture assets and directory identities.
+   Do not add an invented Observer manifest field: current SourceHashes/schema
+   checks reject that. Observer is bound by `ApprovalPlan.ObserverHash`, approved
+   FileHashes and `RunBinding.ObserverSha`, with a separate artifact inventory.
+3. Use a two-stage source/build approval to avoid a hash/provenance cycle. First
+   review runner revision **R**, build and hash that runner, and compute proposed
+   manifest **M** and state **S**. Preserve the old CLEAN run and all four cleanup
+   proofs; a state migration changes its manifest binding, not its evidence of
+   another GUI run. Then separately review a narrow Observer constants patch
+   (`Approval.ManifestSha = SHA(M)`, `InitialStateSha = SHA(S)`) at revision **O**
+   and build/hash Observer there. Record both R and O; do not rebuild/relabel the
+   R runner as O and invalidate M. Review the complete paired artifact/approval
+   plan and SHA before switching. No constants patch or candidate hash is
+   inferred or performed in this non-GUI test task.
+4. A separately reviewed migration procedure must exclude both Smoke and
+   Observer: acquire the existing Smoke instance gate, existing `smoke.lock`
+   exclusivity and Observer mutex, with thread-affine mutex ownership. Confirm
+   no worker/Runtime/server, CLEAN with four proofs, no intent/pending and exact
+   old hashes. Create an approved `*.pending` migration marker in the control
+   directory **before** replacement; existing inspection/approval rejects such
+   markers and normal startup remains forbidden during the switch. Keep the
+   marker independent of temporary atomic-write filenames until all checks end.
+5. Switch only the approved files using flushed staging/atomic per-file replace
+   and readback. Multiple files are **not** one atomic transaction: the marker
+   and exclusivity prevent use of mixed generations. Check every dependency,
+   apphost, manifest/state SHA and plan binding, unchanged identity/UDF32 and
+   fixture assets before removing the marker. Do not fabricate new Runtime
+   exit or CLEAN proofs. Failure retains the marker and BLOCKED/unavailable
+   status; do not auto-rollback, rerun, regenerate UDF or silently accept mixed
+   binaries. Preserve evidence and request separately approved recovery.
+6. Independently review the migrated plan, compatibility and read-only checks.
+   A further explicit authorization must name exact binaries, manifest/state/
+   plan SHA, fixed paths, retention and one same-UDF GUI observation. Source
+   review, formal build, migration and GUI execution are separate approval
+   boundaries. This procedure is not executed by the present tests.
+
+#### Diagnostic parents: future safe provisioning, not performed
+
+The session remains exactly
+`C:\Users\megum\AppData\Local\J1AI\Diagnostics\NetworkObserver\reobserve-20261012-8f96edbb-01`.
+Current approval permits only a direct session child of `Diagnostics\NetworkObserver`
+with the existing restricted basename; do not broaden it or select another path.
+The session writer creates the final directory, **not missing ancestors**.
+`Diagnostics` and `NetworkObserver` therefore require separate provision approval:
+
+1. Hold the existing verified J1AI parent handle with no delete sharing. Reject
+   reparse points, non-directories, ambiguous/final-path mismatch and unexpected
+   existing objects; record Volume/File IDs on those same held handles.
+2. Create/open `Diagnostics`, then `NetworkObserver`, handle-relative from the
+   retained parent. Retain ancestors through setup. No recursive path-based
+   create that follows links, adoption of unknown directories, ACL repair,
+   alternative path or fallback is permitted.
+3. Read Owner SID on each held object and require the approved current-user SID
+   `S-1-5-21-3795752833-3283187962-2586844815-1001`. Apply a protected DACL for that
+   user and SYSTEM and read it back using the **same handle**, together with
+   object identity. Current EvidenceNative security readback requests DACL only;
+   parent Owner SID verification is **not implemented or verified here**. It
+   needs a narrowly reviewed implementation or independently reviewed procedure
+   before actual provisioning. The real pipe owner check above is not directory
+   owner verification.
+4. Recheck capacity, identities, ACLs and exact approved plan. Parent preparation
+   is separate from session creation: `Approval.Validate(initial: true)` requires
+   the final session to be absent. Only authorized Observer execution may create
+   that session. Evidence writes must retain handle-relative object identity and
+   Raw -> flush -> readback -> Verdict -> formal Stop ordering. Saving failure
+   remains INCONCLUSIVE and uses the existing bounded Abort/Stop path, not PASS.
+5. Propose 30-day evidence retention; actual deletion, cleanup of failed setup
+   and any recovery require separate approval. No diagnostics directory, owner
+   change, migration marker, manifest/state write or GUI execution occurs here.

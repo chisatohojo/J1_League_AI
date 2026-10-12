@@ -17,6 +17,11 @@ internal static class Program
     }
     public static async Task<int> Main(string[] args)
     {
+        if (args is ["--real-pipe-peer", var pipeName, var encodedBinding, var peerChallenge, var peerMode])
+            return await RealPipePeer.Run(pipeName, encodedBinding, peerChallenge, peerMode);
+        bool realPipeOnly = args is ["--real-pipe-tests"];
+        if (args is ["--real-pipe-negative-control", var control])
+            return await RealPipeTests.Negative(control);
         string? nativeMutation = null, selectedTest = null, coordinationMutation = null, adapterMutation = null;
         bool coordinationOnly = args is ["--coordination-tests"];
         if (args is ["--negative-control", var mutation] && new[] { "private-allowed", "all-loopback-allowed", "pid-only",
@@ -25,11 +30,12 @@ internal static class Program
         else if (args is ["--test", var selected] && !string.IsNullOrWhiteSpace(selected)) selectedTest = selected;
         else if (args is ["--coordination-negative-control", var coord] && CoordinationTests.Mutations.Contains(coord)) coordinationMutation = coord;
         else if (args is ["--adapter-negative-control", var adapter] && CoordinationAdapterTests.Mutations.Contains(adapter)) adapterMutation = adapter;
-        else if (args.Length != 0 && !coordinationOnly) { Console.Error.WriteLine("Unknown runner arguments"); return 2; }
-        if (nativeMutation == null && !coordinationOnly && coordinationMutation == null && adapterMutation == null) Register();
-        if (nativeMutation == null && adapterMutation == null) CoordinationTests.Register(Add, Async, coordinationMutation);
-        if (nativeMutation == null && coordinationMutation == null) CoordinationAdapterTests.Register(Async, adapterMutation);
+        else if (args.Length != 0 && !coordinationOnly && !realPipeOnly) { Console.Error.WriteLine("Unknown runner arguments"); return 2; }
+        if (nativeMutation == null && !coordinationOnly && !realPipeOnly && coordinationMutation == null && adapterMutation == null) Register();
+        if (nativeMutation == null && adapterMutation == null && !realPipeOnly) CoordinationTests.Register(Add, Async, coordinationMutation);
+        if (nativeMutation == null && coordinationMutation == null && !realPipeOnly) CoordinationAdapterTests.Register(Async, adapterMutation);
         if (args.Length == 0 || nativeMutation != null || selectedTest != null) NativeEvidenceTests.Register(Add, Async, nativeMutation);
+        if (args.Length == 0 || realPipeOnly || selectedTest != null) RealPipeTests.Register(Add, Async);
         if (selectedTest != null)
         {
             Cases.RemoveAll(test => test.Name != selectedTest);
@@ -46,7 +52,7 @@ internal static class Program
                 if (e is NativeEvidenceTests.CleanupBlocked) break; // no further temp creation after cleanup refusal
             }
         }
-        Console.WriteLine($"Registered={Cases.Count} Executed={passed + failed} PASS={passed} FAIL={failed} NOT_RUN={notRun}; value/Fake + isolated native filesystem; no GUI/OS TCP collector/real Stop");
+        Console.WriteLine($"Registered={Cases.Count} Executed={passed + failed} PASS={passed} FAIL={failed} NOT_RUN={notRun}; value/Fake + isolated native filesystem + OS test-only pipes; no GUI/OS TCP collector/real Stop");
         return failed == 0 && notRun == 0 ? 0 : 1;
     }
 
