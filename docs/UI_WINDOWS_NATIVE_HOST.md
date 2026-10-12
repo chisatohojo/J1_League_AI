@@ -958,7 +958,8 @@ separate ETW/WFP/capture feasibility and authorization; none is added here.
 
 #### Non-GUI verification and isolated output
 
-This Phase 1 execution: **260 registered/executed/PASS; 0 FAIL; 0 NOT_RUN**.
+Original Phase 1 implementation execution (historical, before the adapter fixes
+below): **260 registered/executed/PASS; 0 FAIL; 0 NOT_RUN**.
 Composition: previous 203 cases, **56 new deterministic Fake/value coordination
 cases**, and **one new real NTFS receipt identity/Raw-Verdict pairing case**
 (46 native filesystem cases total). Fake worker/collector/backend/Stop share the
@@ -982,7 +983,8 @@ assets, were evaluated before building and redirected with global
 Offline restore uses the verified local package source and unchanged
 `signatureValidationMode=require`; both Release no-restore builds have zero
 warnings/errors. Existing protected 42 files and five inputs remain unchanged.
-Isolated DLL hashes (review artifacts only, **not approved GUI binaries**):
+Original implementation's isolated DLL hashes (historical review artifacts,
+**not approved GUI binaries**; later review/fix builds have different hashes):
 
 - Runner: `da5c67208138294c090dc5daa23f0aee7a815a59c98413b7cf1100240dec91d5`
 - Observer: `ede3f497f21fa184e1a81e804560e984f524cdeeed6382b6c8c400fcb06acfb7`
@@ -1035,3 +1037,72 @@ and SHA after migration/provisioning review. Only a further explicit authorizati
 may permit a single same-UDF GUI re-observation. Actual IPC/SDK/directory-sharing/
 Stop interoperability, fixed-UDF reuse and the original unclassified connection
 remain unproven; this Phase 1 does not clear those gates.
+
+#### Coordination High/Medium adapter fixes (non-GUI only)
+
+Normal Stop delivery and failure escalation now have separate, independently
+coalesced tasks. The formal Stop is invoked at most once. A failed/throwing/timed
+out delivery latches Abort, including after a cached Stop result or failed
+Stop-before/Stop-after receipt. Failure escalation cannot be suppressed by the
+normal Stop cache. Abort cancels normal outbound writes; a serialized send boundary
+checks the Session latch before Ready/Tick/Permit, and checks the Permit phase.
+An already admitted write is cancelled/bounded rather than treated as a fresh
+post-Abort authorization. Abort delivery has a one-second budget; success or
+failure revokes the pipe. Failed delivery/close is never reported as success.
+The worker's actual `WorkerMessageReceiver` is shared by the test-only runner and
+the in-memory adapter tests. Its StopRequested checks the WorkerGate lease while
+RUNNING, not just immediately before SDK initialization. The unchanged product
+GuiLifecycle checks CoordinatedControls during startup and its running loop,
+then follows owned-window/server/Job cleanup. This is not proof that an SDK task
+or real Runtime always completes: missing exit/cleanup proof stays INCONCLUSIVE.
+
+The actual framing reader distinguishes zero bytes at a frame boundary from a
+truncated header/body. Only the former, after a successful Stop acknowledgement
+in Stopping/Ended without Abort, is normal EOF. An EOF before acknowledgement
+(including an unproven shutdown race), unknown IO exception, malformed JSON,
+sequence/peer/run/challenge violation, duplicate or out-of-phase message is a
+sticky fault even during Stopping/Ended. Normal EOF is not exit proof. Before
+publishing coordinated PASS, Observation waits at most two seconds for Receive
+to settle; faults/timeouts become INCONCLUSIVE. Ack/cleanup cannot erase a fault.
+Once finalized, the existing immutable-result contract is preserved.
+
+This fix execution: **309 registered/executed/PASS; 0 FAIL; 0 NOT_RUN**:
+previous 260 plus **49 new adapter/framing tests**. Native filesystem remains
+46 cases including the real directory symlink rejection. The new isolated
+`CoordinationAdapterTests.cs` keeps the previous 56 coordination cases unchanged
+and exercises actual Observation, CoordinatedObservation, CoordinationSession,
+CoordinationDriver, WorkerGate/WorkerMessageReceiver and the formal Stop adapter.
+Only transport, clock, receiver and evidence storage are Fakes. Synchronization
+barriers and a TimeProvider clock drive races/deadlines; a five-second real test
+watchdog detects a broken harness, not an expected logical timeout. No OS pipe,
+real GUI/backend/collector/Stop is exercised by these adapter tests.
+
+Coverage includes false/throw/timeout Stop, cached-result escalation, the old
+80-Tick/20-second probe (now zero additional Tick, one Abort attempt and a stopped
+worker gate), failed/disconnected/timed-out Abort writes, revoked-channel lease
+expiry, duplicate/concurrent Stop/Abort, queued Tick/Permit cancellation,
+pre/during/post-initialization and running lease failure, Close-to-Stop routing,
+normal/early EOF, actual truncated frames, Stopping/Ended protocol violations,
+ack/cleanup after faults, unconfirmed Runtime/channel exit and Raw/flush/readback/
+Verdict/Stop-before/Stop-after/end-receipt failures. SDK completion in these tests
+is synthetic; actual SDK cancellation/crash recovery remains unproven.
+
+The existing 17 negative-controls remain detected. Four new controls are exposed
+only by the assertion runner's `--adapter-negative-control <mutation>`:
+`stop-failure-drop-abort`, `tick-after-abort`, `stopping-protocol-as-eof`, and
+`fault-cleared-by-ack`. All **21/21** controls produce real assertion failures,
+exit 1 and zero NOT_RUN; these expected failures are not ordinary-suite failures.
+The known cleanup-blocked NOT_RUN accounting Low remains unchanged.
+
+Both Release no-restore builds use the existing isolated artifacts directory;
+output/intermediate paths and references were evaluated first. Zero warnings and
+errors in the final builds. Fix-build DLL SHA-256 (before local commit; not frozen
+or approved for GUI adoption):
+
+- Runner: `42f43841b82a8255eee4d53ccee1f3aee55992e9edce234be325fce58b01c8fd`
+- Observer: `426f0cb9e6282549f6a79a06481767f4759635505b689453a55bfeb9f6cc1b63`
+
+No fixed DLL, manifest/state/fixture/UDF, product source or existing GUI synthetic
+case is changed. Refreeze, parent-directory provisioning, actual Named Pipe/SDK
+interoperability and same-UDF re-observation still require separate review and
+explicit approval. The original unclassified TCP candidate remains unresolved.

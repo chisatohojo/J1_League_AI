@@ -17,16 +17,18 @@ internal static class Program
     }
     public static async Task<int> Main(string[] args)
     {
-        string? nativeMutation = null, selectedTest = null, coordinationMutation = null;
+        string? nativeMutation = null, selectedTest = null, coordinationMutation = null, adapterMutation = null;
         bool coordinationOnly = args is ["--coordination-tests"];
         if (args is ["--negative-control", var mutation] && new[] { "private-allowed", "all-loopback-allowed", "pid-only",
             "gap-as-empty", "stop-before-raw", "unknown-backend-pass" }.Contains(mutation)) policy = new MutantPolicy(mutation);
         else if (args is ["--native-negative-control", var native] && NativeEvidenceTests.Mutations.Contains(native)) nativeMutation = native;
         else if (args is ["--test", var selected] && !string.IsNullOrWhiteSpace(selected)) selectedTest = selected;
         else if (args is ["--coordination-negative-control", var coord] && CoordinationTests.Mutations.Contains(coord)) coordinationMutation = coord;
+        else if (args is ["--adapter-negative-control", var adapter] && CoordinationAdapterTests.Mutations.Contains(adapter)) adapterMutation = adapter;
         else if (args.Length != 0 && !coordinationOnly) { Console.Error.WriteLine("Unknown runner arguments"); return 2; }
-        if (nativeMutation == null && !coordinationOnly && coordinationMutation == null) Register();
-        if (nativeMutation == null) CoordinationTests.Register(Add, Async, coordinationMutation);
+        if (nativeMutation == null && !coordinationOnly && coordinationMutation == null && adapterMutation == null) Register();
+        if (nativeMutation == null && adapterMutation == null) CoordinationTests.Register(Add, Async, coordinationMutation);
+        if (nativeMutation == null && coordinationMutation == null) CoordinationAdapterTests.Register(Async, adapterMutation);
         if (args.Length == 0 || nativeMutation != null || selectedTest != null) NativeEvidenceTests.Register(Add, Async, nativeMutation);
         if (selectedTest != null)
         {

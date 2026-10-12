@@ -13,14 +13,16 @@ internal sealed class SmokeCoordination : IAsyncDisposable
     private readonly string challenge;
     private readonly Task receive;
     private int closeRequested;
+    private readonly WorkerMessageReceiver worker;
     internal WorkerGate Gate { get; }
+    internal bool StopRequested => worker.StopRequested;
     internal RunBinding Binding { get; }
     private SmokeCoordination(CoordinationPipe pipe, RunBinding binding, string challenge)
     {
         this.pipe = pipe; Binding = binding; this.challenge = challenge;
         var clock = Stopwatch.StartNew();
         Gate = new(binding, () => clock.ElapsedMilliseconds, () => pipe.Alive);
-        Gate.Ready(binding); receive = Receive();
+        Gate.Ready(binding); worker = new(binding, challenge, Gate); receive = Receive();
     }
     internal static async Task<SmokeCoordination> Connect(SmokeManifest manifest, SmokeFixture fixture)
     {
@@ -57,18 +59,12 @@ internal sealed class SmokeCoordination : IAsyncDisposable
                 using var lease = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token);
                 lease.CancelAfter(1500);
                 var message = await pipe.Read(lease.Token);
-                CoordinationSession.Require(message.Binding == Binding && message.Challenge == challenge, "smoke_foreign_run");
-                Gate.Pulse(message.Binding);
-                switch (message.Kind)
-                {
-                    case "Tick": break;
-                    case "Permit": Gate.Grant(message.Binding, message.Port, message.Permit ?? ""); permitted.TrySetResult(); break;
-                    case "Abort": Gate.Abort(); permitted.TrySetException(new IOException("smoke_abort")); break;
-                    default: throw new IOException("smoke_coord_message");
-                }
+                worker.Accept(message);
+                if (message.Kind == "Permit") permitted.TrySetResult();
+                if (message.Kind == "Abort") permitted.TrySetException(new IOException("smoke_abort"));
             }
         }
-        catch { Gate.Abort(); permitted.TrySetException(new IOException("smoke_coord_disconnected")); }
+        catch { worker.Disconnect(); permitted.TrySetException(new IOException("smoke_coord_disconnected")); }
     }
     private Task Send(string kind, string? run = null, int port = 0) =>
         pipe.Send(new(kind, Binding, 0, challenge, run, port), lifetime.Token);
@@ -101,7 +97,7 @@ internal sealed class SmokeCoordination : IAsyncDisposable
 internal sealed class CoordinatedControls(IControls inner, SmokeCoordination link) : IControls
 {
     public bool Acquire() => inner.Acquire();
-    public bool StopRequested => link.Gate.Aborted || inner.StopRequested;
+    public bool StopRequested => link.StopRequested || inner.StopRequested;
     public bool ConsumeShow() => !StopRequested && inner.ConsumeShow();
     public void RequestShow() => inner.RequestShow();
     public void Dispose() => inner.Dispose();

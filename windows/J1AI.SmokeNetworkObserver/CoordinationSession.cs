@@ -15,6 +15,7 @@ internal class CoordinationPolicy
     internal virtual bool BackendRequired => true;
     internal virtual bool VerdictRequired => true;
     internal virtual bool ExitRequired => true;
+    internal virtual bool PreserveFaultOnAck => true;
 }
 
 // All decisions, including the initialization CALL boundary, are serialized.
@@ -39,6 +40,11 @@ public sealed class CoordinationSession
     public CoordinationPhase Phase { get; private set; }
     public bool Aborted { get { lock (sync) return abort; } }
     public bool StopAcknowledged { get { lock (sync) return stopAcknowledged; } }
+    public bool Failed { get { lock (sync) return failed; } }
+    // Linearization boundary shared with Abort. No new normal send is admitted
+    // after the latch. An already admitted write is bounded/cancelled by adapter.
+    internal Task SendNormal(Func<Task> send, bool permit = false)
+    { lock (sync) { Require(!abort && !failed && (!permit || Phase == CoordinationPhase.Permitted), "coord_send_after_abort_or_stop"); return send(); } }
     public string? FixtureRun { get { lock (sync) return fixtureRun; } }
     public CoordinationSession(RunBinding binding, Func<long> milliseconds, Func<bool> peerAlive,
         ICoordinationJournal journal, long lifetimeMs = 360000)
@@ -114,6 +120,7 @@ public sealed class CoordinationSession
     private void AbortLocked(string reason)
     {
         if (!policy.RetainAbort) return;
+        if (abort) return;
         abort = failed = true; Phase = CoordinationPhase.Blocked;
         // Latch BEFORE attempting a possibly broken journal. Never erase an abort.
         try { Record("abort", new { Reason = reason, FixtureRun = fixtureRun }); } catch { }
@@ -142,6 +149,7 @@ public sealed class CoordinationSession
         {
             Require(stopStarted, "coord_stop_not_requested");
             stopAcknowledged |= acknowledged;
+            if (acknowledged && !policy.PreserveFaultOnAck) { failed = abort = false; Phase = CoordinationPhase.Stopping; }
             Record("stop-after", new { Acknowledged = acknowledged, ProcessExitConfirmed = false, FixtureRun = fixtureRun });
             if (!acknowledged) AbortLocked("formal_stop_unconfirmed");
         }

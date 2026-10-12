@@ -7,10 +7,11 @@ public sealed class Observation
     private readonly IStop stop;
     private readonly ObservationPolicy policy;
     private readonly J1AI.SmokeCoordination.CoordinationSession? coordination;
+    private readonly TimeProvider time;
     public Observation(IdentityContract contract, IEvidence evidence, IStop stop) : this(contract, evidence, stop, new ObservationPolicy()) { }
     internal Observation(IdentityContract contract, IEvidence evidence, IStop stop, ObservationPolicy policy,
-        J1AI.SmokeCoordination.CoordinationSession? coordination = null)
-    { this.contract = contract; this.evidence = evidence; this.stop = stop; this.policy = policy; this.coordination = coordination; }
+        J1AI.SmokeCoordination.CoordinationSession? coordination = null, TimeProvider? time = null)
+    { this.contract = contract; this.evidence = evidence; this.stop = stop; this.policy = policy; this.coordination = coordination; this.time = time ?? TimeProvider.System; }
     public const string Identity = "8f96edbb39b7d4d47cdad47c";
     public const string Scope = "Periodic OS TCP snapshots for exact-UDF/executable/lineage and retained PID+birth identities; not all network traffic or SDK process identity.";
     private readonly Dictionary<int, long> births = [];
@@ -117,18 +118,31 @@ public sealed class Observation
     {
         lock (stopSync)
         {
-            if (stopDelivery != null) return stopDelivery;
-            coordination?.PrepareStop(failure);
+            if (failure) coordination?.Abort("observation_failure");
+            if (stopDelivery != null) return failure ? Escalate(stopDelivery) : stopDelivery;
+            try { coordination?.PrepareStop(failure); }
+            catch
+            {
+                fault = true; reasons.Add("stop_before_receipt_failed");
+                coordination?.Abort("stop_before_receipt_failed");
+                coordination?.PrepareStop(true);
+            }
             stopped = true;
             return stopDelivery = Deliver();
         }
         async Task Deliver()
         {
-            try { stopOk = await stop.RequestAsync(Identity, TimeSpan.FromSeconds(10)).WaitAsync(TimeSpan.FromSeconds(10)); }
+            try { stopOk = await stop.RequestAsync(Identity, TimeSpan.FromSeconds(10)).WaitAsync(TimeSpan.FromSeconds(10), time); }
             catch { stopOk = false; }
             try { coordination?.StopResult(stopOk); }
-            catch { fault = true; reasons.Add("stop_receipt_failed"); }
+            catch { fault = true; reasons.Add("stop_receipt_failed"); coordination?.Abort("stop_receipt_failed"); }
             if (!stopOk) { fault = true; reasons.Add("formal_stop_unconfirmed"); }
+            if (coordination?.Aborted == true && stop is IAbortStop abort) await abort.AbortAsync("observation_stop_failed_or_aborted");
+        }
+        async Task Escalate(Task delivery)
+        {
+            if (stop is IAbortStop abort) await abort.AbortAsync("observation_failure_after_stop");
+            await delivery;
         }
     }
     public async Task Fail(Phase failure, string reason)
@@ -143,7 +157,13 @@ public sealed class Observation
     public async Task<Summary> Complete(bool runtimeEndConfirmed)
     {
         if (finished) return final!;
+        fault |= coordination?.Failed == true || stop is IAbortStop { Faulted: true };
         runtimeEndConfirmed &= endEvidenceConfirmed;
+        if (runtimeEndConfirmed && stop is IAbortStop adapter)
+        {
+            await adapter.FinishAsync();
+            fault |= adapter.Faulted || coordination?.Failed == true;
+        }
         if (coordination != null && runtimeEndConfirmed)
         {
             try { coordination.End(true, true, true, true, true); }

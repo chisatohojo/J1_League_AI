@@ -10,9 +10,21 @@ namespace J1AI.SmokeCoordination;
 public sealed record CoordinationMessage(string Kind, RunBinding Binding, long Sequence, string Challenge,
     string? FixtureRun = null, int Port = 0, string? Permit = null);
 
+// Only a zero-byte read at a FRAME BOUNDARY is a clean EOF. Truncated frames,
+// parser/peer errors and unknown IO exceptions are never normal shutdown.
+public sealed class CoordinationEofException() : IOException("coord_frame_boundary_eof");
+public interface ICoordinationLink : IDisposable
+{
+    int PeerPid { get; }
+    long PeerBirth { get; }
+    bool Alive { get; }
+    Task Send(CoordinationMessage message, CancellationToken token);
+    Task<CoordinationMessage> Read(CancellationToken token);
+}
+
 // Current-user, first-instance local pipe. No stdout/file-existence authorization.
 // Same-user malicious code is outside this boundary; a nonce is correlation, not authentication.
-public sealed class CoordinationPipe : IDisposable
+public sealed class CoordinationPipe : ICoordinationLink
 {
     public static string Name => "J1AI.SmokeCoordination." + CoordinationSession.FixedIdentity;
     private readonly PipeStream stream;
@@ -77,13 +89,19 @@ public sealed class CoordinationPipe : IDisposable
     }
     public async Task<CoordinationMessage> Read(CancellationToken token)
     {
-        byte[] length = new byte[4]; await stream.ReadExactlyAsync(length, token);
-        int count = BitConverter.ToInt32(length);
-        CoordinationSession.Require(count is > 0 and <= 8192, "coord_message_limit");
-        byte[] bytes = new byte[count]; await stream.ReadExactlyAsync(bytes, token);
-        var message = Decode(bytes, ++received);
+        var message = await ReadFrame(stream, ++received, token);
         CoordinationSession.Require(Alive, "coord_peer_dead");
         return message;
+    }
+    internal static async Task<CoordinationMessage> ReadFrame(Stream source, long sequence, CancellationToken token)
+    {
+        byte[] length = new byte[4];
+        if (await source.ReadAsync(length.AsMemory(0, 1), token) == 0) throw new CoordinationEofException();
+        await source.ReadExactlyAsync(length.AsMemory(1), token);
+        int count = BitConverter.ToInt32(length);
+        CoordinationSession.Require(count is > 0 and <= 8192, "coord_message_limit");
+        byte[] bytes = new byte[count]; await source.ReadExactlyAsync(bytes, token);
+        return Decode(bytes, sequence);
     }
     internal static CoordinationMessage Decode(byte[] bytes, long sequence)
     {
@@ -107,11 +125,34 @@ public sealed class CoordinationPipe : IDisposable
     public void Dispose()
     {
         if (Interlocked.Exchange(ref disposed, 1) != 0) return;
-        stream.Dispose(); image.Dispose(); peer.Dispose();
+        try { stream.Dispose(); }
+        finally { try { image.Dispose(); } finally { peer.Dispose(); } }
     }
 }
 
 // Worker-local latch. Used by the real test-only entry and deterministic Fake tests.
+public sealed class WorkerMessageReceiver(RunBinding binding, string challenge, WorkerGate gate)
+{
+    // Polled throughout startup AND RUNNING by CoordinatedControls/GuiLifecycle.
+    public bool StopRequested => gate.Aborted;
+    public void Disconnect() => gate.Abort();
+    public void Accept(CoordinationMessage message)
+    {
+        try
+        {
+            CoordinationSession.Require(message.Binding == binding && message.Challenge == challenge, "smoke_foreign_run");
+            switch (message.Kind)
+            {
+                case "Tick": gate.Pulse(message.Binding); break;
+                case "Permit": gate.Pulse(message.Binding); gate.Grant(message.Binding, message.Port, message.Permit ?? ""); break;
+                case "Abort": gate.Abort(); break;
+                default: throw new IOException("smoke_coord_message");
+            }
+        }
+        catch { gate.Abort(); throw; }
+    }
+}
+
 public sealed class WorkerGate(RunBinding binding, Func<long> now, Func<bool> alive)
 {
     private readonly object sync = new();
