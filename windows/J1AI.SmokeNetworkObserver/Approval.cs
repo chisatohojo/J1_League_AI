@@ -12,8 +12,8 @@ internal sealed record FixtureState(string ManifestHash, int State, string Run, 
 
 public static class Approval
 {
-    public const string ManifestSha = "ce8e230e4deb35b67298f0dcdfecb421cf282125b7ae509de794df91b599cf67";
-    public const string InitialStateSha = "f7f87885a0b5f66f65e065295bc60a9c989a63ce654b5502dac014a36e1d04a7";
+    public const string ManifestSha = "15d60923e1b3f2f418c47c8d098f1e739aa66520a789c134fd86a8782153a09f";
+    public const string InitialStateSha = "cac6b11167c135cc3bd5b70b25ce9f93a4772ad14fdd5ec39c96fd6fa9b9ed58";
     public static readonly JsonSerializerOptions Json = new() { UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow };
     public static string Hash(byte[] bytes) => Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
     public static string FileHash(string path) => Hash(File.ReadAllBytes(path));
