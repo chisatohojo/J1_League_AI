@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+  <!-- No references to frozen projects. The reviewed read-only tool is built
+       separately into the authorized artifacts root, never a fixed bin/obj. -->
+  <ItemGroup>
+    <Reference Include="J1AI.SmokeMigration">
+      <HintPath>$(ArtifactsPath)/bin/J1AI.SmokeMigration/release/J1AI.SmokeMigration.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

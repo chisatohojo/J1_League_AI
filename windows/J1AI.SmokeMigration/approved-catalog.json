@@ -1,0 +1,353 @@
+{
+  "Version": 2,
+  "Repository": "@documents/__SoftDev/J1_League_AI",
+  "Fixed": [
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/J1AI.DashboardHost.deps.json",
+      "SHA256": "41477f8e0dfd4e19e64e7723f02201d54bb63ff7dfb73ebd4f9977168a0ade7c"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/J1AI.DashboardHost.dll",
+      "SHA256": "055492b56a21fe0b67d669d91facaabb3dd6b0861629fa01388cb4cc2a68c86b"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/J1AI.DashboardHost.exe",
+      "SHA256": "fce229833210c17deb493b0650a514c30f8e5216642fa1bff8687f660ca3fae9"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/J1AI.DashboardHost.pdb",
+      "SHA256": "8cea46da35f90522644cbf8cc1b3b5e0cd9bc950082800117d66282b8b496ef3"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/J1AI.DashboardHost.runtimeconfig.json",
+      "SHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/Microsoft.Web.WebView2.Core.dll",
+      "SHA256": "d60e6e94245078cb56e44ebd5f360dc04bf18e460136be93bfc4cfca43b98505"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/Microsoft.Web.WebView2.Core.xml",
+      "SHA256": "8684cd74000c77533e563785208308ada63808da85825206856cab11a9eeffce"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/Microsoft.Web.WebView2.WinForms.dll",
+      "SHA256": "84b5772260dbdfe95591197edc9315dcd2cc86ad610e4b14ddd5e4291e31a381"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/Microsoft.Web.WebView2.WinForms.xml",
+      "SHA256": "6a8ec199373824fdebceda7b3d780d0b31c82edceae04d92391027c971dea6c2"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/runtimes/win-arm64/native/WebView2Loader.dll",
+      "SHA256": "4f48cb32d34298c86cca2108057eea0d900b5e422575e926e8086318a0b9cbf0"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/runtimes/win-x64/native/WebView2Loader.dll",
+      "SHA256": "3426dcc55fdfb8b5e7ac623cf33b4ccf283fbf68a0c5a65bddfdb4d749a8abee"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost/bin/Release/net10.0-windows/runtimes/win-x86/native/WebView2Loader.dll",
+      "SHA256": "87c61e2cae380112c60853e28178b8ea9a0d63739fc03cead680d4ad3fde6b7d"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.deps.json",
+      "SHA256": "41477f8e0dfd4e19e64e7723f02201d54bb63ff7dfb73ebd4f9977168a0ade7c"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.dll",
+      "SHA256": "055492b56a21fe0b67d669d91facaabb3dd6b0861629fa01388cb4cc2a68c86b"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.exe",
+      "SHA256": "fce229833210c17deb493b0650a514c30f8e5216642fa1bff8687f660ca3fae9"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.pdb",
+      "SHA256": "8cea46da35f90522644cbf8cc1b3b5e0cd9bc950082800117d66282b8b496ef3"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.runtimeconfig.json",
+      "SHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.deps.json",
+      "SHA256": "dc6bd3e08dc1100ffd9dd03c603510ed122714f13ead5774d4025c8e6455bc7e"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll",
+      "SHA256": "f0cd3a0c31c3c1925b6314e4a032a26192512f447952cec94b954bce03c92c2b"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.exe",
+      "SHA256": "b09247be9471f45add9e1f1222a08e50da2f751062db3b5305df2484e42b840c"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.pdb",
+      "SHA256": "01accdc57080cb5e241bbf3be4489b8a0b95ef732c8e86fd4df7d01ea406a03c"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.runtimeconfig.json",
+      "SHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.Core.dll",
+      "SHA256": "d60e6e94245078cb56e44ebd5f360dc04bf18e460136be93bfc4cfca43b98505"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.Core.xml",
+      "SHA256": "8684cd74000c77533e563785208308ada63808da85825206856cab11a9eeffce"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.WinForms.dll",
+      "SHA256": "84b5772260dbdfe95591197edc9315dcd2cc86ad610e4b14ddd5e4291e31a381"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.WinForms.xml",
+      "SHA256": "6a8ec199373824fdebceda7b3d780d0b31c82edceae04d92391027c971dea6c2"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/synthetic_child.py",
+      "SHA256": "cae83d0ed5d8a80bc11c8aec0f98e1c80b4c40f3949db330e321fa1c4d81dfb4"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/synthetic_gui_server.py",
+      "SHA256": "64f6a8f8762e712a1068d7fd7222a0c36b24e321b25f4d0ff50e95c159eb304e"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/runtimes/win-arm64/native/WebView2Loader.dll",
+      "SHA256": "4f48cb32d34298c86cca2108057eea0d900b5e422575e926e8086318a0b9cbf0"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/runtimes/win-x64/native/WebView2Loader.dll",
+      "SHA256": "3426dcc55fdfb8b5e7ac623cf33b4ccf283fbf68a0c5a65bddfdb4d749a8abee"
+    },
+    {
+      "Path": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/runtimes/win-x86/native/WebView2Loader.dll",
+      "SHA256": "87c61e2cae380112c60853e28178b8ea9a0d63739fc03cead680d4ad3fde6b7d"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixture-manifest.json",
+      "SHA256": "ce8e230e4deb35b67298f0dcdfecb421cf282125b7ae509de794df91b599cf67"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/run-state.json",
+      "SHA256": "f7f87885a0b5f66f65e065295bc60a9c989a63ce654b5502dac014a36e1d04a7"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/smoke.lock",
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/app.js",
+      "SHA256": "f8dbb30800132f50ec5ca886e9df61df46dec90991735e33eadbdaf62cab549d"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/dashboard-data.js",
+      "SHA256": "7b09dc077aad0415d4a8a784e55f1361f22a5dc4f2c5c722bb02746ead6c2325"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/demo-data.js",
+      "SHA256": "54275d7b362852a9fc8396dea9a2f1d604eda2a2c5b36d37c0fb9338c368037f"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/index.html",
+      "SHA256": "de5f74f833216b76a18cb299e98f8be5bc8b25ae88f179ecf0a8475cc3d0cc0e"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/styles.css",
+      "SHA256": "8c4b8c93a7cdf1fa9db8c3aea566f0c4e2234e476f43017779754e8384e1de65"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/team-colors.js",
+      "SHA256": "2972d042f8892a890890fde75e256cc4f963ce98ac52128c9d4ed3bfccea91c9"
+    },
+    {
+      "Path": "@local/J1AI/Smoke/dashboard-v1/fixtures/J1AI-native-test-dashboard-smoke-v1/web/components/prediction-probability-bar.js",
+      "SHA256": "50f4961e3474ebc899a7049db03fc303c87713aa6a6620038dc7362380fb8dc1"
+    },
+    {
+      "Path": "@desktop/J1 AI Predict.lnk",
+      "SHA256": "dae4bbac3fb0e7d6a767583c5167b389177ef765c1546edc6ec454b7042416a3"
+    }
+  ],
+  "OldObserver": [
+    {
+      "Path": "@repository/windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.deps.json",
+      "SHA256": "c1e38f1367fa8fd71fc34d0d144dc6d7ce531a5fef3e4971e054f45e4d027e88"
+    },
+    {
+      "Path": "@repository/windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.dll",
+      "SHA256": "0ab84e0dec06b1715ae6a436f1810677af4f16143ebf2b4f2f19a96e21ab435b"
+    },
+    {
+      "Path": "@repository/windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.exe",
+      "SHA256": "b5b2ab8143cd5cd9e0cdf9ec06a9cd3cea2312f16563b35d6e8a3fdd51d8e769"
+    },
+    {
+      "Path": "@repository/windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.pdb",
+      "SHA256": "3bcbbd129aa94d8259632e9e8e02355e9d075e405dda22d4858cdd39c40f7ad3"
+    },
+    {
+      "Path": "@repository/windows/J1AI.SmokeNetworkObserver/bin/Release/net10.0-windows/J1AI.SmokeNetworkObserver.runtimeconfig.json",
+      "SHA256": "3e965cd7cfd553c2ff4e842d8d8019aaae2da0a21d92ff85a87573dd8d1b95c6"
+    }
+  ],
+  "Runner": [
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.deps.json",
+      "OldSHA256": "41477f8e0dfd4e19e64e7723f02201d54bb63ff7dfb73ebd4f9977168a0ade7c",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.deps.json",
+      "CandidateSHA256": "41477f8e0dfd4e19e64e7723f02201d54bb63ff7dfb73ebd4f9977168a0ade7c",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.dll",
+      "OldSHA256": "055492b56a21fe0b67d669d91facaabb3dd6b0861629fa01388cb4cc2a68c86b",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.dll",
+      "CandidateSHA256": "f951c61fe1b5c5a214d3e12a7b7d3d134dcd09ac130f19c36e4cc67c57adad57",
+      "Changed": true
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.exe",
+      "OldSHA256": "fce229833210c17deb493b0650a514c30f8e5216642fa1bff8687f660ca3fae9",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.exe",
+      "CandidateSHA256": "b462c472460de895ae51b47aaf076a8d97deb1fe234a798c5d4ea25c701d99a8",
+      "Changed": true
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.pdb",
+      "OldSHA256": "8cea46da35f90522644cbf8cc1b3b5e0cd9bc950082800117d66282b8b496ef3",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.pdb",
+      "CandidateSHA256": "542a687ccecb891396e7463f3c026b1cd77429500f06a93167ec377bd18e4e2c",
+      "Changed": true
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.runtimeconfig.json",
+      "OldSHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.runtimeconfig.json",
+      "CandidateSHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.deps.json",
+      "OldSHA256": "dc6bd3e08dc1100ffd9dd03c603510ed122714f13ead5774d4025c8e6455bc7e",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.Tests.deps.json",
+      "CandidateSHA256": "dc6bd3e08dc1100ffd9dd03c603510ed122714f13ead5774d4025c8e6455bc7e",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.dll",
+      "OldSHA256": "f0cd3a0c31c3c1925b6314e4a032a26192512f447952cec94b954bce03c92c2b",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.Tests.dll",
+      "CandidateSHA256": "300f5512f759fdea25fe12e8be28bb89a8b355d47dd67c4490948a1e61d443fa",
+      "Changed": true
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.exe",
+      "OldSHA256": "b09247be9471f45add9e1f1222a08e50da2f751062db3b5305df2484e42b840c",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.Tests.exe",
+      "CandidateSHA256": "6e03c753e8fe16b8692e69569326a0c2d3b99bcc9d0380b6e654f6f489317a9d",
+      "Changed": true
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.pdb",
+      "OldSHA256": "01accdc57080cb5e241bbf3be4489b8a0b95ef732c8e86fd4df7d01ea406a03c",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.Tests.pdb",
+      "CandidateSHA256": "416368e6ad0d71339b2d92e05dddb78de5ff0546bab4c446d5b4047f73f54edf",
+      "Changed": true
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/J1AI.DashboardHost.Tests.runtimeconfig.json",
+      "OldSHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/J1AI.DashboardHost.Tests.runtimeconfig.json",
+      "CandidateSHA256": "96bc2946dff8790400d652ec7f8de7bb043e954980d59470c112788b68a1fbd3",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.Core.dll",
+      "OldSHA256": "d60e6e94245078cb56e44ebd5f360dc04bf18e460136be93bfc4cfca43b98505",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/Microsoft.Web.WebView2.Core.dll",
+      "CandidateSHA256": "d60e6e94245078cb56e44ebd5f360dc04bf18e460136be93bfc4cfca43b98505",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.Core.xml",
+      "OldSHA256": "8684cd74000c77533e563785208308ada63808da85825206856cab11a9eeffce",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/Microsoft.Web.WebView2.Core.xml",
+      "CandidateSHA256": "8684cd74000c77533e563785208308ada63808da85825206856cab11a9eeffce",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.WinForms.dll",
+      "OldSHA256": "84b5772260dbdfe95591197edc9315dcd2cc86ad610e4b14ddd5e4291e31a381",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/Microsoft.Web.WebView2.WinForms.dll",
+      "CandidateSHA256": "84b5772260dbdfe95591197edc9315dcd2cc86ad610e4b14ddd5e4291e31a381",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/Microsoft.Web.WebView2.WinForms.xml",
+      "OldSHA256": "6a8ec199373824fdebceda7b3d780d0b31c82edceae04d92391027c971dea6c2",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/Microsoft.Web.WebView2.WinForms.xml",
+      "CandidateSHA256": "6a8ec199373824fdebceda7b3d780d0b31c82edceae04d92391027c971dea6c2",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/synthetic_child.py",
+      "OldSHA256": "cae83d0ed5d8a80bc11c8aec0f98e1c80b4c40f3949db330e321fa1c4d81dfb4",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/synthetic_child.py",
+      "CandidateSHA256": "cae83d0ed5d8a80bc11c8aec0f98e1c80b4c40f3949db330e321fa1c4d81dfb4",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/synthetic_gui_server.py",
+      "OldSHA256": "64f6a8f8762e712a1068d7fd7222a0c36b24e321b25f4d0ff50e95c159eb304e",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/synthetic_gui_server.py",
+      "CandidateSHA256": "64f6a8f8762e712a1068d7fd7222a0c36b24e321b25f4d0ff50e95c159eb304e",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/runtimes/win-arm64/native/WebView2Loader.dll",
+      "OldSHA256": "4f48cb32d34298c86cca2108057eea0d900b5e422575e926e8086318a0b9cbf0",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/runtimes/win-arm64/native/WebView2Loader.dll",
+      "CandidateSHA256": "4f48cb32d34298c86cca2108057eea0d900b5e422575e926e8086318a0b9cbf0",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/runtimes/win-x64/native/WebView2Loader.dll",
+      "OldSHA256": "3426dcc55fdfb8b5e7ac623cf33b4ccf283fbf68a0c5a65bddfdb4d749a8abee",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/runtimes/win-x64/native/WebView2Loader.dll",
+      "CandidateSHA256": "3426dcc55fdfb8b5e7ac623cf33b4ccf283fbf68a0c5a65bddfdb4d749a8abee",
+      "Changed": false
+    },
+    {
+      "FixedPath": "@repository/windows/J1AI.DashboardHost.Tests/bin/Release/net10.0-windows/runtimes/win-x86/native/WebView2Loader.dll",
+      "OldSHA256": "87c61e2cae380112c60853e28178b8ea9a0d63739fc03cead680d4ad3fde6b7d",
+      "CandidatePath": "bin/J1AI.DashboardHost.Tests/release/runtimes/win-x86/native/WebView2Loader.dll",
+      "CandidateSHA256": "87c61e2cae380112c60853e28178b8ea9a0d63739fc03cead680d4ad3fde6b7d",
+      "Changed": false
+    }
+  ],
+  "Protected": [
+    {
+      "Path": "data/processed/dashboard/champion_home.json",
+      "SHA256": "a14216d22717dcb384c149c712e424511d0f0af7ad8d5f25ffee4bd026c53af8"
+    },
+    {
+      "Path": "data/processed/predictions/season_transition_st2_prospective.csv",
+      "SHA256": "da2e23157a281b9d2681efa1b9066253623a53e56dbd45da5d9f53aaf4758669"
+    },
+    {
+      "Path": "data/processed/predictions/2026_27_prediction_fixture_bindings.csv",
+      "SHA256": "1722c487b5fdf60709382ff8b696bbfff3b0cf4499128299e8c18b8eda9a8db1"
+    },
+    {
+      "Path": "data/master/teams.csv",
+      "SHA256": "ec255eb65e9fa2c310e3fbcfeecf7a7d201ca4f458a15bb0d129fa0ca9e1b89f"
+    },
+    {
+      "Path": "data/processed/jleague/2026_27/latest.json",
+      "SHA256": "06afc4fa37760eb900f9724f8cba9a54c2bdeb360997ff22818ac803652523ad"
+    }
+  ]
+}

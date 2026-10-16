@@ -979,7 +979,7 @@ or real Stop is invoked by this verification.
 All restore/build outputs, including referenced product projects and copied
 assets, were evaluated before building and redirected with global
 `UseArtifactsOutput=true` / `ArtifactsPath` to:
-`C:\Users\megum\AppData\Local\Temp\J1AI-coordination-phase1-20261012`.
+`%LOCALAPPDATA%\Temp\J1AI-coordination-phase1-20261012`.
 Offline restore uses the verified local package source and unchanged
 `signatureValidationMode=require`; both Release no-restore builds have zero
 warnings/errors. Existing protected 42 files and five inputs remain unchanged.
@@ -1000,14 +1000,14 @@ case temporary roots are removed once, without policy bypass. The old undeletabl
 #### Later provisioning approval (design only)
 
 Proposed session destination remains exactly:
-`C:\Users\megum\AppData\Local\J1AI\Diagnostics\NetworkObserver\reobserve-20261012-8f96edbb-01`.
+`%LOCALAPPDATA%\J1AI\Diagnostics\NetworkObserver\reobserve-20261012-8f96edbb-01`.
 Missing `Diagnostics` and `NetworkObserver` parents are **not created here**.
 Before provisioning, separately approve each absolute path, owner SID, ACL,
 capacity and 30-day retention with deletion requiring another approval.
 Provision from a verified retained parent handle with atomic create/open;
 reject reparse/identity mismatch, retain ancestor Volume/File IDs, verify owner
-SID on the same object and apply/read back a protected DACL. Expected user SID:
-`S-1-5-21-3795752833-3283187962-2586844815-1001`, plus SYSTEM; no unnecessary
+SID on the same object and apply/read back a protected DACL. Expected user SID (the exact value is retained in local approval evidence):
+`<approved-current-user-SID>`, plus SYSTEM; no unnecessary
 inherited grants to other users. The current session writer grants user/SYSTEM
 FullControl; this is not a claim of least privilege or implemented parent-owner
 verification. Parent provisioning/owner readback needs independent implementation
@@ -1176,7 +1176,7 @@ mutations. Total 24 controls are separate from the ordinary 342-case PASS count.
 
 Offline locked restore and Release no-restore builds of Observer.Tests and
 DashboardHost.Tests (including their dependencies and copied assets) use only
-`C:\Users\megum\AppData\Local\Temp\J1AI-coordination-pipe-tests-20261012-01`
+`%LOCALAPPDATA%\Temp\J1AI-coordination-pipe-tests-20261012-01`
 with global `UseArtifactsOutput=true` / `ArtifactsPath`. Output/intermediate/
 NuGet project-extension paths and copy targets were evaluated before build.
 No cache download, lock/signature-policy change or frozen output overwrite is
@@ -1191,6 +1191,11 @@ crash recovery, GUI operation and the original unclassified TCP candidate remain
 unproven. Real IPC success alone authorizes none of those operations.
 
 #### Formal binary and manifest switch: future approval procedure only
+
+Phase A read-only planner and isolated transaction-test implementation is
+documented in [UI_WINDOWS_SMOKE_MIGRATION_PHASE_A.md](UI_WINDOWS_SMOKE_MIGRATION_PHASE_A.md).
+It exposes no real-environment apply mode and does not authorize this future
+switch procedure, real backup creation, refreeze or another GUI run.
 
 The following is a **plan**, not an implemented migration tool or permission to
 replace the frozen 42 files. Formal candidates must be built separately after
@@ -1253,7 +1258,7 @@ review; historical isolated binaries and this test build are not adopted.
 #### Diagnostic parents: future safe provisioning, not performed
 
 The session remains exactly
-`C:\Users\megum\AppData\Local\J1AI\Diagnostics\NetworkObserver\reobserve-20261012-8f96edbb-01`.
+`%LOCALAPPDATA%\J1AI\Diagnostics\NetworkObserver\reobserve-20261012-8f96edbb-01`.
 Current approval permits only a direct session child of `Diagnostics\NetworkObserver`
 with the existing restricted basename; do not broaden it or select another path.
 The session writer creates the final directory, **not missing ancestors**.
@@ -1266,8 +1271,8 @@ The session writer creates the final directory, **not missing ancestors**.
    retained parent. Retain ancestors through setup. No recursive path-based
    create that follows links, adoption of unknown directories, ACL repair,
    alternative path or fallback is permitted.
-3. Read Owner SID on each held object and require the approved current-user SID
-   `S-1-5-21-3795752833-3283187962-2586844815-1001`. Apply a protected DACL for that
+3. Read Owner SID on each held object and require the exact approved current-user SID
+   `<approved-current-user-SID>` recorded in local approval evidence. Apply a protected DACL for that
    user and SYSTEM and read it back using the **same handle**, together with
    object identity. Current EvidenceNative security readback requests DACL only;
    parent Owner SID verification is **not implemented or verified here**. It
