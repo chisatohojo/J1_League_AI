@@ -6,6 +6,43 @@ using System.Runtime.InteropServices;
 
 namespace J1AI.SmokeMigration;
 
+// Fixed current-user Known Folders only; never use environment or path fallbacks.
+public static class KnownFolderPaths
+{
+    [DllImport("shell32.dll", ExactSpelling = true, CallingConvention = CallingConvention.Winapi, PreserveSig = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    private static extern int SHGetKnownFolderPath(in Guid folder, uint flags, nint token, out nint path);
+    [DllImport("ole32.dll", ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    private static extern void CoTaskMemFree(nint memory);
+
+    public static string Get(Environment.SpecialFolder folder)
+    {
+        Contract.Require(OperatingSystem.IsWindows(), "known_folder_windows_only");
+        Guid id = folder switch
+        {
+            Environment.SpecialFolder.LocalApplicationData => new("F1B32785-6FBA-4FCF-9D55-7B8E7F157091"),
+            Environment.SpecialFolder.MyDocuments => new("FDD39AD0-238F-46AF-ADB4-6C85480369C7"),
+            Environment.SpecialFolder.DesktopDirectory => new("B4BFCC3A-DB2C-424C-B029-7FE99A87C641"),
+            Environment.SpecialFolder.Windows => new("F38BF404-1D43-42F2-9305-67DE0B28FC23"),
+            _ => throw new InvalidDataException("known_folder_denied")
+        };
+        nint memory = 0;
+        try
+        {
+            int hr = SHGetKnownFolderPath(in id, 0, 0, out memory);
+            Contract.Require(hr == 0, "known_folder_hresult");
+            Contract.Require(memory != 0, "known_folder_null");
+            string path = Marshal.PtrToStringUni(memory) ?? throw new InvalidDataException("known_folder_null");
+            Contract.Require(!string.IsNullOrWhiteSpace(path), "known_folder_empty");
+            ReadPin.Canonical(path);
+            Contract.Require(Directory.Exists(path), "known_folder_unavailable");
+            return path;
+        }
+        finally { if (memory != 0) CoTaskMemFree(memory); }
+    }
+}
+
 // No input path, output path, root override, apply flag, lock acquisition,
 // process launch, IPC signal or mutation interface is accepted by this class.
 public sealed class Inspector : IDisposable
@@ -21,19 +58,21 @@ public sealed class Inspector : IDisposable
         return Pin(path).Bytes();
     }
     private string Hash(string path) => Contract.Hash(Read(path));
-    private static string SpecialFolderPath(Environment.SpecialFolder folder)
+    private static string SpecialFolderPath(Environment.SpecialFolder folder) => KnownFolderPaths.Get(folder);
+    private static bool IsReservedComponent(string component)
     {
-        string path = Environment.GetFolderPath(folder);
-        Contract.Require(!string.IsNullOrWhiteSpace(path), "catalog_base_unavailable");
-        ReadPin.Canonical(path);
-        Contract.Require(Directory.Exists(path), "catalog_base_unavailable");
-        return path;
+        int dot = component.IndexOf('.');
+        string stem = (dot < 0 ? component : component[..dot]).TrimEnd(' ');
+        return stem.Equals("CON", StringComparison.OrdinalIgnoreCase) || stem.Equals("PRN", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("AUX", StringComparison.OrdinalIgnoreCase) || stem.Equals("NUL", StringComparison.OrdinalIgnoreCase) ||
+            (stem.Length == 4 && (stem.StartsWith("COM", StringComparison.OrdinalIgnoreCase) || stem.StartsWith("LPT", StringComparison.OrdinalIgnoreCase)) &&
+                "123456789¹²³".Contains(stem[3]));
     }
     private static string Relative(string path)
     {
         Contract.Require(!string.IsNullOrWhiteSpace(path) && !Path.IsPathRooted(path) && !path.Contains('\\') &&
             path.Split('/').All(p => p.Length > 0 && p != "." && p != ".." &&
-                p.IndexOfAny(Path.GetInvalidFileNameChars()) < 0 && !p.EndsWith(' ') && !p.EndsWith('.')), "catalog_relative_path");
+                p.IndexOfAny(Path.GetInvalidFileNameChars()) < 0 && !p.EndsWith(' ') && !p.EndsWith('.') && !IsReservedComponent(p)), "catalog_relative_path");
         return path;
     }
     private static string Under(string root, string relative)

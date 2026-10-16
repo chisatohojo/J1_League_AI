@@ -14,13 +14,13 @@ internal static class ObservationPaths
     internal const string RootId = "84b123a2d023a25821c50200000083000000000000000000";
     internal static readonly string Repository = FixedPath(Environment.SpecialFolder.MyDocuments, "__SoftDev", "J1_League_AI");
     internal static readonly string Binary = Path.Combine(Root, "bin", "J1AI.SmokeMigration.Tests", "release", "J1AI.SmokeMigration.Tests.dll");
-    internal static readonly string Dotnet = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "J1AI", "Toolchains", "dotnet", "dotnet.exe");
+    internal static readonly string Dotnet = Path.Combine(KnownFolderPaths.Get(Environment.SpecialFolder.LocalApplicationData), "J1AI", "Toolchains", "dotnet", "dotnet.exe");
     // No fixture or full-suite execution is authorized by this initial logging gate.
     internal static bool NativeFixtureAuthorized => false;
     internal static bool FullSuiteAuthorized => false;
     private static string FixedPath(Environment.SpecialFolder folder, params string[] parts)
     {
-        string basePath = Environment.GetFolderPath(folder);
+        string basePath = KnownFolderPaths.Get(folder);
         Contract.Require(!string.IsNullOrWhiteSpace(basePath) && Path.IsPathFullyQualified(basePath), "observation_base_path_invalid");
         string resolved = Path.GetFullPath(Path.Combine(new[] { basePath }.Concat(parts).ToArray()));
         Contract.Require(Directory.Exists(resolved), "observation_path_unavailable");

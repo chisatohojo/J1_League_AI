@@ -21,8 +21,8 @@ internal static class WorkerEnvironment
     };
     internal static SortedDictionary<string, string> ValidatedExpected()
     {
-        string windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-        string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        string windows = KnownFolderPaths.Get(Environment.SpecialFolder.Windows);
+        string local = KnownFolderPaths.Get(Environment.SpecialFolder.LocalApplicationData);
         var expected = Expected(windows, local, ObservationPaths.Root);
         // OS-known folders, not parent-supplied arbitrary paths. Ancestors and
         // final canonical paths are pinned/reparse-checked by ReadPin.

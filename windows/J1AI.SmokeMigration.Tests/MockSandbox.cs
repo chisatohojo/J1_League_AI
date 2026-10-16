@@ -19,7 +19,7 @@ internal sealed class NativeFailure(string api, int status, uint win32) : IOExce
 // There is no constructor accepting an arbitrary root, source or target path.
 internal sealed class MockSandbox : IDisposable
 {
-    internal static readonly string Allowed = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+    internal static readonly string Allowed = Path.Combine(KnownFolderPaths.Get(Environment.SpecialFolder.LocalApplicationData),
         "J1AI", "BuildCandidates", "coordination-migration-tests-observability-01");
     internal readonly string Root, Identity = "migration-test-" + Guid.NewGuid().ToString("N");
     private readonly ReadPin container;

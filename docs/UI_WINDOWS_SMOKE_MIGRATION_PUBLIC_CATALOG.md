@@ -79,6 +79,90 @@ Future execution needs a separate review of this Catalog schema and resolver,
 new source/binary binding evidence, and explicit execution authorization.
 Keep all historical evidence and the local-only WIP branch unchanged.
 
+## Uncommitted resolver repair: static review only
+
+The current repair replaces all Environment.GetFolderPath calls in the Planner
+and Tests projects with KnownFolderPaths.Get, defined in Inspector.cs. This
+uses the existing Planner assembly reference; it adds no file, ProjectReference
+or project change. Tests must reference a freshly built matching Planner DLL
+in a future approved build; the old DLL does not provide this new helper.
+WorkerEnvironment.cs and MockSandbox.cs require call-site-only edits to avoid
+leaving a fallback route outside ObservationSession.cs.
+
+Migration-path acquisition sites are Inspector.SpecialFolderPath,
+ObservationPaths.FixedPath and Dotnet, WorkerEnvironment.ValidatedExpected
+(Windows and LocalApplicationData), and MockSandbox.Allowed: six direct
+KnownFolderPaths.Get call sites. No GetFolderPath call remains in these two
+projects. Environment enumeration for Worker whitelist validation is unchanged
+and does not supply a Known Folder fallback.
+
+Fourteen pre-existing GetFolderPath calls remain outside the Migration projects:
+SmokeNetworkObserver/Approval.cs (seven), SmokeNetworkObserver/CoordinationSession.cs
+(one), DashboardHost/Diagnostics.cs (one), DashboardHost/WebViewPreflight.cs
+(one), DashboardHost.Tests/Program.cs (two), DashboardHost.Tests/SmokeCoordination.cs
+(one), and DashboardHost.Tests/SmokeRunner.cs (one). Those product/legacy-test
+sources and their frozen binaries are outside this repair and remain unchanged;
+the Migration projects have no ProjectReference to them.
+
+| Known Folder | Official KNOWNFOLDERID |
+| --- | --- |
+| LocalApplicationData | F1B32785-6FBA-4FCF-9D55-7B8E7F157091 |
+| Documents / MyDocuments | FDD39AD0-238F-46AF-ADB4-6C85480369C7 |
+| DesktopDirectory | B4BFCC3A-DB2C-424C-B029-7FE99A87C641 |
+| Windows (existing Worker environment path) | F38BF404-1D43-42F2-9305-67DE0B28FC23 |
+
+The P/Invoke takes an input Guid reference, unsigned DWORD flags, native-sized
+token and output pointer, and preserves the signed HRESULT. Flags are zero;
+token is NULL for the current user. It accepts only S_OK (zero), rejects NULL
+or blank results, requires canonical absolute existing directories, and frees
+every non-NULL returned pointer in finally with CoTaskMemFree, including error
+and validation-exception paths. DLL lookup is restricted to System32. There
+is no environment, current-directory or GetFolderPath fallback and no creation
+flag or default/other-user token. Existing fixed suffixes, RootId, Catalog
+bytes, source-independent frozen SHA values and identity checks are unchanged.
+
+Relative components now reject CON, PRN, AUX, NUL, COM1..COM9, LPT1..LPT9,
+COM¹/²/³ and LPT¹/²/³, without case sensitivity. The first dot separates the
+device stem, so extensions do not bypass rejection; spaces immediately before
+that dot do not bypass it either. Existing absolute-path, traversal, empty
+component, ADS, invalid-character and trailing-dot/space checks remain.
+
+References: [SHGetKnownFolderPath](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath),
+[CoTaskMemFree](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree),
+[KNOWNFOLDERID](https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid),
+[Windows names](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
+
+### Future limited cases: all NOT_RUN
+
+These are expected results for separately authorized verification, not current
+PASS results. HRESULT and allocation-counter injection needs a separately
+reviewed test-only seam; no public root, token, Catalog or native-function
+override was added for this repair. Do not inject failures into the preserved
+environment or alter historical evidence.
+
+| Planned case | Expected result |
+| --- | --- |
+| KF-01: normal LocalApplicationData, Documents, Desktop and Windows | Exact original paths; S_OK; non-NULL allocation freed once; zero filesystem creation |
+| KF-02: failure HRESULT, NULL output; environment variables contain usable paths | Stop without fallback; no pointer free needed |
+| KF-03: failure HRESULT with allocated output | Stop before decoding; allocation freed once |
+| KF-04: nonzero positive HRESULT with allocated output | Reject, allocation freed once |
+| KF-05: S_OK with NULL, empty or whitespace output | Reject; every non-NULL allocation freed once |
+| KF-06: relative, UNC/device, ADS, noncanonical, trailing-dot/space or unavailable base | Reject; allocation freed once |
+| KF-07: managed validation exception after allocation | Original failure propagates; allocation freed once |
+| KF-08: unsupported SpecialFolder | Reject before API call |
+| KF-09: valid base redirected to a different fixed Root or metadata set | Existing downstream identity/SHA checks block approval |
+| RN-01: all listed reserved stems, case variants and extensions | Reject every component before native file access |
+| RN-02: NUL.txt, com1.log, COM¹, LPT³.cfg, NUL .txt | Reject |
+| RN-03: normal.txt, computer.txt and all existing Catalog suffixes | Accept lexical validation |
+| RN-04: absolute/drive-relative/UNC suffixes, traversal, empty components, ADS and invalid characters | Preserve rejection |
+| RN-05: dot/space-ending components and reserved names in intermediate directories | Reject |
+
+No C# build, test, native execution or HRESULT injection has been performed
+for this repair. No new binary SHA, receipt or binding exists. CaseSupervisor's
+historical HEAD/path/source bindings remain unchanged and require separate
+future review. Historical 37/37 PASS and the Pure Fake Harness Medium/Low
+findings remain historical and unresolved, respectively.
+
 ## Checkpoint file inventory
 
 These are the complete 19 file changes from main. The original final source
