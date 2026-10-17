@@ -8,5 +8,6 @@
   "lookahead_days": 7,
   "max_source_age_hours": 24,
   "network_timeout_seconds": 30,
-  "max_evidence_pages": 20
+  "max_evidence_pages": 20,
+  "evidence_urls": []
 }

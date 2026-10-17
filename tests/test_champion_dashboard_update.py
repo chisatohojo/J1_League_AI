@@ -288,7 +288,7 @@ def test_pending_source_transaction_preserves_display(operational, pending):
     assert json.loads((runtime / "view/update-status.json").read_bytes())["state"] == "error"
 
 
-@pytest.mark.parametrize("mode", ["success", "identity", "limit", "held"])
+@pytest.mark.parametrize("mode", ["success", "identity", "limit", "held", "allowlist_overlap", "combined_limit"])
 def test_bounded_collector_reuses_official_gate_without_guessing_ids(operational, monkeypatch, mode):
     from scripts import update_jleague_ongoing as acquisition
     from src.collect import jleague_ongoing as publisher
@@ -328,15 +328,22 @@ def test_bounded_collector_reuses_official_gate_without_guessing_ids(operational
     monkeypatch.setattr(publisher, "create_snapshot", capture)
     monkeypatch.setattr(publisher, "process_snapshot", publish_snapshot)
     config = dict(CONFIG, max_evidence_pages=0 if mode == "limit" else 20)
+    if mode == "allowlist_overlap":
+        config["evidence_urls"] = [f"https://www.jleague.jp/match/j1/2026/{pending.match_page_id}/"]
+    elif mode == "combined_limit":
+        config.update(max_evidence_pages=2, evidence_urls=[
+            "https://www.jleague.jp/match/j1/2026/082201/",
+            "https://www.jleague.jp/match/j1/2026/082202/",
+        ])
     before = snapshot(repo["root"])
-    if mode == "success":
+    if mode in {"success", "allowlist_overlap"}:
         update.collect_official(repo["root"], runtime, config, runtime / "synthetic-stage")
     else:
         code = dict(identity="official_page_identity_changed", limit="evidence_page_limit",
-                    held="official_publication_held")[mode]
+                    held="official_publication_held", combined_limit="evidence_page_limit")[mode]
         with pytest.raises(ValueError, match=code):
             update.collect_official(repo["root"], runtime, config, runtime / "synthetic-stage")
-    assert len(fetched) == (1 if mode in {"identity", "limit"} else 2)
+    assert len(fetched) == (1 if mode in {"identity", "limit", "combined_limit"} else 2)
     if len(fetched) == 2:
         assert fetched[1] == f"https://www.jleague.jp/match/j1/2026/{pending.match_page_id}/"
         assert "7654321" not in fetched[1]
@@ -368,3 +375,98 @@ def test_seed_preserves_accepted_observation_sequence_and_run(tmp_path):
     assert following["previous_snapshot_id"] == original.name
     assert following["sequence"] == manifest["sequence"] + 1
     assert snapshot(source) == before
+
+
+@pytest.mark.parametrize("pages,code", [
+    (None, "evidence_allowlist_schema"),
+    ("https://www.jleague.jp/match/j1/2026/101813/", "evidence_allowlist_schema"),
+    ([13], "evidence_allowlist_url"),
+    (["http://www.jleague.jp/match/j1/2026/101813/"], "evidence_allowlist_url"),
+    (["https://example.invalid/match/j1/2026/101813/"], "evidence_allowlist_url"),
+    (["https://www.jleague.jp/match/j2/2026/101813/"], "evidence_allowlist_url"),
+    (["https://www.jleague.jp/match/j1/2025/101813/"], "evidence_allowlist_url"),
+    (["https://www.jleague.jp/match/j1/2026/101813/?x=1"], "evidence_allowlist_url"),
+    (["https://www.jleague.jp/match/j1/2026/101813/#game-over"], "evidence_allowlist_url"),
+    (["https://www.jleague.jp/match/j1/2026/1018*/"], "evidence_allowlist_url"),
+    (["https://www.jleague.jp/match/j1/2026/101813/"] * 2, "evidence_allowlist_duplicate"),
+])
+def test_evidence_allowlist_rejects_unsafe_config_before_fetch(tmp_path, monkeypatch, pages, code):
+    from scripts import update_jleague_ongoing
+    monkeypatch.setattr(update_jleague_ongoing, "_fetch", lambda *args: pytest.fail("Invalid config fetched"))
+    config = dict(CONFIG, evidence_urls=pages)
+    with pytest.raises(ValueError, match=code):
+        update.collect_official(tmp_path / "source", tmp_path / "runtime", config, tmp_path / "stage")
+    assert not (tmp_path / "runtime").exists()
+
+
+def test_evidence_allowlist_is_optional_and_bounded():
+    url = "https://www.jleague.jp/match/j1/2026/101813/"
+    assert update.evidence_allowlist(CONFIG) == set()
+    assert update.evidence_allowlist(dict(CONFIG, evidence_urls=[url])) == {url}
+    with pytest.raises(ValueError, match="evidence_page_limit"):
+        update.evidence_allowlist(dict(CONFIG, evidence_urls=[url], max_evidence_pages=0))
+
+
+@pytest.mark.parametrize("corruption", [None, "canonical", "date", "round", "clubs", "unconfirmed"])
+def test_allowlisted_evidence_uses_real_parser_and_publisher(tmp_path, monkeypatch, corruption):
+    from test_jleague_ongoing_update import (
+        synthetic_fixtures, listing_html, write_source, write_completion, write_prematch_identity,
+    )
+    from scripts import update_jleague_ongoing as acquisition
+    import time
+    fixtures = synthetic_fixtures()
+    fixtures[0].update(score=(2, 1), match_id="700001")
+    cached = tmp_path / "cached"
+    listing = write_source(cached / "listing.html", listing_html(fixtures), timestamp=NOW.isoformat())
+    completed_path = (write_prematch_identity if corruption == "unconfirmed" else write_completion)(
+        cached, fixtures[0], 1)
+    scheduled_path = write_prematch_identity(cached, fixtures[10], 2)
+    for path in (completed_path, scheduled_path):
+        metadata = json.loads(path.with_suffix(".metadata.json").read_bytes())
+        html = path.read_text(encoding="utf-8")
+        if path == completed_path:
+            if corruption == "canonical":
+                html = html.replace('href="' + metadata["requested_url"] + '"',
+                                    'href="https://www.jleague.jp/match/j1/2026/080799/"')
+            elif corruption == "date":
+                html = html.replace("2026/8/7", "2026/8/8")
+            elif corruption == "round":
+                html = html.replace("第1節", "第2節")
+            elif corruption == "clubs":
+                html = html.replace("/club/club00/", "/club/unregistered/")
+        write_source(path, html, timestamp=NOW.isoformat(), url=metadata["requested_url"])
+    pages = {json.loads(path.with_suffix(".metadata.json").read_bytes())["requested_url"]: path
+             for path in (listing, completed_path, scheduled_path)}
+    allowed = [url for url in pages if url != acquisition.SOURCE_URL]
+    fetched = []
+    runtime = tmp_path / "runtime"
+    def fetch(url, destination):
+        assert url in pages and destination.is_relative_to(runtime)
+        fetched.append(url)
+        destination.write_bytes(pages[url].read_bytes())
+        destination.with_suffix(".metadata.json").write_bytes(pages[url].with_suffix(".metadata.json").read_bytes())
+    prior = SimpleNamespace(schedule=pd.DataFrame(columns=["fixture_key", "match_page_id"]),
+                            completed=pd.DataFrame(columns=["fixture_key"]))
+    monkeypatch.setattr(update, "official", lambda *args: prior)
+    monkeypatch.setattr(update, "seed_snapshot_history", lambda *args: None)
+    monkeypatch.setattr(update, "utc_now", lambda: NOW)
+    monkeypatch.setattr(acquisition, "_fetch", fetch)
+    monkeypatch.setattr(time, "sleep", lambda seconds: None)
+    config = dict(CONFIG, evidence_urls=allowed)
+    if corruption not in {None, "unconfirmed"}:
+        with pytest.raises(ValueError):
+            update.collect_official(tmp_path / "source", runtime, config, tmp_path / "stage")
+        assert not (runtime / "official/latest.json").exists()
+    else:
+        update.collect_official(tmp_path / "source", runtime, config, tmp_path / "stage")
+        pointer = json.loads((runtime / "official/latest.json").read_bytes())
+        schedule = pd.read_csv(runtime / "official/revisions" / pointer["revision_id"] / "schedule.csv",
+                               dtype=str, keep_default_na=False)
+        candidate = schedule.loc[schedule.data_site_match_id.eq("700001")].iloc[0]
+        assert candidate.status == ("candidate" if corruption else "completed")
+        assert candidate.match_id == "700001" and candidate.match_id_namespace == feed.DATA_SITE_NAMESPACE
+        assert candidate.match_page_id == "080701"
+        future = schedule.loc[schedule.match_page_id.eq("081401")].iloc[0]
+        assert future.status == "scheduled" and future.match_id_namespace == feed.MATCH_PAGE_NAMESPACE
+        assert future.home_score == future.away_score == ""
+    assert fetched == [acquisition.SOURCE_URL, *sorted(allowed)]

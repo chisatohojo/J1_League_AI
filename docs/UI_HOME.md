@@ -287,6 +287,17 @@ match-page IDs. Missing page evidence can leave results as candidates. Conflicti
 identities or a held publication stop the update and leave the display intact.
 The current adapter supports the verified 2026/27 regular J1 season only.
 
+An external config may supply `evidence_urls`, an explicit list of exact HTTPS
+official J1 match-page URLs for 2026/2027. The default is an empty list. Wildcards,
+queries, fragments, other hosts/competitions, malformed IDs and duplicate entries
+are rejected. These URLs join already-known page URLs within the same total
+`max_evidence_pages` limit; overlap is fetched once. No page ID is guessed or
+enumerated. The existing snapshot parser/publisher verifies the fetched URL,
+canonical, competition, date, round, home/away clubs, fixture key and separate
+page/Data Site namespaces. A scheduled page can establish identity; only exact
+candidate scores plus explicit game-over evidence establish completion. Operator
+URLs do not bypass any publication or prediction-binding checks.
+
 ### Activation after reviewing the implementation
 
 No real-data update or task registration is part of the synthetic development

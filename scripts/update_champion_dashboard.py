@@ -185,6 +185,17 @@ def initialize(source, runtime):
     atomic_json(runtime / "initialized.json", {"source_root": str(source), "schemaVersion": 1})
 
 
+def evidence_allowlist(config):
+    """Exact operator-supplied J1 URLs only; never derive or enumerate page IDs."""
+    pages = config.get("evidence_urls", [])
+    feed.require(type(pages) is list, "evidence_allowlist_schema")
+    feed.require(all(isinstance(url, str) and feed.PAGE_URL.fullmatch(url) for url in pages),
+                 "evidence_allowlist_url")
+    feed.require(len(pages) == len(set(pages)), "evidence_allowlist_duplicate")
+    feed.require(len(pages) <= config["max_evidence_pages"], "evidence_page_limit")
+    return set(pages)
+
+
 def collect_official(source, runtime, config, publication_root):
     """One bounded acquisition; reuse existing official parser/publisher and binding gates."""
     from scripts.update_jleague_ongoing import _fetch
@@ -192,6 +203,7 @@ def collect_official(source, runtime, config, publication_root):
     from src.collect.jleague_ongoing_source import SOURCE_URL, parse_listing
     import time
 
+    urls = evidence_allowlist(config)
     prior = official(source, runtime / "official")
     seed_snapshot_history(source, runtime, prior)
     acquisition = runtime / "acquisitions" / uuid.uuid4().hex
@@ -202,7 +214,6 @@ def collect_official(source, runtime, config, publication_root):
     # Only explicit official match-page identities; Data Site IDs are never guessed.
     known = {r.fixture_key: str(r.match_page_id) for r in prior.schedule.itertuples()
              if getattr(r, "match_page_id", "")}
-    urls = set()
     today = utc_now().astimezone(ZoneInfo("Asia/Tokyo")).date().isoformat()
     completed = set(prior.completed.fixture_key)
     for row in listing_rows:
@@ -377,6 +388,7 @@ def read_config(path):
                             ("max_evidence_pages", 1, 40)):
         feed.require(type(config.get(name)) is int and low <= config[name] <= high, "config_bounds")
     feed.require(config.get("network_timeout_seconds") == 30, "network_timeout_is_fixed_30_seconds")
+    evidence_allowlist(config)
     validate_paths(config["source_root"], config["runtime_root"])
     return config
 
