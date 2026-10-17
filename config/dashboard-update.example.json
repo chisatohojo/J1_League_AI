@@ -1,0 +1,12 @@
+{
+  "enabled": false,
+  "source_root": "C:/path/to/J1_League_AI",
+  "runtime_root": "C:/path/to/J1AI-runtime",
+  "morning": "07:00",
+  "evening": "22:00",
+  "timezone": "Asia/Tokyo",
+  "lookahead_days": 7,
+  "max_source_age_hours": 24,
+  "network_timeout_seconds": 30,
+  "max_evidence_pages": 20
+}

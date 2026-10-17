@@ -70,8 +70,8 @@ class DevTools {
     return response.result.value;
   }
 
-  async until(expression, description) {
-    const deadline = Date.now() + 10000;
+  async until(expression, description, timeout = 10000) {
+    const deadline = Date.now() + timeout;
     while (Date.now() < deadline) {
       if (await this.evaluate(expression)) return;
       await delay(50);
@@ -141,9 +141,15 @@ async function startBrowser() {
 async function startServer(initialPayload) {
   let payload = initialPayload;
   let apiStatus = 200;
+  let updateStatus = null;
   const server = http.createServer(async (request, response) => {
     try {
       const pathname = new URL(request.url, 'http://127.0.0.1').pathname;
+      if (pathname === '/api/update-status' && updateStatus) {
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify(updateStatus));
+        return;
+      }
       if (pathname === '/api/dashboard') {
         response.writeHead(apiStatus, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(payload));
@@ -174,6 +180,7 @@ async function startServer(initialPayload) {
   return {
     origin: `http://127.0.0.1:${server.address().port}`,
     setPayload(next, status = 200) { payload = next; apiStatus = status; },
+    setUpdateStatus(next) { updateStatus = next; },
     stop: () => new Promise((resolve, reject) => server.close((error) => {
       if (error) reject(error);
       else resolve();
@@ -389,6 +396,37 @@ test('home dashboard browser integration (synthetic data only)', {
           && label.getBoundingClientRect().right <= innerWidth)`),
       `visible numeric labels stay inside ${width}px viewport`);
     }
+  });
+
+  await context.test('live updates replace valid cards and preserve them on failure', async () => {
+    const initial = dashboardPayload(
+      [syntheticMatch('live-previous', { home: 31, draw: 25, away: 44 }, true)],
+      [syntheticMatch('live-next', { home: 44, draw: 25, away: 31 })]);
+    server.setPayload(initial);
+    server.setUpdateStatus({ state: 'ready', startedAt: null, finishedAt: null,
+      lastSuccessAt: '2026-10-01T09:00:00+09:00', errorCode: null, pollEnabled: true, pollSeconds: 10 });
+    await navigate(client, server.origin + '/?case=live-updates',
+      "document.querySelector('#data-status')?.dataset.state === 'operational'");
+    await client.until("document.querySelector('#update-status')?.hidden === false", 'update controls');
+    const changed = structuredClone(initial);
+    changed.previousRound.matches[0].prediction.probabilities = { home: 62, draw: 20, away: 18 };
+    server.setPayload(changed);
+    await client.until("document.querySelector('.probability-label strong')?.textContent === '62%'",
+      'automatic refresh without navigation', 16000);
+    assert.equal(await client.evaluate("document.querySelectorAll('.match-card').length"), 2);
+    const before = await client.evaluate("document.querySelector('#previous-matches').innerHTML");
+    server.setPayload({ ...changed, research: { ST2: { accuracy: .99 } } });
+    await client.evaluate("document.querySelector('#reload-dashboard').click()");
+    await client.until("document.querySelector('#update-status')?.dataset.state === 'error'", 'retain previous cards on invalid JSON');
+    assert.equal(await client.evaluate("document.querySelector('#previous-matches').innerHTML"), before);
+    assert.doesNotMatch(await client.evaluate("document.querySelector('#main').textContent"), /0\.99|99%/);
+    server.setPayload(changed);
+    server.setUpdateStatus({ state: 'error', startedAt: null, finishedAt: null,
+      lastSuccessAt: '2026-10-01T09:00:00+09:00', errorCode: 'update_failed', pollEnabled: true, pollSeconds: 10 });
+    await client.evaluate("document.querySelector('#reload-dashboard').click()");
+    await client.until("document.querySelector('#update-message')?.textContent.includes('更新できませんでした')", 'safe update error status');
+    assert.equal(await client.evaluate("document.querySelector('#previous-matches').innerHTML"), before);
+    server.setUpdateStatus(null);
   });
 
   await context.test('invalid API payload hard fails instead of falling back to demo', async () => {

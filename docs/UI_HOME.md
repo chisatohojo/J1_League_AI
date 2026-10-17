@@ -246,5 +246,121 @@ set `J1AI_BROWSER_PATH` to a local Chromium executable; absent a browser the sui
 explicitly skips. `J1AI_SCREENSHOT_DIR` optionally saves demo screenshots to a
 specified local directory (not required or committed). No production/model IO.
 
-Remaining work: adapter push/review, separately authorized production feed
-generation, official color confirmation, and any separately requested hosting.
+## Champion A scheduled updates (disabled by default)
+
+`scripts/update_champion_dashboard.py` provides a separate operational lane. It
+never runs the ST2 comparison predictor or changes research CSVs, evaluation data,
+models, or original official revisions. Its source root is read-only; all fetched
+observations, accepted publications, prediction batches, status, and display JSON
+go into a separate runtime directory outside the source/code repositories.
+
+The morning slot checks the official calendar and predicts the earliest unsaved
+match date within `lookahead_days` (default 7). It requires the entire unfinished
+date batch to be scheduled, identified, and still before kickoff. Later dates are
+handled on later runs. Saved fixtures are skipped. The evening slot checks results
+and rebuilds the display without inference. Both slots reuse the existing
+official parser, immutable publisher, namespace/binding checks, game-over evidence
+policy, and feed validator. Candidate scores never become completed results.
+
+The independent Champion predictor verifies the five frozen artifact hashes and
+training source hashes before deserialization. It replays the frozen training
+manifest and approved regulation results with Champion's K=30/home advantage=175,
+and only passes pre-match Elo difference to the saved scaler/estimator. It calls
+`transform`/`predict_proba`, never `fit`. Same-day and future results are excluded.
+New prediction CSVs contain only Champion columns and identity/provenance fields.
+
+Predictions and bindings are committed together as a new, SHA-manifested batch
+directory. Existing batches are never overwritten; changed hashes and duplicate
+fixture keys stop updates. Publication validates the complete candidate feed
+before committing predictions, then flushes/fsyncs and atomically replaces the
+display JSON. A failure preserves the last good display. If a display write fails
+after a prediction batch is saved, the next explicit update reads that batch
+instead of predicting it again. Kickoff is checked again immediately before
+saving. An exclusive `update.lock` rejects overlapping jobs. Abandoned locks and
+incomplete initialization require inspection; they are never automatically cleared.
+
+Each network request has the existing finite 30-second timeout, no automatic
+retry, and at most `max_evidence_pages` (default 20) game-over page requests plus
+one listing request per job. Only official page identities from the validated
+publication/listing are used; Data Site IDs are never converted into guessed
+match-page IDs. Missing page evidence can leave results as candidates. Conflicting
+identities or a held publication stop the update and leave the display intact.
+The current adapter supports the verified 2026/27 regular J1 season only.
+
+### Activation after reviewing the implementation
+
+No real-data update or task registration is part of the synthetic development
+checks. Before activation, select the actual read-only data/model source and a
+new writable runtime outside every repository. Confirm the frozen artifacts,
+Python >=3.12 environment/dependencies, official IDs, and available official page
+evidence. Live network acquisition and the real frozen estimator have not been
+executed by these synthetic checks.
+
+1. Copy `config/dashboard-update.example.json` to an operator-owned path outside
+   Git. Set `source_root` and `runtime_root`; keep `enabled: false` until activation
+   is approved. The source must contain the accepted saved Champion projection,
+   original binding sidecar, official revisions, their accepted raw snapshot,
+   TeamMaster, and fixed artifacts. The accepted snapshot/run is copied with its
+   original hashes into the new runtime so observation sequence and predecessor
+   comparisons continue without resetting or rewriting source history.
+   Times default to `07:00` / `22:00`, timezone `Asia/Tokyo`.
+2. After approval, set `enabled: true`. From this code checkout, use the selected
+   environment's Python for the first explicit update:
+
+   ```powershell
+   & $python -B -m scripts.update_champion_dashboard --config $config --slot morning
+   ```
+
+   Use `--slot evening` for results/display only. A nonzero exit means failure;
+   inspect the runtime's status and retained acquisition/publication evidence.
+   Do not repeatedly retry or clear locks without understanding the failure.
+3. After a successful first update, start a separate loopback display server:
+
+   ```powershell
+   & $python -B -m scripts.serve_dashboard --port 0 --data "$runtime/view/champion_home.json" --reload --status "$runtime/view/update-status.json" --poll-seconds 60
+   ```
+
+   Open the URL it prints. Keep existing servers on 52453 and 51406 unchanged.
+   The new screen polls every 60 seconds and offers **表示を再読込**. It shows the
+   update state, last successful update time and official observation time.
+   Reloading is GET-only: it cannot invoke acquisition, prediction, or training.
+   Invalid/research-shaped JSON, stale publication rollback, and read failures
+   preserve the last normal cards and show a safe error. Demo mode does not poll.
+   Stop only this new console server with Ctrl+C.
+4. Inspect the task plan first (this command registers nothing):
+
+   ```powershell
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/register_champion_update_tasks.ps1 -Config $config -Python $python
+   ```
+
+   This execution policy applies only to that PowerShell process; no persistent
+   user/machine policy is changed. After approval, repeat with `-Register`. The two task names are
+   `J1AI-Champion-Morning` and `J1AI-Champion-Evening`. Registration requires Windows
+   local timezone **Tokyo Standard Time** and refuses existing task names.
+   Tasks run as the current limited interactive user (login required), have a
+   15-minute execution limit, ignore overlapping instances, start after a missed
+   trigger when available, and configure no automatic failure retry. The shared
+   runtime lock also prevents the morning/evening tasks from overlapping.
+5. To change times, edit the external config and update the two corresponding
+   triggers in Task Scheduler; changing config alone does not modify an already
+   registered trigger. To pause, disable only these two tasks and set config
+   `enabled: false`. Do not remove another task or process.
+
+The existing real-data display remains a saved prediction snapshot until this new
+runtime is explicitly connected. UI availability is not approval of Migration,
+Native DashboardHost, WebView2/UDF, or Phase A/B. Phase A remains BLOCKED and
+Phase B NOT_AUTHORIZED.
+
+### Synthetic validation
+
+```powershell
+& $python -B -m pytest tests/test_champion_dashboard_update.py tests/test_dashboard_feed.py tests/test_dashboard_server.py -q -p no:cacheprovider
+node --test web/tests/probability-bar.test.mjs web/tests/dashboard.test.mjs web/tests/browser.test.mjs
+```
+
+These checks use synthetic temporary inputs and estimator doubles. They cover
+successful append/display, idempotence, source immutability, exclusive locks,
+kickoff crossing, invalid probabilities/IDs/results, acquisition and inference
+failure, pending transactions, immutable archive verification, Champion-only
+prediction contracts, and real headless-browser polling/error preservation.
+Task script parsing and plan-only execution do not register or run tasks.

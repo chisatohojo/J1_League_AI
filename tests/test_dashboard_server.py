@@ -320,3 +320,54 @@ def test_mutations_and_non_get_requests_rejected(running_server, method):
         urlopen(Request(f"{base}/api/dashboard", method=method), timeout=2)
     assert exc.value.code == 405
     assert exc.value.headers["Allow"] == "GET"
+
+
+def test_reload_retains_last_good_on_invalid_data_and_recovers(tmp_path, payload):
+    from scripts.build_dashboard_feed import write_dashboard_feed
+    data_path = tmp_path / "champion.json"
+    status_path = tmp_path / "status.json"
+    write_dashboard_feed(payload, data_path)
+    status = dict(state="ready", startedAt=None, finishedAt=None,
+                  lastSuccessAt="2026-10-01T09:00:00+09:00", errorCode=None)
+    status_path.write_text(json.dumps(status), encoding="utf-8")
+    server = create_server(payload, port=0, data_path=data_path, status_path=status_path, reload_data=True)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    origin = f"http://127.0.0.1:{server.server_address[1]}"
+    def get(route):
+        with urlopen(origin + route, timeout=2) as response:
+            return json.load(response)
+    try:
+        changed = deepcopy(payload)
+        changed["updatedAt"] = "2026-10-02T09:00:00+09:00"
+        changed["nextRound"]["matches"][0]["prediction"]["probabilities"] = dict(home=60, draw=20, away=20)
+        write_dashboard_feed(changed, data_path)
+        assert get("/api/dashboard") == changed
+        assert get("/api/update-status")["pollEnabled"] is True
+        for invalid in [
+            b"{truncated",
+            json.dumps(dict(changed, research={"ST2": "PRIVATE_SENTINEL"})).encode(),
+            json.dumps(dict(changed, updatedAt=payload["updatedAt"])).encode(),
+        ]:
+            data_path.write_bytes(invalid)
+            assert get("/api/dashboard") == changed
+            result = get("/api/update-status")
+            assert result["state"] == "error" and result["errorCode"] == "display_reload_failed"
+            assert "PRIVATE_SENTINEL" not in json.dumps(result)
+        write_dashboard_feed(changed, data_path)
+        assert get("/api/dashboard") == changed
+        assert get("/api/update-status")["state"] == "ready"
+        status_path.write_text(json.dumps(dict(status, privatePath="PRIVATE_SENTINEL")), encoding="utf-8")
+        assert get("/api/update-status")["errorCode"] == "update_status_invalid"
+        assert get("/api/dashboard") == changed
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_reload_requires_explicit_data_and_bounded_poll(payload):
+    with pytest.raises(DashboardDataError, match="explicit"):
+        create_server(payload, port=0, reload_data=True)
+    with pytest.raises(DashboardDataError, match="interval"):
+        create_server(payload, port=0, poll_seconds=0)

@@ -1,0 +1,401 @@
+"""Scheduled Champion-only updates. CLI stays disabled until explicit approval/configuration."""
+from __future__ import annotations
+
+import argparse
+from contextlib import contextmanager
+from datetime import datetime, timedelta, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import tempfile
+import uuid
+from zoneinfo import ZoneInfo
+
+import pandas as pd
+
+from scripts import build_dashboard_feed as feed
+from src.collect.teams import load_team_master
+from src.modeling.prediction_identity import BINDING_COLUMNS
+from src.modeling.champion_prediction import TARGET_COLUMNS, predict_champion
+
+NATIVE = feed.CHAMPION_PREDICTION_ARTIFACT
+SIDECAR = "data/processed/predictions/champion_a_fixture_bindings.csv"
+
+
+def utc_now():
+    return datetime.now(timezone.utc)
+
+
+def atomic_json(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    body = (json.dumps(value, ensure_ascii=False, allow_nan=False, indent=2) + "\n").encode()
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}-", dir=path.parent)
+    try:
+        with os.fdopen(fd, "wb") as target:
+            target.write(body)
+            target.flush()
+            os.fsync(target.fileno())
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def validate_paths(source, runtime):
+    runtime = Path(runtime).absolute()
+    for path in [runtime, *runtime.parents]:
+        feed.require(not path.is_symlink() and not path.is_junction(), "runtime_link_denied")
+    source, runtime = Path(source).resolve(), runtime.resolve()
+    feed.require(not runtime.is_relative_to(source) and not source.is_relative_to(runtime),
+                 "runtime_must_be_separate")
+    feed.require(source.is_dir(), "source_root_missing")
+    for path in [runtime, *runtime.parents]:
+        feed.require(not path.is_symlink() and not path.is_junction(), "runtime_link_denied")
+    return source, runtime
+
+
+def require_quiet_inputs(source, runtime):
+    # Do not recover another publisher's unfinished transaction or read its projections.
+    for directory in (source / feed.ONGOING_PATH, runtime / "official"):
+        feed.require(not (directory / ".update.lock").exists()
+                     and not any((directory / "revisions").glob(".pending-*")),
+                     "official_update_pending")
+    sidecar = source / feed.BINDING_PATH
+    feed.require(not sidecar.with_name(f".{sidecar.name}.lock").exists()
+                 and not sidecar.with_name(f".{sidecar.name}.journal.json").exists(),
+                 "prediction_update_pending")
+
+
+@contextmanager
+def update_lock(runtime):
+    runtime.mkdir(parents=True, exist_ok=True)
+    lock = runtime / "update.lock"
+    # A crashed owner's lock is deliberately not reclaimed automatically.
+    handle = lock.open("x", encoding="utf-8")
+    try:
+        handle.write(str(os.getpid()))
+        handle.flush()
+        os.fsync(handle.fileno())
+        yield
+    finally:
+        handle.close()
+        lock.unlink()
+
+
+def official(source, directory):
+    pointer = json.loads((directory / "latest.json").read_bytes())
+    feed.require(feed.HEX64.fullmatch(pointer["revision_id"]), "official_revision_id")
+    master = load_team_master(source / feed.TEAM_MASTER_PATH)
+    return feed.read_official_revision(
+        feed.rooted(directory, "revisions/" + pointer["revision_id"]), master,
+        expected_sha=pointer["manifest_sha256"])
+
+
+def csv_write(path, records, columns):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frame = pd.DataFrame(records, columns=columns)
+    with path.open("x", encoding="utf-8", newline="") as handle:
+        frame.to_csv(handle, index=False, lineterminator="\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def stage_inputs(directory, records, bindings):
+    prediction, binding = directory / NATIVE, directory / SIDECAR
+    csv_write(prediction, records, feed.CHAMPION_COLUMNS)
+    csv_write(binding, bindings, BINDING_COLUMNS)
+    return prediction, binding
+
+
+def publish_batch(runtime, records, bindings):
+    if not records:
+        return
+    archive = runtime / "batches"
+    archive.mkdir(exist_ok=True)
+    identity = hashlib.sha256("\n".join(sorted(r["fixture_key"] for r in records)).encode()).hexdigest()
+    destination = archive / identity
+    feed.require(not destination.exists(), "prediction_batch_already_exists")
+    with tempfile.TemporaryDirectory(prefix=".batch-", dir=runtime) as temporary:
+        stage = Path(temporary) / identity
+        stage.mkdir()
+        csv_write(stage / "predictions.csv", records, feed.CHAMPION_COLUMNS)
+        csv_write(stage / "bindings.csv", bindings, BINDING_COLUMNS)
+        atomic_json(stage / "manifest.json", {
+            name: hashlib.sha256((stage / name).read_bytes()).hexdigest()
+            for name in ("predictions.csv", "bindings.csv")})
+        # Both CSVs and their manifest become visible as one immutable directory.
+        stage.rename(destination)
+
+
+def saved_batches(runtime):
+    records, bindings = [], []
+    for directory in sorted((runtime / "batches").glob("*")):
+        feed.require(directory.is_dir() and feed.HEX64.fullmatch(directory.name), "invalid_batch_directory")
+        manifest = json.loads((directory / "manifest.json").read_bytes())
+        feed.require(set(manifest) == {"predictions.csv", "bindings.csv"}, "batch_manifest")
+        for name, digest in manifest.items():
+            feed.require(hashlib.sha256((directory / name).read_bytes()).hexdigest() == digest,
+                         "saved_prediction_modified")
+        rows = feed.csv_frame((directory / "predictions.csv").read_bytes(), exact=feed.CHAMPION_COLUMNS)
+        sidecar = feed.csv_frame((directory / "bindings.csv").read_bytes(), exact=BINDING_COLUMNS)
+        feed.read_champion_only_predictions((directory / "predictions.csv").read_bytes())
+        records.extend(rows.to_dict("records"))
+        bindings.extend(sidecar.to_dict("records"))
+    keys = [r["fixture_key"] for r in records]
+    feed.require(len(keys) == len(set(keys)), "duplicate_saved_fixture")
+    return records, bindings
+
+
+def initialize(source, runtime):
+    """Copy accepted publications and seed Champion projections; never alter original evidence."""
+    if (runtime / "initialized.json").exists():
+        marker = json.loads((runtime / "initialized.json").read_bytes())
+        feed.require(marker["source_root"] == str(source), "runtime_source_changed")
+        return
+    feed.require(not (runtime / "batches").exists() and not (runtime / "official").exists(),
+                 "incomplete_runtime_initialization")
+    payload = feed.build_dashboard_feed(source)
+    predictions = feed.read_champion_predictions(source / feed.PREDICTION_ARTIFACT)
+    sidecar = feed.csv_frame((source / feed.BINDING_PATH).read_bytes(), exact=BINDING_COLUMNS)
+    selected = sidecar.loc[sidecar.prediction_artifact.eq(feed.PREDICTION_ARTIFACT)].copy()
+    selected["prediction_artifact"], selected["model_version"] = NATIVE, feed.CHAMPION_VERSION
+    records = predictions.assign(model_version=feed.CHAMPION_VERSION).to_dict("records")
+    source_official = source / feed.ONGOING_PATH
+    pointer = json.loads((source_official / "latest.json").read_bytes())
+    revisions = set(predictions.source_revision) | set(selected.identity_witness_revision_id) | {pointer["revision_id"]}
+    for revision in revisions:
+        original = feed.rooted(source_official, "revisions/" + revision)
+        metadata = json.loads((original / "manifest.json").read_bytes())
+        destination = runtime / "official/revisions" / revision
+        destination.mkdir(parents=True, exist_ok=False)
+        for name in ["manifest.json", *metadata["files"]]:
+            feed.require(Path(name).name == name, "official_copy_path")
+            body = (original / name).read_bytes()
+            if name != "manifest.json":
+                feed.require(hashlib.sha256(body).hexdigest() == metadata["files"][name], "official_copy_hash")
+            with (destination / name).open("xb") as target:
+                target.write(body)
+                target.flush()
+                os.fsync(target.fileno())
+    atomic_json(runtime / "official/latest.json", pointer)
+    publish_batch(runtime, records, selected.to_dict("records"))
+    feed.write_dashboard_feed(payload, runtime / "view/champion_home.json")
+    atomic_json(runtime / "initialized.json", {"source_root": str(source), "schemaVersion": 1})
+
+
+def collect_official(source, runtime, config, publication_root):
+    """One bounded acquisition; reuse existing official parser/publisher and binding gates."""
+    from scripts.update_jleague_ongoing import _fetch
+    from src.collect.jleague_ongoing import create_snapshot, process_snapshot
+    from src.collect.jleague_ongoing_source import SOURCE_URL, parse_listing
+    import time
+
+    prior = official(source, runtime / "official")
+    seed_snapshot_history(source, runtime, prior)
+    acquisition = runtime / "acquisitions" / uuid.uuid4().hex
+    acquisition.mkdir(parents=True)
+    listing = acquisition / "listing.html"
+    _fetch(SOURCE_URL, listing)  # Existing finite 30-second timeout; no retry.
+    listing_rows = parse_listing(listing.read_text(encoding="utf-8-sig"))
+    # Only explicit official match-page identities; Data Site IDs are never guessed.
+    known = {r.fixture_key: str(r.match_page_id) for r in prior.schedule.itertuples()
+             if getattr(r, "match_page_id", "")}
+    urls = set()
+    today = utc_now().astimezone(ZoneInfo("Asia/Tokyo")).date().isoformat()
+    completed = set(prior.completed.fixture_key)
+    for row in listing_rows:
+        page, previous_page = row.get("match_page_id"), known.get(row["fixture_key"])
+        feed.require(not page or not previous_page or page == previous_page, "official_page_identity_changed")
+        page = page or previous_page
+        if row["fixture_key"] not in completed and row["match_date"] <= today and page:
+            feed.require(re.fullmatch(r"[0-9]{6}", page), "official_page_identity")
+            urls.add(f"https://www.jleague.jp/match/j1/{row['match_date'][:4]}/{page}/")
+    feed.require(len(urls) <= config["max_evidence_pages"], "evidence_page_limit")
+    evidence = []
+    for i, url in enumerate(sorted(urls)):
+        time.sleep(1)
+        path = acquisition / f"evidence_{i:03d}.html"
+        _fetch(url, path)
+        evidence.append(path)
+    snapshot = create_snapshot(runtime / "snapshots", listing_html=listing, evidence_html=evidence)
+    summary = process_snapshot(
+        snapshot, runtime / "official", prediction_binding_path=publication_root / SIDECAR,
+        prediction_repository_root=publication_root, prediction_artifacts=(NATIVE,))
+    feed.require(summary["publication_status"] == "published", "official_publication_held")
+
+
+def seed_snapshot_history(source, runtime, prior):
+    """Preserve the accepted observation sequence in this separate operational lane."""
+    from src.collect.jleague_ongoing import _read_snapshot, _json, _write_new, FORMAT_VERSION
+    snapshots = runtime / "snapshots"
+    if any(snapshots.glob("*/manifest.json")):
+        return
+    snapshot_id = prior.manifest["snapshot_id"]
+    feed.require(feed.SAFE_FILE.fullmatch(snapshot_id), "snapshot_seed_identity")
+    original = feed.rooted(source, "data/raw/jleague/2026_27/snapshots/" + snapshot_id)
+    manifest = _read_snapshot(original, require_v2=True)
+    feed.require(prior.manifest["format_version"] == FORMAT_VERSION
+                 and manifest["sequence"] == prior.manifest["sequence"]
+                 and manifest["sources"] == prior.manifest["summary"]["sources"], "snapshot_seed_contract")
+    run = prior.manifest["run"]
+    feed.require(feed.sha(_json(run)) == prior.revision_id, "snapshot_seed_run")
+    snapshots.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".seed-", dir=runtime) as temporary:
+        stage = Path(temporary) / snapshot_id
+        stage.mkdir()
+        names = {"manifest.json"} | {entry[key] for entry in manifest["sources"] for key in ("html", "metadata")}
+        for name in names:
+            feed.require(Path(name).name == name, "snapshot_seed_path")
+            _write_new(stage / name, (original / name).read_bytes())
+        feed.require(_read_snapshot(stage, require_v2=True) == manifest, "snapshot_seed_changed")
+        stage.rename(snapshots / snapshot_id)
+    runs = runtime / "official/runs"
+    runs.mkdir(exist_ok=True)
+    _write_new(runs / f"{snapshot_id}-{FORMAT_VERSION}.json", _json(run))
+
+
+def select_targets(current, records, now, lookahead):
+    saved = {r["fixture_key"] for r in records}
+    today = now.astimezone(ZoneInfo("Asia/Tokyo")).date()
+    end = (today + timedelta(days=lookahead)).isoformat()
+    candidates = current.schedule.loc[
+        current.schedule.status.eq("scheduled") & current.schedule.match_date.ge(today.isoformat())
+        & current.schedule.match_date.le(end)]
+    missing = candidates.loc[~candidates.fixture_key.isin(saved)]
+    if missing.empty:
+        return missing.loc[:, list(TARGET_COLUMNS)]
+    day = missing.match_date.min()
+    batch = current.schedule.loc[current.schedule.match_date.eq(day) & ~current.schedule.status.eq("completed")]
+    feed.require(batch.status.eq("scheduled").all(), "target_not_officially_scheduled")
+    feed.require(not batch.fixture_key.isin(saved).any(), "saved_date_batch_changed")
+    feed.require(current.manifest["format_version"] == "ongoing-v2", "prediction_requires_typed_official_ids")
+    for row in batch.itertuples(index=False):
+        feed.require(bool(row.match_id) and row.match_id_namespace in
+                     {feed.MATCH_PAGE_NAMESPACE, feed.DATA_SITE_NAMESPACE}, "official_id_missing")
+        feed.require(timestamp_aware(now) < feed.timestamp(feed.kickoff_at(row.match_date, row.kickoff_time)),
+                     "kickoff_elapsed")
+    appearances = pd.concat([batch[f"{s}_team_id"] for s in ("home", "away")])
+    feed.require(appearances.is_unique, "target_team_date_duplicate")
+    return batch.sort_values("fixture_key").loc[:, list(TARGET_COLUMNS)]
+
+
+def timestamp_aware(value):
+    return feed.timestamp(value.isoformat() if isinstance(value, datetime) else value)
+
+
+def new_records(targets, values, current, master, generated):
+    import numpy as np
+    values = np.asarray(values, dtype=float)
+    feed.require(values.shape == (len(targets), 3) and np.isfinite(values).all()
+                 and ((0 <= values) & (values <= 1)).all()
+                 and np.allclose(values.sum(axis=1), 1, rtol=0, atol=1e-12), "prediction_probabilities")
+    names = {a.team_id: a.canonical_name for a in master.aliases}
+    records, bindings = [], []
+    for row, probabilities in zip(targets.itertuples(index=False), values):
+        feed.require(generated < feed.timestamp(feed.kickoff_at(row.match_date, row.kickoff_time)), "kickoff_elapsed")
+        record = {key: getattr(row, key) for key in ("fixture_key", "match_id", "match_date", "home_team_id", "away_team_id")}
+        record.update(kickoff=row.kickoff_time, home_team_name=names[row.home_team_id],
+                      away_team_name=names[row.away_team_id], prediction_generated_at=generated.isoformat(),
+                      source_revision=current.revision_id, champion_a_model_version=feed.CHAMPION_VERSION,
+                      champion_a_artifact_hash=feed.CHAMPION_HASH, model_version=feed.CHAMPION_VERSION,
+                      **{f"a_p_{side}": repr(float(probabilities[i])) for i, side in enumerate(("away", "draw", "home"))})
+        records.append(record)
+        bindings.append(dict(prediction_artifact=NATIVE, prediction_match_id=row.match_id,
+            model_version=feed.CHAMPION_VERSION, fixture_key=row.fixture_key,
+            prediction_id_namespace=row.match_id_namespace, identity_witness_revision_id=current.revision_id,
+            identity_witness_manifest_sha256=current.manifest_sha, match_date=row.match_date,
+            home_team_id=row.home_team_id, away_team_id=row.away_team_id, prediction_generated_at=generated.isoformat()))
+    return records, bindings
+
+
+def run_update(source_root, runtime_root, slot, config, *, collector=collect_official,
+               predictor=predict_champion, clock=utc_now):
+    source, runtime = validate_paths(source_root, runtime_root)
+    feed.require(slot in {"morning", "evening"}, "update_slot")
+    with update_lock(runtime):
+        status_path = runtime / "view/update-status.json"
+        previous = json.loads(status_path.read_bytes()) if status_path.exists() else {}
+        started = timestamp_aware(clock())
+        state = dict(state="updating", startedAt=started.isoformat(), finishedAt=None,
+                     lastSuccessAt=previous.get("lastSuccessAt"), errorCode=None)
+        atomic_json(status_path, state)
+        try:
+            require_quiet_inputs(source, runtime)
+            initialize(source, runtime)
+            records, bindings = saved_batches(runtime)
+            with tempfile.TemporaryDirectory(prefix=".display-", dir=runtime) as temporary:
+                stage = Path(temporary)
+                prediction, sidecar = stage_inputs(stage, records, bindings)
+                collector(source, runtime, config, stage)
+                current = official(source, runtime / "official")
+                now = timestamp_aware(clock())
+                observed = feed.timestamp(current.observed_at)
+                feed.require(observed <= now and now - observed <= timedelta(hours=config["max_source_age_hours"]),
+                             "official_source_stale_or_future")
+                targets = select_targets(current, records, now, config["lookahead_days"]) if slot == "morning" else None
+                added, added_bindings = [], []
+                if targets is not None and not targets.empty:
+                    master = load_team_master(source / feed.TEAM_MASTER_PATH)
+                    probabilities = predictor(targets, current, source, now)
+                    generated = timestamp_aware(clock())
+                    feed.require(generated >= now, "clock_moved_backwards")
+                    added, added_bindings = new_records(targets, probabilities, current, master, generated)
+                # Derived CSVs are temporary; immutable prediction batches are authoritative.
+                prediction.unlink()
+                sidecar.unlink()
+                prediction, sidecar = stage_inputs(stage, records + added, bindings + added_bindings)
+                payload = feed.build_dashboard_feed(
+                    source, prediction_file=prediction, binding_file=sidecar,
+                    official_directory=runtime / "official", champion_only=True)
+                for row in added:
+                    committed = timestamp_aware(clock())
+                    feed.require(committed >= feed.timestamp(row["prediction_generated_at"]), "clock_moved_backwards")
+                    feed.require(committed < feed.timestamp(feed.kickoff_at(row["match_date"], row["kickoff"])),
+                                 "kickoff_elapsed_before_commit")
+                publish_batch(runtime, added, added_bindings)
+                feed.write_dashboard_feed(payload, runtime / "view/champion_home.json")
+            state.update(state="ready", finishedAt=clock().isoformat(), lastSuccessAt=clock().isoformat(), errorCode=None)
+            atomic_json(status_path, state)
+            return dict(added=len(added), total=len(records) + len(added), state="ready")
+        except Exception:
+            # Never publish exception strings/source paths or research cells to the UI.
+            state.update(state="error", finishedAt=clock().isoformat(), errorCode="update_failed")
+            atomic_json(status_path, state)
+            raise
+
+
+def read_config(path):
+    config = json.loads(Path(path).read_bytes())
+    feed.require(type(config.get("enabled")) is bool, "config_enabled")
+    for name in ("morning", "evening"):
+        feed.require(isinstance(config.get(name), str) and
+                     re.fullmatch(r"(?:[01][0-9]|2[0-3]):[0-5][0-9]", config[name]), "schedule_time")
+    feed.require(config.get("timezone") == "Asia/Tokyo", "schedule_timezone")
+    for name, low, high in (("lookahead_days", 1, 14), ("max_source_age_hours", 1, 48),
+                            ("max_evidence_pages", 1, 40)):
+        feed.require(type(config.get(name)) is int and low <= config[name] <= high, "config_bounds")
+    feed.require(config.get("network_timeout_seconds") == 30, "network_timeout_is_fixed_30_seconds")
+    validate_paths(config["source_root"], config["runtime_root"])
+    return config
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", required=True, type=Path)
+    parser.add_argument("--slot", required=True, choices=("morning", "evening"))
+    args = parser.parse_args(argv)
+    try:
+        config = read_config(args.config)
+        feed.require(config["enabled"] is True, "automatic_updates_disabled")
+        print(json.dumps(run_update(config["source_root"], config["runtime_root"], args.slot, config)))
+        return 0
+    except Exception as error:
+        print(json.dumps(dict(state="error", errorCode="automatic_updates_disabled" if
+                             str(error) == "automatic_updates_disabled" else "update_failed")), flush=True)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

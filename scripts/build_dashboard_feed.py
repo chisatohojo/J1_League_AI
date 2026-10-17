@@ -51,6 +51,8 @@ PROJECTION_COLUMNS = (
     "source_revision", "champion_a_model_version", "champion_a_artifact_hash",
     "a_p_away", "a_p_draw", "a_p_home",
 )
+CHAMPION_PREDICTION_ARTIFACT = "data/processed/predictions/champion_a_prospective.csv"
+CHAMPION_COLUMNS = (*PROJECTION_COLUMNS, "model_version")
 # Frozen input header only: research cells remain opaque and are never put in a frame.
 MIXED_COLUMNS = (
     "fixture_key", "match_id", "match_date", "kickoff", "home_team_id",
@@ -149,6 +151,17 @@ def read_champion_predictions(path=None, *, body=None):
         frame = pd.DataFrame(projected, columns=PROJECTION_COLUMNS, dtype=str)
     except (csv.Error, UnicodeError):
         raise DashboardFeedError("Malformed prediction CSV") from None
+    return validate_champion_projection(frame)
+
+
+def read_champion_only_predictions(body):
+    """Independent operational store: no comparison/research columns permitted."""
+    frame = csv_frame(body, exact=CHAMPION_COLUMNS)
+    require(frame.model_version.eq(CHAMPION_VERSION).all(), "Wrong operational model version")
+    return validate_champion_projection(frame.loc[:, list(PROJECTION_COLUMNS)])
+
+
+def validate_champion_projection(frame):
     require(not frame.fixture_key.duplicated().any() and not frame.match_id.duplicated().any(),
             "Duplicate saved prediction identity")
     for row in frame.itertuples(index=False):
@@ -285,10 +298,12 @@ def read_official_revision(directory, master, *, expected_sha=None):
     return OfficialSource(directory.name, sha(manifest_body), manifest, schedule, completed)
 
 
-def validate_binding_coverage(predictions, bindings):
+def validate_binding_coverage(predictions, bindings, *, champion_only=False):
     validate_prediction_bindings(bindings)
-    selected = bindings.loc[bindings.prediction_artifact.eq(PREDICTION_ARTIFACT)]
-    require(selected.model_version.eq(COMPARISON_VERSION).all(), "Wrong sidecar comparison version")
+    artifact = CHAMPION_PREDICTION_ARTIFACT if champion_only else PREDICTION_ARTIFACT
+    version = CHAMPION_VERSION if champion_only else COMPARISON_VERSION
+    selected = bindings.loc[bindings.prediction_artifact.eq(artifact)]
+    require(selected.model_version.eq(version).all(), "Wrong sidecar model version")
     require(len(selected) == len(predictions), "Missing or orphan prediction binding")
     require(selected.prediction_match_id.is_unique, "Duplicate sidecar prediction ID")
     by_id = selected.set_index("prediction_match_id")
@@ -303,21 +318,29 @@ def validate_binding_coverage(predictions, bindings):
     return by_id
 
 
-def build_dashboard_feed(repository_root=ROOT):
+def build_dashboard_feed(repository_root=ROOT, *, prediction_file=None, binding_file=None,
+                         official_directory=None, champion_only=False):
     """Construct the entire feed before writing anything; inputs remain read-only."""
     root = Path(repository_root).resolve()
     prediction_path, binding_path, master_path = [rooted(root, path) for path in (
         PREDICTION_ARTIFACT, BINDING_PATH, TEAM_MASTER_PATH)]
+    if prediction_file is not None:
+        require(champion_only, "Explicit store requires Champion-only mode")
+        prediction_path = Path(prediction_file).resolve()
+    if binding_file is not None:
+        require(champion_only, "Explicit store requires Champion-only mode")
+        binding_path = Path(binding_file).resolve()
     journal = binding_path.with_name(f".{binding_path.name}.journal.json")
     lock = binding_path.with_name(f".{binding_path.name}.lock")
     require(not journal.exists() and not lock.exists(), "Prediction append pending; read-only adapter cannot recover")
     snapshots = {path: path.read_bytes() for path in (prediction_path, binding_path, master_path)}
-    predictions = read_champion_predictions(body=snapshots[prediction_path])
+    predictions = (read_champion_only_predictions(snapshots[prediction_path]) if champion_only
+                   else read_champion_predictions(body=snapshots[prediction_path]))
     bindings = csv_frame(snapshots[binding_path], exact=BINDING_COLUMNS)
-    by_id = validate_binding_coverage(predictions, bindings)
+    by_id = validate_binding_coverage(predictions, bindings, champion_only=champion_only)
     master = load_team_master(master_path)
     names = {alias.team_id: alias.canonical_name for alias in master.aliases}
-    ongoing = rooted(root, ONGOING_PATH)
+    ongoing = Path(official_directory).resolve() if official_directory is not None else rooted(root, ONGOING_PATH)
     pointer_path = rooted(ongoing, "latest.json")
     pointer_body = pointer_path.read_bytes()
     pointer = json.loads(pointer_body)

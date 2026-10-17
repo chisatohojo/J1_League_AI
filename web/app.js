@@ -76,7 +76,7 @@ export function renderDashboard(data, { demo = false } = {}) {
       : "CHAMPION A / 保存済みの正式運用予想のみを表示しています。";
   notice.replaceChildren(element("span", "notice-message", message));
   if (!demo && data.updatedAt) {
-    notice.append(element("span", "notice-updated", `表示用データ更新: ${formatKickoff(data.updatedAt)} JST`));
+    notice.append(element("span", "notice-updated", `公式データ観測: ${formatKickoff(data.updatedAt)} JST`));
   }
   document.querySelector("#preview-link").href = demo ? "/" : "/?demo=1";
   document.querySelector("#preview-link").textContent = demo ? "通常画面へ戻る ↗" : "UIデモを見る ↗";
@@ -96,6 +96,56 @@ export function renderDashboard(data, { demo = false } = {}) {
   notice.dataset.state = demo ? "demo" : empty ? "empty" : "operational";
 }
 
+async function connectLiveUpdates(initialData) {
+  const response = await fetch("/api/update-status", { cache: "no-store", credentials: "same-origin" });
+  if (!response.ok) return;
+  const initialStatus = await response.json();
+  if (initialStatus.pollEnabled !== true) return;
+  const interval = initialStatus.pollSeconds;
+  if (!Number.isInteger(interval) || interval < 10 || interval > 3600) return;
+  const panel = document.querySelector("#update-status");
+  const message = document.querySelector("#update-message");
+  const button = document.querySelector("#reload-dashboard");
+  let signature = JSON.stringify(initialData), busy = false;
+  panel.hidden = false;
+  function show(status) {
+    if (!["idle", "updating", "ready", "error"].includes(status.state)) throw new Error("更新状態が不正です");
+    panel.dataset.state = status.state;
+    const labels = { idle: "定期更新を待っています", updating: "公式データを確認・更新しています",
+      ready: "更新済み", error: "更新できませんでした。前回の正常な表示を保持しています" };
+    message.textContent = labels[status.state] + (status.lastSuccessAt
+      ? " · 最終成功: " + formatKickoff(status.lastSuccessAt) + " JST" : "");
+  }
+  show(initialStatus);
+  async function reload() {
+    if (busy) return;
+    busy = true; button.disabled = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    try {
+      const options = { cache: "no-store", credentials: "same-origin", signal: controller.signal };
+      const [dataResponse, statusResponse] = await Promise.all([
+        fetch("/api/dashboard", options), fetch("/api/update-status", options)]);
+      if (!dataResponse.ok || !statusResponse.ok) throw new Error("再読込に失敗しました");
+      const [data, status] = await Promise.all([dataResponse.json(), statusResponse.json()]);
+      validateDashboard(data);
+      show(status);
+      if (JSON.stringify(data) !== signature) {
+        renderDashboard(data);
+        signature = JSON.stringify(data);
+      }
+    } catch {
+      panel.dataset.state = "error";
+      message.textContent = "再読込できませんでした。前回の正常な表示を保持しています";
+    } finally {
+      clearTimeout(timeout); busy = false; button.disabled = false;
+    }
+  }
+  button.addEventListener("click", reload);
+  async function poll() { await reload(); setTimeout(poll, interval * 1000); }
+  setTimeout(poll, interval * 1000);
+}
+
 async function start() {
   try {
     const demo = new URLSearchParams(location.search).get("demo") === "1";
@@ -108,6 +158,7 @@ async function start() {
       data = await response.json();
     }
     renderDashboard(data, { demo });
+    if (!demo) connectLiveUpdates(data).catch(() => {});
   } catch (error) {
     // Fail closed. Never fall back to synthetic or research predictions on API/schema failure.
     document.querySelector("#data-status").dataset.state = "error";

@@ -15,6 +15,7 @@ import math
 from pathlib import Path
 import re
 import sys
+from threading import Lock
 from typing import Any
 from urllib.parse import unquote, urlsplit
 
@@ -208,11 +209,56 @@ def create_server(
     *,
     port: int = 8765,
     static_root: Path | None = None,
+    data_path: Path | None = None,
+    status_path: Path | None = None,
+    reload_data: bool = False,
+    poll_seconds: int = 60,
 ) -> ThreadingHTTPServer:
     """Create a loopback-only, GET-only server using an immutable JSON snapshot."""
     approved = validate_dashboard_data(empty_dashboard() if payload is None else payload)
     api_bytes = json.dumps(approved, ensure_ascii=False, allow_nan=False).encode("utf-8")
     root = (WEB_ROOT if static_root is None else static_root).resolve()
+    if reload_data and data_path is None:
+        raise DashboardDataError("Reload requires an explicit JSON input")
+    if type(poll_seconds) is not int or not 10 <= poll_seconds <= 3600:
+        raise DashboardDataError("Poll interval must be 10..3600 seconds")
+    snapshot_lock = Lock()
+    reload_error = None
+    last_observed = approved["updatedAt"]
+
+    def refresh():
+        nonlocal api_bytes, reload_error, last_observed
+        if reload_data:
+            try:
+                incoming = load_dashboard_data(data_path)
+                if last_observed and (incoming["updatedAt"] is None or
+                        _timestamp(incoming["updatedAt"], "updatedAt") <
+                        _timestamp(last_observed, "updatedAt")):
+                    raise DashboardDataError("Display publication rollback")
+                api_bytes = json.dumps(incoming, ensure_ascii=False, allow_nan=False).encode("utf-8")
+                last_observed = incoming["updatedAt"]
+                reload_error = None
+            except (OSError, ValueError, TypeError, KeyError):
+                reload_error = "display_reload_failed"
+
+    def update_status():
+        state = dict(state="idle", startedAt=None, finishedAt=None, lastSuccessAt=None, errorCode=None)
+        if reload_data and status_path is not None:
+            try:
+                candidate = json.loads(status_path.read_bytes(), object_pairs_hook=_unique_object)
+                if set(candidate) != set(state) or candidate["state"] not in {"idle", "updating", "ready", "error"}:
+                    raise DashboardDataError("Update status schema")
+                if candidate["errorCode"] not in {None, "update_failed"}:
+                    raise DashboardDataError("Update status code")
+                for key in ("startedAt", "finishedAt", "lastSuccessAt"):
+                    if candidate[key] is not None:
+                        _timestamp(candidate[key], key)
+                state = candidate
+            except (OSError, ValueError, TypeError, KeyError):
+                state.update(state="error", errorCode="update_status_invalid")
+        if reload_error:
+            state.update(state="error", errorCode=reload_error)
+        return dict(state, pollEnabled=reload_data, pollSeconds=poll_seconds, feedUpdatedAt=last_observed)
 
     class DashboardHandler(BaseHTTPRequestHandler):
         def _send(self, content: bytes, content_type: str) -> None:
@@ -227,7 +273,16 @@ def create_server(
         def do_GET(self) -> None:
             route = unquote(urlsplit(self.path).path)
             if route == "/api/dashboard":
-                self._send(api_bytes, "application/json")
+                with snapshot_lock:
+                    refresh()
+                    content = api_bytes
+                self._send(content, "application/json")
+                return
+            if route == "/api/update-status":
+                with snapshot_lock:
+                    refresh()
+                    content = json.dumps(update_status(), ensure_ascii=False).encode("utf-8")
+                self._send(content, "application/json")
                 return
             asset = STATIC_ROUTES.get(route)
             if asset is None:
@@ -269,12 +324,21 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8765, help="Loopback port (default: 8765)")
     parser.add_argument("--data", type=Path, help="Explicit prepared Champion A-only JSON (read-only)")
+    parser.add_argument("--reload", action="store_true", help="Validate and reload only the explicitly supplied JSON; retain last good data on failure")
+    parser.add_argument("--status", type=Path, help="Explicit update-status JSON, used only with --reload")
+    parser.add_argument("--poll-seconds", type=int, default=60, help="Browser refresh interval, 10..3600 (default 60)")
     args = parser.parse_args(argv)
     if not 0 <= args.port <= 65535:
         parser.error("--port must be between 0 and 65535")
+    if (args.reload or args.status) and not args.data:
+        parser.error("--reload/--status require --data")
+    if args.status and not args.reload:
+        parser.error("--status requires --reload")
     try:
         payload = load_dashboard_data(args.data)
-        server = create_server(payload, port=args.port)
+        server = create_server(payload, port=args.port, data_path=args.data,
+                               status_path=args.status, reload_data=args.reload,
+                               poll_seconds=args.poll_seconds)
     except (DashboardDataError, OSError) as exc:
         print(f"Dashboard startup rejected: {exc}", file=sys.stderr)
         return 2
