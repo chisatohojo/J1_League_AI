@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import argparse
 from contextlib import contextmanager
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 import hashlib
 import json
 import os
@@ -196,45 +196,171 @@ def evidence_allowlist(config):
     return set(pages)
 
 
+def discovery_options(config):
+    enabled = config.get("discovery_enabled", True)
+    feed.require(type(enabled) is bool, "discovery_enabled_schema")
+    options = {}
+    for name, default, low, high in (
+        ("discovery_window_days", 7, 1, 31),
+        ("max_discovery_pages", 6, 1, 12),
+        ("max_acquisition_seconds", 600, 120, 840),
+    ):
+        value = config.get(name, default)
+        feed.require(type(value) is int and low <= value <= high, "discovery_config_bounds")
+        options[name] = value
+    return enabled, options
+
+
+def discovery_windows(targets, today, options):
+    """Do not age out unresolved results; reserve a window for upcoming fixtures."""
+    windows = []
+    for day in sorted({date.fromisoformat(row["match_date"]) for row in targets}):
+        if windows and (day - windows[-1][0]).days < options["discovery_window_days"]:
+            windows[-1] = (windows[-1][0], day)
+        else:
+            windows.append((day, day))
+    limit = options["max_discovery_pages"]
+    selected = windows[:limit]
+    future = next((window for window in windows if window[1] >= today), None)
+    if future is not None and future not in selected:
+        selected = selected[:limit - 1] + [future]
+    return selected
+
+
 def collect_official(source, runtime, config, publication_root):
     """One bounded acquisition; reuse existing official parser/publisher and binding gates."""
     from scripts.update_jleague_ongoing import _fetch
     from src.collect.jleague_ongoing import create_snapshot, process_snapshot
-    from src.collect.jleague_ongoing_source import SOURCE_URL, parse_listing
+    from src.collect.jleague_ongoing_source import (
+        SOURCE_URL, parse_listing, discovery_search_url, discover_match_urls,
+        parse_completion_evidence, apply_completion_evidence,
+    )
     import time
 
     urls = evidence_allowlist(config)
+    discovery_enabled, options = discovery_options(config)
     prior = official(source, runtime / "official")
     seed_snapshot_history(source, runtime, prior)
     acquisition = runtime / "acquisitions" / uuid.uuid4().hex
     acquisition.mkdir(parents=True)
-    listing = acquisition / "listing.html"
-    _fetch(SOURCE_URL, listing)  # Existing finite 30-second timeout; no retry.
-    listing_rows = parse_listing(listing.read_text(encoding="utf-8-sig"))
-    # Only explicit official match-page identities; Data Site IDs are never guessed.
-    known = {r.fixture_key: str(r.match_page_id) for r in prior.schedule.itertuples()
-             if getattr(r, "match_page_id", "")}
-    today = utc_now().astimezone(ZoneInfo("Asia/Tokyo")).date().isoformat()
-    completed = set(prior.completed.fixture_key)
-    for row in listing_rows:
-        page, previous_page = row.get("match_page_id"), known.get(row["fixture_key"])
-        feed.require(not page or not previous_page or page == previous_page, "official_page_identity_changed")
-        page = page or previous_page
-        if row["fixture_key"] not in completed and row["match_date"] <= today and page:
-            feed.require(re.fullmatch(r"[0-9]{6}", page), "official_page_identity")
-            urls.add(f"https://www.jleague.jp/match/j1/{row['match_date'][:4]}/{page}/")
-    feed.require(len(urls) <= config["max_evidence_pages"], "evidence_page_limit")
-    evidence = []
-    for i, url in enumerate(sorted(urls)):
-        time.sleep(1)
-        path = acquisition / f"evidence_{i:03d}.html"
+    deadline = time.monotonic() + options["max_acquisition_seconds"]
+    audit = dict(schemaVersion=1, discoveryEnabled=discovery_enabled, searches=[],
+                 discovered=[], evidence=[], unresolved=[], state="acquiring")
+
+    def fetch(url, path):
+        # The fetch has a 30s stream deadline and 30s socket timeout. Reserve
+        # both, plus politeness, so an in-flight read fits the total budget.
+        feed.require(deadline - time.monotonic() >= 61, "acquisition_time_limit")
+        if audit["searches"] or path.name != "listing.html":
+            time.sleep(1)
         _fetch(url, path)
-        evidence.append(path)
-    snapshot = create_snapshot(runtime / "snapshots", listing_html=listing, evidence_html=evidence)
-    summary = process_snapshot(
-        snapshot, runtime / "official", prediction_binding_path=publication_root / SIDECAR,
-        prediction_repository_root=publication_root, prediction_artifacts=(NATIVE,))
-    feed.require(summary["publication_status"] == "published", "official_publication_held")
+        feed.require(time.monotonic() <= deadline, "acquisition_time_limit")
+        body = path.read_bytes()
+        metadata = json.loads(path.with_suffix(".metadata.json").read_bytes())
+        feed.require(metadata["requested_url"] == metadata["final_url"] == url
+                     and metadata["status"] == 200
+                     and metadata["sha256"] == hashlib.sha256(body).hexdigest()
+                     and metadata["bytes"] == len(body), "acquisition_provenance")
+        return dict(url=url, html=path.name, sha256=metadata["sha256"],
+                    metadataSHA256=hashlib.sha256(path.with_suffix(".metadata.json").read_bytes()).hexdigest(),
+                    fetchedAtUTC=metadata["fetched_at_utc"])
+
+    try:
+        listing = acquisition / "listing.html"
+        audit["listing"] = fetch(SOURCE_URL, listing)
+        listing_rows = parse_listing(listing.read_text(encoding="utf-8-sig"))
+        known = {r.fixture_key: str(r.match_page_id) for r in prior.schedule.itertuples()
+                 if getattr(r, "match_page_id", "")}
+        known_ids = {page: key for key, page in known.items()}
+        feed.require(len(known_ids) == len(known), "official_page_identity_collision")
+        today = utc_now().astimezone(ZoneInfo("Asia/Tokyo")).date()
+        end = (today + timedelta(days=config["lookahead_days"])).isoformat()
+        completed = set(prior.completed.fixture_key)
+        targets = []
+        for row in listing_rows:
+            page, previous_page = row.get("match_page_id"), known.get(row["fixture_key"])
+            feed.require(not page or not previous_page or page == previous_page, "official_page_identity_changed")
+            page = page or previous_page
+            if row["fixture_key"] in completed:
+                continue
+            if row["match_date"] <= today.isoformat() and page:
+                feed.require(re.fullmatch(r"[0-9]{6}", page), "official_page_identity")
+                urls.add(f"https://www.jleague.jp/match/j1/{row['match_date'][:4]}/{page}/")
+            # Candidate age has no cutoff. Missing upcoming IDs are searched
+            # only within the configured forecast horizon, never the full year.
+            if (row["status"] == "candidate" or
+                    (row["status"] == "scheduled" and not page and row["match_date"] <= end)):
+                targets.append(row)
+        feed.require(len(urls) <= config["max_evidence_pages"], "evidence_page_limit")
+        manual_urls = evidence_allowlist(config)
+        origins = {url: [] for url in urls}
+        if discovery_enabled:
+            windows = discovery_windows(targets, today, options)
+            known_completed_urls = {
+                f"https://www.jleague.jp/match/j1/{r.match_date[:4]}/{r.match_page_id}/"
+                for r in prior.schedule.itertuples()
+                if r.fixture_key in completed and getattr(r, "match_page_id", "")}
+            found = {}
+            for i, (start, finish) in enumerate(windows):
+                search_url = discovery_search_url(start, finish)
+                path = acquisition / f"search_{i:03d}.html"
+                search = fetch(search_url, path)
+                search.update(start=start.isoformat(), end=finish.isoformat())
+                audit["searches"].append(search)
+                for url in discover_match_urls(path.read_text(encoding="utf-8-sig"), start=start, end=finish):
+                    audit["discovered"].append(dict(url=url, sourcePage=search_url,
+                        sourceSHA256=search["sha256"], fetchedAtUTC=search["fetchedAtUTC"]))
+                    if url not in known_completed_urls:
+                        found.setdefault(url, []).append(search_url)
+            # Bounded, deterministic selection. Deferred fixtures remain in
+            # the season schedule and in the unresolved audit, never discarded.
+            for url in sorted(found):
+                if url in urls or len(urls) < config["max_evidence_pages"]:
+                    urls.add(url)
+                    origins[url] = found[url]
+                else:
+                    audit["unresolved"].append(dict(url=url, reason="evidence_page_budget"))
+        evidence, parsed = [], []
+        for i, url in enumerate(sorted(urls)):
+            path = acquisition / f"evidence_{i:03d}.html"
+            entry = fetch(url, path)
+            entry.update(sourcePages=origins.get(url, []), manualAllowlist=url in manual_urls,
+                         validation="pending")
+            audit["evidence"].append(entry)
+            item = parse_completion_evidence(path.read_text(encoding="utf-8-sig"), source_url=url)
+            feed.require(known.get(item["fixture_key"], item["match_page_id"]) == item["match_page_id"],
+                         "official_page_identity_changed")
+            feed.require(known_ids.get(item["match_page_id"], item["fixture_key"]) == item["fixture_key"],
+                         "official_page_identity_collision")
+            parsed.append(item)
+            # Includes duplicate fixture/page-ID collision and candidate-score
+            # checks; the publisher repeats these gates with archived sources.
+            apply_completion_evidence(listing_rows, parsed)
+            entry.update(validation="matched", fixtureKey=item["fixture_key"],
+                         matchPageID=item["match_page_id"], namespace="jleague_match_page",
+                         matchDate=item["match_date"], round=item["round"],
+                         completionVerified=item["verified"])
+            evidence.append(path)
+        resolved = {row["fixture_key"]: row for row in apply_completion_evidence(listing_rows, parsed)}
+        for target in targets:
+            row = resolved[target["fixture_key"]]
+            if row["status"] == "candidate" or not row.get("match_page_id"):
+                audit["unresolved"].append(dict(fixtureKey=row["fixture_key"], matchDate=row["match_date"],
+                    status=row["status"], reason="completion_unconfirmed" if row.get("match_page_id")
+                    else "official_link_not_resolved"))
+        audit["state"] = "validated"
+        atomic_json(acquisition / "discovery.json", audit)
+        snapshot = create_snapshot(runtime / "snapshots", listing_html=listing, evidence_html=evidence)
+        summary = process_snapshot(
+            snapshot, runtime / "official", prediction_binding_path=publication_root / SIDECAR,
+            prediction_repository_root=publication_root, prediction_artifacts=(NATIVE,))
+        feed.require(summary["publication_status"] == "published", "official_publication_held")
+        audit.update(state="published", snapshot=snapshot.name)
+        atomic_json(acquisition / "discovery.json", audit)
+    except Exception:
+        audit["state"] = "failed"
+        atomic_json(acquisition / "discovery.json", audit)
+        raise
 
 
 def seed_snapshot_history(source, runtime, prior):
@@ -389,6 +515,7 @@ def read_config(path):
         feed.require(type(config.get(name)) is int and low <= config[name] <= high, "config_bounds")
     feed.require(config.get("network_timeout_seconds") == 30, "network_timeout_is_fixed_30_seconds")
     evidence_allowlist(config)
+    discovery_options(config)
     validate_paths(config["source_root"], config["runtime_root"])
     return config
 

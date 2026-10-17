@@ -34,8 +34,22 @@ def _fetch(url: str, destination: Path):
     """Save one response and its provenance; never overwrite or retry implicitly."""
     request = urllib.request.Request(url, headers={"User-Agent": "J1-Match-Predictor-Research/0.1"})
     started = datetime.now(timezone.utc).isoformat()
+    deadline = time.monotonic() + 30
     with urllib.request.urlopen(request, timeout=30) as response:
-        body = response.read()
+        chunks, size = [], 0
+        while True:
+            # read1 returns available bytes instead of waiting for a whole
+            # response/large block. An active slow stream cannot run forever.
+            chunk = response.read1(65536)
+            if time.monotonic() > deadline:
+                raise TimeoutError("official_fetch_deadline")
+            if not chunk:
+                break
+            size += len(chunk)
+            if size > 8 * 1024 * 1024:
+                raise ValueError("official_response_size_limit")
+            chunks.append(chunk)
+        body = b"".join(chunks)
         metadata = {
             "requested_url": url, "final_url": response.url, "status": response.status,
             "request_started_at_utc": started,

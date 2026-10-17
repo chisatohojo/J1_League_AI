@@ -9,5 +9,9 @@
   "max_source_age_hours": 24,
   "network_timeout_seconds": 30,
   "max_evidence_pages": 20,
+  "discovery_enabled": true,
+  "discovery_window_days": 7,
+  "max_discovery_pages": 6,
+  "max_acquisition_seconds": 600,
   "evidence_urls": []
 }

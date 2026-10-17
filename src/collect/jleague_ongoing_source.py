@@ -28,6 +28,44 @@ _CLUB = r"[a-z0-9_-]+"
 _MATCH_URL = r"https://www\.jleague\.jp/match/j1/(2026|2027)/([0-9]{6})/"
 
 
+def discovery_search_url(start: date, end: date) -> str:
+    """Only date windows are constructed; match identities always come from links."""
+    if not date(2026, 8, 1) <= start <= end <= date(2027, 6, 30):
+        raise ValueError("discovery_window_outside_season")
+    return ("https://www.jleague.jp/j1/match/search-list/?category=j1"
+            f"&startdate={start.isoformat()}&enddate={end.isoformat()}&period=custom")
+
+
+def discover_match_urls(html: str, *, start: date, end: date) -> tuple[str, ...]:
+    """Reuse the observed official RSC detailHref/league grouping, never text IDs.
+
+    These are discovery hints only. The ordinary-J1 header, canonical, fixture,
+    date, round and score must still pass the existing match evidence parser.
+    Unsupported/empty structure fails closed rather than falling back to regex
+    searches over arbitrary scripts, related links or numeric match IDs.
+    """
+    from src.collect.jleague_match_xg import parse_schedule_detail_hrefs
+
+    discovery_search_url(start, end)
+    urls = set()
+    for year in range(start.year, end.year + 1):
+        try:
+            identities = parse_schedule_detail_hrefs(
+                html, season=year, competition_name="明治安田Ｊ１リーグ")
+        except ValueError as error:
+            if str(error) != f"No official J1 detailHref found for {year}.":
+                raise
+            continue
+        for identity in identities:
+            day = date(year, int(identity[:2]), int(identity[2:4]))
+            if start <= day <= end:
+                # Every component is taken from an actual observed detailHref.
+                urls.add(f"https://www.jleague.jp/match/j1/{year}/{identity}/")
+    if not urls:
+        raise ValueError("discovery_listing_structure_or_links_missing")
+    return tuple(sorted(urls))
+
+
 def _club_link(links: list[str]) -> tuple[str, str]:
     match = re.fullmatch(rf"https?://www\.jleague\.jp/club/({_CLUB})/profile/", links[0]) if len(links) == 1 else None
     if match is None:

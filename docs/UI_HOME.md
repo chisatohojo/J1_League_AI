@@ -362,7 +362,49 @@ runtime is explicitly connected. UI availability is not approval of Migration,
 Native DashboardHost, WebView2/UDF, or Phase A/B. Phase A remains BLOCKED and
 Phase B NOT_AUTHORIZED.
 
-### Synthetic validation
+### Official match URL discovery
+
+The operational collector searches the official J1 date/result search pages for
+actual `detailHref` links under the exact ordinary-J1 competition name. It reuses
+the existing search-link parser; it never enumerates or guesses match page IDs.
+Every fetched detail must pass the existing canonical, competition, date, round,
+home/away, fixture key, typed-ID and score/completion gates before publication.
+An explicit `game-over` section is required for completion; an identity-only
+page keeps the fixture scheduled or candidate. Existing prediction batches are
+never rewritten by discovery.
+
+Defaults (also used when the new optional config fields are absent):
+
+- `discovery_enabled: true`; `false` retains the manual/known-ID recovery path.
+- `discovery_window_days: 7` (1–31): maximum span of each date window.
+- `max_discovery_pages: 6` (1–12): maximum search pages per update.
+- `max_acquisition_seconds: 600` (120–840): total acquisition budget. Each
+  request uses the existing 30-second socket timeout plus a 30-second stream
+  deadline; a new request starts only with sufficient remaining time for both.
+  Responses are capped at 8 MiB, with one-second spacing and no retry.
+- `max_evidence_pages` remains the combined cap for discovered, previously
+  verified and manually configured pages (default 20, maximum 40).
+
+All unresolved candidates remain eligible regardless of age. Future scheduled
+fixtures missing match-page IDs are searched through `lookahead_days`. Oldest
+windows are prioritized with a window reserved for upcoming fixtures. Deferred
+or unconfirmed fixtures remain in the official schedule and acquisition audit;
+they are not silently completed or dropped. A daily run does not guarantee that
+the official site has published a usable link. Existing IDs that conflict with
+a newly observed link require operator investigation, including reschedules
+that change a previously registered URL identity.
+
+`runtime/acquisitions/<id>/discovery.json` records search URLs, archived HTML and
+metadata hashes, observation times, discovered URLs and their source pages,
+fixture/namespace validation, completion decisions and unresolved reasons.
+Archived search HTML and fetch metadata are retained beside the audit. Evidence
+HTML/metadata also enter the normal immutable snapshot/publication pipeline.
+Unsupported search structure, malformed/conflicting evidence, network failure
+or time-budget exhaustion stops the update and preserves the last normal feed
+and saved predictions. No task registration or live acquisition is enabled by
+changing the example configuration.
+
+### Synthetic validation commands
 
 ```powershell
 & $python -B -m pytest tests/test_champion_dashboard_update.py tests/test_dashboard_feed.py tests/test_dashboard_server.py -q -p no:cacheprovider
