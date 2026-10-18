@@ -1,6 +1,7 @@
 import { PredictionProbabilityBar } from "./components/prediction-probability-bar.js";
 import { validateDashboard, highestProbabilityOutcomes, actualOutcome, formatKickoff } from "./dashboard-data.js";
 import { teamColor } from "./team-colors.js";
+import { validateRetrospective, selectDisplayPrediction, RETROSPECTIVE_TYPE } from "./retrospective-data.js";
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -13,10 +14,14 @@ function outcomeLabel(outcome, match) {
   return outcome === "draw" ? "Draw · 引き分け" : outcome === "home" ? match.homeTeam.name : match.awayTeam.name;
 }
 
-export function MatchCard(match, { previous, demo }) {
+export function MatchCard(match, { previous, demo, overlay = null }) {
+  const display = selectDisplayPrediction(match, overlay);
+  const reconstruction = display?.kind === RETROSPECTIVE_TYPE;
+  const prediction = display?.value ?? null;
   const finished = match.status ? match.status === "completed" : previous;
   const pending = match.status === "candidate";
-  const card = element("article", `match-card${match.prediction === null ? " no-prediction" : ""}`);
+  const card = element("article", `match-card${prediction === null ? " no-prediction" : ""}${reconstruction ? " retrospective-card" : ""}`);
+  if (display) card.dataset.predictionType = display.kind;
   card.dataset.matchId = match.id;
   if (match.status) card.dataset.status = match.status;
   card.setAttribute("aria-label", `${match.homeTeam.name} 対 ${match.awayTeam.name}`);
@@ -39,18 +44,18 @@ export function MatchCard(match, { previous, demo }) {
       fixture.append(element("div", finished ? "fixture-score" : "fixture-versus", score));
     }
   }
-  if (match.prediction === null) {
+  if (prediction === null) {
     card.append(top, fixture, element("p", "no-prediction-note", finished || pending ? "AI予測なし" : "AI予測は未生成"));
     return card;
   }
   const heading = element("p", "bar-heading", "WIN PROBABILITY");
-  const probabilities = match.prediction.probabilities;
+  const probabilities = prediction.probabilities;
   const bar = PredictionProbabilityBar({
     homeProbability: probabilities.home, drawProbability: probabilities.draw, awayProbability: probabilities.away,
     homeColor: teamColor(match.homeTeam.id), awayColor: teamColor(match.awayTeam.id),
     homeLabel: match.homeTeam.name, awayLabel: match.awayTeam.name,
   });
-  const outcomes = highestProbabilityOutcomes(probabilities);
+  const outcomes = reconstruction ? [prediction.predictedOutcome] : highestProbabilityOutcomes(probabilities);
   const details = element("div", "prediction-details");
   const pick = element("div", "detail-item");
   pick.append(element("span", "detail-label", "AI PICK"),
@@ -68,25 +73,42 @@ export function MatchCard(match, { previous, demo }) {
   } else {
     details.append(element("span", "prediction-note", "最も確率の高い結果"));
   }
-  const saved = element("p", "saved-note", demo ? "架空の予想・結果を使ったUIプレビュー" : "試合前に保存された予想を表示");
-  saved.title = `予想保存時刻: ${match.prediction.generatedAt}`;
-  card.append(top, fixture, heading, bar, details, saved);
+  const saved = element("p", "saved-note", reconstruction ? "当時の試合前保存予測ではありません"
+    : demo ? "架空の予想・結果を使ったUIプレビュー" : "試合前に保存された予想を表示");
+  if (reconstruction) {
+    const badge = element("strong", "retrospective-label", "後日再現予測");
+    const time = element("time", "recalculated-at", "再計算: " + new Intl.DateTimeFormat("ja-JP", {
+      timeZone:"Asia/Tokyo", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false,
+    }).format(new Date(prediction.calculatedAt)) + " JST");
+    time.dateTime = prediction.calculatedAt; time.title = prediction.calculatedAt;
+    card.append(top, fixture, badge, heading, bar, details, time, saved);
+  } else {
+    saved.title = `予想保存時刻: ${prediction.generatedAt}`;
+    card.append(top, fixture, heading, bar, details, saved);
+  }
   return card;
 }
 
-export function renderDashboard(data, { demo = false } = {}) {
+export function renderDashboard(data, { demo = false, overlay = null } = {}) {
   validateDashboard(data, { demo });
+  if (overlay) validateRetrospective(overlay, data);
   const rounds = data.schemaVersion === 2;
   document.body.classList.toggle("round-view", rounds);
   const empty = data.previousRound.matches.length + data.nextRound.matches.length === 0;
   const notice = document.querySelector("#data-status");
   const message = demo ? "UI DEMO / 架空データのプレビューです。実データではありません。"
     : empty ? "Champion専用の保存済み表示データは未接続です。研究データは使用していません。"
+      : overlay ? "CHAMPION A / 公式日程・試合前保存予測・後日再現予測を表示しています。種別をカードに明示しています。"
       : rounds ? "CHAMPION A / 公式日程と保存済み予測を表示しています。予測なしの試合に確率は補完しません。"
         : "CHAMPION A / 保存済みの正式運用予想のみを表示しています。";
   notice.replaceChildren(element("span", "notice-message", message));
   if (!demo && data.updatedAt) {
     notice.append(element("span", "notice-updated", `公式データ観測: ${formatKickoff(data.updatedAt)} JST`));
+  }
+  if (overlay) {
+    notice.append(element("p", "retrospective-notice", "確認用画面 / 保存済みの試合前予測を優先し、未保存の確定試合には後日再現予測を表示。ライブ成績とは合算しません。"));
+    if (overlay.diagnostics.length) notice.append(element("p", "overlay-diagnostics",
+      `再現表示を保留: ${overlay.diagnostics.length}件（公式情報との不一致）`));
   }
   document.querySelector("#preview-link").href = demo ? "/" : "/?demo=1";
   document.querySelector("#preview-link").textContent = demo ? "通常画面へ戻る ↗" : "UIデモを見る ↗";
@@ -109,7 +131,7 @@ export function renderDashboard(data, { demo = false } = {}) {
           divider.append(date); cards.push(divider); day = matchDay;
         }
       }
-      cards.push(MatchCard(match, { previous, demo }));
+      cards.push(MatchCard(match, { previous, demo, overlay }));
     }
     if (cards.length === 0) {
       const placeholder = element("div", "empty-state");
@@ -120,9 +142,54 @@ export function renderDashboard(data, { demo = false } = {}) {
     } else container.replaceChildren(...cards);
   }
   notice.dataset.state = demo ? "demo" : empty ? "empty" : "operational";
+  renderHistory(data, overlay);
+  document.querySelector("#previous-round .section-note").textContent = overlay
+    ? "試合前保存予測と後日再現予測を区別して、正式結果と照合。"
+    : "試合前の保存済み予想と、実際の結果を並べて確認。";
 }
 
-async function connectLiveUpdates(initialData) {
+function renderHistory(data, overlay) {
+  const existing = document.getElementById("retrospective-history");
+  if (!overlay) { existing?.remove(); return; }
+  const selected = existing?.querySelector("select")?.value;
+  const opened = existing?.open ?? false;
+  const panel = element("details", "history-section"); panel.id = "retrospective-history";
+  panel.open = opened;
+  panel.append(element("summary", "", "過去の節を見る · 後日再現予測を含む履歴"));
+  panel.append(element("p", "history-note", "試合前保存予測と後日再現予測は別の種別です。成績は合算しません。当時の公式掲載状況は未立証です。"));
+  const label = element("label", "history-select-label", "表示する節 ");
+  const select = element("select", ""); select.id = "history-round";
+  for (const section of overlay.historyRounds) {
+    const option = element("option", "", `${section.label} · ${section.matches.length}試合`);
+    option.value = String(section.number); select.append(option);
+  }
+  select.value = overlay.historyRounds.some(r => String(r.number) === selected) ? selected : String(data.previousRound.number ?? overlay.historyRounds[0].number);
+  if (!select.value) select.value = String(overlay.historyRounds[0].number);
+  label.append(select); panel.append(label);
+  const container = element("div", "match-grid"); container.id = "history-matches"; panel.append(container);
+  function show() {
+    if (!panel.open) { container.replaceChildren(); return; }
+    const section = overlay.historyRounds.find(r => String(r.number) === select.value);
+    const cards = []; let day = null;
+    for (const match of section.matches) {
+      const matchDay = new Intl.DateTimeFormat("sv-SE", { timeZone:"Asia/Tokyo", year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date(match.kickoffAt));
+      if (matchDay !== day) { cards.push(element("h3", "match-date-divider", matchDay)); day = matchDay; }
+      cards.push(MatchCard(match, { previous:true, demo:false, overlay }));
+    }
+    container.replaceChildren(...cards);
+  }
+  select.addEventListener("change", show); panel.addEventListener("toggle", show);
+  if (existing) existing.replaceWith(panel); else document.querySelector(".rounds").append(panel);
+  show();
+}
+
+async function fetchOverlay(data) {
+  const response = await fetch("/api/retrospective", { cache:"no-store", credentials:"same-origin" });
+  if (!response.ok) throw new Error("後日再現データを接続できません。通常画面は ?retrospective=1 を外して開けます。");
+  return validateRetrospective(await response.json(), data);
+}
+
+async function connectLiveUpdates(initialData, initialOverlay = null) {
   const response = await fetch("/api/update-status", { cache: "no-store", credentials: "same-origin" });
   if (!response.ok) return;
   const initialStatus = await response.json();
@@ -132,15 +199,15 @@ async function connectLiveUpdates(initialData) {
   const panel = document.querySelector("#update-status");
   const message = document.querySelector("#update-message");
   const button = document.querySelector("#reload-dashboard");
-  let signature = JSON.stringify(initialData), busy = false;
+  let signature = JSON.stringify([initialData, initialOverlay]), busy = false;
   panel.hidden = false;
   function show(status) {
     if (!["idle", "updating", "ready", "error"].includes(status.state)) throw new Error("更新状態が不正です");
     panel.dataset.state = status.state;
     const labels = { idle: "定期更新を待っています", updating: "公式データを確認・更新しています",
       ready: "更新済み", error: "更新できませんでした。前回の正常な表示を保持しています" };
-    message.textContent = labels[status.state] + (status.lastSuccessAt
-      ? " · 最終成功: " + formatKickoff(status.lastSuccessAt) + " JST" : "");
+    message.textContent = (initialOverlay ? "確認用表示 / " : "") + labels[status.state] + (status.lastSuccessAt
+      ? (initialOverlay ? " · 表示JSON生成: " : " · 最終成功: ") + formatKickoff(status.lastSuccessAt) + " JST" : "");
   }
   show(initialStatus);
   async function reload() {
@@ -155,10 +222,11 @@ async function connectLiveUpdates(initialData) {
       if (!dataResponse.ok || !statusResponse.ok) throw new Error("再読込に失敗しました");
       const [data, status] = await Promise.all([dataResponse.json(), statusResponse.json()]);
       validateDashboard(data);
+      const overlay = initialOverlay ? await fetchOverlay(data) : null;
       show(status);
-      if (JSON.stringify(data) !== signature) {
-        renderDashboard(data);
-        signature = JSON.stringify(data);
+      if (JSON.stringify([data, overlay]) !== signature) {
+        renderDashboard(data, { overlay });
+        signature = JSON.stringify([data, overlay]);
       }
     } catch {
       panel.dataset.state = "error";
@@ -183,8 +251,9 @@ async function start() {
       if (!response.ok) throw new Error("表示用APIからデータを取得できませんでした");
       data = await response.json();
     }
-    renderDashboard(data, { demo });
-    if (!demo) connectLiveUpdates(data).catch(() => {});
+    const overlay = !demo && new URLSearchParams(location.search).get("retrospective") === "1" ? await fetchOverlay(data) : null;
+    renderDashboard(data, { demo, overlay });
+    if (!demo) connectLiveUpdates(data, overlay).catch(() => {});
   } catch (error) {
     // Fail closed. Never fall back to synthetic or research predictions on API/schema failure.
     document.querySelector("#data-status").dataset.state = "error";

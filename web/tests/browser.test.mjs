@@ -9,6 +9,8 @@ import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { syntheticRetrospective } from './retrospective-fixture.mjs';
+import { validateRetrospective, selectDisplayPrediction } from '../retrospective-data.js';
 
 const webRoot = fileURLToPath(new URL('../', import.meta.url));
 const browserPath = [
@@ -142,9 +144,15 @@ async function startServer(initialPayload) {
   let payload = initialPayload;
   let apiStatus = 200;
   let updateStatus = null;
+  let overlay = null;
   const server = http.createServer(async (request, response) => {
     try {
       const pathname = new URL(request.url, 'http://127.0.0.1').pathname;
+      if (pathname === '/api/retrospective') {
+        response.writeHead(overlay ? 200 : 404, { 'Content-Type':'application/json' });
+        response.end(JSON.stringify(overlay));
+        return;
+      }
       if (pathname === '/api/update-status' && updateStatus) {
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(updateStatus));
@@ -181,6 +189,7 @@ async function startServer(initialPayload) {
     origin: `http://127.0.0.1:${server.address().port}`,
     setPayload(next, status = 200) { payload = next; apiStatus = status; },
     setUpdateStatus(next) { updateStatus = next; },
+    setOverlay(next) { overlay = next; },
     stop: () => new Promise((resolve, reject) => server.close((error) => {
       if (error) reject(error);
       else resolve();
@@ -439,6 +448,49 @@ test('home dashboard browser integration (synthetic data only)', {
     }
   });
 
+  await context.test('independent retrospective overlay preserves four saved predictions and reload types', async () => {
+    const {data,overlay} = syntheticRetrospective();
+    server.setPayload(data); server.setOverlay(overlay);
+    server.setUpdateStatus({ state:'ready',startedAt:null,finishedAt:null,lastSuccessAt:data.updatedAt,
+      errorCode:null,pollEnabled:true,pollSeconds:60 });
+    const injection = await client.send('Page.addScriptToEvaluateOnNewDocument', { source:`
+      window.__nativeSetTimeout = window.setTimeout;
+      window.setTimeout = function(callback, interval, ...args) {
+        if (interval === 60000) { window.__poll60 = callback; return 0; }
+        return window.__nativeSetTimeout(callback, interval, ...args);
+      };` });
+    await navigate(client, server.origin+'/?retrospective=1', "document.querySelectorAll('[data-prediction-type=retrospective_reconstruction]').length === 16");
+    await client.until("typeof window.__poll60 === 'function'",'60-second timer registered');
+    assert.equal(await client.evaluate("document.querySelectorAll('[data-prediction-type=saved_pre_match]').length"),4);
+    assert.equal(await client.evaluate("document.querySelectorAll('.retrospective-label').length"),16);
+    assert.equal(await client.evaluate("document.querySelectorAll('.probability-bar').length"),20);
+    assert.equal(await client.evaluate("document.querySelectorAll('.retrospective-card .outcome-badge.hit').length"),16);
+    assert.match(await client.evaluate("document.querySelector('.retrospective-card').textContent"),/当時の試合前保存予測ではありません/);
+    assert.equal(await client.evaluate("document.querySelector('.recalculated-at').dateTime"),'2026-10-18T05:00:00Z');
+    const before=await client.evaluate("document.querySelector('#previous-matches').innerHTML");
+    // Invoke the registered 60-second callback; no artificial timestamp enters a predictor.
+    await client.evaluate("window.__poll60()");
+    await client.until("!document.querySelector('#reload-dashboard').disabled",'scheduled display reload');
+    assert.equal(await client.evaluate("document.querySelector('#previous-matches').innerHTML"),before);
+    await client.evaluate("document.querySelector('#retrospective-history').open=true");
+    await client.until("document.querySelectorAll('#history-matches .match-card').length===10",'history round');
+    await client.evaluate("document.querySelector('#history-round').value='10';document.querySelector('#history-round').dispatchEvent(new Event('change'))");
+    assert.equal(await client.evaluate("document.querySelectorAll('#history-matches [data-prediction-type=saved_pre_match]').length"),2);
+    assert.equal(await client.evaluate("document.querySelectorAll('#history-matches [data-prediction-type=retrospective_reconstruction]').length"),8);
+    for(const width of [1280,375]) {
+      await viewport(client,width);
+      assert.ok(await client.evaluate("document.documentElement.scrollWidth <= innerWidth"));
+      assert.equal(await client.evaluate("getComputedStyle(document.querySelector('.match-grid')).gridTemplateColumns.split(' ').length"),width>760?2:1);
+    }
+    await captureScreenshot(client,'retrospective-mobile.png');
+    const broken=structuredClone(overlay);broken.entries[0].reconstruction.type='saved_pre_match';server.setOverlay(broken);
+    await client.evaluate("document.querySelector('#reload-dashboard').click()");
+    await client.until("document.querySelector('#update-status').dataset.state==='error'",'bad overlay keeps last valid view');
+    assert.equal(await client.evaluate("document.querySelector('#previous-matches').innerHTML"),before);
+    server.setOverlay(null);server.setUpdateStatus(null);
+    await client.send('Page.removeScriptToEvaluateOnNewDocument',{identifier:injection.identifier});
+  });
+
   await context.test('live updates replace valid cards and preserve them on failure', async () => {
     const initial = dashboardPayload(
       [syntheticMatch('live-previous', { home: 31, draw: 25, away: 44 }, true)],
@@ -487,4 +539,81 @@ test('home dashboard browser integration (synthetic data only)', {
     assert.equal(await client.evaluate(`document.querySelector('#dashboard-error').hidden`), false);
     assert.equal(await client.evaluate(`document.querySelectorAll('.match-card').length`), 0);
   });
+});
+
+test('explicit loopback retrospective preview (read-only, opt-in)', {
+  skip: !process.env.J1AI_RETROSPECTIVE_PREVIEW_URL && 'No explicit isolated preview URL supplied',
+  timeout: 100000,
+}, async (context) => {
+  const url = new URL(process.env.J1AI_RETROSPECTIVE_PREVIEW_URL);
+  assert.equal(url.protocol,'http:'); assert.equal(url.hostname,'127.0.0.1');
+  assert.equal(url.pathname,'/'); assert.equal(url.search,'?retrospective=1');
+  const [data,overlay] = await Promise.all(['/api/dashboard','/api/retrospective'].map(async route => {
+    const response=await fetch(new URL(route,url),{signal:AbortSignal.timeout(5000)});
+    assert.equal(response.status,200); return response.json();
+  }));
+  validateRetrospective(overlay,data);
+  let browser=await startBrowser();
+  context.after(async()=>{
+    if (browser) { await browser.client.send('Browser.close').catch(()=>{}); browser.client.close(); await browser.stop(); }
+  });
+  async function inspect(client) {
+    await navigate(client,url.href,"document.querySelectorAll('#previous-matches .match-card,#next-matches .match-card').length===20");
+    await client.until("document.querySelector('#update-status').hidden===false",'preview reload controls');
+    const snapshot=await client.evaluate(`Array.from(document.querySelectorAll('#previous-matches .match-card,#next-matches .match-card')).map(card=>({
+      id:card.dataset.matchId,type:card.dataset.predictionType,
+      teams:Array.from(card.querySelectorAll('.team-name')).map(n=>n.textContent),
+      score:card.querySelector('.fixture-score')?.textContent ?? null,
+      bar:card.querySelector('.prediction-probability')?.getAttribute('aria-label'),
+      result:card.querySelector('.outcome-badge')?.textContent ?? null,
+      note:card.querySelector('.saved-note')?.textContent,title:card.querySelector('.saved-note')?.title,
+      recalculatedAt:card.querySelector('.recalculated-at')?.dateTime ?? null
+    }))`);
+    assert.equal(snapshot.filter(c=>c.type==='saved_pre_match').length,4);
+    assert.equal(snapshot.filter(c=>c.type==='retrospective_reconstruction').length,16);
+    for(const match of [...data.previousRound.matches,...data.nextRound.matches]) {
+      const card=snapshot.find(c=>c.id===match.id), display=selectDisplayPrediction(match,overlay);
+      assert.ok(card); assert.equal(card.type,display.kind);
+      assert.deepEqual(card.teams,[match.homeTeam.name,match.awayTeam.name]);
+      for(const side of ['home','draw','away']) assert.ok(card.bar.includes(`${display.value.probabilities[side]}%`));
+      if(match.result) assert.equal(card.score,`${match.result.homeScore} − ${match.result.awayScore}`);
+      else assert.equal(card.score,null);
+      if(display.kind==='retrospective_reconstruction') {
+        assert.equal(card.recalculatedAt,display.value.calculatedAt);
+        assert.equal(card.note,'当時の試合前保存予測ではありません');
+        assert.equal(card.result,display.value.hit?'✓ HIT':'× MISS');
+      } else {
+        assert.equal(card.note,'試合前に保存された予想を表示');
+        assert.equal(card.title,`予想保存時刻: ${match.prediction.generatedAt}`);
+      }
+    }
+    return snapshot;
+  }
+  const before=await inspect(browser.client);
+  await browser.client.send('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
+  await captureScreenshot(browser.client,'retrospective-real-desktop.png');
+  const seen=[];
+  await browser.client.evaluate("document.querySelector('#retrospective-history').open=true");
+  for(const section of overlay.historyRounds) {
+    await browser.client.evaluate(`document.querySelector('#history-round').value=${JSON.stringify(String(section.number))};document.querySelector('#history-round').dispatchEvent(new Event('change'))`);
+    await browser.client.until("document.querySelectorAll('#history-matches .match-card').length===10",'history cards');
+    const selected=await browser.client.evaluate("Array.from(document.querySelectorAll('#history-matches .match-card')).map(c=>({id:c.dataset.matchId,status:c.dataset.status,type:c.dataset.predictionType}))");
+    assert.deepEqual(selected.map(c=>c.id),section.matches.map(m=>m.id));
+    seen.push(...selected.filter(c=>c.status==='completed').map(c=>c.id));
+  }
+  assert.equal(new Set(seen).size,98);
+  await browser.client.evaluate("document.querySelector('#retrospective-history').open=false");
+  await browser.client.send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});
+  assert.ok(await browser.client.evaluate("document.documentElement.scrollWidth<=innerWidth"));
+  await captureScreenshot(browser.client,'retrospective-real-mobile.png');
+  await browser.client.send('Emulation.clearDeviceMetricsOverride');
+  await browser.client.evaluate(`window.__previewReads=0;const savedFetch=window.fetch;window.fetch=function(input,...args){
+    if(String(input)==='/api/dashboard')window.__previewReads++;return savedFetch.call(this,input,...args);};`);
+  await delay(61000);
+  assert.ok(await browser.client.evaluate("window.__previewReads>=1"),'actual 60-second poll read the display API');
+  assert.equal(await browser.client.evaluate("document.querySelector('#update-status').dataset.state"),'ready');
+  // Reopening the browser uses another owned temporary profile and the same retained server.
+  await browser.client.send('Browser.close').catch(()=>{});browser.client.close();await browser.stop();browser=null;
+  browser=await startBrowser();
+  assert.deepEqual(await inspect(browser.client),before);
 });

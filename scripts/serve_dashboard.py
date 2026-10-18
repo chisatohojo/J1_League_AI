@@ -37,6 +37,7 @@ STATIC_ROUTES = {
     "/dashboard-data.js": ("dashboard-data.js", "text/javascript"),
     "/team-colors.js": ("team-colors.js", "text/javascript"),
     "/demo-data.js": ("demo-data.js", "text/javascript"),
+    "/retrospective-data.js": ("retrospective-data.js", "text/javascript"),
 }
 TEAM_ID = re.compile(r"team_[0-9]{4}\Z")
 MAX_TEXT_LENGTH = 200
@@ -246,6 +247,8 @@ def create_server(
     status_path: Path | None = None,
     reload_data: bool = False,
     poll_seconds: int = 60,
+    retrospective_path: Path | None = None,
+    retrospective_sha: str | None = None,
 ) -> ThreadingHTTPServer:
     """Create a loopback-only, GET-only server using an immutable JSON snapshot."""
     approved = validate_dashboard_data(empty_dashboard() if payload is None else payload)
@@ -258,6 +261,16 @@ def create_server(
     snapshot_lock = Lock()
     reload_error = None
     last_observed = approved["updatedAt"]
+
+    def read_overlay():
+        # Optional separate lane: ordinary v1/v2 servers never import or read it.
+        from scripts.dashboard_retrospective import read_json, sha, validate_overlay, safe_path
+        if not retrospective_sha or sha(safe_path(retrospective_path).read_bytes()) != retrospective_sha:
+            raise DashboardDataError("Retrospective display SHA mismatch")
+        return validate_overlay(read_json(retrospective_path), json.loads(api_bytes))
+
+    if retrospective_path is not None:
+        read_overlay()  # Refuse a broken explicit preview before opening a listener.
 
     def refresh():
         nonlocal api_bytes, reload_error, last_observed
@@ -318,6 +331,19 @@ def create_server(
 
         def do_GET(self) -> None:
             route = unquote(urlsplit(self.path).path)
+            if route == "/api/retrospective":
+                if retrospective_path is None:
+                    self.send_error(404, "Retrospective overlay not connected")
+                    return
+                try:
+                    with snapshot_lock:
+                        refresh()
+                        content = json.dumps(read_overlay(), ensure_ascii=False, allow_nan=False).encode("utf-8")
+                except (OSError, ValueError, KeyError, TypeError):
+                    self.send_error(503, "Retrospective overlay unavailable")
+                    return
+                self._send(content, "application/json")
+                return
             if route == "/api/dashboard":
                 with snapshot_lock:
                     refresh()
@@ -373,6 +399,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reload", action="store_true", help="Validate and reload only the explicitly supplied JSON; retain last good data on failure")
     parser.add_argument("--status", type=Path, help="Explicit update-status JSON, used only with --reload")
     parser.add_argument("--poll-seconds", type=int, default=60, help="Browser refresh interval, 10..3600 (default 60)")
+    parser.add_argument("--retrospective", type=Path, help="Explicit independent preview overlay; never replaces saved prediction.source")
+    parser.add_argument("--retrospective-sha", help="Required SHA-256 anchor for the immutable preview overlay")
     args = parser.parse_args(argv)
     if not 0 <= args.port <= 65535:
         parser.error("--port must be between 0 and 65535")
@@ -380,12 +408,15 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--reload/--status require --data")
     if args.status and not args.reload:
         parser.error("--status requires --reload")
+    if bool(args.retrospective) != bool(args.retrospective_sha) or args.retrospective and not args.data:
+        parser.error("--retrospective requires --data and --retrospective-sha")
     try:
         payload = load_dashboard_data(args.data)
         server = create_server(payload, port=args.port, data_path=args.data,
                                status_path=args.status, reload_data=args.reload,
-                               poll_seconds=args.poll_seconds)
-    except (DashboardDataError, OSError) as exc:
+                               poll_seconds=args.poll_seconds, retrospective_path=args.retrospective,
+                               retrospective_sha=args.retrospective_sha)
+    except (ValueError, OSError, KeyError, TypeError) as exc:
         print(f"Dashboard startup rejected: {exc}", file=sys.stderr)
         return 2
     address, port = server.server_address

@@ -168,3 +168,13 @@ h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.5px; margin: 0; line-
   .prediction-details { gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.retrospective-card { border-top: 3px solid #8b703f; }
+.retrospective-label { display: inline-block; margin-top: 15px; padding: 5px 8px; border-radius: 4px; color: #725729; background: #f4eedf; font-size: 11px; }
+.recalculated-at { display: block; margin-top: 15px; font-size: 10px; color: var(--muted); }
+.retrospective-notice, .overlay-diagnostics { margin: 12px 0 0; line-height: 1.8; }
+.history-section { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 30px; }
+.history-section > summary { font-size: 16px; font-weight: 700; cursor: pointer; }
+.history-note { color: var(--muted); font-size: 12px; line-height: 1.9; }
+.history-select-label { display: block; margin: 18px 0; font-size: 13px; }
+#history-round { padding: 9px 12px; border: 1px solid var(--line); border-radius: 5px; background: white; color: var(--ink); }
