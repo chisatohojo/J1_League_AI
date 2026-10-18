@@ -179,6 +179,34 @@ browser profileは以下にbrowser別で分離します。
 削除しません。browser起動processは所有記録として生成しますが、window寿命の証拠には
 使わず、終了命令も送りません。
 
+## 後日再現表示を通常ブラウザーで開く
+
+専用アプリモードで再表示時に白画面となる環境では、後日再現表示に限り
+`--browser-mode default` を明示できます。白画面の原因を修正したという意味ではありません。
+
+```powershell
+pythonw.exe -B C:\approved-code\scripts\launch_dashboard.py --runtime C:\approved-display-store --view retrospective --store-sha <store.jsonのSHA256> --python C:\approved-venv\Scripts\python.exe --browser-mode default
+```
+
+表示ストアのSHA検証と動的loopbackポートは従来どおりです。検証後のURL
+`http://127.0.0.1:<割当ポート>/?retrospective=1` をWindowsのHTTP関連付けで開きます。
+ブラウザーの指定、診断ポート、DevTools、プロファイル設定の変更は行いません。
+Windowsによる起動要求の受付は、画面の描画成功を保証するものではありません。
+
+通常ブラウザー専用のIPC・ログ・所有サーバーを使用し、既存のアプリモードやv1/v2とは
+分離します。タブを×で閉じてもサーバーは維持します。同じショートカットを再実行すると
+同じサーバーのURLを開きます。他のタブは閉じず、ブラウザープロセスも終了しません。
+通常の履歴等は既定ブラウザーの設定に従います。
+
+このモードのサーバーだけを停止する場合も、同じモードを明示します。
+
+```powershell
+python.exe -B C:\approved-code\scripts\launch_dashboard.py --runtime C:\approved-display-store --view retrospective --browser-mode default --stop
+```
+
+停止は所有サーバーだけを対象とし、タブは閉じません。再起動後も同じ絶対パスの
+ショートカットから起動できます。コード・Python・表示ストアの移動や削除はしないでください。
+
 ## Champion-only JSONとの関係
 
 従来の単一JSONスナップショットも明示指定できます。

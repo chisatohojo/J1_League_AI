@@ -903,3 +903,148 @@ def test_base_interpreter_probe_failure_never_creates_server(fake_root, monkeypa
     with pytest.raises(launcher.LauncherError, match="Cannot start the dashboard server"):
         launcher.start_server(fake_root / ".venv/Scripts/python.exe", fake_root, None)
     spawn.assert_not_called()
+
+
+def test_default_browser_opens_only_windows_association(monkeypatch):
+    open_url = Mock()
+    monkeypatch.setattr(launcher.os, "startfile", open_url, raising=False)
+    assert launcher.start_default_browser("http://127.0.0.1:45678/") is None
+    open_url.assert_called_once_with("http://127.0.0.1:45678/?retrospective=1", "open")
+
+
+@pytest.mark.parametrize("url", ["https://example.com/", "http://localhost:80/",
+    "http://127.0.0.1:0/", "http://127.0.0.1:45678/?demo=1", "file:///private"])
+def test_default_browser_rejects_noncanonical_urls_without_shell(monkeypatch, url):
+    open_url = Mock()
+    monkeypatch.setattr(launcher.os, "startfile", open_url, raising=False)
+    with pytest.raises(launcher.LauncherError):
+        launcher.start_default_browser(url)
+    open_url.assert_not_called()
+
+
+def test_default_browser_failure_is_not_silently_successful(monkeypatch):
+    monkeypatch.setattr(launcher.os, "startfile", Mock(side_effect=OSError("private detail")), raising=False)
+    with pytest.raises(launcher.LauncherError) as error:
+        launcher.start_default_browser("http://127.0.0.1:45678/")
+    assert error.value.code == "default_browser_failed"
+    assert "private detail" not in str(error.value)
+
+
+@pytest.mark.parametrize("view", ["legacy", "rounds"])
+def test_default_browser_is_retrospective_only(fake_root, view):
+    with pytest.raises(launcher.LauncherError):
+        launcher.runtime_scope(fake_root, fake_root / "store", view, browser_mode="default")
+    with pytest.raises(SystemExit) as error:
+        launcher.main(["--runtime", "synthetic", "--view", view, "--browser-mode", "default"])
+    assert error.value.code == 2
+
+
+def test_default_browser_reopens_same_validated_store_without_app_profile(runtime, fake_root, tmp_path, monkeypatch):
+    from scripts.retrospective_generations import publish_pair
+    from test_retrospective_generations import synthetic_pair
+    store = tmp_path / "display-store"
+    anchor = publish_pair(store, *synthetic_pair(), "7" * 64)["store_sha256"]
+    open_url = Mock()
+    find = Mock(side_effect=AssertionError("Default mode must not discover Edge/Chrome"))
+    monkeypatch.setattr(launcher, "start_default_browser", open_url)
+    monkeypatch.setattr(launcher, "find_browser", find)
+    runtime.state.stop_requested.side_effect = [False, False, False, True]
+    runtime.state.open_requested.side_effect = [True, True, True]
+    assert launcher.run_launcher(fake_root, runtime=store, view="retrospective",
+        store_sha=anchor, browser_mode="default") == 0
+    runtime.start.assert_called_once_with(fake_root / ".venv/Scripts/python.exe", fake_root,
+        None, presentation_root=store, store_sha=anchor)
+    runtime.ready.assert_called_once_with(runtime.server, 20.0, require_data=True, expected_version=2)
+    assert open_url.call_count == 4
+    assert all(call.args == ("http://127.0.0.1:45678/",) for call in open_url.call_args_list)
+    runtime.browser.assert_not_called()
+    find.assert_not_called()
+    assert not (fake_root / "local/edge-profile").exists()
+    runtime.browser_process.poll.assert_not_called()
+    runtime.browser_process.terminate.assert_not_called()
+    runtime.server.terminate.assert_called_once()
+    assert runtime.events == ["started", "reopened", "reopened", "reopened", "stopped"]
+
+
+def test_default_browser_duplicate_and_stop_use_own_scope(runtime, fake_root, monkeypatch):
+    factory = Mock(return_value=runtime.state)
+    open_url = Mock()
+    monkeypatch.setattr(launcher, "WindowsInstance", factory)
+    monkeypatch.setattr(launcher, "start_default_browser", open_url)
+    store = fake_root / "missing-store"
+    runtime.state.acquire.return_value = False
+    for stop in (False, True):
+        assert launcher.run_launcher(fake_root, runtime=store, view="retrospective",
+            browser_mode="default", stop=stop) == 0
+    expected = launcher.runtime_scope(fake_root, store, "retrospective", browser_mode="default")
+    assert all(call.args == (expected,) and call.kwargs == {"reopen": True}
+               for call in factory.call_args_list)
+    runtime.state.signal_open.assert_called_once()
+    runtime.state.signal_stop.assert_called_once()
+    open_url.assert_not_called()
+    runtime.start.assert_not_called()
+    runtime.server.terminate.assert_not_called()
+
+
+@pytest.mark.parametrize("stop", [False, True])
+def test_default_browser_cli_preserves_explicit_mode_for_start_and_stop(fake_root, monkeypatch, stop):
+    run = Mock(return_value=0)
+    monkeypatch.setattr(launcher, "run_launcher", run)
+    monkeypatch.setattr(launcher, "repository_root", lambda: fake_root)
+    store = fake_root / "display-store"
+    args = ["--runtime", str(store), "--view", "retrospective", "--browser-mode", "default"]
+    args += ["--stop"] if stop else ["--store-sha", "1" * 64]
+    assert launcher.main(args) == 0
+    assert run.call_args.args == (fake_root,)
+    assert run.call_args.kwargs["runtime"] == store
+    assert run.call_args.kwargs["browser_mode"] == "default"
+    assert run.call_args.kwargs["stop"] is stop
+    assert run.call_args.kwargs["store_sha"] == (None if stop else "1" * 64)
+
+
+def test_default_browser_rejects_invalid_store_before_opening(runtime, fake_root, tmp_path, monkeypatch):
+    open_url = Mock()
+    monkeypatch.setattr(launcher, "start_default_browser", open_url)
+    with pytest.raises(launcher.LauncherError):
+        launcher.run_launcher(fake_root, runtime=tmp_path / "missing", view="retrospective",
+            store_sha="1" * 64, browser_mode="default")
+    open_url.assert_not_called()
+    runtime.start.assert_not_called()
+
+
+def test_default_browser_open_failure_stops_only_its_server(runtime, fake_root, tmp_path, monkeypatch):
+    from scripts.retrospective_generations import publish_pair
+    from test_retrospective_generations import synthetic_pair
+    store = tmp_path / "display-store"
+    anchor = publish_pair(store, *synthetic_pair(), "7" * 64)["store_sha256"]
+    monkeypatch.setattr(launcher, "start_default_browser",
+        Mock(side_effect=launcher.LauncherError("default_browser_failed")))
+    with pytest.raises(launcher.LauncherError):
+        launcher.run_launcher(fake_root, runtime=store, view="retrospective",
+            store_sha=anchor, browser_mode="default")
+    runtime.server.terminate.assert_called_once()
+    runtime.browser.assert_not_called()
+    runtime.state.close.assert_called_once()
+
+
+@pytest.mark.skipif(launcher.sys.platform != "win32", reason="real kernel objects are Windows-only")
+def test_default_browser_kernel_open_stop_and_recovery_are_separate(tmp_path):
+    root, store = tmp_path / "repo", tmp_path / "store"
+    app_scope = launcher.runtime_scope(root, store, "retrospective")
+    tab_scope = launcher.runtime_scope(root, store, "retrospective", browser_mode="default")
+    assert len({app_scope, tab_scope, launcher.runtime_scope(root, store),
+                launcher.runtime_scope(root, store, "rounds")}) == 4
+    app = launcher.WindowsInstance(app_scope, reopen=True)
+    tab = launcher.WindowsInstance(tab_scope, reopen=True)
+    duplicate = launcher.WindowsInstance(tab_scope, reopen=True)
+    recovered = launcher.WindowsInstance(tab_scope, reopen=True)
+    try:
+        assert app.acquire() and tab.acquire() and not duplicate.acquire()
+        assert duplicate.signal_open() and tab.open_requested() and not tab.open_requested()
+        assert not app.open_requested()
+        assert duplicate.signal_stop() and tab.stop_requested(0) and not app.stop_requested(0)
+        tab.close()
+        assert recovered.acquire() and not recovered.stop_requested(0)
+    finally:
+        for instance in (app, tab, duplicate, recovered):
+            instance.close()

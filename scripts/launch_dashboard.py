@@ -42,6 +42,7 @@ MESSAGES = {
     "invalid_url": "The server did not provide a valid loopback dashboard URL.",
     "invalid_response": "The dashboard response is not the expected operational Champion schema.",
     "browser_spawn_failed": "Cannot start the browser in app mode. No tab fallback was attempted.",
+    "default_browser_failed": "Windows could not open the dashboard URL in the default browser.",
     "cleanup_failed": "The owned server could not be stopped. See the safe cleanup instructions.",
     "unexpected_failure": "Launcher setup failed. Check local permissions, venv and browser availability.",
     "runtime_missing": "The selected runtime must contain the selected view JSON and view/update-status.json. No empty or demo fallback was used.",
@@ -73,11 +74,15 @@ def find_python(root: Path, explicit: Path | None = None) -> Path:
     return executable
 
 
-def runtime_scope(root: Path, runtime: Path | None, view="legacy") -> Path:
+def runtime_scope(root: Path, runtime: Path | None, view="legacy", *, browser_mode="app") -> Path:
     # A separate kernel/profile namespace; this path is never created.
     if view not in {"legacy", "rounds", "retrospective"} or view != "legacy" and runtime is None:
         raise LauncherError("runtime_missing")
+    if browser_mode not in {"app", "default"} or browser_mode == "default" and view != "retrospective":
+        raise LauncherError("runtime_missing")
     suffix = "-"+view if view != "legacy" else ""
+    if browser_mode == "default":
+        suffix += "-default-browser"
     return root if runtime is None else root / (".champion-" + instance_id(runtime) + suffix)
 
 
@@ -318,6 +323,19 @@ def start_browser(browser: Path, url: str, profile: Path, root: Path, *, softwar
         raise LauncherError("browser_spawn_failed") from None
 
 
+def start_default_browser(url: str) -> None:
+    """Ask Windows to open only a validated loopback URL; never manage its browser.
+
+    ShellExecute acceptance is an open request, not proof of rendered content.
+    No executable discovery, browser flags, profile edits or process ownership.
+    """
+    validate_url(url)
+    try:
+        os.startfile(url + "?retrospective=1", "open")
+    except OSError:
+        raise LauncherError("default_browser_failed") from None
+
+
 def _read_startup_url(stream, messages: queue.Queue) -> None:
     # Never forward stdout/stderr or data into a log or error message.
     try:
@@ -471,9 +489,10 @@ def stop_owned_server(process) -> None:
 
 
 def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False,
-                 runtime: Path | None = None, python: Path | None = None, view="legacy", store_sha=None) -> int:
+                 runtime: Path | None = None, python: Path | None = None, view="legacy", store_sha=None,
+                 browser_mode="app") -> int:
     require_windows()
-    owner = runtime_scope(root, runtime, view)
+    owner = runtime_scope(root, runtime, view, browser_mode=browser_mode)
     controls = WindowsInstance(root) if runtime is None else WindowsInstance(owner, reopen=True)
     server = None
     try:
@@ -497,8 +516,9 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
                          "If the app window is closed, run the documented --stop command before restarting.")
             return 0
         python = find_python(root) if python is None else find_python(root, python)
-        browser = find_browser()
-        profile = local_directory(owner) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
+        if browser_mode == "app":
+            browser = find_browser()
+            profile = local_directory(owner) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
         if runtime is not None:
             if view == "retrospective":
                 validate_presentation_store(runtime,store_sha)
@@ -517,7 +537,13 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
         # the supported Windows PC. Keep the legacy browser command unchanged.
         browser_options = ({"software_rendering":True,"retrospective":True} if view == "retrospective" else
                            {"software_rendering": True} if view == "rounds" else {})
-        start_browser(browser, url, profile, root, **browser_options)
+        def open_dashboard():
+            if browser_mode == "default":
+                start_default_browser(url)
+            else:
+                start_browser(browser, url, profile, root, **browser_options)
+
+        open_dashboard()
         record_event(owner, "started")
         # No browser poll()/wait(), window manipulation, taskkill, or profile
         # deletion. Chromium's startup PID is not a window-lifetime witness.
@@ -525,7 +551,7 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
             if server.poll() is not None:
                 raise LauncherError("server_exited")
             if runtime is not None and controls.open_requested():
-                start_browser(browser, url, profile, root, **browser_options)
+                open_dashboard()
                 record_event(owner, "reopened")
         record_event(owner, "stopped")
         return 0
@@ -555,6 +581,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--runtime", type=Path, help="Explicit Champion runtime; enables status and 60-second reload, no acquisition")
     parser.add_argument("--view", choices=("legacy", "rounds", "retrospective"), default="legacy", help="Separate instance/profile; retrospective --runtime points to an independent display store")
     parser.add_argument("--store-sha",help="Retrospective store.json SHA-256; no generation or model execution at launch")
+    parser.add_argument("--browser-mode", choices=("app", "default"), default="app",
+                        help="Retrospective only: default opens the Windows default browser with separate server/IPC ownership")
     parser.add_argument("--python", type=Path, help="Explicit existing python.exe when code and venv are in separate worktrees")
     parser.add_argument("--startup-timeout", type=positive_timeout, default=20.0, help="Bounded server readiness wait in seconds (default: 20)")
     args = parser.parse_args(argv)
@@ -562,18 +590,21 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--runtime and --data are mutually exclusive")
     if args.view != "legacy" and args.runtime is None:
         parser.error("Selected view requires --runtime")
+    if args.browser_mode == "default" and args.view != "retrospective":
+        parser.error("--browser-mode default requires --view retrospective")
     if args.view == "retrospective" and not args.stop and not args.store_sha or args.store_sha and args.view != "retrospective":
         parser.error("--store-sha is required only for retrospective display startup")
     root = repository_root()
     try:
         return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop,
                             runtime=args.runtime, python=args.python, view=args.view,
-                            **({"store_sha":args.store_sha} if args.view=="retrospective" else {}))
+                            **({"store_sha":args.store_sha} if args.view=="retrospective" else {}),
+                            **({"browser_mode":args.browser_mode} if args.browser_mode != "app" else {}))
     except (Exception, KeyboardInterrupt) as exc:
         code = exc.code if isinstance(exc, LauncherError) else "unexpected_failure"
         # No exception string, traceback, server output or response body is logged.
         try:
-            record_event(runtime_scope(root, args.runtime, args.view), code)
+            record_event(runtime_scope(root, args.runtime, args.view, browser_mode=args.browser_mode), code)
         except Exception:
             pass
         show_message(MESSAGES[code] + "\nSee docs/UI_WINDOWS_LAUNCHER.md for troubleshooting.", error=True)
