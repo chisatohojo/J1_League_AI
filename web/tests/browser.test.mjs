@@ -9,7 +9,7 @@ import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { syntheticRetrospective } from './retrospective-fixture.mjs';
+import { syntheticRetrospective, syntheticGeneration } from './retrospective-fixture.mjs';
 import { validateRetrospective, selectDisplayPrediction } from '../retrospective-data.js';
 
 const webRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -145,9 +145,14 @@ async function startServer(initialPayload) {
   let apiStatus = 200;
   let updateStatus = null;
   let overlay = null;
+  let presentation = null;
   const server = http.createServer(async (request, response) => {
     try {
       const pathname = new URL(request.url, 'http://127.0.0.1').pathname;
+      if(pathname==='/api/presentation') {
+        response.writeHead(presentation?200:404,{'Content-Type':'application/json'});
+        response.end(JSON.stringify(presentation));return;
+      }
       if (pathname === '/api/retrospective') {
         response.writeHead(overlay ? 200 : 404, { 'Content-Type':'application/json' });
         response.end(JSON.stringify(overlay));
@@ -190,6 +195,7 @@ async function startServer(initialPayload) {
     setPayload(next, status = 200) { payload = next; apiStatus = status; },
     setUpdateStatus(next) { updateStatus = next; },
     setOverlay(next) { overlay = next; },
+    setPresentation(next) { presentation=next; },
     stop: () => new Promise((resolve, reject) => server.close((error) => {
       if (error) reject(error);
       else resolve();
@@ -533,6 +539,35 @@ test('home dashboard browser integration (synthetic data only)', {
     await client.send('Page.removeScriptToEvaluateOnNewDocument',{identifier:injection.identifier});
   });
 
+  await context.test('coherent 98-result generations follow result updates and ten saved predictions',async()=>{
+    server.setPresentation(syntheticGeneration());
+    const injection=await client.send('Page.addScriptToEvaluateOnNewDocument',{source:`
+      const original=window.setTimeout;window.setTimeout=function(callback,ms,...args){
+        if(ms===60000){window.__generationPoll=callback;return 0;}return original(callback,ms,...args);};`});
+    await navigate(client,server.origin+'/?retrospective=1',"document.querySelectorAll('#previous-matches .match-card,#next-matches .match-card').length===20");
+    await client.until("typeof window.__generationPoll==='function'",'60-second generation poll');
+    assert.equal(await client.evaluate("document.querySelectorAll('[data-prediction-type=saved_pre_match]').length"),4);
+    assert.equal(await client.evaluate("document.querySelectorAll('[data-prediction-type=retrospective_reconstruction]').length"),16);
+    for(const stage of [1,2]) {
+      server.setPresentation(syntheticGeneration(stage));
+      await client.evaluate("window.__generationPoll()");
+      await client.until("!document.querySelector('#reload-dashboard').disabled",'coherent generation reload');
+      assert.equal(await client.evaluate("document.querySelectorAll('[data-prediction-type=saved_pre_match]').length"),stage===1?4:12);
+      assert.equal(await client.evaluate("document.querySelectorAll('[data-prediction-type=retrospective_reconstruction]').length"),stage===1?16:8);
+      assert.equal(await client.evaluate("document.querySelectorAll('.outcome-badge.hit').length"),stage===1?20:10);
+      assert.equal(await client.evaluate("document.querySelectorAll('#next-matches .result-value').length"),stage===1?10:0);
+    }
+    const before=await client.evaluate("document.querySelector('.rounds').innerHTML");
+    const invalid=syntheticGeneration(2);invalid.overlay=syntheticGeneration().overlay;
+    server.setPresentation(invalid);await client.evaluate("window.__generationPoll()");
+    await client.until("document.querySelector('#update-status').dataset.state==='error'",'mismatched generation held');
+    assert.equal(await client.evaluate("document.querySelector('.rounds').innerHTML"),before);
+    server.setPresentation(syntheticGeneration());await client.evaluate("window.__generationPoll()");
+    await client.until("!document.querySelector('#reload-dashboard').disabled",'rollback rejected');
+    assert.equal(await client.evaluate("document.querySelector('.rounds').innerHTML"),before);
+    server.setPresentation(null);await client.send('Page.removeScriptToEvaluateOnNewDocument',{identifier:injection.identifier});
+  });
+
   await context.test('live updates replace valid cards and preserve them on failure', async () => {
     const initial = dashboardPayload(
       [syntheticMatch('live-previous', { home: 31, draw: 25, away: 44 }, true)],
@@ -654,7 +689,7 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
   await captureScreenshot(browser.client,'retrospective-real-mobile.png');
   await browser.client.send('Emulation.clearDeviceMetricsOverride');
   await browser.client.evaluate(`window.__previewReads=0;const savedFetch=window.fetch;window.fetch=function(input,...args){
-    if(String(input)==='/api/dashboard')window.__previewReads++;return savedFetch.call(this,input,...args);};`);
+    if(['/api/dashboard','/api/presentation'].includes(String(input)))window.__previewReads++;return savedFetch.call(this,input,...args);};`);
   await delay(61000);
   assert.ok(await browser.client.evaluate("window.__previewReads>=1"),'actual 60-second poll read the display API');
   assert.equal(await browser.client.evaluate("document.querySelector('#update-status').dataset.state"),'ready');

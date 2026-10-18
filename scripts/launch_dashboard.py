@@ -75,9 +75,9 @@ def find_python(root: Path, explicit: Path | None = None) -> Path:
 
 def runtime_scope(root: Path, runtime: Path | None, view="legacy") -> Path:
     # A separate kernel/profile namespace; this path is never created.
-    if view not in {"legacy", "rounds"} or view != "legacy" and runtime is None:
+    if view not in {"legacy", "rounds", "retrospective"} or view != "legacy" and runtime is None:
         raise LauncherError("runtime_missing")
-    suffix = "-rounds" if view == "rounds" else ""
+    suffix = "-"+view if view != "legacy" else ""
     return root if runtime is None else root / (".champion-" + instance_id(runtime) + suffix)
 
 
@@ -94,6 +94,21 @@ def runtime_files(runtime: Path, view="legacy") -> tuple[Path, Path]:
     ):
         raise LauncherError("runtime_missing")
     return data.resolve(), status.resolve()
+
+
+def validate_presentation_store(runtime: Path, store_sha):
+    # Keep launcher dependencies stdlib-only; the server performs full pair validation before binding.
+    path=runtime.absolute()
+    if not isinstance(store_sha,str) or not re.fullmatch(r"[0-9a-f]{64}",store_sha):
+        raise LauncherError("runtime_missing")
+    for item in (path,*path.parents,*(path/name for name in ("store.json","current.json","status.json"))):
+        if item.is_symlink() or item.is_junction(): raise LauncherError("runtime_missing")
+    try:
+        if not all((path/name).is_file() for name in ("store.json","current.json","status.json")) or hashlib.sha256(
+                (path/"store.json").read_bytes()).hexdigest()!=store_sha:
+            raise LauncherError("runtime_missing")
+    except OSError:
+        raise LauncherError("runtime_missing") from None
 
 
 def find_browser(environ=None) -> Path:
@@ -236,8 +251,13 @@ def validate_url(url: str) -> str:
     return url
 
 
-def server_command(python: Path, data: Path | None, status: Path | None = None) -> list[str]:
+def server_command(python: Path, data: Path | None, status: Path | None = None, *, presentation_root=None, store_sha=None) -> list[str]:
     command = [str(python), "-u", "-m", "scripts.serve_dashboard", "--port", "0"]
+    if presentation_root is not None:
+        if data is not None or status is not None or not store_sha:
+            raise LauncherError("runtime_missing")
+        return command[:1]+["-B"]+command[1:]+["--generation-store",str(presentation_root.resolve()),
+            "--store-sha",store_sha,"--poll-seconds","60"]
     if data is not None:
         # Explicit JSON is read/validated ONLY by the existing server.
         command.extend(("--data", str(data.resolve())))
@@ -249,17 +269,17 @@ def server_command(python: Path, data: Path | None, status: Path | None = None) 
     return command
 
 
-def browser_command(browser: Path, url: str, profile: Path, *, software_rendering=False) -> list[str]:
+def browser_command(browser: Path, url: str, profile: Path, *, software_rendering=False, retrospective=False) -> list[str]:
     validate_url(url)
     return [
-        str(browser), f"--app={url}", f"--user-data-dir={profile}",
+        str(browser), f"--app={url + '?retrospective=1' if retrospective else url}", f"--user-data-dir={profile}",
         "--no-first-run", "--no-default-browser-check", "--disable-background-networking",
         "--disable-component-update", "--disable-sync",
         *(["--disable-gpu"] if software_rendering else []),
     ]
 
 
-def start_server(python: Path, root: Path, data: Path | None, status: Path | None = None):
+def start_server(python: Path, root: Path, data: Path | None, status: Path | None = None, *, presentation_root=None, store_sha=None):
     try:
         # Windows venv python.exe is a redirector that creates another process.
         # Run this stdlib-only server with its base interpreter so the retained
@@ -272,8 +292,10 @@ def start_server(python: Path, root: Path, data: Path | None, status: Path | Non
         executable = Path(probe.stdout.strip())
         if not executable.is_absolute() or not executable.is_file() or executable.name.lower() != "python.exe":
             raise LauncherError("server_spawn_failed")
+        command=(server_command(executable,data,status,presentation_root=presentation_root,store_sha=store_sha)
+                 if presentation_root is not None else server_command(executable,data,status))
         return subprocess.Popen(
-            server_command(executable, data, status), cwd=str(root), shell=False,
+            command, cwd=str(root), shell=False,
             stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             text=True, encoding="utf-8", errors="replace", creationflags=CREATE_NO_WINDOW,
         )
@@ -281,10 +303,11 @@ def start_server(python: Path, root: Path, data: Path | None, status: Path | Non
         raise LauncherError("server_spawn_failed") from None
 
 
-def start_browser(browser: Path, url: str, profile: Path, root: Path, *, software_rendering=False):
+def start_browser(browser: Path, url: str, profile: Path, root: Path, *, software_rendering=False, retrospective=False):
     try:
         profile.mkdir(parents=True, exist_ok=True)
-        command = (browser_command(browser, url, profile, software_rendering=True) if software_rendering
+        command = (browser_command(browser,url,profile,software_rendering=True,retrospective=True) if retrospective else
+                   browser_command(browser, url, profile, software_rendering=True) if software_rendering
                    else browser_command(browser, url, profile))
         return subprocess.Popen(
             command, cwd=str(root), shell=False,
@@ -448,7 +471,7 @@ def stop_owned_server(process) -> None:
 
 
 def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False,
-                 runtime: Path | None = None, python: Path | None = None, view="legacy") -> int:
+                 runtime: Path | None = None, python: Path | None = None, view="legacy", store_sha=None) -> int:
     require_windows()
     owner = runtime_scope(root, runtime, view)
     controls = WindowsInstance(root) if runtime is None else WindowsInstance(owner, reopen=True)
@@ -477,9 +500,13 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
         browser = find_browser()
         profile = local_directory(owner) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
         if runtime is not None:
-            data, status = runtime_files(runtime, view)
-            server = start_server(python, root, data, status=status)
-            if view == "rounds":
+            if view == "retrospective":
+                validate_presentation_store(runtime,store_sha)
+                server=start_server(python,root,None,presentation_root=runtime,store_sha=store_sha)
+            else:
+                data, status = runtime_files(runtime, view)
+                server = start_server(python, root, data, status=status)
+            if view in {"rounds","retrospective"}:
                 url = wait_for_ready(server, timeout, require_data=True, expected_version=2)
             else:
                 url = wait_for_ready(server, timeout, require_data=True)
@@ -488,7 +515,8 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
             url = wait_for_ready(server, timeout)
         # A fresh v2 app window otherwise rendered white after close/reopen on
         # the supported Windows PC. Keep the legacy browser command unchanged.
-        browser_options = {"software_rendering": True} if view == "rounds" else {}
+        browser_options = ({"software_rendering":True,"retrospective":True} if view == "retrospective" else
+                           {"software_rendering": True} if view == "rounds" else {})
         start_browser(browser, url, profile, root, **browser_options)
         record_event(owner, "started")
         # No browser poll()/wait(), window manipulation, taskkill, or profile
@@ -525,18 +553,22 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--data", type=Path, help="Explicit prepared Champion-only JSON; never generated or searched for")
     group.add_argument("--stop", action="store_true", help="Signal the owning launcher to stop its server; do not close browsers")
     parser.add_argument("--runtime", type=Path, help="Explicit Champion runtime; enables status and 60-second reload, no acquisition")
-    parser.add_argument("--view", choices=("legacy", "rounds"), default="legacy", help="Runtime view: legacy v1 (default) or complete official rounds v2; separate instance/profile")
+    parser.add_argument("--view", choices=("legacy", "rounds", "retrospective"), default="legacy", help="Separate instance/profile; retrospective --runtime points to an independent display store")
+    parser.add_argument("--store-sha",help="Retrospective store.json SHA-256; no generation or model execution at launch")
     parser.add_argument("--python", type=Path, help="Explicit existing python.exe when code and venv are in separate worktrees")
     parser.add_argument("--startup-timeout", type=positive_timeout, default=20.0, help="Bounded server readiness wait in seconds (default: 20)")
     args = parser.parse_args(argv)
     if args.runtime is not None and args.data is not None:
         parser.error("--runtime and --data are mutually exclusive")
     if args.view != "legacy" and args.runtime is None:
-        parser.error("--view rounds requires --runtime")
+        parser.error("Selected view requires --runtime")
+    if args.view == "retrospective" and not args.stop and not args.store_sha or args.store_sha and args.view != "retrospective":
+        parser.error("--store-sha is required only for retrospective display startup")
     root = repository_root()
     try:
         return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop,
-                            runtime=args.runtime, python=args.python, view=args.view)
+                            runtime=args.runtime, python=args.python, view=args.view,
+                            **({"store_sha":args.store_sha} if args.view=="retrospective" else {}))
     except (Exception, KeyboardInterrupt) as exc:
         code = exc.code if isinstance(exc, LauncherError) else "unexpected_failure"
         # No exception string, traceback, server output or response body is logged.

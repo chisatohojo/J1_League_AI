@@ -1,7 +1,7 @@
 import { PredictionProbabilityBar } from "./components/prediction-probability-bar.js";
 import { validateDashboard, highestProbabilityOutcomes, actualOutcome, formatKickoff } from "./dashboard-data.js";
 import { teamColor } from "./team-colors.js";
-import { validateRetrospective, selectDisplayPrediction, RETROSPECTIVE_TYPE } from "./retrospective-data.js";
+import { validateRetrospective, validatePresentation, selectDisplayPrediction, RETROSPECTIVE_TYPE } from "./retrospective-data.js";
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -190,10 +190,21 @@ async function fetchOverlay(data) {
   return validateRetrospective(await response.json(), data);
 }
 
-async function connectLiveUpdates(initialData, initialOverlay = null) {
-  const response = await fetch("/api/update-status", { cache: "no-store", credentials: "same-origin" });
-  if (!response.ok) return;
-  const initialStatus = await response.json();
+async function fetchPresentation(options = { cache:"no-store", credentials:"same-origin" }) {
+  const response=await fetch("/api/presentation",options);
+  if(response.status===404) return null; // Existing fixed previews retain their separate strict API contract.
+  if(!response.ok) throw new Error("表示世代を取得できません");
+  return validatePresentation(await response.json());
+}
+
+async function connectLiveUpdates(initialData, initialOverlay = null, initialPresentation = null) {
+  let initialStatus;
+  if(initialPresentation) initialStatus=initialPresentation.status;
+  else {
+    const response = await fetch("/api/update-status", { cache: "no-store", credentials: "same-origin" });
+    if (!response.ok) return;
+    initialStatus = await response.json();
+  }
   if (initialStatus.pollEnabled !== true) return;
   const interval = initialStatus.pollSeconds;
   if (!Number.isInteger(interval) || interval < 10 || interval > 3600) return;
@@ -201,6 +212,7 @@ async function connectLiveUpdates(initialData, initialOverlay = null) {
   const message = document.querySelector("#update-message");
   const button = document.querySelector("#reload-dashboard");
   let signature = JSON.stringify([initialData, initialOverlay]), busy = false;
+  let generation=initialPresentation;
   panel.hidden = false;
   function show(status) {
     if (!["idle", "updating", "ready", "error"].includes(status.state)) throw new Error("更新状態が不正です");
@@ -218,17 +230,27 @@ async function connectLiveUpdates(initialData, initialOverlay = null) {
     const timeout = setTimeout(() => controller.abort(), 10000);
     try {
       const options = { cache: "no-store", credentials: "same-origin", signal: controller.signal };
-      const [dataResponse, statusResponse] = await Promise.all([
-        fetch("/api/dashboard", options), fetch("/api/update-status", options)]);
-      if (!dataResponse.ok || !statusResponse.ok) throw new Error("再読込に失敗しました");
-      const [data, status] = await Promise.all([dataResponse.json(), statusResponse.json()]);
-      validateDashboard(data);
-      const overlay = initialOverlay ? await fetchOverlay(data) : null;
+      let data,status,overlay,nextGeneration=null;
+      if(generation) {
+        nextGeneration=await fetchPresentation(options);
+        if(!nextGeneration || nextGeneration.sequence<generation.sequence ||
+          nextGeneration.sequence===generation.sequence && nextGeneration.generationId!==generation.generationId)
+          throw new Error("表示世代の巻き戻りを拒否しました");
+        ({dashboard:data,status,overlay}=nextGeneration);
+      } else {
+        const [dataResponse, statusResponse] = await Promise.all([
+          fetch("/api/dashboard", options), fetch("/api/update-status", options)]);
+        if (!dataResponse.ok || !statusResponse.ok) throw new Error("再読込に失敗しました");
+        [data, status] = await Promise.all([dataResponse.json(), statusResponse.json()]);
+        validateDashboard(data);
+        overlay = initialOverlay ? await fetchOverlay(data) : null;
+      }
       show(status);
       if (JSON.stringify([data, overlay]) !== signature) {
         renderDashboard(data, { overlay });
         signature = JSON.stringify([data, overlay]);
       }
+      if(nextGeneration) generation=nextGeneration;
     } catch {
       panel.dataset.state = "error";
       message.textContent = "再読込できませんでした。前回の正常な表示を保持しています";
@@ -244,17 +266,20 @@ async function connectLiveUpdates(initialData, initialOverlay = null) {
 async function start() {
   try {
     const demo = new URLSearchParams(location.search).get("demo") === "1";
+    const retrospective=!demo && new URLSearchParams(location.search).get("retrospective")==="1";
+    const presentation=retrospective ? await fetchPresentation() : null;
     let data;
     if (demo) {
       data = (await import("./demo-data.js")).DEMO_DATA;
-    } else {
+    } else if(presentation) data=presentation.dashboard;
+    else {
       const response = await fetch("/api/dashboard", { cache: "no-store", credentials: "same-origin" });
       if (!response.ok) throw new Error("表示用APIからデータを取得できませんでした");
       data = await response.json();
     }
-    const overlay = !demo && new URLSearchParams(location.search).get("retrospective") === "1" ? await fetchOverlay(data) : null;
+    const overlay = presentation ? presentation.overlay : retrospective ? await fetchOverlay(data) : null;
     renderDashboard(data, { demo, overlay });
-    if (!demo) connectLiveUpdates(data, overlay).catch(() => {});
+    if (!demo) connectLiveUpdates(data, overlay, presentation).catch(() => {});
   } catch (error) {
     // Fail closed. Never fall back to synthetic or research predictions on API/schema failure.
     document.querySelector("#data-status").dataset.state = "error";

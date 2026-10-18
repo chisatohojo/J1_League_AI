@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { syntheticRetrospective } from "./retrospective-fixture.mjs";
-import { validateRetrospective, selectDisplayPrediction } from "../retrospective-data.js";
+import { syntheticRetrospective, syntheticGeneration } from "./retrospective-fixture.mjs";
+import { validateRetrospective, validatePresentation, selectDisplayPrediction } from "../retrospective-data.js";
 import { validateDashboard } from "../dashboard-data.js";
 
 test("independent overlay validates without modifying the saved v2 feed",()=>{
@@ -41,4 +41,20 @@ for(const [name,mutate] of Object.entries({
 test("v2 cannot disguise retrospective as a saved prediction",()=>{
   const {data}=syntheticRetrospective();data.previousRound.matches[0].prediction.source="retrospective_reconstruction";
   assert.throws(()=>validateDashboard(data));
+});
+
+test("coherent generations preserve 98 reconstructions while ten new saved predictions are added",()=>{
+  for(const stage of [0,1,2]) {
+    const presentation=syntheticGeneration(stage);assert.equal(validatePresentation(presentation),presentation);
+    assert.equal(presentation.overlay.entries.length,96);
+    assert.equal(presentation.overlay.historyRounds.flatMap(r=>r.matches).filter(m=>m.status==='completed').length,stage?100:98);
+    assert.equal(presentation.overlay.historyRounds.flatMap(r=>r.matches).filter(m=>m.prediction).length,stage===2?14:4);
+  }
+});
+for(const [name,mutate] of Object.entries({
+  mixed:p=>p.dashboard=syntheticGeneration(2).dashboard,
+  identity:p=>p.generationId='bad',sequence:p=>p.sequence=0,status:p=>p.status.feedUpdatedAt='2026-10-19T00:00:00Z',
+  source:p=>p.overlay.entries[0].reconstruction.type='saved_pre_match',
+})) test(`coherent presentation rejects ${name}`,()=>{
+  const p=syntheticGeneration();mutate(p);assert.throws(()=>validatePresentation(p));
 });

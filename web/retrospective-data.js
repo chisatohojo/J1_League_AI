@@ -107,3 +107,19 @@ export function selectDisplayPrediction(match, overlay) {
   if (match.status === "completed" && entry) return { kind:RETROSPECTIVE_TYPE, value:entry.reconstruction };
   return null;
 }
+
+/** One HTTP response binds v2 + overlay to a single immutable display generation. */
+export function validatePresentation(value) {
+  keys(value,["schemaVersion","generationId","sequence","dashboard","overlay","status"]);
+  require(value.schemaVersion===1 && typeof value.generationId==="string" && HASH.test(value.generationId)
+    && Number.isSafeInteger(value.sequence) && value.sequence>0,"presentation identity");
+  validateRetrospective(value.overlay,value.dashboard);
+  const status=value.status;
+  keys(status,["state","startedAt","finishedAt","lastSuccessAt","errorCode","pollEnabled","pollSeconds","feedUpdatedAt"]);
+  require(["idle","updating","ready","error"].includes(status.state) && status.pollEnabled===true
+    && Number.isInteger(status.pollSeconds) && status.pollSeconds>=10 && status.pollSeconds<=3600
+    && status.feedUpdatedAt===value.dashboard.updatedAt
+    && [null,"update_failed","display_reload_failed","update_status_invalid"].includes(status.errorCode),"presentation status");
+  for(const key of ["startedAt","finishedAt","lastSuccessAt"]) if(status[key]!==null) timestamp(status[key]);
+  return value;
+}

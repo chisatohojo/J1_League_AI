@@ -547,7 +547,7 @@ def new_records(targets, values, current, master, generated):
     return records, bindings
 
 
-def run_update(source_root, runtime_root, slot, config, *, collector=collect_official,
+def _run_update(source_root, runtime_root, slot, config, *, collector=collect_official,
                predictor=predict_champion, clock=utc_now):
     source, runtime = validate_paths(source_root, runtime_root)
     feed.require(slot in {"morning", "evening"}, "update_slot")
@@ -601,6 +601,24 @@ def run_update(source_root, runtime_root, slot, config, *, collector=collect_off
                          lastSuccessAt=previous.get("lastSuccessAt"), errorCode="update_failed")
             atomic_json(status_path, state)
             raise
+
+
+def run_update(source_root,runtime_root,slot,config,*,collector=collect_official,predictor=predict_champion,clock=utc_now):
+    result=_run_update(source_root,runtime_root,slot,config,collector=collector,predictor=predictor,clock=clock)
+    # The core update and its lock are complete before the optional, independent display refresh.
+    # A display failure must never turn a committed official update/prediction into a core failure.
+    if "retrospective_display" in config:
+        try:
+            options=config["retrospective_display"]
+            feed.require(isinstance(options,dict) and set(options)=={
+                "store_root","store_sha256","reconstruction_root","ledger_sha256"},"retrospective_display_config")
+            from scripts.build_retrospective_preview import refresh_store
+            refresh_store(source_root,runtime_root,options["reconstruction_root"],options["ledger_sha256"],
+                options["store_root"],expected_store_sha=options["store_sha256"],now=timestamp_aware(clock()))
+            result["retrospectiveState"]="ready"
+        except Exception:
+            result["retrospectiveState"]="error"
+    return result
 
 
 def read_config(path):

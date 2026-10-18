@@ -842,6 +842,45 @@ def test_round_runtime_owner_reopens_same_server_and_stops_only_its_scope(runtim
     assert runtime.events == ["started", "reopened", "stopped"]
 
 
+def test_retrospective_owner_profile_and_reopen_are_separate(runtime,fake_root,tmp_path):
+    from scripts.retrospective_generations import publish_pair
+    from test_retrospective_generations import synthetic_pair
+    store=tmp_path/"display-store";anchor=publish_pair(store,*synthetic_pair(),"7"*64)["store_sha256"]
+    scopes=[launcher.runtime_scope(fake_root,store,view) for view in ("legacy","rounds","retrospective")]
+    assert len(set(scopes))==3
+    runtime.state.stop_requested.side_effect=[False,True]
+    runtime.state.open_requested.return_value=True
+    assert launcher.run_launcher(fake_root,runtime=store,view="retrospective",store_sha=anchor)==0
+    runtime.start.assert_called_once_with(fake_root/".venv/Scripts/python.exe",fake_root,None,presentation_root=store,store_sha=anchor)
+    runtime.ready.assert_called_once_with(runtime.server,20.0,require_data=True,expected_version=2)
+    assert runtime.browser.call_count==2 and runtime.browser.call_args_list[0]==runtime.browser.call_args_list[1]
+    assert runtime.browser.call_args.kwargs==dict(software_rendering=True,retrospective=True)
+    assert runtime.events==["started","reopened","stopped"]
+    runtime.browser_process.terminate.assert_not_called()
+    runtime.server.terminate.assert_called_once()
+    command=launcher.server_command(fake_root/".venv/Scripts/python.exe",None,presentation_root=store,store_sha=anchor)
+    assert command[command.index("--generation-store")+1]==str(store)
+    assert "--data" not in command
+    browser=launcher.browser_command(fake_root/"msedge.exe","http://127.0.0.1:45678/",tmp_path/"dedicated",retrospective=True)
+    assert "--app=http://127.0.0.1:45678/?retrospective=1" in browser
+    assert "--remote-debugging-port" not in " ".join(browser)
+
+
+def test_retrospective_duplicate_and_stop_never_start_another_server(runtime,fake_root):
+    runtime.state.acquire.return_value=False
+    assert launcher.run_launcher(fake_root,runtime=fake_root/"missing-store",view="retrospective")==0
+    runtime.start.assert_not_called();runtime.browser.assert_not_called()
+    runtime.state.signal_open.assert_called_once()
+    assert launcher.run_launcher(fake_root,runtime=fake_root/"missing-store",view="retrospective",stop=True)==0
+    runtime.start.assert_not_called();runtime.server.terminate.assert_not_called()
+
+
+def test_retrospective_launch_rejects_missing_or_changed_store_before_any_window(runtime,fake_root,tmp_path):
+    with pytest.raises(launcher.LauncherError):
+        launcher.run_launcher(fake_root,runtime=tmp_path/"missing-store",view="retrospective",store_sha="1"*64)
+    runtime.start.assert_not_called();runtime.browser.assert_not_called()
+
+
 @pytest.mark.skipif(launcher.sys.platform != "win32", reason="real kernel objects are Windows-only")
 def test_round_stop_event_does_not_signal_legacy_runtime(fake_root):
     operational = fake_root / "operational"

@@ -249,12 +249,22 @@ def create_server(
     poll_seconds: int = 60,
     retrospective_path: Path | None = None,
     retrospective_sha: str | None = None,
+    generation_store: Path | None = None,
+    store_sha: str | None = None,
 ) -> ThreadingHTTPServer:
     """Create a loopback-only, GET-only server using an immutable JSON snapshot."""
+    generation = None
+    if generation_store is not None:
+        if data_path or status_path or retrospective_path or payload is not None:
+            raise DashboardDataError("Generation store cannot be mixed with independent display inputs")
+        from scripts.retrospective_generations import read_current
+        generation = read_current(generation_store, store_sha)
+        payload = generation["dashboard"]
+        reload_data = True
     approved = validate_dashboard_data(empty_dashboard() if payload is None else payload)
     api_bytes = json.dumps(approved, ensure_ascii=False, allow_nan=False).encode("utf-8")
     root = (WEB_ROOT if static_root is None else static_root).resolve()
-    if reload_data and data_path is None:
+    if reload_data and data_path is None and generation_store is None:
         raise DashboardDataError("Reload requires an explicit JSON input")
     if type(poll_seconds) is not int or not 10 <= poll_seconds <= 3600:
         raise DashboardDataError("Poll interval must be 10..3600 seconds")
@@ -273,7 +283,26 @@ def create_server(
         read_overlay()  # Refuse a broken explicit preview before opening a listener.
 
     def refresh():
-        nonlocal api_bytes, reload_error, last_observed
+        nonlocal api_bytes, reload_error, last_observed, generation
+        if generation_store is not None:
+            from scripts.retrospective_generations import read_current
+            try:
+                before=read_update_state()
+                if before["state"] != "ready": return
+                incoming=read_current(generation_store,store_sha)
+                pointer=incoming["pointer"]; previous=generation["pointer"]
+                if pointer["sequence"] < previous["sequence"] or (pointer["sequence"] == previous["sequence"]
+                        and pointer["generation"] != previous["generation"]):
+                    raise DashboardDataError("Display generation rollback")
+                if _timestamp(incoming["dashboard"]["updatedAt"],"updatedAt") < _timestamp(last_observed,"updatedAt"):
+                    raise DashboardDataError("Display publication rollback")
+                if read_update_state() != before: return
+                generation=incoming
+                api_bytes=json.dumps(incoming["dashboard"],ensure_ascii=False,allow_nan=False).encode("utf-8")
+                last_observed=incoming["dashboard"]["updatedAt"]; reload_error=None
+            except (OSError,ValueError,KeyError,TypeError):
+                reload_error="display_reload_failed"
+            return
         if reload_data:
             try:
                 before = read_update_state()
@@ -295,6 +324,9 @@ def create_server(
                 reload_error = "display_reload_failed"
 
     def read_update_state():
+        if generation_store is not None:
+            from scripts.retrospective_generations import read_status
+            return read_status(generation_store)
         state = dict(state="idle", startedAt=None, finishedAt=None, lastSuccessAt=None, errorCode=None)
         if reload_data and status_path is not None:
             candidate = json.loads(status_path.read_bytes(), object_pairs_hook=_unique_object)
@@ -331,7 +363,24 @@ def create_server(
 
         def do_GET(self) -> None:
             route = unquote(urlsplit(self.path).path)
+            if route == "/api/presentation":
+                if generation_store is None:
+                    self.send_error(404,"Coherent presentation not connected")
+                    return
+                with snapshot_lock:
+                    refresh()
+                    content=json.dumps(dict(schemaVersion=1,generationId=generation["pointer"]["generation"],
+                        sequence=generation["pointer"]["sequence"],dashboard=generation["dashboard"],
+                        overlay=generation["overlay"],status=update_status()),ensure_ascii=False,allow_nan=False).encode("utf-8")
+                self._send(content,"application/json")
+                return
             if route == "/api/retrospective":
+                if generation_store is not None:
+                    with snapshot_lock:
+                        refresh()
+                        content=json.dumps(generation["overlay"],ensure_ascii=False,allow_nan=False).encode("utf-8")
+                    self._send(content,"application/json")
+                    return
                 if retrospective_path is None:
                     self.send_error(404, "Retrospective overlay not connected")
                     return
@@ -401,6 +450,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--poll-seconds", type=int, default=60, help="Browser refresh interval, 10..3600 (default 60)")
     parser.add_argument("--retrospective", type=Path, help="Explicit independent preview overlay; never replaces saved prediction.source")
     parser.add_argument("--retrospective-sha", help="Required SHA-256 anchor for the immutable preview overlay")
+    parser.add_argument("--generation-store",type=Path,help="Separate coherent display generations; read-only server")
+    parser.add_argument("--store-sha",help="Immutable store.json SHA-256 anchor")
     args = parser.parse_args(argv)
     if not 0 <= args.port <= 65535:
         parser.error("--port must be between 0 and 65535")
@@ -410,18 +461,20 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--status requires --reload")
     if bool(args.retrospective) != bool(args.retrospective_sha) or args.retrospective and not args.data:
         parser.error("--retrospective requires --data and --retrospective-sha")
+    if bool(args.generation_store) != bool(args.store_sha) or args.generation_store and (args.data or args.status or args.retrospective):
+        parser.error("--generation-store requires --store-sha and cannot mix other data inputs")
     try:
-        payload = load_dashboard_data(args.data)
+        payload = None if args.generation_store else load_dashboard_data(args.data)
         server = create_server(payload, port=args.port, data_path=args.data,
                                status_path=args.status, reload_data=args.reload,
                                poll_seconds=args.poll_seconds, retrospective_path=args.retrospective,
-                               retrospective_sha=args.retrospective_sha)
+                               retrospective_sha=args.retrospective_sha,generation_store=args.generation_store,store_sha=args.store_sha)
     except (ValueError, OSError, KeyError, TypeError) as exc:
         print(f"Dashboard startup rejected: {exc}", file=sys.stderr)
         return 2
     address, port = server.server_address
     print(f"J1AI dashboard: http://{address}:{port}/", flush=True)
-    if args.data is None:
+    if args.data is None and args.generation_store is None:
         print("Operational view is empty; no prediction/history files were read.", flush=True)
     try:
         server.serve_forever()

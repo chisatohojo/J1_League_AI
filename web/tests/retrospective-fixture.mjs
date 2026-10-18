@@ -33,3 +33,38 @@ export function syntheticRetrospective() {
       {id:entries.find(e=>e.fixtureKey===m.id)?.officialId ?? String(200000+i),namespace:"jleague_match_page"}]))};
   return {data,overlay};
 }
+
+export function syntheticGeneration(stage=0) {
+  const sample=syntheticRetrospective(),rounds=[],entries=[],identities={};
+  for(let number=1;number<=(stage>=2?11:10);number++) {
+    const matches=[];
+    for(let i=0;i<10;i++) {
+      const match=structuredClone(sample.data.previousRound.matches[i]);
+      const completed=number<=9 || number===10 && (i<8 || stage>=1);
+      const saved=number===9 && i<2 || number===10 && i>=8 || number===11;
+      let day=new Date(Date.UTC(2026,7,7+(number-1)*7)).toISOString().slice(0,10);
+      if(number===9) day='2026-10-09';
+      if(number===10) day=i<8?'2026-10-17':'2026-10-18';
+      if(number===11) day='2026-10-21';
+      Object.assign(match,{id:`j1_2026_2027:club${number}_${i}:away${number}_${i}`,round:number,
+        status:completed?'completed':'scheduled',kickoffAt:day+'T19:00:00+09:00',
+        result:completed?{homeScore:2,awayScore:1}:null,prediction:saved?{
+          source:'saved_pre_match',generatedAt:'2026-08-01T00:00:00Z',probabilities:{home:55,draw:25,away:20}}:null});
+      identities[match.id]={id:String(100000+number*10+i),namespace:'jleague_match_page'};
+      if((number<=9 || number===10 && i<8) && !saved) {
+        entries.push({...structuredClone(sample.overlay.entries[0]),fixtureKey:match.id,round:number,matchDate:day,
+          homeTeamId:match.homeTeam.id,awayTeamId:match.awayTeam.id,officialId:identities[match.id].id,result:structuredClone(match.result)});
+      }
+      matches.push(match);
+    }
+    rounds.push({number,label:`第${number}節`,kind:'previous',matches});
+  }
+  const observed=['2026-10-18T00:00:00Z','2026-10-18T13:00:00Z','2026-10-18T22:00:00Z'][stage];
+  const data={...sample.data,updatedAt:observed,previousRound:structuredClone(rounds[stage>=2?9:8]),
+    nextRound:{...structuredClone(rounds[stage>=2?10:9]),kind:stage>=2?'next':'current'}};
+  const overlay={...sample.overlay,officialObservedAt:observed,officialRevision:String(stage+3).repeat(64),
+    entries,historyRounds:rounds,officialIdentities:identities};
+  return {schemaVersion:1,generationId:String(stage+5).repeat(64),sequence:stage+1,dashboard:data,overlay,
+    status:{state:'ready',startedAt:null,finishedAt:null,lastSuccessAt:observed,errorCode:null,
+      pollEnabled:true,pollSeconds:60,feedUpdatedAt:observed}};
+}
