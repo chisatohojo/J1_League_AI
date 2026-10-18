@@ -630,6 +630,11 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
     assert.equal(response.status,200); return response.json();
   }));
   validateRetrospective(overlay,data);
+  // The live revision advances; derive expected identities from the validated pair,
+  // then compare every rendered card. Synthetic 4/16 fixtures remain fixed above.
+  const matches=[...data.previousRound.matches,...data.nextRound.matches];
+  const displays=matches.map(match=>selectDisplayPrediction(match,overlay));
+  assert.ok(displays.every(Boolean),'This explicit preview check requires predictions on all twenty cards');
   let browser=await startBrowser();
   context.after(async()=>{
     if (browser) { await browser.client.send('Browser.close').catch(()=>{}); browser.client.close(); await browser.stop(); }
@@ -647,9 +652,9 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
       note:card.querySelector('.saved-note')?.textContent,title:card.querySelector('.saved-note')?.title,
       recalculatedAt:card.querySelector('.recalculated-at')?.dateTime ?? null
     }))`);
-    assert.equal(snapshot.filter(c=>c.type==='saved_pre_match').length,4);
-    assert.equal(snapshot.filter(c=>c.type==='retrospective_reconstruction').length,16);
-    for(const match of [...data.previousRound.matches,...data.nextRound.matches]) {
+    for(const kind of ['saved_pre_match','retrospective_reconstruction'])
+      assert.equal(snapshot.filter(c=>c.type===kind).length,displays.filter(d=>d.kind===kind).length);
+    for(const match of matches) {
       const card=snapshot.find(c=>c.id===match.id), display=selectDisplayPrediction(match,overlay);
       assert.ok(card); assert.equal(card.type,display.kind);
       assert.deepEqual(card.teams,[match.homeTeam.name,match.awayTeam.name]);
@@ -666,6 +671,12 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
       } else {
         assert.equal(card.note,'試合前に保存された予想を表示');
         assert.equal(card.title,`予想保存時刻: ${match.prediction.generatedAt}`);
+        if(match.result) {
+          const sides=['home','draw','away'], values=sides.map(side=>display.value.probabilities[side]);
+          const picks=sides.filter((side,i)=>values[i]===Math.max(...values));
+          const actual=match.result.homeScore===match.result.awayScore?'draw':match.result.homeScore>match.result.awayScore?'home':'away';
+          assert.equal(card.result,picks.length>1?'— 同率':picks[0]===actual?'✓ HIT':'× MISS');
+        }
       }
     }
     return snapshot;
@@ -682,7 +693,9 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
     assert.deepEqual(selected.map(c=>c.id),section.matches.map(m=>m.id));
     seen.push(...selected.filter(c=>c.status==='completed').map(c=>c.id));
   }
-  assert.equal(new Set(seen).size,98);
+  const expectedCompleted=overlay.historyRounds.flatMap(section=>section.matches)
+    .filter(match=>match.status==='completed').map(match=>match.id);
+  assert.deepEqual([...new Set(seen)].sort(),[...new Set(expectedCompleted)].sort());
   await browser.client.evaluate("document.querySelector('#retrospective-history').open=false");
   await browser.client.send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});
   assert.ok(await browser.client.evaluate("document.documentElement.scrollWidth<=innerWidth"));
