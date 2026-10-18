@@ -89,7 +89,7 @@ h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.5px; margin: 0; line-
 .detail-item { flex: 1; min-width: 0; }
 .detail-label { display: block; font-size: 9px; letter-spacing: 1.1px; color: var(--muted); margin-bottom: 5px; }
 .pick-value, .result-value { font-size: 12px; line-height: 1.5; display: block; overflow-wrap: anywhere; }
-.result-item { flex: 0 0 auto; }
+.result-item { flex: 1 1 0; }
 .outcome-badge { padding: 5px 8px; border-radius: 4px; font-size: 10px; font-weight: 650; white-space: nowrap; }
 .outcome-badge.hit { background: #eaf3ee; color: #386c50; }
 .outcome-badge.miss { background: #f6ecee; color: #944652; }

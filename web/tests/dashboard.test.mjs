@@ -64,10 +64,14 @@ test("AI pick uses original precision, not display rounding; exact ties stay exp
   assert.deepEqual(highestProbabilityOutcomes({ home: 40, draw: 20, away: 40 }), ["home", "away"]);
 });
 
-test("display derives actual result from supplied Champion-only score", () => {
-  assert.equal(actualOutcome({ homeScore: 2, awayScore: 1 }), "home");
-  assert.equal(actualOutcome({ homeScore: 1, awayScore: 1 }), "draw");
-  assert.equal(actualOutcome({ homeScore: 0, awayScore: 1 }), "away");
+for (const [score, expected] of [
+  [{ homeScore: 2, awayScore: 1 }, "home"],
+  [{ homeScore: 0, awayScore: 0 }, "draw"],
+  [{ homeScore: 0, awayScore: 1 }, "away"],
+]) test(`RESULT keeps the official ${expected} outcome and score unchanged`, () => {
+  const result = Object.freeze(score), before = JSON.stringify(result);
+  assert.equal(actualOutcome(result), expected);
+  assert.equal(JSON.stringify(result), before);
 });
 
 test("kickoff display is JST, independent of client timezone", () => {

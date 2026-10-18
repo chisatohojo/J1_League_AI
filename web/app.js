@@ -65,7 +65,8 @@ export function MatchCard(match, { previous, demo, overlay = null }) {
   if (finished) {
     const actual = actualOutcome(match.result);
     const result = element("div", "detail-item result-item");
-    result.append(element("span", "detail-label", "RESULT"), element("strong", "result-value", actual.toUpperCase()));
+    const resultLabel = actual === "draw" ? "引き分け" : actual === "home" ? match.homeTeam.name : match.awayTeam.name;
+    result.append(element("span", "detail-label", "RESULT"), element("strong", "result-value", resultLabel));
     details.append(result);
     const hit = outcomes.length === 1 && outcomes[0] === actual;
     details.append(element("span", `outcome-badge ${outcomes.length > 1 ? "tied" : hit ? "hit" : "miss"}`,

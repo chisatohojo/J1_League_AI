@@ -370,6 +370,48 @@ test('home dashboard browser integration (synthetic data only)', {
     assert.doesNotMatch(await client.evaluate(`document.querySelector('#data-status').textContent`), /デモ/);
   });
 
+  await context.test('RESULT names and draws preserve picks, probabilities and HIT/MISS in both prediction types', async () => {
+    for (const [score, expectedSide] of [[{homeScore:2,awayScore:1},'home'],[{homeScore:1,awayScore:2},'away'],[{homeScore:0,awayScore:0},'draw']]) {
+      const {data,overlay}=syntheticRetrospective();
+      const longHome='ホームクラブの非常に長い正式名称'.repeat(9);
+      const longAway='AwayFootballClubWithAVeryLongName'.repeat(5);
+      const targets=[data.previousRound.matches[0],data.previousRound.matches[2]];
+      for (const match of targets) {
+        match.homeTeam.name=longHome;match.awayTeam.name=longAway;match.result=structuredClone(score);
+        const historic=overlay.historyRounds[0].matches.find(m=>m.id===match.id);
+        Object.assign(historic,structuredClone(match));
+        const entry=overlay.entries.find(e=>e.fixtureKey===match.id);
+        if(entry) {entry.result=structuredClone(score);entry.reconstruction.hit=expectedSide==='home';}
+      }
+      const unchanged=JSON.stringify({data,overlay});
+      server.setPayload(data);server.setOverlay(overlay);
+      await navigate(client,`${server.origin}/?retrospective=1&case=result-${expectedSide}`,
+        "document.querySelectorAll('.result-value').length===18");
+      for (const match of targets) {
+        const display=selectDisplayPrediction(match,overlay);
+        const id=JSON.stringify(match.id);
+        const card=await client.evaluate(`(()=>{const c=Array.from(document.querySelectorAll('#previous-matches .match-card')).find(c=>c.dataset.matchId===${id});return {
+          label:c.querySelector('.result-value').textContent,pick:c.querySelector('.pick-value').textContent,
+          badge:c.querySelector('.outcome-badge').textContent,bar:c.querySelector('.prediction-probability').getAttribute('aria-label')};})()`);
+        assert.equal(card.label,expectedSide==='draw'?'引き分け':expectedSide==='home'?longHome:longAway);
+        const predicted=display.kind==='saved_pre_match'?'away':'home';
+        assert.equal(card.pick,predicted==='home'?longHome:longAway);
+        assert.equal(card.badge,predicted===expectedSide?'✓ HIT':'× MISS');
+        for(const side of ['home','draw','away']) assert.ok(card.bar.includes(`${display.value.probabilities[side]}%`));
+      }
+      for(const width of [1280,375,320]) {
+        await viewport(client,width);
+        assert.ok(await client.evaluate("document.documentElement.scrollWidth<=innerWidth"));
+        assert.ok(await client.evaluate(`Array.from(document.querySelectorAll('.result-value')).every(n=>{
+          const card=n.closest('.match-card').getBoundingClientRect(),box=n.getBoundingClientRect();
+          return box.left>=card.left && box.right<=card.right && n.scrollWidth<=n.clientWidth+1;
+        })`),'long RESULT names wrap within their cards');
+      }
+      assert.equal(JSON.stringify({data,overlay}),unchanged);
+    }
+    server.setOverlay(null);
+  });
+
   await context.test('zero/tiny/rounded bars stay legible and responsive without changing inputs', async () => {
     const probabilities = [[31, 25, 44], [0, 100, 0], [0.1, 99.8, 0.1], [33, 33, 33]];
     await client.evaluate(`(async () => {
@@ -564,6 +606,7 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
       id:card.dataset.matchId,type:card.dataset.predictionType,
       teams:Array.from(card.querySelectorAll('.team-name')).map(n=>n.textContent),
       score:card.querySelector('.fixture-score')?.textContent ?? null,
+      resultLabel:card.querySelector('.result-value')?.textContent ?? null,
       bar:card.querySelector('.prediction-probability')?.getAttribute('aria-label'),
       result:card.querySelector('.outcome-badge')?.textContent ?? null,
       note:card.querySelector('.saved-note')?.textContent,title:card.querySelector('.saved-note')?.title,
@@ -576,8 +619,11 @@ test('explicit loopback retrospective preview (read-only, opt-in)', {
       assert.ok(card); assert.equal(card.type,display.kind);
       assert.deepEqual(card.teams,[match.homeTeam.name,match.awayTeam.name]);
       for(const side of ['home','draw','away']) assert.ok(card.bar.includes(`${display.value.probabilities[side]}%`));
-      if(match.result) assert.equal(card.score,`${match.result.homeScore} − ${match.result.awayScore}`);
-      else assert.equal(card.score,null);
+      if(match.result) {
+        assert.equal(card.score,`${match.result.homeScore} − ${match.result.awayScore}`);
+        const outcome=match.result.homeScore===match.result.awayScore?'draw':match.result.homeScore>match.result.awayScore?'home':'away';
+        assert.equal(card.resultLabel,outcome==='draw'?'引き分け':outcome==='home'?match.homeTeam.name:match.awayTeam.name);
+      } else {assert.equal(card.score,null);assert.equal(card.resultLabel,null);}
       if(display.kind==='retrospective_reconstruction') {
         assert.equal(card.recalculatedAt,display.value.calculatedAt);
         assert.equal(card.note,'当時の試合前保存予測ではありません');
