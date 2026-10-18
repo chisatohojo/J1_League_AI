@@ -406,6 +406,18 @@ changing the example configuration.
 
 ### Synthetic validation commands
 
+Morning inference requires every fixture dated before the selected prediction
+date to be `completed`. Any earlier `candidate` or `scheduled` fixture stops
+before model invocation, without publishing a batch or replacing the last good
+feed. The runtime retains the date, fixture key and status in
+`diagnostics/prediction-history-<id>.json`; the UI exposes only a safe error code.
+All fixtures on the target date must be scheduled, have unique fixture keys and
+official IDs, be unpredicted and remain before kickoff. A completed or otherwise
+ineligible fixture on that date cannot be silently excluded for a partial batch.
+For the first October 19 morning operation, separately confirm that the freshly
+published October 21 target set equals the ten operator-specified fixtures.
+This one-time set/count is an operational precondition, not a permanent limit.
+
 ```powershell
 & $python -B -m pytest tests/test_champion_dashboard_update.py tests/test_dashboard_feed.py tests/test_dashboard_server.py -q -p no:cacheprovider
 node --test web/tests/probability-bar.test.mjs web/tests/dashboard.test.mjs web/tests/browser.test.mjs

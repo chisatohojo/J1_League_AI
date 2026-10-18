@@ -404,9 +404,10 @@ def select_targets(current, records, now, lookahead):
     if missing.empty:
         return missing.loc[:, list(TARGET_COLUMNS)]
     day = missing.match_date.min()
-    batch = current.schedule.loc[current.schedule.match_date.eq(day) & ~current.schedule.status.eq("completed")]
+    batch = current.schedule.loc[current.schedule.match_date.eq(day)]
     feed.require(batch.status.eq("scheduled").all(), "target_not_officially_scheduled")
     feed.require(not batch.fixture_key.isin(saved).any(), "saved_date_batch_changed")
+    feed.require(batch.fixture_key.is_unique and batch.match_id.is_unique, "target_identity_duplicate")
     feed.require(current.manifest["format_version"] == "ongoing-v2", "prediction_requires_typed_official_ids")
     for row in batch.itertuples(index=False):
         feed.require(bool(row.match_id) and row.match_id_namespace in
@@ -416,6 +417,20 @@ def select_targets(current, records, now, lookahead):
     appearances = pd.concat([batch[f"{s}_team_id"] for s in ("home", "away")])
     feed.require(appearances.is_unique, "target_team_date_duplicate")
     return batch.sort_values("fixture_key").loc[:, list(TARGET_COLUMNS)]
+
+
+def require_complete_history(current, target_date, runtime, checked_at):
+    """Never replay Elo with an unfinished fixture silently omitted from history."""
+    unresolved = current.schedule.loc[
+        current.schedule.match_date.lt(target_date) & ~current.schedule.status.eq("completed"),
+        ["match_date", "fixture_key", "status"],
+    ].sort_values(["match_date", "fixture_key"])
+    if not unresolved.empty:
+        atomic_json(runtime / "diagnostics" / f"prediction-history-{uuid.uuid4().hex}.json", dict(
+            schemaVersion=1, errorCode="prediction_history_incomplete",
+            checkedAt=checked_at.isoformat(), targetDate=target_date,
+            officialRevision=current.revision_id, unresolved=unresolved.to_dict("records")))
+        raise ValueError("prediction_history_incomplete")
 
 
 def timestamp_aware(value):
@@ -474,6 +489,7 @@ def run_update(source_root, runtime_root, slot, config, *, collector=collect_off
                 targets = select_targets(current, records, now, config["lookahead_days"]) if slot == "morning" else None
                 added, added_bindings = [], []
                 if targets is not None and not targets.empty:
+                    require_complete_history(current, targets.match_date.iloc[0], runtime, now)
                     master = load_team_master(source / feed.TEAM_MASTER_PATH)
                     probabilities = predictor(targets, current, source, now)
                     generated = timestamp_aware(clock())

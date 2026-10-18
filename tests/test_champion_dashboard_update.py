@@ -75,6 +75,80 @@ def test_update_success_idempotence_and_original_data_unchanged(operational):
     assert payload["nextRound"]["matches"][0]["prediction"]["probabilities"] == dict(home=50, draw=30, away=20)
     assert "st2_" not in (runtime / "view/champion_home.json").read_text()
     assert len(list((runtime / "batches").iterdir())) == 2
+    assert not (runtime / "diagnostics").exists()  # Completed past; later scheduled fixtures are permitted.
+
+
+@pytest.mark.parametrize("status", ["candidate", "scheduled"])
+def test_incomplete_past_history_stops_before_predictor_and_preserves_display(operational, status):
+    from test_dashboard_feed import set_completed
+    repo, runtime = operational
+    before_feed = (runtime / "view/champion_home.json").read_bytes()
+    before_batches, before_source = snapshot(runtime / "batches"), snapshot(repo["root"])
+    unfinished = None
+    def collector(source, runtime, config, stage):
+        nonlocal unfinished
+        rows = deepcopy(repo["current_rows"])
+        row = rows[8]  # Unsaved fixture; source evidence and saved predictions stay untouched.
+        row["match_date"] = "2026-08-20"
+        if status == "candidate":
+            set_completed(row)
+            row.update(status="candidate", evidence_type="official_completion_unconfirmed",
+                       completion_origin_snapshot="")
+        unfinished = {key: row[key] for key in ("match_date", "fixture_key", "status")}
+        identity = "3" * 64
+        digest = publish(runtime / "official/revisions" / identity, rows,
+                         observed="2026-08-20T15:00:00+00:00", version="ongoing-v2")
+        update.atomic_json(runtime / "official/latest.json", dict(revision_id=identity, manifest_sha256=digest))
+    def forbidden(*args):
+        pytest.fail("An unfinished past fixture must stop before model invocation")
+    with pytest.raises(ValueError, match="^prediction_history_incomplete$"):
+        invoke(operational, collector=collector, predictor=forbidden)
+    assert (runtime / "view/champion_home.json").read_bytes() == before_feed
+    assert snapshot(runtime / "batches") == before_batches and snapshot(repo["root"]) == before_source
+    diagnostics = list((runtime / "diagnostics").glob("prediction-history-*.json"))
+    assert len(diagnostics) == 1
+    diagnostic = json.loads(diagnostics[0].read_bytes())
+    assert diagnostic == dict(schemaVersion=1, errorCode="prediction_history_incomplete",
+        checkedAt=NOW.isoformat(), targetDate="2026-08-22", officialRevision="3" * 64,
+        unresolved=[unfinished])
+    state = json.loads((runtime / "view/update-status.json").read_bytes())
+    assert state["state"] == "error" and state["lastSuccessAt"] is None
+    assert state["errorCode"] == "update_failed" and unfinished["fixture_key"] not in json.dumps(state)
+    assert not (runtime / "update.lock").exists()
+
+
+@pytest.mark.parametrize("mode,code", [
+    ("candidate", "target_not_officially_scheduled"), ("completed", "target_not_officially_scheduled"),
+    ("missing_id", "official_id_missing"), ("duplicate_fixture", "target_identity_duplicate"),
+    ("duplicate_id", "target_identity_duplicate"), ("saved_partial", "saved_date_batch_changed"),
+    ("kickoff", "kickoff_elapsed"),
+])
+def test_target_date_cannot_be_partially_selected(operational, mode, code):
+    repo, runtime = operational
+    prior = update.official(repo["root"], runtime / "official")
+    current = SimpleNamespace(schedule=prior.schedule.copy(), manifest=prior.manifest)
+    batch = current.schedule.index[current.schedule.match_date.eq("2026-08-22")].tolist()
+    assert len(batch) == 2
+    first, second = batch
+    records, _ = update.saved_batches(runtime)
+    now = NOW
+    if mode in {"candidate", "completed"}:
+        current.schedule.loc[second, "status"] = mode
+    elif mode == "missing_id":
+        current.schedule.loc[second, "match_id"] = ""
+    elif mode == "duplicate_fixture":
+        current.schedule.loc[second, "fixture_key"] = current.schedule.loc[first, "fixture_key"]
+    elif mode == "duplicate_id":
+        current.schedule.loc[second, "match_id"] = current.schedule.loc[first, "match_id"]
+    elif mode == "saved_partial":
+        records.append(dict(fixture_key=current.schedule.loc[first, "fixture_key"]))
+    elif mode == "kickoff":
+        now = datetime.fromisoformat("2026-08-22T10:01:00+00:00")
+    before_feed, before_batches = (runtime / "view/champion_home.json").read_bytes(), snapshot(runtime / "batches")
+    with pytest.raises(ValueError, match=code):
+        update.select_targets(current, records, now, CONFIG["lookahead_days"])
+    assert (runtime / "view/champion_home.json").read_bytes() == before_feed
+    assert snapshot(runtime / "batches") == before_batches
 
 
 @pytest.mark.parametrize("failure", ["network", "inference", "probabilities", "missing_id", "candidate", "stale"])
