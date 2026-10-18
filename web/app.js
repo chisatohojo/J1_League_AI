@@ -14,13 +14,16 @@ function outcomeLabel(outcome, match) {
 }
 
 export function MatchCard(match, { previous, demo }) {
-  const card = element("article", "match-card");
+  const finished = match.status ? match.status === "completed" : previous;
+  const pending = match.status === "candidate";
+  const card = element("article", `match-card${match.prediction === null ? " no-prediction" : ""}`);
   card.dataset.matchId = match.id;
+  if (match.status) card.dataset.status = match.status;
   card.setAttribute("aria-label", `${match.homeTeam.name} 対 ${match.awayTeam.name}`);
   const top = element("div", "card-topline");
   const time = element("time", "kickoff", formatKickoff(match.kickoffAt));
   time.dateTime = match.kickoffAt;
-  top.append(time, element("span", "match-state", demo ? "DEMO" : previous ? "FULL TIME" : "PRE MATCH"));
+  top.append(time, element("span", "match-state", demo ? "DEMO" : pending ? "結果確認中" : finished ? "FULL TIME" : "PRE MATCH"));
 
   const fixture = element("div", "fixture");
   for (const side of ["home", "away"]) {
@@ -32,9 +35,13 @@ export function MatchCard(match, { previous, demo }) {
     teamNode.append(accent, element("span", "venue-label", side.toUpperCase()), element("h3", "team-name", team.name));
     fixture.append(teamNode);
     if (side === "home") {
-      const score = previous ? `${match.result.homeScore} − ${match.result.awayScore}` : "VS";
-      fixture.append(element("div", previous ? "fixture-score" : "fixture-versus", score));
+      const score = finished ? `${match.result.homeScore} − ${match.result.awayScore}` : "VS";
+      fixture.append(element("div", finished ? "fixture-score" : "fixture-versus", score));
     }
+  }
+  if (match.prediction === null) {
+    card.append(top, fixture, element("p", "no-prediction-note", finished || pending ? "AI予測なし" : "AI予測は未生成"));
+    return card;
   }
   const heading = element("p", "bar-heading", "WIN PROBABILITY");
   const probabilities = match.prediction.probabilities;
@@ -50,7 +57,7 @@ export function MatchCard(match, { previous, demo }) {
     element("strong", "pick-value", outcomes.map(outcome => outcomeLabel(outcome, match)).join(" / ")));
   if (outcomes.length > 1) pick.append(element("span", "tie-note", "同率最高 · HIT/MISS判定対象外"));
   details.append(pick);
-  if (previous) {
+  if (finished) {
     const actual = actualOutcome(match.result);
     const result = element("div", "detail-item result-item");
     result.append(element("span", "detail-label", "RESULT"), element("strong", "result-value", actual.toUpperCase()));
@@ -69,11 +76,14 @@ export function MatchCard(match, { previous, demo }) {
 
 export function renderDashboard(data, { demo = false } = {}) {
   validateDashboard(data, { demo });
+  const rounds = data.schemaVersion === 2;
+  document.body.classList.toggle("round-view", rounds);
   const empty = data.previousRound.matches.length + data.nextRound.matches.length === 0;
   const notice = document.querySelector("#data-status");
   const message = demo ? "UI DEMO / 架空データのプレビューです。実データではありません。"
     : empty ? "Champion専用の保存済み表示データは未接続です。研究データは使用していません。"
-      : "CHAMPION A / 保存済みの正式運用予想のみを表示しています。";
+      : rounds ? "CHAMPION A / 公式日程と保存済み予測を表示しています。予測なしの試合に確率は補完しません。"
+        : "CHAMPION A / 保存済みの正式運用予想のみを表示しています。";
   notice.replaceChildren(element("span", "notice-message", message));
   if (!demo && data.updatedAt) {
     notice.append(element("span", "notice-updated", `公式データ観測: ${formatKickoff(data.updatedAt)} JST`));
@@ -82,9 +92,25 @@ export function renderDashboard(data, { demo = false } = {}) {
   document.querySelector("#preview-link").textContent = demo ? "通常画面へ戻る ↗" : "UIデモを見る ↗";
   for (const [key, previous, selector] of [["previousRound", true, "previous"], ["nextRound", false, "next"]]) {
     const round = data[key];
+    document.querySelector(`#${selector}-title`).textContent = rounds
+      ? round.label : previous ? "前節の予想結果" : "次節の予想";
+    if (!previous) document.querySelector('nav a[href="#next-round"]').textContent = rounds && round.kind === "current" ? "今節の試合" : "次節の予想";
     document.querySelector(`#${selector}-label`).textContent = `${round.label} · ${round.matches.length} MATCHES`;
     const container = document.querySelector(`#${selector}-matches`);
-    const cards = round.matches.map(match => MatchCard(match, { previous, demo }));
+    const cards = [];
+    let day = null;
+    for (const match of round.matches) {
+      if (rounds) {
+        const matchDay = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(match.kickoffAt));
+        if (matchDay !== day) {
+          const divider = element("h3", "match-date-divider");
+          const date = element("time", "", new Intl.DateTimeFormat("ja-JP", { timeZone: "Asia/Tokyo", month: "long", day: "numeric", weekday: "short" }).format(new Date(match.kickoffAt)));
+          date.dateTime = matchDay;
+          divider.append(date); cards.push(divider); day = matchDay;
+        }
+      }
+      cards.push(MatchCard(match, { previous, demo }));
+    }
     if (cards.length === 0) {
       const placeholder = element("div", "empty-state");
       placeholder.append(element("span", "empty-symbol", previous ? "01" : "02"),

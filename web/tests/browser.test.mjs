@@ -398,6 +398,47 @@ test('home dashboard browser integration (synthetic data only)', {
     }
   });
 
+  await context.test('official rounds render all ten games across days and all prediction/result states', async () => {
+    const data = dashboardPayload();
+    data.schemaVersion = 2;
+    for (const [key, number] of [['previousRound', 1], ['nextRound', 2]]) {
+      const matches = Array.from({length:10}, (_,i) => {
+        const completed = number === 1 || i < 8;
+        const match = syntheticMatch(`round-${number}-${String(i).padStart(2,'0')}`, {home:31,draw:25,away:44}, completed);
+        match.round = number;
+        match.status = completed ? 'completed' : 'scheduled';
+        match.homeTeam.id = `team_${String(2*i+1).padStart(4,'0')}`;
+        match.awayTeam.id = `team_${String(2*i+2).padStart(4,'0')}`;
+        match.kickoffAt = `2030-10-0${number === 1 ? (i < 2 ? 2 : i < 6 ? 3 : 4) : (i < 8 ? 8 : 9)}T19:00:00+09:00`;
+        if (number === 1 ? i >= 2 : i !== 0 && i !== 9) match.prediction = null;
+        if (!completed) match.result = null;
+        if (number === 2 && i === 1) { match.status = 'candidate'; match.result = null; }
+        return match;
+      });
+      data[key] = {label:`${number===1?'前節':'今節'} · 第${number}節`,number,
+        kind:number===1?'previous':'current',matches};
+    }
+    server.setPayload(data);
+    await navigate(client, server.origin+'/?case=rounds', "document.querySelectorAll('.match-card').length === 20");
+    assert.match(await client.evaluate("document.querySelector('#previous-title').textContent"), /第1節/);
+    assert.match(await client.evaluate("document.querySelector('#next-title').textContent"), /今節.*第2節/);
+    assert.deepEqual(await client.evaluate("['previous','next'].map(s=>document.querySelectorAll('#'+s+'-matches .match-card').length)"), [10,10]);
+    assert.deepEqual(await client.evaluate("['previous','next'].map(s=>document.querySelectorAll('#'+s+'-matches .match-date-divider').length)"), [3,2]);
+    assert.equal(await client.evaluate("document.querySelectorAll('.probability-bar').length"), 4);
+    assert.match(await client.evaluate("document.querySelector('#next-matches [data-match-id=\"round-2-00\"]').textContent"), /HIT/);
+    assert.match(await client.evaluate("document.querySelector('#next-matches [data-match-id=\"round-2-08\"]').textContent"), /AI予測は未生成/);
+    assert.match(await client.evaluate("document.querySelector('#previous-matches .no-prediction').textContent"), /AI予測なし/);
+    assert.equal(await client.evaluate("document.querySelector('#next-matches [data-status=candidate] .fixture-score')"), null);
+    assert.match(await client.evaluate("document.querySelector('#next-matches [data-status=candidate]').textContent"), /結果確認中/);
+    assert.equal(await client.evaluate("document.querySelectorAll('.no-prediction .probability-bar, .no-prediction .pick-value, .no-prediction .outcome-badge').length"), 0);
+    for (const width of [1280,1024,375,320]) {
+      await viewport(client,width);
+      const columns = await client.evaluate("getComputedStyle(document.querySelector('.match-grid')).gridTemplateColumns.split(' ').length");
+      assert.equal(columns,width>760?2:1);
+      assert.ok(await client.evaluate("document.documentElement.scrollWidth <= innerWidth"));
+    }
+  });
+
   await context.test('live updates replace valid cards and preserve them on failure', async () => {
     const initial = dashboardPayload(
       [syntheticMatch('live-previous', { home: 31, draw: 25, away: 44 }, true)],

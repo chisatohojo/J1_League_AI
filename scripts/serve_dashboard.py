@@ -112,8 +112,9 @@ def validate_dashboard_data(payload: Any) -> dict[str, Any]:
         {"schemaVersion", "mode", "model", "updatedAt", "previousRound", "nextRound"},
         "dashboard",
     )
-    if type(data["schemaVersion"]) is not int or data["schemaVersion"] != 1:
-        raise DashboardDataError("schemaVersion: expected 1")
+    if type(data["schemaVersion"]) is not int or data["schemaVersion"] not in (1, 2):
+        raise DashboardDataError("schemaVersion: expected 1 or 2")
+    rounds = data["schemaVersion"] == 2
     if data["mode"] != "operational":
         raise DashboardDataError("mode: only operational data is permitted")
     model = _object(data["model"], {"name", "version"}, "model")
@@ -124,16 +125,26 @@ def validate_dashboard_data(payload: Any) -> dict[str, Any]:
 
     identities: set[str] = set()
     for section in ("previousRound", "nextRound"):
-        round_data = _object(data[section], {"label", "matches"}, section)
+        round_data = _object(data[section], {"label", "matches", "number", "kind"} if rounds else {"label", "matches"}, section)
         _text(round_data["label"], f"{section}.label")
         if not isinstance(round_data["matches"], list):
             raise DashboardDataError(f"{section}.matches: list required")
         if len(round_data["matches"]) > MAX_MATCHES_PER_ROUND:
             raise DashboardDataError(f"{section}.matches: at most {MAX_MATCHES_PER_ROUND} matches permitted")
+        if rounds:
+            number = round_data["number"]
+            if not (number is None and not round_data["matches"] or
+                    type(number) is int and 1 <= number <= 38 and len(round_data["matches"]) == 10):
+                raise DashboardDataError(f"{section}: full official round required")
+            if round_data["kind"] not in ({"previous"} if section == "previousRound" else {"current", "next"}):
+                raise DashboardDataError(f"{section}: invalid round kind")
+        teams, order = set(), []
         for index, value in enumerate(round_data["matches"]):
             path = f"{section}.matches[{index}]"
             keys = {"id", "homeTeam", "awayTeam", "kickoffAt", "prediction"}
-            if section == "previousRound":
+            if rounds:
+                keys.update({"round", "status", "result"})
+            elif section == "previousRound":
                 keys.add("result")
             match = _object(value, keys, path)
             identity = _text(match["id"], f"{path}.id")
@@ -145,40 +156,62 @@ def validate_dashboard_data(payload: Any) -> dict[str, Any]:
             if home == away:
                 raise DashboardDataError(f"{path}: home and away teams must differ")
             kickoff = _timestamp(match["kickoffAt"], f"{path}.kickoffAt")
-            prediction = _object(
-                match["prediction"],
-                {"source", "generatedAt", "probabilities"},
-                f"{path}.prediction",
-            )
-            if prediction["source"] != "saved_pre_match":
-                raise DashboardDataError(f"{path}.prediction.source: saved_pre_match required")
-            generated = _timestamp(
-                prediction["generatedAt"], f"{path}.prediction.generatedAt"
-            )
-            if generated >= kickoff:
-                raise DashboardDataError(f"{path}: saved prediction must precede kickoff")
-            probabilities = _object(
-                prediction["probabilities"],
-                {"home", "draw", "away"},
-                f"{path}.prediction.probabilities",
-            )
-            for outcome, probability in probabilities.items():
-                if (
-                    type(probability) not in (int, float)
-                    or not 0 <= probability <= 100
-                    or not math.isfinite(probability)
-                ):
-                    raise DashboardDataError(
-                        f"{path}.prediction.probabilities.{outcome}: finite percentage required"
-                    )
-            if not math.isclose(sum(probabilities.values()), 100, rel_tol=0, abs_tol=0.02):
-                raise DashboardDataError(f"{path}: probabilities must sum to 100 within 0.02")
-            if section == "previousRound":
+            if rounds:
+                if type(match["round"]) is not int or match["round"] != round_data["number"]:
+                    raise DashboardDataError(f"{path}: round mismatch")
+                if match["status"] not in {"scheduled", "candidate", "completed"}:
+                    raise DashboardDataError(f"{path}: invalid official status")
+                if home in teams or away in teams:
+                    raise DashboardDataError(f"{path}: duplicate team in round")
+                teams.update((home, away))
+                order.append((kickoff, identity))
+            if not rounds or match["prediction"] is not None:
+                _validate_prediction(match["prediction"], kickoff, path)
+            finished = match["status"] == "completed" if rounds else section == "previousRound"
+            if finished:
                 result = _object(match["result"], {"homeScore", "awayScore"}, f"{path}.result")
                 for name, score in result.items():
                     if type(score) is not int or not 0 <= score <= MAX_SAFE_INTEGER:
                         raise DashboardDataError(f"{path}.result.{name}: nonnegative safe integer required")
+            elif rounds and match["result"] is not None:
+                raise DashboardDataError(f"{path}: unconfirmed score forbidden")
+        if rounds and order != sorted(order):
+            raise DashboardDataError(f"{section}: chronological fixture order required")
+    if rounds and data["previousRound"]["number"] is not None and data["nextRound"]["number"] is not None:
+        if data["previousRound"]["number"] + 1 != data["nextRound"]["number"]:
+            raise DashboardDataError("Adjacent official rounds required")
     return data
+
+
+def _validate_prediction(value, kickoff, path):
+    prediction = _object(
+        value,
+        {"source", "generatedAt", "probabilities"},
+        f"{path}.prediction",
+    )
+    if prediction["source"] != "saved_pre_match":
+        raise DashboardDataError(f"{path}.prediction.source: saved_pre_match required")
+    generated = _timestamp(
+        prediction["generatedAt"], f"{path}.prediction.generatedAt"
+    )
+    if generated >= kickoff:
+        raise DashboardDataError(f"{path}: saved prediction must precede kickoff")
+    probabilities = _object(
+        prediction["probabilities"],
+        {"home", "draw", "away"},
+        f"{path}.prediction.probabilities",
+    )
+    for outcome, probability in probabilities.items():
+        if (
+            type(probability) not in (int, float)
+            or not 0 <= probability <= 100
+            or not math.isfinite(probability)
+        ):
+            raise DashboardDataError(
+                f"{path}.prediction.probabilities.{outcome}: finite percentage required"
+            )
+    if not math.isclose(sum(probabilities.values()), 100, rel_tol=0, abs_tol=0.02):
+        raise DashboardDataError(f"{path}: probabilities must sum to 100 within 0.02")
 
 
 def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:

@@ -228,6 +228,48 @@ preserves the previous valid JSON and removes the owned temporary file. Protecte
 input/model directories cannot be CLI output destinations. To view a subsequently
 approved feed, serve with `--data data/processed/dashboard/champion_home.json`.
 
+## Complete official rounds (schema v2, staged opt-in)
+
+The round view includes all ten official fixtures in each selected round, even
+across multiple dates or when no saved prediction exists. It reuses the same
+publication, fixture identity, TeamMaster, saved-batch and provenance checks.
+Only approved Champion probabilities are projected; no probabilities are created.
+
+Selection uses the current Asia/Tokyo calendar date and official `round` values.
+On a match day the highest round played that day is **current**; otherwise the
+earliest future match date selects **next** (highest round if that date is shared).
+**Previous** is the immediately preceding official round. After the season only
+the final previous round remains. Unresolved old candidates do not pin selection.
+Postponed fixtures retain their official round; a distant postponed date does
+not extend a round's current period across intervening rounds.
+
+Schema v2 retains the root/model/time keys above and adds exact round keys
+`number` (1..38, or null for an empty section) and `kind`
+(`previous`, `current`, `next`). A numbered section requires exactly ten matches,
+twenty distinct clubs, and chronological kickoff/fixture-key order. Each match
+adds `round`, `status` (`completed`, `candidate`, `scheduled`), and nullable
+`prediction` / `result`. A result is required only for `completed`; candidate
+scores are never exported. Saved prediction values and generation times retain
+their original precision and pre-match validation.
+
+Completed cards show official scores in either section. Without a prediction
+they show **AI予測なし** and omit bars, picks and HIT/MISS. Scheduled cards without
+a prediction show **AI予測は未生成**; candidates show **結果確認中**. Section headings
+include the official round number, with JST date dividers and accurate counts.
+Round layouts use two columns above 760px and one on smaller screens.
+
+Python/JavaScript validators, the server and the desktop launcher accept both
+v1 and v2. Existing demo/v1 rendering and operational JSON remain supported.
+The exporter and scheduled updater retain their v1 default during this staged
+rollout. An isolated round preview uses `build_dashboard_feed(...,
+champion_only=True, round_view=True)` with explicitly supplied validated saved
+Champion inputs and official publication directory. The ordinary source adapter
+also accepts `--rounds --output <separate-json>`; `--rounds` requires an explicit
+destination. Serve that separate JSON with `--data` on a new loopback port.
+Neither preview creation nor display changes existing predictions, publications,
+operational JSON, task registration or running servers. Connecting the operational
+updater to v2 is a subsequent explicit rollout, not an automatic side effect.
+
 ## Validation
 
 ```powershell

@@ -308,7 +308,7 @@ def validate_ready_payload(payload, *, require_data=False) -> None:
     keys = {"schemaVersion", "mode", "model", "updatedAt", "previousRound", "nextRound"}
     if not isinstance(payload, dict) or set(payload) != keys:
         raise LauncherError("invalid_response")
-    if type(payload["schemaVersion"]) is not int or payload["schemaVersion"] != 1:
+    if type(payload["schemaVersion"]) is not int or payload["schemaVersion"] not in (1, 2):
         raise LauncherError("invalid_response")
     if payload["mode"] != "operational" or payload["model"] != {"name": "Champion A", "version": CHAMPION_VERSION}:
         raise LauncherError("invalid_response")
@@ -317,7 +317,8 @@ def validate_ready_payload(payload, *, require_data=False) -> None:
     for name in ("previousRound", "nextRound"):
         section = payload[name]
         if (
-            not isinstance(section, dict) or set(section) != {"label", "matches"}
+            not isinstance(section, dict) or set(section) !=
+            ({"label", "matches", "number", "kind"} if payload["schemaVersion"] == 2 else {"label", "matches"})
             or not isinstance(section["label"], str) or not section["label"].strip()
             or not isinstance(section["matches"], list)
         ):

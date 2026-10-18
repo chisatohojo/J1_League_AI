@@ -56,6 +56,10 @@ h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.5px; margin: 0; line-
 .section-note { color: var(--muted); font-size: 11px; line-height: 1.7; margin: 11px 0 19px; }
 .match-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .match-card { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 19px; box-shadow: 0 2px 3px #101c2c03; }
+.match-date-divider { grid-column: 1 / -1; margin: 12px 0 0; padding-bottom: 9px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.match-card.no-prediction { background: #fafbfd; box-shadow: none; align-self: start; }
+.no-prediction-note { margin: 17px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.round-view .match-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 .card-topline { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 17px; }
 .kickoff { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .match-state { font-size: 9px; letter-spacing: 1px; color: #5f6e82; background: #f0f3f7; border-radius: 3px; padding: 4px 6px; flex-shrink: 0; }
@@ -122,6 +126,7 @@ h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.5px; margin: 0; line-
   .team-name { font-size: 16px; }
 }
 @media (max-width: 760px) {
+  .round-view .match-grid { grid-template-columns: minmax(0, 1fr); }
   .header-inner { min-height: 65px; padding: 0 20px; gap: 24px; }
   nav { margin-left: auto; gap: 19px; font-size: 11px; }
   .header-label { display: none; }

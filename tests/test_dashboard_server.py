@@ -85,6 +85,54 @@ def test_empty_defaults_are_independent():
     assert empty_dashboard()["previousRound"]["matches"] == []
 
 
+@pytest.fixture
+def round_payload(payload):
+    data = deepcopy(payload)
+    data["schemaVersion"] = 2
+    sample = payload["previousRound"]["matches"][0]
+    for section, number in (("previousRound", 1), ("nextRound", 2)):
+        matches = []
+        for i in range(10):
+            match = deepcopy(sample)
+            match.update(id=f"round-{number}-{i:02d}", round=number,
+                status="completed" if section == "previousRound" or i < 8 else "scheduled",
+                kickoffAt=f"2026-10-{number+1:02d}T19:00:00+09:00")
+            match["homeTeam"]["id"], match["awayTeam"]["id"] = f"team_{2*i+1:04d}", f"team_{2*i+2:04d}"
+            if i >= 2:
+                match["prediction"] = None
+            if match["status"] != "completed":
+                match["result"] = None
+            matches.append(match)
+        data[section] = dict(label=f"第{number}節", number=number,
+            kind="previous" if section == "previousRound" else "current", matches=matches)
+    return data
+
+
+def test_v2_rounds_allow_missing_prediction_and_completed_in_current_section(round_payload):
+    assert validate_dashboard_data(round_payload) is round_payload
+    candidate = round_payload["nextRound"]["matches"][0]
+    candidate.update(status="candidate", result=None)
+    assert validate_dashboard_data(round_payload) is round_payload
+
+
+@pytest.mark.parametrize("problem", ["missing", "round", "kind", "duplicate_team", "order", "unconfirmed_score",
+    "completed_without_score", "research", "bad_prediction", "nonadjacent"])
+def test_v2_round_contract_rejects_partial_or_ambiguous_data(round_payload, problem):
+    current = round_payload["nextRound"]
+    match = current["matches"][0]
+    if problem == "missing": current["matches"].pop()
+    elif problem == "round": match["round"] = 1
+    elif problem == "kind": current["kind"] = "previous"
+    elif problem == "duplicate_team": current["matches"][1]["homeTeam"]["id"] = match["homeTeam"]["id"]
+    elif problem == "order": current["matches"].reverse()
+    elif problem == "unconfirmed_score": match["status"] = "candidate"
+    elif problem == "completed_without_score": match["result"] = None
+    elif problem == "research": current["matches"][9]["st2"] = 1
+    elif problem == "bad_prediction": match["prediction"]["probabilities"]["home"] = 0
+    elif problem == "nonadjacent": round_payload["previousRound"]["number"] = 3
+    with pytest.raises(DashboardDataError): validate_dashboard_data(round_payload)
+
+
 def test_valid_saved_champion_payload_unchanged(payload):
     before = deepcopy(payload)
     assert validate_dashboard_data(payload) is payload

@@ -4,7 +4,7 @@ import ast
 import builtins
 from copy import deepcopy
 import csv
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import importlib.abc
 import io
 import json
@@ -433,6 +433,107 @@ def test_end_to_end_exact_schema_firewall_selection_identity_and_no_writes(repos
         assert forbidden not in serialized.lower()
     assert all(path.read_bytes() == body for path, body in before.items())
     assert not (repository["root"] / adapter.OUTPUT_PATH).exists()
+
+
+@pytest.fixture
+def round_repository(repository, tmp_path):
+    """Full synthetic publications: round 1 across three days, round 2 across two."""
+    repo = repository
+    for index, row in enumerate(repo["rows"][:20]):
+        row["match_date"] = ("2026-08-08" if index < 2 else "2026-08-09" if index < 6 else
+                             "2026-08-10" if index < 10 else "2026-08-17" if index < 18 else "2026-08-18")
+    source_sha = publish(repo["source_dir"], repo["rows"], observed="2026-08-02T15:00:00+00:00")
+    current = deepcopy(repo["rows"])
+    for row in current:
+        row["match_id_namespace"] = adapter.MATCH_PAGE_NAMESPACE
+    for row in current[:18]:
+        set_completed(row)
+    repo["current_rows"] = current
+    digest = publish(repo["current_dir"], current, observed="2026-08-17T15:00:00+00:00", version="ongoing-v2")
+    (repo["root"] / adapter.ONGOING_PATH / "latest.json").write_text(json.dumps(dict(
+        revision_id=repo["current_id"], manifest_sha256=digest)), encoding="utf-8")
+    records, bindings = [], []
+    for row in [repo["rows"][i] for i in (0, 1, 18, 19)]:
+        record = {key: repo["predictions"][0][key] for key in adapter.PROJECTION_COLUMNS}
+        record.update(fixture_key=row["fixture_key"], match_id=row["match_id"], match_date=row["match_date"],
+            kickoff=row["kickoff_time"], home_team_id=f"team_{int(row['home_club'][4:]):04d}",
+            away_team_id=f"team_{int(row['away_club'][4:]):04d}", home_team_name=row["home_team"],
+            away_team_name=row["away_team"], model_version=adapter.CHAMPION_VERSION)
+        records.append(record)
+        bindings.append(dict(prediction_artifact=adapter.CHAMPION_PREDICTION_ARTIFACT,
+            prediction_match_id=row["match_id"], model_version=adapter.CHAMPION_VERSION,
+            fixture_key=row["fixture_key"], prediction_id_namespace=adapter.MATCH_PAGE_NAMESPACE,
+            identity_witness_revision_id=repo["source_id"], identity_witness_manifest_sha256=source_sha,
+            match_date=row["match_date"], home_team_id=record["home_team_id"], away_team_id=record["away_team_id"],
+            prediction_generated_at=record["prediction_generated_at"]))
+    prediction, binding = tmp_path / "champion.csv", tmp_path / "bindings.csv"
+    prediction.write_bytes(csv_bytes(records, adapter.CHAMPION_COLUMNS))
+    binding.write_bytes(csv_bytes(bindings, adapter.BINDING_COLUMNS))
+    return repo, records, dict(prediction_file=prediction, binding_file=binding, champion_only=True,
+        round_view=True, now=datetime.fromisoformat("2026-08-18T09:00:00+09:00"))
+
+
+def test_round_view_shows_all_official_games_and_exact_saved_predictions(round_repository):
+    repo, records, options = round_repository
+    before = {path: path.read_bytes() for path in repo["root"].rglob("*") if path.is_file()}
+    payload = adapter.build_dashboard_feed(repo["root"], **options)
+    assert payload["schemaVersion"] == 2
+    assert payload["previousRound"]["number"] == 1 and payload["nextRound"]["number"] == 2
+    assert payload["nextRound"]["kind"] == "current"
+    for name, days in (("previousRound", 3), ("nextRound", 2)):
+        matches = payload[name]["matches"]
+        assert len(matches) == 10 and sum(m["prediction"] is not None for m in matches) == 2
+        assert len({m["kickoffAt"][:10] for m in matches}) == days
+        assert [(m["kickoffAt"], m["id"]) for m in matches] == sorted((m["kickoffAt"], m["id"]) for m in matches)
+        for match in matches:
+            if match["prediction"] is not None:
+                row = next(r for r in records if r["fixture_key"] == match["id"])
+                assert match["prediction"]["generatedAt"] == row["prediction_generated_at"]
+                assert match["prediction"]["probabilities"] == {side: float(row[f"a_p_{side}"])*100 for side in ("home", "draw", "away")}
+            assert (match["result"] is not None) == (match["status"] == "completed")
+    assert [m["status"] for m in payload["nextRound"]["matches"]].count("completed") == 8
+    assert all(path.read_bytes() == body for path, body in before.items())
+    assert validate_dashboard_data(payload) is payload
+
+
+@pytest.mark.parametrize("change", ["candidate", "postponed", "no_predictions"])
+def test_round_view_does_not_invent_results_or_predictions_or_regroup_postponements(round_repository, change):
+    repo, _, options = round_repository
+    if change == "no_predictions":
+        options["prediction_file"].write_bytes(csv_bytes([], adapter.CHAMPION_COLUMNS))
+        options["binding_file"].write_bytes(csv_bytes([], adapter.BINDING_COLUMNS))
+    else:
+        row = repo["current_rows"][2]
+        if change == "candidate":
+            row.update(status="candidate", evidence_type="official_completion_unconfirmed", completion_origin_snapshot="")
+        else:
+            row.update(match_date="2026-09-03", status="scheduled", home_score="", away_score="", result="",
+                match_id=row["match_page_id"], match_id_namespace=adapter.MATCH_PAGE_NAMESPACE)
+        digest = publish(repo["current_dir"], repo["current_rows"], observed="2026-08-17T15:00:00+00:00", version="ongoing-v2")
+        (repo["root"] / adapter.ONGOING_PATH / "latest.json").write_text(json.dumps(dict(
+            revision_id=repo["current_id"], manifest_sha256=digest)), encoding="utf-8")
+    payload = adapter.build_dashboard_feed(repo["root"], **options)
+    assert payload["nextRound"]["number"] == 2 and payload["nextRound"]["kind"] == "current"
+    assert len(payload["previousRound"]["matches"]) == len(payload["nextRound"]["matches"]) == 10
+    if change == "no_predictions":
+        assert all(m["prediction"] is None for key in ("previousRound", "nextRound") for m in payload[key]["matches"])
+    else:
+        match = next(m for m in payload["previousRound"]["matches"] if m["id"] == row["fixture_key"])
+        assert match["round"] == 1 and match["result"] is None
+        assert match["status"] == ("candidate" if change == "candidate" else "scheduled")
+
+
+@pytest.mark.parametrize("now,expected", [
+    ("2026-08-07T12:00:00+09:00", (None, 1, "next")),
+    ("2026-08-08T12:00:00+09:00", (None, 1, "current")),
+    ("2026-08-11T12:00:00+09:00", (1, 2, "next")),
+    ("2026-08-17T15:00:00+00:00", (1, 2, "current")),
+    ("2026-10-01T12:00:00+09:00", (3, None, "next")),
+])
+def test_official_round_calendar_selection_ignores_old_candidate(now, expected):
+    schedule = pd.DataFrame([dict(round=n, match_date=day, status="candidate" if n==1 else "scheduled")
+        for n, day in ((1,"2026-08-08"),(2,"2026-08-18"),(3,"2026-09-04"))])
+    assert adapter.select_official_rounds(schedule, datetime.fromisoformat(now)) == expected
 
 
 def test_projection_never_materializes_research_or_class_fields(repository):

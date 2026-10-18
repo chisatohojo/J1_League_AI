@@ -319,7 +319,7 @@ def validate_binding_coverage(predictions, bindings, *, champion_only=False):
 
 
 def build_dashboard_feed(repository_root=ROOT, *, prediction_file=None, binding_file=None,
-                         official_directory=None, champion_only=False):
+                         official_directory=None, champion_only=False, round_view=False, now=None):
     """Construct the entire feed before writing anything; inputs remain read-only."""
     root = Path(repository_root).resolve()
     prediction_path, binding_path, master_path = [rooted(root, path) for path in (
@@ -445,10 +445,60 @@ def build_dashboard_feed(repository_root=ROOT, *, prediction_file=None, binding_
         selected_day = (max if previous else min)(item[0] for item in candidates) if candidates else None
         selected = sorted((item[2] for item in candidates if item[0] == selected_day), key=lambda match: match["id"])
         payload[key] = {"label": f"{label} · {selected_day}" if selected_day else label, "matches": selected}
+    if round_view:
+        payload = round_dashboard(current, names, {item[2]["id"]: item[2] for item in joined}, now=now)
     validate_dashboard_data(payload)  # Exact recursive output schema is also the research leak firewall.
     require(all(path.read_bytes() == body for path, body in snapshots.items())
             and pointer_path.read_bytes() == pointer_body and not journal.exists() and not lock.exists(),
             "Input publication changed during adapter read")
+    return payload
+
+
+def select_official_rounds(schedule, now):
+    """Use JST calendar fixtures, never unfinished status or a postponed span.
+
+    Today's highest official round is current. On a day without games, the
+    earliest future fixture date selects the next round (highest round on a
+    shared date). An old candidate does not pin the current section. Postponed
+    games retain their original round and do not extend a round across months.
+    """
+    today = timestamp(now.isoformat()).astimezone(ZoneInfo("Asia/Tokyo")).date().isoformat()
+    numbers = sorted({int(value) for value in schedule["round"]})
+    on_day = schedule.loc[schedule.match_date.eq(today)]
+    kind = "current" if not on_day.empty else "next"
+    if on_day.empty:
+        future = schedule.loc[schedule.match_date.gt(today)]
+        on_day = future.loc[future.match_date.eq(future.match_date.min())] if not future.empty else future
+    if on_day.empty:
+        return (numbers[-1] if numbers else None), None, kind
+    selected = max(int(value) for value in on_day["round"])
+    previous = max((number for number in numbers if number < selected), default=None)
+    return previous, selected, kind
+
+
+def round_dashboard(current, names, saved, *, now=None):
+    previous, selected, kind = select_official_rounds(
+        current.schedule, datetime.now(ZoneInfo("Asia/Tokyo")) if now is None else now)
+    payload = dict(schemaVersion=2, mode="operational", model=dict(CHAMPION_MODEL), updatedAt=current.observed_at)
+    completed = current.completed.set_index("fixture_key")
+    for key, number, section_kind in (("previousRound", previous, "previous"), ("nextRound", selected, kind)):
+        label = {"previous": "前節", "current": "今節", "next": "次節"}[section_kind]
+        matches = []
+        if number is not None:
+            rows = current.schedule.loc[current.schedule["round"].astype(int).eq(number)]
+            require(len(rows) == 10, "Official round must contain all ten fixtures")
+            for row in rows.sort_values(["match_date", "kickoff_time", "fixture_key"]).itertuples(index=False):
+                result = None
+                if row.status == "completed":
+                    score = completed.loc[row.fixture_key]
+                    result = dict(homeScore=int(score.home_score), awayScore=int(score.away_score))
+                matches.append(dict(id=row.fixture_key, round=number, status=row.status,
+                    homeTeam=dict(id=row.home_team_id, name=names[row.home_team_id]),
+                    awayTeam=dict(id=row.away_team_id, name=names[row.away_team_id]),
+                    kickoffAt=kickoff_at(row.match_date, row.kickoff_time),
+                    prediction=saved.get(row.fixture_key, {}).get("prediction"), result=result))
+        payload[key] = dict(label=f"{label} · 第{number}節" if number is not None else label,
+                            number=number, kind=section_kind, matches=matches)
     return payload
 
 
@@ -476,13 +526,15 @@ def write_dashboard_feed(payload, output):
 def main(argv=None, *, repository_root=ROOT):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, help=f"Validated JSON destination (default: {OUTPUT_PATH})")
+    parser.add_argument("--rounds", action="store_true", help="Schema v2: all official fixtures by round; requires separate --output")
     args = parser.parse_args(argv)
     try:
         root = Path(repository_root).resolve()
+        require(not args.rounds or args.output is not None, "Round preview requires an explicit output")
         output = args.output if args.output is not None else rooted(root, OUTPUT_PATH)
         protected = ("models", "data/raw", "data/master", "data/processed/predictions", ONGOING_PATH)
         require(not any(output.resolve().is_relative_to(root / path) for path in protected), "Output overlaps protected inputs")
-        payload = build_dashboard_feed(root)
+        payload = build_dashboard_feed(root, round_view=args.rounds)
         write_dashboard_feed(payload, output)
     except Exception:
         # Never echo source cells or exception excerpts from the mixed research CSV.

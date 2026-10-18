@@ -73,3 +73,45 @@ test("display derives actual result from supplied Champion-only score", () => {
 test("kickoff display is JST, independent of client timezone", () => {
   assert.match(formatKickoff("2030-08-10T10:00:00Z"), /19:00/);
 });
+
+function roundData() {
+  const data = operationalData();
+  data.schemaVersion = 2;
+  const sample = data.previousRound.matches[0];
+  for (const [section, number] of [["previousRound", 1], ["nextRound", 2]]) {
+    const matches = Array.from({ length: 10 }, (_, i) => {
+      const match = structuredClone(sample);
+      Object.assign(match, { id: `round-${number}-${String(i).padStart(2, "0")}`, round: number,
+        status: i < 8 ? "completed" : "scheduled", kickoffAt: `2030-08-${number + 10}T19:00:00+09:00` });
+      match.homeTeam.id = `team_${String(2*i+1).padStart(4,"0")}`;
+      match.awayTeam.id = `team_${String(2*i+2).padStart(4,"0")}`;
+      if (i >= 2) match.prediction = null;
+      else match.prediction.generatedAt = "2030-08-01T09:00:00+09:00";
+      if (match.status !== "completed") match.result = null;
+      return match;
+    });
+    data[section] = { label: `第${number}節`, number, kind: number === 1 ? "previous" : "current", matches };
+  }
+  return data;
+}
+
+test("v2 all official fixtures, missing predictions and unconfirmed results validate without mutation", () => {
+  const data = roundData();
+  data.nextRound.matches[0].status = "candidate";
+  data.nextRound.matches[0].result = null;
+  const before = JSON.stringify(data);
+  assert.equal(validateDashboard(data), data);
+  assert.equal(JSON.stringify(data), before);
+});
+
+for (const [problem, mutate] of Object.entries({
+  partial: d => d.nextRound.matches.pop(),
+  round: d => { d.nextRound.matches[0].round = 3; },
+  kind: d => { d.nextRound.kind = "previous"; },
+  team: d => { d.nextRound.matches[1].homeTeam.id = d.nextRound.matches[0].homeTeam.id; },
+  order: d => d.nextRound.matches.reverse(),
+  candidateScore: d => { d.nextRound.matches[0].status = "candidate"; },
+  missingFinalScore: d => { d.nextRound.matches[0].result = null; },
+  research: d => { d.nextRound.matches[9].st2 = 1; },
+  fakePrediction: d => { d.nextRound.matches[0].prediction.source = "generated"; },
+})) test(`v2 rejects ${problem}`, () => { const data = roundData(); mutate(data); assert.throws(() => validateDashboard(data)); });
