@@ -3,7 +3,8 @@
 param(
     [string]$Data,
     [string]$Runtime,
-    [string]$Python
+    [string]$Python,
+    [ValidateSet('legacy', 'rounds')][string]$View = 'legacy'
 )
 
 Set-StrictMode -Version Latest
@@ -47,10 +48,12 @@ if (-not $desktop -or -not (Test-Path -LiteralPath $desktop -PathType Container)
 $shortcutPath = Join-Path $desktop 'J1 AI Predict.lnk'
 $ownerMarker = 'J1AI Windows dashboard launcher v1 | ' + $repositoryRoot
 $arguments = '"' + $launcher + '"'
+if ($View -eq 'rounds' -and -not $Runtime) { throw '-View rounds requires -Runtime.' }
 if ($Runtime) {
     if ($Data) { throw '-Runtime and -Data cannot be combined.' }
     $runtimePath = (Resolve-Path -LiteralPath $Runtime).Path
-    foreach ($relative in @('view\champion_home.json', 'view\update-status.json')) {
+    $viewFile = if ($View -eq 'rounds') { 'view\champion_rounds.json' } else { 'view\champion_home.json' }
+    foreach ($relative in @($viewFile, 'view\update-status.json')) {
         if (-not (Test-Path -LiteralPath (Join-Path $runtimePath $relative) -PathType Leaf)) {
             throw 'The selected runtime has no prepared feed or update status. No shortcut was installed.'
         }
@@ -58,6 +61,12 @@ if ($Runtime) {
     $shortcutPath = Join-Path $desktop 'J1AI Champion A.lnk'
     $ownerMarker = 'J1AI Champion A launcher v1 | ' + $repositoryRoot + ' | ' + $runtimePath
     $arguments = '-B ' + $arguments + ' --runtime "' + $runtimePath + '"'
+    if ($View -eq 'rounds') {
+        # Separate opt-in icon; never overwrite an existing v1 shortcut.
+        $shortcutPath = Join-Path $desktop 'J1AI Champion A Rounds.lnk'
+        $ownerMarker = 'J1AI Champion A launcher v2 | ' + $repositoryRoot + ' | ' + $runtimePath
+        $arguments += ' --view rounds'
+    }
 }
 if ($Data) {
     $dataPath = (Resolve-Path -LiteralPath $Data).Path

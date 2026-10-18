@@ -796,6 +796,67 @@ def test_runtime_and_data_cannot_be_combined():
         launcher.main(["--runtime", "synthetic", "--data", "synthetic.json"])
 
 
+def test_round_view_has_separate_namespace_and_no_legacy_fallback(fake_root, tmp_path):
+    operational = tmp_path / "operational"
+    (operational / "view").mkdir(parents=True)
+    for name in ("champion_home.json", "update-status.json"):
+        (operational / "view" / name).touch()
+    old_scope = launcher.runtime_scope(fake_root, operational)
+    new_scope = launcher.runtime_scope(fake_root, operational, "rounds")
+    assert old_scope != new_scope
+    assert launcher.local_directory(old_scope) != launcher.local_directory(new_scope)
+    with pytest.raises(launcher.LauncherError):
+        launcher.runtime_files(operational, "rounds")
+    (operational / "view/champion_rounds.json").touch()
+    assert launcher.runtime_files(operational, "rounds")[0].name == "champion_rounds.json"
+    with pytest.raises(SystemExit):
+        launcher.main(["--view", "rounds"])
+    with pytest.raises(launcher.LauncherError):
+        launcher.runtime_scope(fake_root, None, "rounds")
+    with pytest.raises(launcher.LauncherError):
+        launcher.validate_ready_payload(empty_dashboard(), expected_version=2)
+
+
+def test_software_rendering_is_explicit_and_legacy_browser_command_stays_unchanged(fake_root):
+    args = (fake_root / "msedge.exe", "http://127.0.0.1:45678/", fake_root / "profile")
+    legacy = launcher.browser_command(*args)
+    assert "--disable-gpu" not in legacy
+    assert launcher.browser_command(*args, software_rendering=True) == [*legacy, "--disable-gpu"]
+
+
+def test_round_runtime_owner_reopens_same_server_and_stops_only_its_scope(runtime, fake_root):
+    operational = fake_root / "operational"
+    (operational / "view").mkdir(parents=True)
+    for name in ("champion_rounds.json", "update-status.json"):
+        (operational / "view" / name).touch()
+    runtime.state.stop_requested.side_effect = [False, False, True]
+    runtime.state.open_requested.side_effect = [True, False]
+    assert launcher.run_launcher(fake_root, runtime=operational, view="rounds") == 0
+    runtime.start.assert_called_once_with(fake_root / ".venv/Scripts/python.exe", fake_root,
+        operational / "view/champion_rounds.json", status=operational / "view/update-status.json")
+    runtime.ready.assert_called_once_with(runtime.server, 20.0, require_data=True, expected_version=2)
+    assert runtime.browser.call_count == 2 and runtime.browser.call_args_list[0] == runtime.browser.call_args_list[1]
+    assert runtime.browser.call_args.kwargs == {"software_rendering": True}
+    runtime.server.terminate.assert_called_once()
+    runtime.browser_process.terminate.assert_not_called()
+    assert runtime.events == ["started", "reopened", "stopped"]
+
+
+@pytest.mark.skipif(launcher.sys.platform != "win32", reason="real kernel objects are Windows-only")
+def test_round_stop_event_does_not_signal_legacy_runtime(fake_root):
+    operational = fake_root / "operational"
+    legacy = launcher.WindowsInstance(launcher.runtime_scope(fake_root, operational), reopen=True)
+    rounds = launcher.WindowsInstance(launcher.runtime_scope(fake_root, operational, "rounds"), reopen=True)
+    signal = launcher.WindowsInstance(launcher.runtime_scope(fake_root, operational, "rounds"), reopen=True)
+    try:
+        assert legacy.acquire() and rounds.acquire()
+        assert signal.signal_open() and rounds.open_requested() and not legacy.open_requested()
+        assert signal.signal_stop() and rounds.stop_requested(0) and not legacy.stop_requested(0)
+    finally:
+        for state in (legacy, rounds, signal):
+            state.close()
+
+
 def test_base_interpreter_probe_failure_never_creates_server(fake_root, monkeypatch):
     monkeypatch.setattr(launcher.subprocess, "run", Mock(side_effect=subprocess.TimeoutExpired("probe", 5)))
     spawn = Mock()

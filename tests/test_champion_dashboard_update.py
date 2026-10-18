@@ -1,6 +1,6 @@
 """Temporary synthetic repositories only; never load the real estimator or fetch official sources."""
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 import hashlib
 import json
 from pathlib import Path
@@ -196,6 +196,94 @@ def test_evening_never_predicts_and_records_success(operational):
     assert invoke(operational, slot="evening", predictor=forbidden)["added"] == 0
     repo, runtime = operational
     assert json.loads((runtime / "view/update-status.json").read_bytes())["lastSuccessAt"] == NOW.isoformat()
+
+
+def test_morning_adds_saved_predictions_to_both_views_without_changing_old_predictions(operational):
+    repo, runtime = operational
+    prior_records, _ = update.saved_batches(runtime)
+    assert invoke(operational)["added"] == 2
+    legacy, rounds = [json.loads((runtime / "view" / name).read_bytes())
+                      for name in (update.LEGACY_VIEW, update.ROUND_VIEW)]
+    assert legacy["schemaVersion"] == 1 and rounds["schemaVersion"] == 2
+    assert legacy["updatedAt"] == rounds["updatedAt"]
+    assert len(rounds["nextRound"]["matches"]) == 10
+    by_key = {m["id"]: m for section in ("previousRound", "nextRound") for m in rounds[section]["matches"]}
+    for row in prior_records:
+        prediction = by_key[row["fixture_key"]]["prediction"]
+        assert prediction["generatedAt"] == row["prediction_generated_at"]
+        assert prediction["probabilities"] == {s: float(row[f"a_p_{s}"])*100 for s in ("home", "draw", "away")}
+    for match in legacy["nextRound"]["matches"]:
+        assert by_key[match["id"]]["prediction"] == match["prediction"]
+    assert sum(m["prediction"] is None for m in by_key.values()) == 4
+    assert all((m["result"] is not None) == (m["status"] == "completed") for m in by_key.values())
+    assert not list((runtime / "view").glob(".display-*"))
+
+
+@pytest.mark.parametrize("failure", ["v1_schema", "v2_schema", "publication_mismatch", "v2_write", "v1_write", "ready_status", "network"])
+def test_dual_view_failure_restores_both_files_and_last_success(operational, monkeypatch, failure):
+    repo, runtime = operational
+    invoke(operational, slot="evening")
+    paths = [runtime / "view" / name for name in (update.LEGACY_VIEW, update.ROUND_VIEW)]
+    before = {path: path.read_bytes() for path in paths}
+    saved, source = snapshot(runtime / "batches"), snapshot(repo["root"])
+    def collector(source, runtime, config, stage):
+        identity = "3" * 64
+        digest = publish(runtime / "official/revisions" / identity, repo["current_rows"],
+                         observed=NOW.isoformat(), version="ongoing-v2")
+        update.atomic_json(runtime / "official/latest.json", dict(revision_id=identity, manifest_sha256=digest))
+    if failure.endswith("schema") or failure == "publication_mismatch":
+        original = feed.build_dashboard_feed
+        def invalid(*args, **kwargs):
+            payload = original(*args, **kwargs)
+            if failure == "publication_mismatch" and payload["schemaVersion"] == 2:
+                payload["updatedAt"] = "2026-08-20T15:00:00+00:00"
+            elif payload["schemaVersion"] == (1 if failure == "v1_schema" else 2):
+                payload["research"] = "synthetic invalid field"
+            return payload
+        monkeypatch.setattr(feed, "build_dashboard_feed", invalid)
+    elif failure.endswith("write"):
+        original = update.os.replace
+        destination = runtime / "view" / (update.ROUND_VIEW if failure == "v2_write" else update.LEGACY_VIEW)
+        failed = False
+        def deny_once(src, dst):
+            nonlocal failed
+            if Path(dst) == destination and not failed:
+                failed = True
+                raise PermissionError("synthetic write denied")
+            return original(src, dst)
+        monkeypatch.setattr(update.os, "replace", deny_once)
+    elif failure == "ready_status":
+        original = update.atomic_json
+        def deny_ready(path, value):
+            if Path(path).name == "update-status.json" and value.get("state") == "ready":
+                raise PermissionError("synthetic status denied")
+            return original(path, value)
+        monkeypatch.setattr(update, "atomic_json", deny_ready)
+    else:
+        def collector(*args):
+            raise TimeoutError("synthetic acquisition failure")
+    with pytest.raises((ValueError, OSError)):
+        invoke(operational, slot="evening", collector=collector, clock=lambda: NOW + timedelta(minutes=1))
+    assert all(path.read_bytes() == body for path, body in before.items())
+    assert snapshot(runtime / "batches") == saved and snapshot(repo["root"]) == source
+    state = json.loads((runtime / "view/update-status.json").read_bytes())
+    assert state["state"] == "error" and state["lastSuccessAt"] == NOW.isoformat()
+    assert not list((runtime / "view").glob(".display-*")) and not (runtime / "update.lock").exists()
+
+
+def test_first_dual_publication_failure_does_not_leave_v2_file(operational, monkeypatch):
+    _, runtime = operational
+    before = (runtime / "view" / update.LEGACY_VIEW).read_bytes()
+    original = update.os.replace
+    def deny_legacy(src, dst):
+        if Path(dst) == runtime / "view" / update.LEGACY_VIEW:
+            raise PermissionError("synthetic legacy write denied")
+        return original(src, dst)
+    monkeypatch.setattr(update.os, "replace", deny_legacy)
+    with pytest.raises(PermissionError):
+        invoke(operational, slot="evening")
+    assert (runtime / "view" / update.LEGACY_VIEW).read_bytes() == before
+    assert not (runtime / "view" / update.ROUND_VIEW).exists()
 
 
 def test_exclusion_lock_and_abandoned_lock_not_recovered(operational):

@@ -370,8 +370,11 @@ def test_mutations_and_non_get_requests_rejected(running_server, method):
     assert exc.value.headers["Allow"] == "GET"
 
 
-def test_reload_retains_last_good_on_invalid_data_and_recovers(tmp_path, payload):
+@pytest.mark.parametrize("version", [1, 2])
+def test_reload_retains_last_good_on_invalid_data_and_recovers(tmp_path, payload, round_payload, version):
     from scripts.build_dashboard_feed import write_dashboard_feed
+    alternative = deepcopy(round_payload if version == 1 else payload)
+    payload = payload if version == 1 else round_payload
     data_path = tmp_path / "champion.json"
     status_path = tmp_path / "status.json"
     write_dashboard_feed(payload, data_path)
@@ -390,12 +393,21 @@ def test_reload_retains_last_good_on_invalid_data_and_recovers(tmp_path, payload
         changed["updatedAt"] = "2026-10-02T09:00:00+09:00"
         changed["nextRound"]["matches"][0]["prediction"]["probabilities"] = dict(home=60, draw=20, away=20)
         write_dashboard_feed(changed, data_path)
+        for state in ("updating", "error"):
+            status_path.write_text(json.dumps(dict(status, state=state,
+                errorCode="update_failed" if state == "error" else None)), encoding="utf-8")
+            assert get("/api/dashboard") == payload
+            assert get("/api/update-status")["state"] == state
+        status_path.write_text(json.dumps(status), encoding="utf-8")
         assert get("/api/dashboard") == changed
         assert get("/api/update-status")["pollEnabled"] is True
+        assert get("/api/update-status")["pollSeconds"] == 60
+        alternative["updatedAt"] = changed["updatedAt"]
         for invalid in [
             b"{truncated",
             json.dumps(dict(changed, research={"ST2": "PRIVATE_SENTINEL"})).encode(),
             json.dumps(dict(changed, updatedAt=payload["updatedAt"])).encode(),
+            json.dumps(alternative).encode(),
         ]:
             data_path.write_bytes(invalid)
             assert get("/api/dashboard") == changed

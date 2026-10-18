@@ -260,15 +260,30 @@ Round layouts use two columns above 760px and one on smaller screens.
 
 Python/JavaScript validators, the server and the desktop launcher accept both
 v1 and v2. Existing demo/v1 rendering and operational JSON remain supported.
-The exporter and scheduled updater retain their v1 default during this staged
-rollout. An isolated round preview uses `build_dashboard_feed(...,
+The standalone exporter retains its v1 default. An isolated round preview uses `build_dashboard_feed(...,
 champion_only=True, round_view=True)` with explicitly supplied validated saved
 Champion inputs and official publication directory. The ordinary source adapter
 also accepts `--rounds --output <separate-json>`; `--rounds` requires an explicit
 destination. Serve that separate JSON with `--data` on a new loopback port.
 Neither preview creation nor display changes existing predictions, publications,
-operational JSON, task registration or running servers. Connecting the operational
-updater to v2 is a subsequent explicit rollout, not an automatic side effect.
+operational JSON, task registration or running servers.
+
+The scheduled updater now validates both projections of the same publication
+before publishing `view/champion_home.json` (v1) and
+`view/champion_rounds.json` (v2). Morning saved batches feed both projections;
+evening remains results/display only. Both JSON files are staged, flushed and
+read back before individual atomic replacements. A handled replacement or final
+status-write failure restores the exact prior display bytes, including removing
+a newly created v2 file. `lastSuccessAt` advances only when both views and the
+success status are published. Existing prediction archives remain immutable.
+
+These two filenames are not one filesystem transaction. Reload-enabled servers
+keep their cached view while update status is `updating` or `error`, and verify
+the same ready status before and after reading. Invalid feeds, schema switches
+or publication rollback retain the last normal display. A hard crash or failed
+rollback requires inspection of the retained lock/backups; nothing is retried
+or recovered automatically. The shared status and 60-second reload apply to
+either schema. Existing running v1 servers and shortcuts need no change.
 
 ## Validation
 

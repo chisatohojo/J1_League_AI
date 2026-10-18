@@ -263,7 +263,14 @@ def create_server(
         nonlocal api_bytes, reload_error, last_observed
         if reload_data:
             try:
+                before = read_update_state()
+                if status_path is not None and before["state"] != "ready":
+                    return  # Never ingest one half of an updating/failed dual-feed publication.
                 incoming = load_dashboard_data(data_path)
+                if incoming["schemaVersion"] != approved["schemaVersion"]:
+                    raise DashboardDataError("Display schema changed")
+                if status_path is not None and read_update_state() != before:
+                    return
                 if last_observed and (incoming["updatedAt"] is None or
                         _timestamp(incoming["updatedAt"], "updatedAt") <
                         _timestamp(last_observed, "updatedAt")):
@@ -274,21 +281,27 @@ def create_server(
             except (OSError, ValueError, TypeError, KeyError):
                 reload_error = "display_reload_failed"
 
-    def update_status():
+    def read_update_state():
         state = dict(state="idle", startedAt=None, finishedAt=None, lastSuccessAt=None, errorCode=None)
         if reload_data and status_path is not None:
-            try:
-                candidate = json.loads(status_path.read_bytes(), object_pairs_hook=_unique_object)
-                if set(candidate) != set(state) or candidate["state"] not in {"idle", "updating", "ready", "error"}:
-                    raise DashboardDataError("Update status schema")
-                if candidate["errorCode"] not in {None, "update_failed"}:
-                    raise DashboardDataError("Update status code")
-                for key in ("startedAt", "finishedAt", "lastSuccessAt"):
-                    if candidate[key] is not None:
-                        _timestamp(candidate[key], key)
-                state = candidate
-            except (OSError, ValueError, TypeError, KeyError):
-                state.update(state="error", errorCode="update_status_invalid")
+            candidate = json.loads(status_path.read_bytes(), object_pairs_hook=_unique_object)
+            if set(candidate) != set(state) or candidate["state"] not in {"idle", "updating", "ready", "error"}:
+                raise DashboardDataError("Update status schema")
+            if candidate["errorCode"] not in {None, "update_failed"}:
+                raise DashboardDataError("Update status code")
+            for key in ("startedAt", "finishedAt", "lastSuccessAt"):
+                if candidate[key] is not None:
+                    _timestamp(candidate[key], key)
+            state = candidate
+        return state
+
+    def update_status():
+        try:
+            state = read_update_state()
+        except (OSError, ValueError, TypeError, KeyError):
+            state = dict(state="error", startedAt=None, finishedAt=None, lastSuccessAt=None,
+                         errorCode="update_status_invalid")
+            return dict(state, pollEnabled=reload_data, pollSeconds=poll_seconds, feedUpdatedAt=last_observed)
         if reload_error:
             state.update(state="error", errorCode=reload_error)
         return dict(state, pollEnabled=reload_data, pollSeconds=poll_seconds, feedUpdatedAt=last_observed)

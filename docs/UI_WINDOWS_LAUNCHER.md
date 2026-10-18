@@ -52,6 +52,42 @@ PC再起動後も同じアイコンで起動できます。絶対パスのコー
 現在の作業フォルダや前回のURL・portには依存しません。PC再起動でkernel objectsは解放され、
 クリック時に新しいserverを起動します。自動起動やWindowsタスクは登録しません。
 
+## 全10試合表示のv2を選ぶ
+
+運用更新はv1と別に `view/champion_rounds.json` を保存します。v2の起動は明示選択です。
+選択ファイルが未生成・不正・v1の場合はエラーとし、旧画面へ黙って切り替えません。
+
+```powershell
+& $python -B -m scripts.launch_dashboard --runtime $runtime --view rounds --python $python
+```
+
+v2も更新状態・公式観測時刻と60秒再読込を利用します。v1とv2は名前付きevent・mutex・
+専用browser profileを分離するため、両方を並行表示できます。×で閉じた後に同じコマンドを
+実行すると、v2の同じserverへ再表示要求を送ります。v1のserverは再利用・停止しません。
+対応PCでの再表示時の白画面を避けるため、v2の専用browserだけ `--disable-gpu` で起動します。
+v1のbrowser引数や個人browserの設定は変更しません。
+v2のserverだけを終了する場合は、v2ウィンドウを閉じて次を実行します。
+
+```powershell
+& $python -B -m scripts.launch_dashboard --runtime $runtime --view rounds --stop
+```
+
+現アイコンの切り替えは別途承認後に行います。まず所有marker・TargetPath・作業フォルダ・
+既存引数を確認し、旧 `.lnk` を別名保存します。そのうえで **J1AI Champion A** の既存
+起動引数に `--view rounds` を追加します。コード・Python・runtimeは同じ絶対パスを維持し、
+URLやportは指定しません。再表示後に第9節／第10節の各10試合、保存済み4予測、更新状態を
+照合します。元へ戻す場合は保存した `.lnk` を復元します。データの移動やタスク登録は不要です。
+既存のv1所有markerと引数に一致する通常installerを、切替後のアイコンへ上書き実行しません。
+
+切り替えずに別のv2アイコンを追加する場合だけ、次を使えます。
+
+```powershell
+.\scripts\install_dashboard_shortcut.ps1 -Runtime $runtime -Python $python -View rounds
+```
+
+これは **J1AI Champion A Rounds.lnk** を別途作成し、既存v1アイコンを変更しません。
+今回のコード実装だけでは、どちらのアイコンも作成・切り替えません。
+
 ## 従来の初回セットアップ・ショートカット
 
 既存のWindows仮想環境に `.venv\Scripts\python.exe` と `pythonw.exe` が必要です。

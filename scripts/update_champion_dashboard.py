@@ -22,6 +22,8 @@ from src.modeling.champion_prediction import TARGET_COLUMNS, predict_champion
 
 NATIVE = feed.CHAMPION_PREDICTION_ARTIFACT
 SIDECAR = "data/processed/predictions/champion_a_fixture_bindings.csv"
+LEGACY_VIEW = "champion_home.json"
+ROUND_VIEW = "champion_rounds.json"
 
 
 def utc_now():
@@ -41,6 +43,89 @@ def atomic_json(path, value):
         os.replace(temporary, path)
     finally:
         Path(temporary).unlink(missing_ok=True)
+
+
+def build_display_feeds(source, runtime, prediction, sidecar, now):
+    """Validate both projections of one immutable publication before any display write."""
+    pointer = runtime / "official/latest.json"
+    before = pointer.read_bytes()
+    options = dict(prediction_file=prediction, binding_file=sidecar,
+                   official_directory=runtime / "official", champion_only=True)
+    legacy = feed.build_dashboard_feed(source, **options)
+    rounds = feed.build_dashboard_feed(source, **options, round_view=True, now=now)
+    feed.require(pointer.read_bytes() == before, "display_publication_changed")
+    validate_display_feeds(legacy, rounds)
+    return legacy, rounds
+
+
+def validate_display_feeds(legacy, rounds):
+    for payload, version in ((legacy, 1), (rounds, 2)):
+        feed.validate_dashboard_data(payload)
+        feed.require(payload["schemaVersion"] == version, "display_schema_version")
+    feed.require(all(legacy[key] == rounds[key] for key in ("model", "updatedAt", "mode")),
+                 "display_publication_mismatch")
+
+
+@contextmanager
+def publish_display_feeds(runtime, legacy, rounds):
+    """Stage/flush both files; roll back handled failures, including status publication.
+
+    Each filename is replaced atomically. This is not a filesystem transaction
+    across both names: reload-enabled servers hold their snapshot while status
+    is updating/error. A hard crash requires inspection, never automatic replay.
+    """
+    validate_display_feeds(legacy, rounds)
+    view = runtime / "view"
+    feed.require(not view.is_symlink() and not view.is_junction(), "display_link_denied")
+    view.mkdir(exist_ok=True)
+    temporary, backups, staged, replaced = [], {}, {}, []
+    rollback_failed = False
+
+    def stage(body):
+        fd, name = tempfile.mkstemp(prefix=".display-", suffix=".json", dir=view)
+        path = Path(name)
+        temporary.append(path)
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(body)
+            stream.flush()
+            os.fsync(stream.fileno())
+        feed.require(path.read_bytes() == body, "display_readback_failed")
+        return path
+
+    try:
+        # Replace legacy last so a v2 write failure cannot touch the old v1 file.
+        for name, payload in ((ROUND_VIEW, rounds), (LEGACY_VIEW, legacy)):
+            path = view / name
+            feed.require(not path.is_symlink() and not path.is_junction(), "display_link_denied")
+            backups[path] = stage(path.read_bytes()) if path.exists() else None
+            staged[path] = stage((json.dumps(payload, ensure_ascii=False, allow_nan=False, indent=2) + "\n").encode())
+        try:
+            for path, prepared in staged.items():
+                os.replace(prepared, path)
+                replaced.append(path)
+            yield
+        except BaseException:
+            failure = None
+            for path in reversed(replaced):
+                backup = backups[path]
+                try:
+                    if backup is None:
+                        path.unlink()
+                    else:
+                        os.replace(backup, path)
+                except OSError as error:
+                    failure = error
+            if failure is not None:
+                rollback_failed = True
+                raise ValueError("display_rollback_failed") from failure
+            raise
+    finally:
+        # Leave a backup on disk if rollback itself failed; never erase recovery evidence.
+        keep = {backup for path, backup in backups.items() if rollback_failed and backup is not None
+                and path in replaced and backup.exists()}
+        for path in temporary:
+            if path not in keep:
+                path.unlink(missing_ok=True)
 
 
 def validate_paths(source, runtime):
@@ -499,22 +584,21 @@ def run_update(source_root, runtime_root, slot, config, *, collector=collect_off
                 prediction.unlink()
                 sidecar.unlink()
                 prediction, sidecar = stage_inputs(stage, records + added, bindings + added_bindings)
-                payload = feed.build_dashboard_feed(
-                    source, prediction_file=prediction, binding_file=sidecar,
-                    official_directory=runtime / "official", champion_only=True)
-                for row in added:
-                    committed = timestamp_aware(clock())
-                    feed.require(committed >= feed.timestamp(row["prediction_generated_at"]), "clock_moved_backwards")
-                    feed.require(committed < feed.timestamp(feed.kickoff_at(row["match_date"], row["kickoff"])),
-                                 "kickoff_elapsed_before_commit")
-                publish_batch(runtime, added, added_bindings)
-                feed.write_dashboard_feed(payload, runtime / "view/champion_home.json")
-            state.update(state="ready", finishedAt=clock().isoformat(), lastSuccessAt=clock().isoformat(), errorCode=None)
-            atomic_json(status_path, state)
+                legacy, rounds = build_display_feeds(source, runtime, prediction, sidecar, now)
+            for row in added:
+                committed = timestamp_aware(clock())
+                feed.require(committed >= feed.timestamp(row["prediction_generated_at"]), "clock_moved_backwards")
+                feed.require(committed < feed.timestamp(feed.kickoff_at(row["match_date"], row["kickoff"])),
+                             "kickoff_elapsed_before_commit")
+            publish_batch(runtime, added, added_bindings)
+            with publish_display_feeds(runtime, legacy, rounds):
+                state.update(state="ready", finishedAt=clock().isoformat(), lastSuccessAt=clock().isoformat(), errorCode=None)
+                atomic_json(status_path, state)
             return dict(added=len(added), total=len(records) + len(added), state="ready")
         except Exception:
             # Never publish exception strings/source paths or research cells to the UI.
-            state.update(state="error", finishedAt=clock().isoformat(), errorCode="update_failed")
+            state.update(state="error", finishedAt=clock().isoformat(),
+                         lastSuccessAt=previous.get("lastSuccessAt"), errorCode="update_failed")
             atomic_json(status_path, state)
             raise
 

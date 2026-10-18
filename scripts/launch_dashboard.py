@@ -44,7 +44,7 @@ MESSAGES = {
     "browser_spawn_failed": "Cannot start the browser in app mode. No tab fallback was attempted.",
     "cleanup_failed": "The owned server could not be stopped. See the safe cleanup instructions.",
     "unexpected_failure": "Launcher setup failed. Check local permissions, venv and browser availability.",
-    "runtime_missing": "The selected runtime must contain view/champion_home.json and view/update-status.json. No empty or demo fallback was used.",
+    "runtime_missing": "The selected runtime must contain the selected view JSON and view/update-status.json. No empty or demo fallback was used.",
 }
 EVENTS = set(MESSAGES) | {"started", "stopped", "already_running", "stop_requested", "not_running", "open_requested", "reopened"}
 
@@ -73,16 +73,22 @@ def find_python(root: Path, explicit: Path | None = None) -> Path:
     return executable
 
 
-def runtime_scope(root: Path, runtime: Path | None) -> Path:
+def runtime_scope(root: Path, runtime: Path | None, view="legacy") -> Path:
     # A separate kernel/profile namespace; this path is never created.
-    return root if runtime is None else root / (".champion-" + instance_id(runtime))
+    if view not in {"legacy", "rounds"} or view != "legacy" and runtime is None:
+        raise LauncherError("runtime_missing")
+    suffix = "-rounds" if view == "rounds" else ""
+    return root if runtime is None else root / (".champion-" + instance_id(runtime) + suffix)
 
 
-def runtime_files(runtime: Path) -> tuple[Path, Path]:
+def runtime_files(runtime: Path, view="legacy") -> tuple[Path, Path]:
+    if view not in {"legacy", "rounds"}:
+        raise LauncherError("runtime_missing")
     path = runtime.absolute()
     if any(p.is_symlink() or p.is_junction() for p in (path, *path.parents)):
         raise LauncherError("runtime_missing")
-    data, status = path / "view/champion_home.json", path / "view/update-status.json"
+    data = path / "view" / ("champion_rounds.json" if view == "rounds" else "champion_home.json")
+    status = path / "view/update-status.json"
     if not data.is_file() or not status.is_file() or any(
         p.is_symlink() or p.is_junction() for p in (data.parent, data, status)
     ):
@@ -243,12 +249,13 @@ def server_command(python: Path, data: Path | None, status: Path | None = None) 
     return command
 
 
-def browser_command(browser: Path, url: str, profile: Path) -> list[str]:
+def browser_command(browser: Path, url: str, profile: Path, *, software_rendering=False) -> list[str]:
     validate_url(url)
     return [
         str(browser), f"--app={url}", f"--user-data-dir={profile}",
         "--no-first-run", "--no-default-browser-check", "--disable-background-networking",
         "--disable-component-update", "--disable-sync",
+        *(["--disable-gpu"] if software_rendering else []),
     ]
 
 
@@ -274,11 +281,13 @@ def start_server(python: Path, root: Path, data: Path | None, status: Path | Non
         raise LauncherError("server_spawn_failed") from None
 
 
-def start_browser(browser: Path, url: str, profile: Path, root: Path):
+def start_browser(browser: Path, url: str, profile: Path, root: Path, *, software_rendering=False):
     try:
         profile.mkdir(parents=True, exist_ok=True)
+        command = (browser_command(browser, url, profile, software_rendering=True) if software_rendering
+                   else browser_command(browser, url, profile))
         return subprocess.Popen(
-            browser_command(browser, url, profile), cwd=str(root), shell=False,
+            command, cwd=str(root), shell=False,
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             creationflags=CREATE_NO_WINDOW,
         )
@@ -302,13 +311,15 @@ def _read_startup_url(stream, messages: queue.Queue) -> None:
     messages.put(None)
 
 
-def validate_ready_payload(payload, *, require_data=False) -> None:
+def validate_ready_payload(payload, *, require_data=False, expected_version=None) -> None:
     # Basic structural readiness only. Full recursive validation belongs to the
     # existing server before it can bind/print a URL; no probability inspection.
     keys = {"schemaVersion", "mode", "model", "updatedAt", "previousRound", "nextRound"}
     if not isinstance(payload, dict) or set(payload) != keys:
         raise LauncherError("invalid_response")
     if type(payload["schemaVersion"]) is not int or payload["schemaVersion"] not in (1, 2):
+        raise LauncherError("invalid_response")
+    if expected_version is not None and payload["schemaVersion"] != expected_version:
         raise LauncherError("invalid_response")
     if payload["mode"] != "operational" or payload["model"] != {"name": "Champion A", "version": CHAMPION_VERSION}:
         raise LauncherError("invalid_response")
@@ -336,7 +347,7 @@ def _unique_json(pairs):
     return result
 
 
-def check_ready(url: str, timeout: float, *, require_data=False) -> None:
+def check_ready(url: str, timeout: float, *, require_data=False, expected_version=None) -> None:
     validate_url(url)
     # Disable proxies AND redirects: a loopback request must not escape to a
     # configured external proxy or follow a server-supplied Location header.
@@ -360,12 +371,14 @@ def check_ready(url: str, timeout: float, *, require_data=False) -> None:
         payload = json.loads(content, object_pairs_hook=_unique_json)
     except (UnicodeError, ValueError, RecursionError):
         raise LauncherError("invalid_response") from None
-    validate_ready_payload(payload, require_data=require_data)
+    validate_ready_payload(payload, require_data=require_data, expected_version=expected_version)
 
 
-def _probe_ready(url: str, timeout: float, messages: queue.Queue, require_data=False) -> None:
+def _probe_ready(url: str, timeout: float, messages: queue.Queue, require_data=False, expected_version=None) -> None:
     try:
-        if require_data:
+        if expected_version is not None:
+            check_ready(url, timeout=timeout, require_data=require_data, expected_version=expected_version)
+        elif require_data:
             check_ready(url, timeout=timeout, require_data=True)
         else:
             check_ready(url, timeout=timeout)
@@ -378,7 +391,7 @@ def _probe_ready(url: str, timeout: float, messages: queue.Queue, require_data=F
         messages.put("invalid_response")
 
 
-def wait_for_ready(process, timeout: float = 20.0, *, require_data=False) -> str:
+def wait_for_ready(process, timeout: float = 20.0, *, require_data=False, expected_version=None) -> str:
     deadline = time.monotonic() + timeout
     messages = queue.Queue()
     threading.Thread(target=_read_startup_url, args=(process.stdout, messages), daemon=True).start()
@@ -401,7 +414,7 @@ def wait_for_ready(process, timeout: float = 20.0, *, require_data=False) -> str
             # bytes forever or a socket implementation ignores its own timeout.
             threading.Thread(
                 target=_probe_ready,
-                args=(url, min(1.0, max(0.001, deadline - time.monotonic())), probes, require_data),
+                args=(url, min(1.0, max(0.001, deadline - time.monotonic())), probes, require_data, expected_version),
                 daemon=True,
             ).start()
             probing = True
@@ -435,9 +448,9 @@ def stop_owned_server(process) -> None:
 
 
 def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False,
-                 runtime: Path | None = None, python: Path | None = None) -> int:
+                 runtime: Path | None = None, python: Path | None = None, view="legacy") -> int:
     require_windows()
-    owner = runtime_scope(root, runtime)
+    owner = runtime_scope(root, runtime, view)
     controls = WindowsInstance(root) if runtime is None else WindowsInstance(owner, reopen=True)
     server = None
     try:
@@ -464,13 +477,19 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
         browser = find_browser()
         profile = local_directory(owner) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
         if runtime is not None:
-            data, status = runtime_files(runtime)
+            data, status = runtime_files(runtime, view)
             server = start_server(python, root, data, status=status)
-            url = wait_for_ready(server, timeout, require_data=True)
+            if view == "rounds":
+                url = wait_for_ready(server, timeout, require_data=True, expected_version=2)
+            else:
+                url = wait_for_ready(server, timeout, require_data=True)
         else:
             server = start_server(python, root, data)
             url = wait_for_ready(server, timeout)
-        start_browser(browser, url, profile, root)
+        # A fresh v2 app window otherwise rendered white after close/reopen on
+        # the supported Windows PC. Keep the legacy browser command unchanged.
+        browser_options = {"software_rendering": True} if view == "rounds" else {}
+        start_browser(browser, url, profile, root, **browser_options)
         record_event(owner, "started")
         # No browser poll()/wait(), window manipulation, taskkill, or profile
         # deletion. Chromium's startup PID is not a window-lifetime witness.
@@ -478,7 +497,7 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
             if server.poll() is not None:
                 raise LauncherError("server_exited")
             if runtime is not None and controls.open_requested():
-                start_browser(browser, url, profile, root)
+                start_browser(browser, url, profile, root, **browser_options)
                 record_event(owner, "reopened")
         record_event(owner, "stopped")
         return 0
@@ -506,20 +525,23 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--data", type=Path, help="Explicit prepared Champion-only JSON; never generated or searched for")
     group.add_argument("--stop", action="store_true", help="Signal the owning launcher to stop its server; do not close browsers")
     parser.add_argument("--runtime", type=Path, help="Explicit Champion runtime; enables status and 60-second reload, no acquisition")
+    parser.add_argument("--view", choices=("legacy", "rounds"), default="legacy", help="Runtime view: legacy v1 (default) or complete official rounds v2; separate instance/profile")
     parser.add_argument("--python", type=Path, help="Explicit existing python.exe when code and venv are in separate worktrees")
     parser.add_argument("--startup-timeout", type=positive_timeout, default=20.0, help="Bounded server readiness wait in seconds (default: 20)")
     args = parser.parse_args(argv)
     if args.runtime is not None and args.data is not None:
         parser.error("--runtime and --data are mutually exclusive")
+    if args.view != "legacy" and args.runtime is None:
+        parser.error("--view rounds requires --runtime")
     root = repository_root()
     try:
         return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop,
-                            runtime=args.runtime, python=args.python)
+                            runtime=args.runtime, python=args.python, view=args.view)
     except (Exception, KeyboardInterrupt) as exc:
         code = exc.code if isinstance(exc, LauncherError) else "unexpected_failure"
         # No exception string, traceback, server output or response body is logged.
         try:
-            record_event(runtime_scope(root, args.runtime), code)
+            record_event(runtime_scope(root, args.runtime, args.view), code)
         except Exception:
             pass
         show_message(MESSAGES[code] + "\nSee docs/UI_WINDOWS_LAUNCHER.md for troubleshooting.", error=True)
