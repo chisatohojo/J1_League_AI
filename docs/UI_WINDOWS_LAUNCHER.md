@@ -7,11 +7,52 @@ read-only serverを変更せず、Edge（優先）またはChromeの `--app` モ
 アドレスバー・タブバーのない独立ウィンドウを開きます。通常のタブへのfallback、
 ブラウザーのインストール、外部依存、Electron/Tauriはありません。
 
-real Champion-only feedはまだ生成していません。既定の通常画面は空のoperational
-viewです。保存済みJSONの自動探索・feed生成・予想生成・モデル読込・評価・取得は
-行いません。ST2は既存UIのSEALED表示のままです。
+Champion A専用runtimeを明示した起動では、保存済みの実予測JSONと更新状態を読みます。
+feed生成・予想生成・モデル読込・評価・公式取得・定期タスク登録は行いません。
+ST2は既存UIのSEALED表示のままです。従来の引数なし起動だけは空のoperational viewです。
 
-## 初回セットアップ・ショートカット
+## Champion A専用ショートカット
+
+コード用worktree、既存venv、運用runtimeの場所を明示してインストールします。
+フォルダの移動やvenvの複製は不要です。パスはローカルで指定し、公開ソースに保存しません。
+
+```powershell
+$python = 'C:\path\to\existing-repository\.venv\Scripts\python.exe'
+$runtime = 'C:\path\to\Champion-runtime'
+.\scripts\install_dashboard_shortcut.ps1 -Runtime $runtime -Python $python
+```
+
+実際のWindows Desktopに **J1AI Champion A.lnk** を1個配置します。従来の
+「J1 AI Predict」と無関係なショートカットは保持します。所有marker、Pythonw、
+コード用worktree、引数が完全一致する専用ショートカットだけを再インストールできます。
+
+このアイコンは以下を表示専用で実行します。
+
+- `view/champion_home.json` を明示してOS割当の127.0.0.1ポートでserverを起動。
+- `view/update-status.json` と60秒間隔の再読込を有効にする。
+- Edge優先、Chromeを代替として、専用profileのアプリウィンドウを開く。
+- 未取得・不正JSON・空データはエラーとし、demoや空画面へ切り替えない。
+
+ウィンドウの×は画面だけを閉じます。もう一度アイコンを押すと、名前付きOpen eventで
+所有launcherに要求し、**同じserver・同じ専用profile**で画面を開き直します。
+ブラウザーの起動PIDからウィンドウ寿命を推測せず、serverを二重起動しません。
+このinstanceとprofileはコード・runtimeの組合せで分離し、他のserverを再利用・停止しません。
+
+完全に終了する場合は画面を閉じてから、同じコード用worktreeで次を実行してください。
+
+```powershell
+& $python -B -m scripts.launch_dashboard --runtime $runtime --stop
+```
+
+停止eventを受けた所有launcherが、保持するprocess handleでserverだけを終了します。
+Windowsのvenv redirectorを有限時間で解決し、stdlib専用serverは実体のbase Pythonで
+起動するため、停止対象は中間プロセスではなく実際のlistenerです。個人browserは触りません。
+
+PC再起動後も同じアイコンで起動できます。絶対パスのコード・Python・runtimeを参照し、
+現在の作業フォルダや前回のURL・portには依存しません。PC再起動でkernel objectsは解放され、
+クリック時に新しいserverを起動します。自動起動やWindowsタスクは登録しません。
+
+## 従来の初回セットアップ・ショートカット
 
 既存のWindows仮想環境に `.venv\Scripts\python.exe` と `pythonw.exe` が必要です。
 venvがない場合のセットアップは [README](../README.md) を参照してください。
@@ -68,10 +109,10 @@ hashで区別し、processが生存する間handleを保持します。重複ク
 PIDファイルは使わず、process終了でkernel objectsが解放されるのでstale PIDによる
 永久起動不能はありません。
 
-アプリの×ボタンはbrowser windowだけを閉じます。Chromiumの起動PIDが終了しても
+従来の`--data`／引数なし起動では、アプリの×ボタンはbrowser windowだけを閉じます。Chromiumの起動PIDが終了しても
 windowは存続し得るため、**browser終了を推測してserverを止めません**。
 ランチャーとserverは明示停止まで残ります。閉じた後に再び開く場合も、先に停止して
-からDesktopアイコンを押してください。この安全側の制約は第一段階の既知仕様です。
+からDesktopアイコンを押してください。`--runtime`のChampion Aアイコンは上記Open eventで再表示します。
 
 serverを終了するには、repository rootで以下を実行してください。
 
@@ -104,7 +145,7 @@ browser profileは以下にbrowser別で分離します。
 
 ## Champion-only JSONとの関係
 
-将来別taskで生成・承認されたJSONを明示指定することは可能です。
+従来の単一JSONスナップショットも明示指定できます。
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.launch_dashboard --data C:\approved\champion_home.json

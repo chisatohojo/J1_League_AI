@@ -44,8 +44,9 @@ MESSAGES = {
     "browser_spawn_failed": "Cannot start the browser in app mode. No tab fallback was attempted.",
     "cleanup_failed": "The owned server could not be stopped. See the safe cleanup instructions.",
     "unexpected_failure": "Launcher setup failed. Check local permissions, venv and browser availability.",
+    "runtime_missing": "The selected runtime must contain view/champion_home.json and view/update-status.json. No empty or demo fallback was used.",
 }
-EVENTS = set(MESSAGES) | {"started", "stopped", "already_running", "stop_requested", "not_running"}
+EVENTS = set(MESSAGES) | {"started", "stopped", "already_running", "stop_requested", "not_running", "open_requested", "reopened"}
 
 
 class LauncherError(RuntimeError):
@@ -65,11 +66,28 @@ def require_windows() -> None:
         raise LauncherError("windows_required")
 
 
-def find_python(root: Path) -> Path:
-    executable = root / ".venv" / "Scripts" / "python.exe"
-    if not executable.is_file():
+def find_python(root: Path, explicit: Path | None = None) -> Path:
+    executable = explicit.resolve() if explicit is not None else root / ".venv" / "Scripts" / "python.exe"
+    if not executable.is_file() or executable.name.lower() != "python.exe":
         raise LauncherError("venv_missing")
     return executable
+
+
+def runtime_scope(root: Path, runtime: Path | None) -> Path:
+    # A separate kernel/profile namespace; this path is never created.
+    return root if runtime is None else root / (".champion-" + instance_id(runtime))
+
+
+def runtime_files(runtime: Path) -> tuple[Path, Path]:
+    path = runtime.absolute()
+    if any(p.is_symlink() or p.is_junction() for p in (path, *path.parents)):
+        raise LauncherError("runtime_missing")
+    data, status = path / "view/champion_home.json", path / "view/update-status.json"
+    if not data.is_file() or not status.is_file() or any(
+        p.is_symlink() or p.is_junction() for p in (data.parent, data, status)
+    ):
+        raise LauncherError("runtime_missing")
+    return data.resolve(), status.resolve()
 
 
 def find_browser(environ=None) -> Path:
@@ -138,12 +156,14 @@ class WindowsInstance:
     the objects when the final handle closes, including after a process crash.
     """
 
-    def __init__(self, root: Path, *, api=None, last_error=None):
+    def __init__(self, root: Path, *, api=None, last_error=None, reopen=False):
         self.api = kernel_api() if api is None else api
         self.last_error = ctypes.get_last_error if last_error is None else last_error
         self.name = "Local\\J1AI.Dashboard." + instance_id(root)
         self.mutex = None
         self.event = None
+        self.open_event = None
+        self.reopen = reopen
 
     def acquire(self) -> bool:
         self.mutex = self.api.CreateMutexW(None, False, self.name)
@@ -157,6 +177,11 @@ class WindowsInstance:
         if not self.event:
             self.close()
             raise LauncherError("ipc_failed")
+        if self.reopen:
+            self.open_event = self.api.CreateEventW(None, False, False, self.name + ".Open")
+            if not self.open_event:
+                self.close()
+                raise LauncherError("ipc_failed")
         return True
 
     def stop_requested(self, timeout_ms: int = 500) -> bool:
@@ -166,7 +191,19 @@ class WindowsInstance:
         return result == 0
 
     def signal_stop(self) -> bool:
-        handle = self.api.OpenEventW(0x0002, False, self.name + ".Stop")
+        return self._signal(".Stop")
+
+    def signal_open(self) -> bool:
+        return self._signal(".Open")
+
+    def open_requested(self) -> bool:
+        result = self.api.WaitForSingleObject(self.open_event, 0)
+        if result not in (0, 258):
+            raise LauncherError("ipc_failed")
+        return result == 0
+
+    def _signal(self, suffix: str) -> bool:
+        handle = self.api.OpenEventW(0x0002, False, self.name + suffix)
         if not handle:
             if self.last_error() == 2:  # ERROR_FILE_NOT_FOUND: no stale PID state.
                 return False
@@ -179,7 +216,7 @@ class WindowsInstance:
             self.api.CloseHandle(handle)
 
     def close(self) -> None:
-        for name in ("event", "mutex"):
+        for name in ("event", "open_event", "mutex"):
             handle = getattr(self, name)
             if handle:
                 self.api.CloseHandle(handle)
@@ -193,11 +230,16 @@ def validate_url(url: str) -> str:
     return url
 
 
-def server_command(python: Path, data: Path | None) -> list[str]:
+def server_command(python: Path, data: Path | None, status: Path | None = None) -> list[str]:
     command = [str(python), "-u", "-m", "scripts.serve_dashboard", "--port", "0"]
     if data is not None:
         # Explicit JSON is read/validated ONLY by the existing server.
         command.extend(("--data", str(data.resolve())))
+    if status is not None:
+        if data is None:
+            raise LauncherError("runtime_missing")
+        command.insert(1, "-B")
+        command.extend(("--reload", "--status", str(status.resolve()), "--poll-seconds", "60"))
     return command
 
 
@@ -210,14 +252,25 @@ def browser_command(browser: Path, url: str, profile: Path) -> list[str]:
     ]
 
 
-def start_server(python: Path, root: Path, data: Path | None):
+def start_server(python: Path, root: Path, data: Path | None, status: Path | None = None):
     try:
+        # Windows venv python.exe is a redirector that creates another process.
+        # Run this stdlib-only server with its base interpreter so the retained
+        # Popen handle owns the actual listener, not an intermediate redirector.
+        probe = subprocess.run(
+            [str(python), "-I", "-S", "-B", "-X", "utf8", "-c", "import sys;print(sys._base_executable)"],
+            capture_output=True, text=True, encoding="utf-8", timeout=5, check=True,
+            creationflags=CREATE_NO_WINDOW,
+        )
+        executable = Path(probe.stdout.strip())
+        if not executable.is_absolute() or not executable.is_file() or executable.name.lower() != "python.exe":
+            raise LauncherError("server_spawn_failed")
         return subprocess.Popen(
-            server_command(python, data), cwd=str(root), shell=False,
+            server_command(executable, data, status), cwd=str(root), shell=False,
             stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             text=True, encoding="utf-8", errors="replace", creationflags=CREATE_NO_WINDOW,
         )
-    except OSError:
+    except (OSError, subprocess.SubprocessError):
         raise LauncherError("server_spawn_failed") from None
 
 
@@ -249,7 +302,7 @@ def _read_startup_url(stream, messages: queue.Queue) -> None:
     messages.put(None)
 
 
-def validate_ready_payload(payload) -> None:
+def validate_ready_payload(payload, *, require_data=False) -> None:
     # Basic structural readiness only. Full recursive validation belongs to the
     # existing server before it can bind/print a URL; no probability inspection.
     keys = {"schemaVersion", "mode", "model", "updatedAt", "previousRound", "nextRound"}
@@ -269,6 +322,8 @@ def validate_ready_payload(payload) -> None:
             or not isinstance(section["matches"], list)
         ):
             raise LauncherError("invalid_response")
+    if require_data and not any(payload[name]["matches"] for name in ("previousRound", "nextRound")):
+        raise LauncherError("invalid_response")
 
 
 def _unique_json(pairs):
@@ -280,7 +335,7 @@ def _unique_json(pairs):
     return result
 
 
-def check_ready(url: str, timeout: float) -> None:
+def check_ready(url: str, timeout: float, *, require_data=False) -> None:
     validate_url(url)
     # Disable proxies AND redirects: a loopback request must not escape to a
     # configured external proxy or follow a server-supplied Location header.
@@ -304,12 +359,15 @@ def check_ready(url: str, timeout: float) -> None:
         payload = json.loads(content, object_pairs_hook=_unique_json)
     except (UnicodeError, ValueError, RecursionError):
         raise LauncherError("invalid_response") from None
-    validate_ready_payload(payload)
+    validate_ready_payload(payload, require_data=require_data)
 
 
-def _probe_ready(url: str, timeout: float, messages: queue.Queue) -> None:
+def _probe_ready(url: str, timeout: float, messages: queue.Queue, require_data=False) -> None:
     try:
-        check_ready(url, timeout=timeout)
+        if require_data:
+            check_ready(url, timeout=timeout, require_data=True)
+        else:
+            check_ready(url, timeout=timeout)
         messages.put("ready")
     except LauncherError:
         messages.put("invalid_response")
@@ -319,7 +377,7 @@ def _probe_ready(url: str, timeout: float, messages: queue.Queue) -> None:
         messages.put("invalid_response")
 
 
-def wait_for_ready(process, timeout: float = 20.0) -> str:
+def wait_for_ready(process, timeout: float = 20.0, *, require_data=False) -> str:
     deadline = time.monotonic() + timeout
     messages = queue.Queue()
     threading.Thread(target=_read_startup_url, args=(process.stdout, messages), daemon=True).start()
@@ -342,7 +400,7 @@ def wait_for_ready(process, timeout: float = 20.0) -> str:
             # bytes forever or a socket implementation ignores its own timeout.
             threading.Thread(
                 target=_probe_ready,
-                args=(url, min(1.0, max(0.001, deadline - time.monotonic())), probes),
+                args=(url, min(1.0, max(0.001, deadline - time.monotonic())), probes, require_data),
                 daemon=True,
             ).start()
             probing = True
@@ -375,35 +433,53 @@ def stop_owned_server(process) -> None:
         process.stdout.close()
 
 
-def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False) -> int:
+def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False,
+                 runtime: Path | None = None, python: Path | None = None) -> int:
     require_windows()
-    controls = WindowsInstance(root)
+    owner = runtime_scope(root, runtime)
+    controls = WindowsInstance(root) if runtime is None else WindowsInstance(owner, reopen=True)
     server = None
     try:
         if stop:
             signalled = controls.signal_stop()
-            record_event(root, "stop_requested" if signalled else "not_running")
+            record_event(owner, "stop_requested" if signalled else "not_running")
             show_message("Stop requested for this launcher's server only. Browser windows are untouched."
                          if signalled else "No dashboard launcher is running.")
             return 0
         if not controls.acquire():
+            if runtime is not None:
+                deadline = time.monotonic() + timeout
+                while not controls.signal_open():
+                    if time.monotonic() >= deadline:
+                        raise LauncherError("ipc_failed")
+                    time.sleep(0.05)
+                record_event(owner, "open_requested")
+                return 0
             record_event(root, "already_running")
             show_message("J1 AI Predict is already running. No new server or window was opened.\n"
                          "If the app window is closed, run the documented --stop command before restarting.")
             return 0
-        python = find_python(root)
+        python = find_python(root) if python is None else find_python(root, python)
         browser = find_browser()
-        profile = local_directory(root) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
-        server = start_server(python, root, data)
-        url = wait_for_ready(server, timeout)
+        profile = local_directory(owner) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
+        if runtime is not None:
+            data, status = runtime_files(runtime)
+            server = start_server(python, root, data, status=status)
+            url = wait_for_ready(server, timeout, require_data=True)
+        else:
+            server = start_server(python, root, data)
+            url = wait_for_ready(server, timeout)
         start_browser(browser, url, profile, root)
-        record_event(root, "started")
+        record_event(owner, "started")
         # No browser poll()/wait(), window manipulation, taskkill, or profile
         # deletion. Chromium's startup PID is not a window-lifetime witness.
         while not controls.stop_requested():
             if server.poll() is not None:
                 raise LauncherError("server_exited")
-        record_event(root, "stopped")
+            if runtime is not None and controls.open_requested():
+                start_browser(browser, url, profile, root)
+                record_event(owner, "reopened")
+        record_event(owner, "stopped")
         return 0
     finally:
         try:
@@ -428,16 +504,21 @@ def main(argv: list[str] | None = None) -> int:
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--data", type=Path, help="Explicit prepared Champion-only JSON; never generated or searched for")
     group.add_argument("--stop", action="store_true", help="Signal the owning launcher to stop its server; do not close browsers")
+    parser.add_argument("--runtime", type=Path, help="Explicit Champion runtime; enables status and 60-second reload, no acquisition")
+    parser.add_argument("--python", type=Path, help="Explicit existing python.exe when code and venv are in separate worktrees")
     parser.add_argument("--startup-timeout", type=positive_timeout, default=20.0, help="Bounded server readiness wait in seconds (default: 20)")
     args = parser.parse_args(argv)
+    if args.runtime is not None and args.data is not None:
+        parser.error("--runtime and --data are mutually exclusive")
     root = repository_root()
     try:
-        return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop)
+        return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop,
+                            runtime=args.runtime, python=args.python)
     except (Exception, KeyboardInterrupt) as exc:
         code = exc.code if isinstance(exc, LauncherError) else "unexpected_failure"
         # No exception string, traceback, server output or response body is logged.
         try:
-            record_event(root, code)
+            record_event(runtime_scope(root, args.runtime), code)
         except Exception:
             pass
         show_message(MESSAGES[code] + "\nSee docs/UI_WINDOWS_LAUNCHER.md for troubleshooting.", error=True)

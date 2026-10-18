@@ -152,6 +152,7 @@ def test_hidden_safe_process_launch_arguments(fake_root, isolated_env, monkeypat
     calls = []
     monkeypatch.setattr(launcher.subprocess, "Popen", lambda args, **kwargs: calls.append((args, kwargs)) or fake_process())
     python = fake_root / ".venv/Scripts/python.exe"
+    monkeypatch.setattr(launcher.subprocess, "run", lambda *args, **kwargs: SimpleNamespace(stdout=str(python)))
     data = fake_root / "prepared & file.json"
     launcher.start_server(python, fake_root, data)
     browser = fake_root / "Program Files/msedge.exe"
@@ -443,6 +444,8 @@ def test_windows_empty_server_smoke_in_synthetic_repository(fake_root):
     finally:
         launcher.stop_owned_server(process)
     assert process.poll() is not None
+    with pytest.raises(URLError):
+        opener.open(url + "api/dashboard", timeout=1)
 
 
 @pytest.fixture
@@ -455,7 +458,7 @@ def runtime(fake_root, monkeypatch):
     browser_process.poll.side_effect = AssertionError("Startup PID is NOT window lifetime")
     browser_process.wait.side_effect = AssertionError("Startup PID is NOT window lifetime")
     monkeypatch.setattr(launcher, "require_windows", lambda: None)
-    monkeypatch.setattr(launcher, "WindowsInstance", lambda root: state)
+    monkeypatch.setattr(launcher, "WindowsInstance", lambda root, **kwargs: state)
     monkeypatch.setattr(launcher, "find_browser", lambda: fake_root / "msedge.exe")
     monkeypatch.setattr(launcher, "local_directory", lambda root: fake_root / "local")
     start = Mock(return_value=process)
@@ -687,6 +690,11 @@ def test_powershell_installer_ownership_function_without_desktop_writes():
         $shortcut.Arguments = $arguments
         if (Test-DashboardShortcutOwnership $shortcut $marker $pythonw $root $launcher) { throw 'Unexpected arguments accepted' }
     }
+    $expected = '-B ' + $prefix + ' --runtime "C:\synthetic runtime" --python "C:\synthetic venv\python.exe"'
+    $shortcut.Arguments = $expected
+    if (-not (Test-DashboardShortcutOwnership $shortcut $marker $pythonw $root $launcher $expected)) { throw 'Own runtime shortcut refused' }
+    $shortcut.Arguments += ' --stop'
+    if (Test-DashboardShortcutOwnership $shortcut $marker $pythonw $root $launcher $expected) { throw 'Altered runtime shortcut accepted' }
     'Installer ownership: PASS (no COM / Desktop writes)'
     '''
     # -Command scriptblock parameters require expression invocation, not a file.
@@ -698,3 +706,100 @@ def test_powershell_installer_ownership_function_without_desktop_writes():
                             creationflags=launcher.CREATE_NO_WINDOW, timeout=10)
     assert result.returncode == 0, result.stderr
     assert "Installer ownership: PASS" in result.stdout
+
+
+def test_external_python_and_runtime_namespace(fake_root, tmp_path):
+    python = tmp_path / "other venv/Scripts/python.exe"
+    python.parent.mkdir(parents=True)
+    python.touch()
+    assert launcher.find_python(fake_root, python) == python
+    other = tmp_path / "runtime"
+    assert launcher.runtime_scope(fake_root, other) != fake_root
+    assert launcher.runtime_scope(fake_root, other) == launcher.runtime_scope(fake_root, other)
+    assert launcher.runtime_scope(fake_root, other) != launcher.runtime_scope(fake_root, other / "second")
+    assert not launcher.runtime_scope(fake_root, other).exists()
+
+
+def test_runtime_files_and_reload_server_command(fake_root, tmp_path):
+    operational = tmp_path / "operational runtime"
+    with pytest.raises(launcher.LauncherError, match="No empty or demo fallback"):
+        launcher.runtime_files(operational)
+    (operational / "view").mkdir(parents=True)
+    for name in ("champion_home.json", "update-status.json"):
+        (operational / "view" / name).touch()
+    data, status = launcher.runtime_files(operational)
+    command = launcher.server_command(fake_root / ".venv/Scripts/python.exe", data, status)
+    assert command[-5:] == ["--reload", "--status", str(status), "--poll-seconds", "60"]
+    assert command[command.index("--data") + 1] == str(data)
+    assert command[command.index("--port") + 1] == "0" and "-B" in command
+    assert not any("update_champion" in value or "demo" in value for value in command)
+
+
+def test_runtime_empty_payload_is_an_error():
+    with pytest.raises(launcher.LauncherError):
+        launcher.validate_ready_payload(empty_dashboard(), require_data=True)
+    data = empty_dashboard()
+    data["nextRound"]["matches"] = [{}]  # Full recursive schema remains the server's responsibility.
+    launcher.validate_ready_payload(data, require_data=True)
+
+
+def test_runtime_reopen_signals_existing_owner_without_another_server(runtime, fake_root):
+    runtime.state.acquire.return_value = False
+    runtime.state.signal_open.return_value = True
+    assert launcher.run_launcher(fake_root, runtime=fake_root / "operational") == 0
+    runtime.state.signal_open.assert_called_once()
+    runtime.start.assert_not_called()
+    runtime.browser.assert_not_called()
+    assert runtime.events == ["open_requested"]
+
+
+def test_runtime_owner_reopens_window_with_same_server_and_profile(runtime, fake_root):
+    operational = fake_root / "operational"
+    (operational / "view").mkdir(parents=True)
+    for name in ("champion_home.json", "update-status.json"):
+        (operational / "view" / name).touch()
+    runtime.state.stop_requested.side_effect = [False, False, True]
+    runtime.state.open_requested.side_effect = [True, False]
+    assert launcher.run_launcher(fake_root, runtime=operational) == 0
+    runtime.start.assert_called_once_with(fake_root / ".venv/Scripts/python.exe", fake_root,
+        operational / "view/champion_home.json", status=operational / "view/update-status.json")
+    assert runtime.browser.call_count == 2 and runtime.browser.call_args_list[0] == runtime.browser.call_args_list[1]
+    assert runtime.events == ["started", "reopened", "stopped"]
+    runtime.browser_process.poll.assert_not_called()
+    runtime.browser_process.terminate.assert_not_called()
+
+
+@pytest.mark.skipif(launcher.sys.platform != "win32", reason="real kernel objects are Windows-only")
+def test_runtime_open_event_auto_resets_and_stop_is_scoped(tmp_path):
+    owner = launcher.WindowsInstance(tmp_path / "runtime-owner", reopen=True)
+    opener = launcher.WindowsInstance(tmp_path / "runtime-owner", reopen=True)
+    unrelated = launcher.WindowsInstance(tmp_path / "different-owner", reopen=True)
+    try:
+        assert owner.acquire() and unrelated.acquire() and not opener.acquire()
+        assert opener.signal_open() and owner.open_requested() and not owner.open_requested()
+        assert not unrelated.open_requested()
+        assert opener.signal_stop() and owner.stop_requested(0)
+        assert not unrelated.stop_requested(0)
+    finally:
+        for controls in (owner, opener, unrelated):
+            controls.close()
+
+
+def test_runtime_stop_does_not_require_data_or_python(runtime, fake_root):
+    assert launcher.run_launcher(fake_root, runtime=fake_root / "missing runtime", stop=True) == 0
+    runtime.start.assert_not_called()
+    runtime.browser.assert_not_called()
+
+
+def test_runtime_and_data_cannot_be_combined():
+    with pytest.raises(SystemExit):
+        launcher.main(["--runtime", "synthetic", "--data", "synthetic.json"])
+
+
+def test_base_interpreter_probe_failure_never_creates_server(fake_root, monkeypatch):
+    monkeypatch.setattr(launcher.subprocess, "run", Mock(side_effect=subprocess.TimeoutExpired("probe", 5)))
+    spawn = Mock()
+    monkeypatch.setattr(launcher.subprocess, "Popen", spawn)
+    with pytest.raises(launcher.LauncherError, match="Cannot start the dashboard server"):
+        launcher.start_server(fake_root / ".venv/Scripts/python.exe", fake_root, None)
+    spawn.assert_not_called()
