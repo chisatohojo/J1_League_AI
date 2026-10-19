@@ -1,0 +1,78 @@
+[
+  {
+    "fixture_key": "j1_2026_2027:chiba:nagasaki",
+    "match_date": "2026-10-11",
+    "declared_snapshot": "20261017T231757938417Z-edbc58a3",
+    "declared_snapshot_matching_entries": 0,
+    "evidence_url": "https://www.jleague.jp/match/j1/2026/101101/",
+    "evidence_sha256": "0010ecaf65eb6caf5420e64599b64e100a6c2d7b5c2ae5d51daf0b21b6fec26e",
+    "fetched_at_utc": "2026-10-17T13:36:08.005891+00:00",
+    "diagnostic": "ORIGIN_SNAPSHOT_WITNESS_MISMATCH",
+    "verified_alternative_raw_locations_not_adopted": [
+      {
+        "snapshot": "20261017T133613718777Z-21f0d67d",
+        "raw_sha256": "0010ecaf65eb6caf5420e64599b64e100a6c2d7b5c2ae5d51daf0b21b6fec26e",
+        "metadata_sha256": "34151cfce948b97e47170daf6376caea047541796e3ec17cdc10a977c28ccb2e",
+        "adopted": false
+      }
+    ],
+    "status": "HOLD"
+  },
+  {
+    "fixture_key": "j1_2026_2027:mito:shimizu",
+    "match_date": "2026-10-11",
+    "declared_snapshot": "20261017T231757938417Z-edbc58a3",
+    "declared_snapshot_matching_entries": 0,
+    "evidence_url": "https://www.jleague.jp/match/j1/2026/101102/",
+    "evidence_sha256": "0d7fa8f56401bf8dbfbd10f34e6138f922e6d45ac7763be4edcf987b7f211354",
+    "fetched_at_utc": "2026-10-17T13:36:09.613865+00:00",
+    "diagnostic": "ORIGIN_SNAPSHOT_WITNESS_MISMATCH",
+    "verified_alternative_raw_locations_not_adopted": [
+      {
+        "snapshot": "20261017T133613718777Z-21f0d67d",
+        "raw_sha256": "0d7fa8f56401bf8dbfbd10f34e6138f922e6d45ac7763be4edcf987b7f211354",
+        "metadata_sha256": "60746b8a954149c667f177b391c789d23b9639df685fac128eaf27162d70142a",
+        "adopted": false
+      }
+    ],
+    "status": "HOLD"
+  },
+  {
+    "fixture_key": "j1_2026_2027:tokyov:hiroshima",
+    "match_date": "2026-10-11",
+    "declared_snapshot": "20261017T231757938417Z-edbc58a3",
+    "declared_snapshot_matching_entries": 0,
+    "evidence_url": "https://www.jleague.jp/match/j1/2026/101103/",
+    "evidence_sha256": "b0f6c91bf295d6e6e58bdee891328f1a46d7a518fa18b3ae05e0b874c6145270",
+    "fetched_at_utc": "2026-10-17T13:36:11.177523+00:00",
+    "diagnostic": "ORIGIN_SNAPSHOT_WITNESS_MISMATCH",
+    "verified_alternative_raw_locations_not_adopted": [
+      {
+        "snapshot": "20261017T133613718777Z-21f0d67d",
+        "raw_sha256": "b0f6c91bf295d6e6e58bdee891328f1a46d7a518fa18b3ae05e0b874c6145270",
+        "metadata_sha256": "f7ba2bf0fe81d68365b1599f8636a66ad67e73040c9fa7666dfe99caabc81ff2",
+        "adopted": false
+      }
+    ],
+    "status": "HOLD"
+  },
+  {
+    "fixture_key": "j1_2026_2027:kawasakif:nagoya",
+    "match_date": "2026-10-11",
+    "declared_snapshot": "20261017T231757938417Z-edbc58a3",
+    "declared_snapshot_matching_entries": 0,
+    "evidence_url": "https://www.jleague.jp/match/j1/2026/101104/",
+    "evidence_sha256": "85ca6f3301b2f8fde3e5c9af00070bda04099ecf57c2095244faed84c1b16c1a",
+    "fetched_at_utc": "2026-10-17T13:36:12.619673+00:00",
+    "diagnostic": "ORIGIN_SNAPSHOT_WITNESS_MISMATCH",
+    "verified_alternative_raw_locations_not_adopted": [
+      {
+        "snapshot": "20261017T133613718777Z-21f0d67d",
+        "raw_sha256": "85ca6f3301b2f8fde3e5c9af00070bda04099ecf57c2095244faed84c1b16c1a",
+        "metadata_sha256": "c5fbf25e8bc3781f68b11062acebabaf0a31e6e94027dcb3a8a6fd45a4b3f1f1",
+        "adopted": false
+      }
+    ],
+    "status": "HOLD"
+  }
+]

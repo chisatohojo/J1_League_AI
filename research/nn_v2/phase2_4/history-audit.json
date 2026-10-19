@@ -1,0 +1,32 @@
+{
+  "historical_training_rows": 3588,
+  "hyakunen_regulation_results": 200,
+  "ongoing_completed_results": 100,
+  "hyakunen_raw_sources_sha_verified": 12,
+  "hyakunen_detailed_pages_available": 11,
+  "hyakunen_detail_pages_missing": 189,
+  "hyakunen_pk_matches": 51,
+  "hyakunen_et_matches": 1,
+  "ongoing_completion_witnesses_sha_verified": 96,
+  "ongoing_completion_origin_binding_gaps": 4,
+  "next_scheduled_date_only_not_enrollment": "2026-10-21",
+  "prior_unresolved_results": 0,
+  "last_ongoing_result_date": "2026-10-18",
+  "scope": [
+    "ordinary J1 2015-2025 event policy v1.1",
+    "2026 Hyakunen regulation scores only",
+    "accepted 2026/27 completed regulation results only"
+  ],
+  "excluded": [
+    "PK winners/scores",
+    "extra-time scores",
+    "Cup/AFC",
+    "ST2",
+    "retrospective predictions"
+  ],
+  "source_publication_time_proven": false,
+  "acquisition_times_and_sha_available": true,
+  "future_nn_elo_form_adapter": "NOT_IMPLEMENTED_OR_PIT_VERIFIED",
+  "2026_interruption_registry_review": "NOT_COMPLETED",
+  "status": "HOLD"
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "nn_v2_phase2_4_sha256_v1",
+  "study_id": "nn_v2_residual_20261020_01",
+  "status": "HOLD",
+  "base_commit": "ae208e0336e5554e52bfef87c3f0fe81c7d404a3",
+  "files": [
+    {
+      "path": "research/nn_v2/phase2_4/.gitattributes",
+      "bytes": 67,
+      "sha256": "85a119e9cdcafac9e51b2de1d6dcb8d36f6e40b80bc0877011a16888980eb048"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/history-audit.json",
+      "bytes": 1058,
+      "sha256": "abccd17706a4dd3eaff340ef6a74162328e93090ee90a1f4afb055507db11361"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/local-evidence-index.json",
+      "bytes": 1413,
+      "sha256": "1b88b90bebdb33ffb36d5ecc3807be72c78aa643bf4545a749803241fcf9ce38"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/model-reference.json",
+      "bytes": 859,
+      "sha256": "700f513ff7165adf5205d81fc5cfde7cf17c314e56a5f370d219e587f50bc942"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/protection-verification.json",
+      "bytes": 603,
+      "sha256": "f372d7656c1be927f5806e1f88f0914b311eee4f3c2949ce9138ec45aab5f106"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/provenance-gaps.json",
+      "bytes": 3333,
+      "sha256": "5d4f2685f8d501cae2d963e8fa656b46260bc170d4c516b1c6a46644f6df29a9"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/readiness.json",
+      "bytes": 2043,
+      "sha256": "81c315b46e460b234dbc2e18e6121a7ba4a98805e734bb2044f79f41f46faba0"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/RESULTS.md",
+      "bytes": 9398,
+      "sha256": "f4300104987ed5955c908d8ff2944c8092b3ff2af1ebbbacd0302df29b4a08a1"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/rounds.json",
+      "bytes": 5709,
+      "sha256": "48cbc40af55fce6a33d070cc0f248ae9110322fe09c37b2e182878de7204e16d"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/source-audit.json",
+      "bytes": 4001,
+      "sha256": "2e3d3e2a435a938105c55fab3588ccd0dcc89f96eb55a8ca8721c6231827b7ab"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/STORAGE_AND_RECOVERY.md",
+      "bytes": 7859,
+      "sha256": "2f4c25fbfb601f0d61474be9117841264df45f570eb0cd488b1b24ab63cd9337"
+    },
+    {
+      "path": "research/nn_v2/phase2_4/synthetic-results.json",
+      "bytes": 926,
+      "sha256": "56e688d6356e6a4e8399e2627765acc1215ca0feab52f8a51d8e971dc2ebbb3f"
+    },
+    {
+      "path": "scripts/audit_nn_v2_future_sources.py",
+      "bytes": 11377,
+      "sha256": "4f30b84dd7085a3cb8ef9b92535304f81b7643b9acaf627f7b57542d7ba7f3e0"
+    },
+    {
+      "path": "src/modeling/nn_v2_synthetic_store.py",
+      "bytes": 9148,
+      "sha256": "6c98663827e084add35456abf3c9bf3f3cb2e364d309902d4d1db346bc351441"
+    },
+    {
+      "path": "tests/test_nn_v2_synthetic_store.py",
+      "bytes": 5861,
+      "sha256": "93131a547e5bfa39a0c981f2421f368fd0c4f8a540b7aeb6a9f160646e1ac8ff"
+    }
+  ],
+  "real_fits": 0,
+  "performance_evaluations": 0,
+  "real_probability_calculations": 0,
+  "T0": null,
+  "actual_enrollments": 0,
+  "real_prediction_saves": 0
+}

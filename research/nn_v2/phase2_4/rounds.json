@@ -1,0 +1,371 @@
+[
+  {
+    "round": 1,
+    "fixtures": 10,
+    "dates": [
+      "2026-08-07",
+      "2026-08-08",
+      "2026-08-09"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 2,
+    "fixtures": 10,
+    "dates": [
+      "2026-08-14",
+      "2026-08-15"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 3,
+    "fixtures": 10,
+    "dates": [
+      "2026-08-21",
+      "2026-08-22",
+      "2026-08-23"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 4,
+    "fixtures": 10,
+    "dates": [
+      "2026-08-29"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 5,
+    "fixtures": 10,
+    "dates": [
+      "2026-09-02"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 6,
+    "fixtures": 10,
+    "dates": [
+      "2026-09-05",
+      "2026-09-06"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 7,
+    "fixtures": 10,
+    "dates": [
+      "2026-09-11",
+      "2026-09-12",
+      "2026-09-13"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 8,
+    "fixtures": 10,
+    "dates": [
+      "2026-09-19",
+      "2026-09-20"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 9,
+    "fixtures": 10,
+    "dates": [
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 10,
+    "fixtures": 10,
+    "dates": [
+      "2026-10-17",
+      "2026-10-18"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 11,
+    "fixtures": 10,
+    "dates": [
+      "2026-10-21"
+    ],
+    "ids_pending": 0,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 12,
+    "fixtures": 10,
+    "dates": [
+      "2026-10-24",
+      "2026-10-25"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 13,
+    "fixtures": 10,
+    "dates": [
+      "2026-10-31",
+      "2026-11-01"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 14,
+    "fixtures": 10,
+    "dates": [
+      "2026-11-07",
+      "2026-11-08"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 15,
+    "fixtures": 10,
+    "dates": [
+      "2026-11-20",
+      "2026-11-21"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 16,
+    "fixtures": 10,
+    "dates": [
+      "2026-11-25",
+      "2026-12-16",
+      "2027-04-14"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 17,
+    "fixtures": 10,
+    "dates": [
+      "2026-11-28",
+      "2026-11-29"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 18,
+    "fixtures": 10,
+    "dates": [
+      "2026-12-04",
+      "2026-12-05",
+      "2026-12-06"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 19,
+    "fixtures": 10,
+    "dates": [
+      "2026-12-12",
+      "2026-12-13"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 20,
+    "fixtures": 10,
+    "dates": [
+      "2026-12-19"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 0
+  },
+  {
+    "round": 21,
+    "fixtures": 10,
+    "dates": [
+      "2027-02-13",
+      "2027-02-14"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 22,
+    "fixtures": 10,
+    "dates": [
+      "2027-02-20"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 23,
+    "fixtures": 10,
+    "dates": [
+      "2027-02-27"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 24,
+    "fixtures": 10,
+    "dates": [
+      "2027-03-06"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 25,
+    "fixtures": 10,
+    "dates": [
+      "2027-03-10"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 26,
+    "fixtures": 10,
+    "dates": [
+      "2027-03-13",
+      "2027-03-14"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 27,
+    "fixtures": 10,
+    "dates": [
+      "2027-03-20",
+      "2027-03-21"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 28,
+    "fixtures": 10,
+    "dates": [
+      "2027-04-03"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 29,
+    "fixtures": 10,
+    "dates": [
+      "2027-04-09",
+      "2027-04-10"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 30,
+    "fixtures": 10,
+    "dates": [
+      "2027-04-16",
+      "2027-04-17"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 31,
+    "fixtures": 10,
+    "dates": [
+      "2027-04-24"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 32,
+    "fixtures": 10,
+    "dates": [
+      "2027-04-29"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 33,
+    "fixtures": 10,
+    "dates": [
+      "2027-05-03"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 34,
+    "fixtures": 10,
+    "dates": [
+      "2027-05-09"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 35,
+    "fixtures": 10,
+    "dates": [
+      "2027-05-15"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 36,
+    "fixtures": 10,
+    "dates": [
+      "2027-05-22"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 37,
+    "fixtures": 10,
+    "dates": [
+      "2027-05-29"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  },
+  {
+    "round": 38,
+    "fixtures": 10,
+    "dates": [
+      "2027-06-06"
+    ],
+    "ids_pending": 10,
+    "kickoffs_pending": 10
+  }
+]

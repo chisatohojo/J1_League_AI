@@ -1,0 +1,32 @@
+{
+  "data_origin": "synthetic",
+  "suites": [
+    {
+      "suite": "storage-tests-final.xml",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 3.464,
+      "junit_sha256": "5a277de1b7c804f179221739874550d42bf0f2f4ad3841a204d7912746a4efda",
+      "actual_exit": 0
+    },
+    {
+      "suite": "existing-contract-tests-final.xml",
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 1.557,
+      "junit_sha256": "32ce99b5e08401ef6de145aff7ecc4818ea46e6289d7bfc071ed5f9782f734a4",
+      "actual_exit": 0
+    }
+  ],
+  "total_passed": 75,
+  "warnings_as_errors": true,
+  "legacy_junit_for_record_property": true,
+  "initial_legacy_test_run": "50 pass, 1 setup warning/error under xunit2; preserved locally; final legacy format 51 pass",
+  "no_model_fit_tests_selected": true,
+  "real_fits": 0,
+  "real_model_predictions": 0,
+  "real_enrollments": 0,
+  "real_prediction_saves": 0
+}

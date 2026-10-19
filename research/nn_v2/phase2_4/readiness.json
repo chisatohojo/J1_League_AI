@@ -1,0 +1,61 @@
+{
+  "overall": "HOLD",
+  "MODEL": {
+    "status": "READY",
+    "reason": "Phase2.3 seal, fixed artifacts, backup CRC/SHA/extracted bytes and prior readback evidence verified; no model deserialization/inference this phase"
+  },
+  "SOURCE": {
+    "status": "HOLD",
+    "reason": "Capacity 28 rounds exists; provisional 200 have 190 IDs and 100 kickoffs unresolved; snapshot is saved observation only"
+  },
+  "HISTORY": {
+    "status": "HOLD",
+    "reason": "4 completion-origin SHA bindings disagree; raw alternatives verified but not adopted; dedicated NN future Elo/Form and 2026 temporal exception audit incomplete"
+  },
+  "STORAGE": {
+    "status": "READY_SYNTHETIC_CONTRACT_DESIGN_ONLY",
+    "reason": "Parent checked and candidate absent; strict synthetic-only transaction tests pass. No real writer deployment"
+  },
+  "ENROLLMENT": {
+    "status": "HOLD",
+    "reason": "No T0 or enrollment; existing v1 enrollment requires 200 known kickoffs; pending kickoff binding design needs separate implementation approval"
+  },
+  "PREDICTION": {
+    "status": "HOLD",
+    "reason": "SOURCE/HISTORY/ENROLLMENT unresolved; no source acquisition or live prediction writer enabled"
+  },
+  "counts": {
+    "all_380": {
+      "fixtures": 380,
+      "official_ids_known": 110,
+      "official_ids_pending": 270,
+      "kickoffs_known": 200,
+      "kickoffs_pending": 180
+    },
+    "unstarted_280": {
+      "fixtures": 280,
+      "official_ids_known": 10,
+      "official_ids_pending": 270,
+      "kickoffs_known": 100,
+      "kickoffs_pending": 180
+    },
+    "capacity_200_not_enrolled": {
+      "fixtures": 200,
+      "official_ids_known": 10,
+      "official_ids_pending": 190,
+      "kickoffs_known": 100,
+      "kickoffs_pending": 100
+    }
+  },
+  "new_synthetic_tests": 24,
+  "existing_contract_tests": 51,
+  "real_fits": 0,
+  "performance_evaluations": 0,
+  "real_probability_calculations": 0,
+  "T0": null,
+  "actual_enrollments": 0,
+  "real_prediction_saves": 0,
+  "network_fetches": 0,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED"
+}

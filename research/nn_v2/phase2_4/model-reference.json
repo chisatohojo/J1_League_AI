@@ -1,0 +1,15 @@
+{
+  "study_id": "nn_v2_residual_20261020_01",
+  "status": "TRAINED_AND_SEALED_RESEARCH_ONLY",
+  "artifact_seal_sha256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "pretraining_manifest_sha256": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb",
+  "files": {
+    "final-baseline/model.joblib": "b14c68b04d7c710dc78695aff274ea43ef34ccc73ed935998da1c3d26657beb2",
+    "final-baseline/scaler.joblib": "a3d47ad31bc2f59d963e78e7b61d1c5449559f56aa4dbc3bb9830e5a94bfab66",
+    "residual/artifact.json": "62b31d2b6da274d6980bfa717050c6c080d42bbed3c36df07a801d4f209f5128",
+    "residual-scaler.npz": "69f2690ca10ea57b387dd60186033143680b0de8029f8e9a04af885ebede6086"
+  },
+  "prior_backup_crc_and_119_payload_sha_and_extracted_sha": "PASS",
+  "this_phase_model_deserializations": 0,
+  "this_phase_probabilities_computed": 0
+}

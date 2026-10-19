@@ -1,0 +1,24 @@
+{
+  "audit_root": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_4-20261020-070632",
+  "files": {
+    "final-sources/history-audit.json": "abccd17706a4dd3eaff340ef6a74162328e93090ee90a1f4afb055507db11361",
+    "final-sources/missing-kickoffs.csv": "60c00d293a34e07fed6ea5fb5e686fdd8e2ec602b58d8134a02967f65a8e1f01",
+    "final-sources/missing-official-ids.csv": "355c4602ca337b8ff889a71039b9797fa16145e6a2bb4d3f8ea06bb2c6ab15eb",
+    "final-sources/provenance-gaps.json": "5d4f2685f8d501cae2d963e8fa656b46260bc170d4c516b1c6a46644f6df29a9",
+    "final-sources/rounds.json": "48cbc40af55fce6a33d070cc0f248ae9110322fe09c37b2e182878de7204e16d",
+    "final-sources/schedule-identity-audit.csv": "121521f2362c30aa7b498688dfb9abae12034e4d09228f8c03cb9a4b78ea4ef7",
+    "final-sources/SHA256-MANIFEST.json": "e88e613bb01519a0ec8812c5b8ea29127dcf93ec9031444d13f0649fe6b9f563",
+    "final-sources/source-audit.json": "2e3d3e2a435a938105c55fab3588ccd0dcc89f96eb55a8ca8721c6231827b7ab",
+    "final-sources/witness-audit.json": "1f3f0ed8558bba99f634dfed049340ca11e9b124ed091e0137d225cec12c7193"
+  },
+  "list_counts": {
+    "missing-official-ids.csv": 270,
+    "missing-kickoffs.csv": 180,
+    "schedule-identity-audit.csv": 380
+  },
+  "provisional_200_is_not_enrollment": true,
+  "T0": null,
+  "actual_enrollments": 0,
+  "candidate_storage_root": "%LOCALAPPDATA%/J1AI/NNResearch-v2-future-20261020-01",
+  "candidate_created": false
+}
