@@ -1,0 +1,2 @@
+# Preserve exact manifest/specification bytes for SHA readback on every platform.
+*.json -text whitespace=cr-at-eol

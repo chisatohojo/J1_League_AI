@@ -1,0 +1,66 @@
+{
+  "tests": 115,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "seconds": 3.409,
+  "properties": [
+    [
+      "test_initialization_and_exact_parameter_count",
+      "parameter_count",
+      "90"
+    ],
+    [
+      "test_all_90_gradients_by_central_difference[7]",
+      "gradient_max_absolute_error",
+      "3.2360407170757555e-10"
+    ],
+    [
+      "test_all_90_gradients_by_central_difference[7]",
+      "gradient_relative_l2_error",
+      "4.230948532547356e-09"
+    ],
+    [
+      "test_all_90_gradients_by_central_difference[43]",
+      "gradient_max_absolute_error",
+      "2.830385752161657e-10"
+    ],
+    [
+      "test_all_90_gradients_by_central_difference[43]",
+      "gradient_relative_l2_error",
+      "2.488848012256795e-09"
+    ],
+    [
+      "test_chronological_offsets_have_only_prior_year_fit_and_new_scalers",
+      "synthetic_crossfit_folds",
+      "9"
+    ],
+    [
+      "test_chronological_offsets_have_only_prior_year_fit_and_new_scalers",
+      "synthetic_crossfit_rows",
+      "54"
+    ],
+    [
+      "test_synthetic_20_round_200_fixture_proposal_and_full_date_batch",
+      "synthetic_enrolled_fixture_validation_only",
+      "200"
+    ],
+    [
+      "test_synthetic_20_round_200_fixture_proposal_and_full_date_batch",
+      "actual_enrollments",
+      "0"
+    ],
+    [
+      "test_synthetic_20_round_200_fixture_proposal_and_full_date_batch",
+      "actual_saved_forecasts",
+      "0"
+    ]
+  ],
+  "data_origin": "synthetic",
+  "actual_pytest_exit": 0,
+  "warnings_as_errors": true,
+  "real_data_fits": 0,
+  "real_data_evaluations": 0,
+  "future_predictions_saved": 0,
+  "junit_sha256": "c49978d6ebd94f3a5ef8eab244737d42cd649efd1d2dcd6a760972328c7131fd"
+}

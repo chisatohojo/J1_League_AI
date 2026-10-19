@@ -1,0 +1,125 @@
+{
+  "status": "SYNTHETIC_IMPLEMENTATION_VERIFIED_REAL_EXECUTION_NOT_AUTHORIZED",
+  "source_design_commit": "10ec3bd679cb4fb66cf4d59c3b26001667c28e16",
+  "numeric_details_review": "User confirmed PCG64 / Glorot bound / corrected Adam / post-update curve / Logistic tol before implementation",
+  "residual": {
+    "schema": "nn_v2_residual_numeric_v1",
+    "features": [
+      "home_last5_matches_available",
+      "away_last5_matches_available",
+      "home_last5_points",
+      "away_last5_points",
+      "home_last5_goals_for",
+      "away_last5_goals_for",
+      "home_last5_goals_against",
+      "away_last5_goals_against"
+    ],
+    "classes": [
+      0,
+      1,
+      2
+    ],
+    "parameters": 90,
+    "hidden": 8,
+    "activation": "tanh",
+    "residual_bound": 0.25,
+    "l2_weights": 0.01,
+    "dtype": "float64",
+    "rng": "PCG64",
+    "seed": 42,
+    "initialization": "W1 Glorot uniform; b1/W2/b2 zero",
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "epsilon_outside_sqrt": 1e-08,
+    "bias_correction": true,
+    "epochs": 200,
+    "batch": "full",
+    "loss_record": "post_update",
+    "early_stopping": false,
+    "warm_start": false,
+    "cpu_threads": 1,
+    "objective": "mean CE + 0.01/2*(sum(W1**2)+sum(W2**2)); no bias penalty",
+    "parameter_order": [
+      "W1 row-major (8,8)",
+      "b1 (8)",
+      "W2 row-major (8,2)",
+      "b2 (2)"
+    ],
+    "W1_uniform_bounds": [
+      -0.6123724356957945,
+      0.6123724356957945
+    ],
+    "input_scaler": {
+      "with_mean": true,
+      "with_std": true,
+      "variance_ddof": 0
+    }
+  },
+  "tested_versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "sklearn": "1.9.1"
+  },
+  "offsets": {
+    "seed_years": [
+      2015,
+      2016
+    ],
+    "target_years": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "source_years": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "training_predicate": "season < target_year",
+    "fresh_scaler_and_estimator_per_fold": true,
+    "logistic": {
+      "C": 1,
+      "solver": "lbfgs",
+      "max_iter": 1000,
+      "random_state": 0,
+      "tol": 0.0001
+    },
+    "fit_warnings": "STOP",
+    "row_order": [
+      "match_date",
+      "match_id"
+    ],
+    "policy": "nn_original_kickoff_events_v1_1",
+    "real_source_rows_expected_not_executed": 3588,
+    "real_residual_rows_expected_not_executed": 2976
+  },
+  "phase2_1_operations": {
+    "real_fits": 0,
+    "real_performance_evaluations": 0,
+    "future_predictions_saved": 0,
+    "actual_enrollments": 0,
+    "new_dependencies_installed": 0
+  },
+  "synthetic_result": "115 PASS; warnings treated as errors",
+  "future_enrollment": "proposal validators only; independent 380-fixture selection check required",
+  "live_network_or_update_hook": false,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED"
+}

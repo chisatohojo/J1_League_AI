@@ -1,0 +1,76 @@
+{
+  "schema": "nn_v2_phase2_1_implementation_sha256_v1",
+  "base_commit": "10ec3bd679cb4fb66cf4d59c3b26001667c28e16",
+  "status": "SYNTHETIC_IMPLEMENTATION_READY_REAL_TRAINING_NOT_AUTHORIZED",
+  "algorithm_parameter_count": 90,
+  "tests_passed": 115,
+  "real_data_fits": 0,
+  "real_data_evaluations": 0,
+  "future_saved_predictions": 0,
+  "files": [
+    {
+      "path": "src/modeling/nn_residual_v2.py",
+      "bytes": 12942,
+      "sha256": "170df64f860eda2c81683799bb362f38eff3d54493f93619cb5148ec86f846af"
+    },
+    {
+      "path": "src/modeling/nn_v2_offsets.py",
+      "bytes": 6255,
+      "sha256": "605f052734d4eadce64bef012a0a1c5c87bdffddddca066493eec6c26bd7e897"
+    },
+    {
+      "path": "src/modeling/nn_v2_contracts.py",
+      "bytes": 13676,
+      "sha256": "f4278e42b6b639a969016103f938f2ea491e30f5706668940a55ed37537f2749"
+    },
+    {
+      "path": "tests/test_nn_residual_v2.py",
+      "bytes": 11348,
+      "sha256": "d03046d6b809fc27e2ad5a3b0d4ac2befa236cb2f7b34a03497169d4dc5eb1ee"
+    },
+    {
+      "path": "tests/test_nn_v2_offsets_contracts.py",
+      "bytes": 16639,
+      "sha256": "23f7c80b87352d6f39d9b2ef904b5a36c21d80ec735b43570db1728568846c3e"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/.gitattributes",
+      "bytes": 116,
+      "sha256": "f01dbca01e95b30037bb7f08a83491b220fbae4f5e581ba0a5cffd4b5a7c1fed"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/NUMERICS.md",
+      "bytes": 2361,
+      "sha256": "678a43d03cc91ff2b5b0bcf6aa0c72a097359ce045adb0301461881432619e42"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/RESULTS.md",
+      "bytes": 6414,
+      "sha256": "bf5e72137d4691e6fde2f38f52efc5f869ee803744604384d28c7c1ef3ca4f19"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/SCHEMAS.md",
+      "bytes": 6506,
+      "sha256": "ed103792fbb3beb9a8dccbef70906874e4e328dd969634efa08097fca35f3a93"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/implementation-spec.json",
+      "bytes": 3016,
+      "sha256": "b56afd8f638d8f649517f3709296947d7b2266e7bc561807121f38c6ebb837c7"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/protection-verification.json",
+      "bytes": 4533,
+      "sha256": "8c64d297f884bcd1895f8cae529456be78ff24a01693e59e5690d8093709ef3e"
+    },
+    {
+      "path": "research/nn_v2/phase2_1/synthetic-results.json",
+      "bytes": 1690,
+      "sha256": "70a343b6f812d6c6e97b29f6d3238f982de7bb4290db7f88993ce8bf811a0b69"
+    }
+  ],
+  "original_design_ledger_sha256": "2aa1020a69696b323306efff5831776411c3c0605192f75ec513231de3abee41",
+  "v1_closure_sha256": "5ec55c77ac219a3bc144299b852f352fac5a5fd24ff916501c73183778dd6d74",
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED"
+}
