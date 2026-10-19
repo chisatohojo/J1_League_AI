@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "execution_invocations": 1,
+  "historical_model_fits": 15,
+  "final_model_fits": 1,
+  "actual_process_exit": 0,
+  "related_tests_passed": 108,
+  "oof_rows_per_model": 1678,
+  "oof_rows_total": 5034,
+  "paired_fixture_fold_label_verification": "PASS",
+  "saved_probability_validation": "PASS",
+  "independent_metric_recomputation": [
+    {
+      "model": "elo_logistic",
+      "n": 1678,
+      "log_loss": 1.0560637375940591,
+      "brier": 0.6357311177890514,
+      "accuracy": 0.466626936829559
+    },
+    {
+      "model": "form_logistic",
+      "n": 1678,
+      "log_loss": 1.0599213626339463,
+      "brier": 0.6381420438419695,
+      "accuracy": 0.46185935637663883
+    },
+    {
+      "model": "mlp",
+      "n": 1678,
+      "log_loss": 1.1894862762075415,
+      "brier": 0.7012444126256141,
+      "accuracy": 0.41120381406436235
+    }
+  ],
+  "class_order": [
+    0,
+    1,
+    2
+  ],
+  "per_fold_scalers": "new fit with exact per-fold training row counts",
+  "artifact_readback": "PASS; no predict/evaluate on final training set",
+  "final_training_rows": 3588,
+  "training_2024_rows": 380,
+  "model_sha256": "30b159ed8cb6da84f210def283ab2c242073463c4895ac8d279adc5c03e8f55a",
+  "scaler_sha256": "dada7aab10cb8cf706bd96fed311edd262a2ee167162464137bac563c4985c0b",
+  "run_ledger_sha256": "f2438b10c7f630bbc71e4a8150bb4a992b06cd88a9a92d327240c23cdf6b37ea",
+  "run_files_checked": 26,
+  "protected_files_unchanged": 560,
+  "official_cache_unchanged": 3588,
+  "official_metadata_unchanged": 3588,
+  "task_definitions_unchanged": 2,
+  "operational_head_and_tree_unchanged": true,
+  "main_unchanged": true,
+  "frozen_implementation_unchanged": 18,
+  "timing_policy": "nn_original_kickoff_events_v1_1",
+  "final_training": {
+    "seconds": 2.245673600002192,
+    "iterations": 500,
+    "converged": false,
+    "warnings": [
+      "ConvergenceWarning"
+    ],
+    "scaler_training_rows": 3588
+  },
+  "curves": {
+    "2020": 500,
+    "2021": 500,
+    "2022": 500,
+    "2023": 500,
+    "2024": 426,
+    "final_2015_2025": 500
+  },
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED",
+  "source_commit": "232546ef38bebe55e3847f2cd0d25a09c57ca961",
+  "started_at_utc": "2026-10-19T05:29:40.003309+00:00",
+  "completed_at_utc": "2026-10-19T05:30:01.380205+00:00",
+  "model_trained_at_utc": "2026-10-19T05:29:58.278159+00:00",
+  "artifact_metadata_sha256": "a08a5415d01c547bd411d5d28ea04380ae9def319a0e41ba195e66cc8333d87e",
+  "frozen_spec_sha256": "5554ca48fa1ffa8a3fe7a8bd9b1bb0e61e7380d39b03f107b6c39bd69d461587",
+  "implementation_ledger_sha256": "5e1f197669e300e455139c4ddf52f7e8b7bc3fe0cba8d24668226e5003c41e43",
+  "versions": {
+    "python": "3.12.14",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "joblib": "1.6.0"
+  },
+  "local_output": "%LOCALAPPDATA%/J1AI/NNResearch-phase1_2-20261019-142912/run",
+  "artifact_publication": "Models, scaler, row-level OOF, raw data, local paths and protection receipts remain outside Git."
+}

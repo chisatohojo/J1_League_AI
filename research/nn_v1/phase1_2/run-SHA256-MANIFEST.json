@@ -1,0 +1,135 @@
+{
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "path": "artifact/metadata.json",
+      "bytes": 5661,
+      "sha256": "a08a5415d01c547bd411d5d28ea04380ae9def319a0e41ba195e66cc8333d87e"
+    },
+    {
+      "path": "artifact/model.joblib",
+      "bytes": 46472,
+      "sha256": "30b159ed8cb6da84f210def283ab2c242073463c4895ac8d279adc5c03e8f55a"
+    },
+    {
+      "path": "artifact/scaler.joblib",
+      "bytes": 1247,
+      "sha256": "dada7aab10cb8cf706bd96fed311edd262a2ee167162464137bac563c4985c0b"
+    },
+    {
+      "path": "artifact/training-manifest.csv",
+      "bytes": 707024,
+      "sha256": "5e8a545c1731aaa003d624ddf27e3f677bcba114ef082a368628f0f3dd0a3497"
+    },
+    {
+      "path": "attempt.json",
+      "bytes": 200,
+      "sha256": "28367d816d702060c32a8ee08a28ca8146568d313e31b4d091adc71656be487f"
+    },
+    {
+      "path": "chronology-comparison.json",
+      "bytes": 402,
+      "sha256": "aa11a642bb8837425873f9aca1d6444d60a19f4f8a890190aa51f66d1a8e9ea0"
+    },
+    {
+      "path": "DATA_AUDIT.md",
+      "bytes": 1462,
+      "sha256": "a07dc4839cbd3e3cd8eb48d192a866ea1ca2019a16e60960b88144e9aeb6cb53"
+    },
+    {
+      "path": "dataset-audit.json",
+      "bytes": 2674,
+      "sha256": "d7862c1b21e79fbf898a2fa0cb92b9bb30b295a74efcef7c596368c50941c60e"
+    },
+    {
+      "path": "existing-feature-assets.json",
+      "bytes": 2183,
+      "sha256": "9aee490c30fe66e4b54a4cb275826fa0e3074f11549f6e1bf0a862e2f62f3e12"
+    },
+    {
+      "path": "feature-audit.csv",
+      "bytes": 60475,
+      "sha256": "3f30b8ade7bbaca50f8d06771669e77583a5df5532d184e508c672a7bd7d1b0a"
+    },
+    {
+      "path": "fold-2020.json",
+      "bytes": 1152,
+      "sha256": "b882e9fcc2f14b669bdeea20184ff9af2de2208ea81512252d0f4bb3a3813783"
+    },
+    {
+      "path": "fold-2021.json",
+      "bytes": 1159,
+      "sha256": "b8c0fb5ccd801ee8ef156e29132055f71654091e72a2fedf859e95c6ae924b65"
+    },
+    {
+      "path": "fold-2022.json",
+      "bytes": 1174,
+      "sha256": "f3682f69daa3d599209679b6683100ab4dc7729ca55e04788cb82dd9a7719aaf"
+    },
+    {
+      "path": "fold-2023.json",
+      "bytes": 1153,
+      "sha256": "7dc2d5653c1ac6d3098cb587d81b81707384ceab9219e1a969589ba342d0a86c"
+    },
+    {
+      "path": "fold-2024.json",
+      "bytes": 1109,
+      "sha256": "6754a8d4345ec9cd4a4770865e872b4fd7d02949e88a7f0df5bba42c00f95362"
+    },
+    {
+      "path": "fold-log-loss.png",
+      "bytes": 67063,
+      "sha256": "0c4ea61800f92db5792ddb423283c2cb74ac4d9982595877e6c382a2c62e0e90"
+    },
+    {
+      "path": "fold-metrics.csv",
+      "bytes": 2450,
+      "sha256": "6b7ba66ab51b488eb1aedeb9942a257d7f9149b02967f8d07735460596bf4a3d"
+    },
+    {
+      "path": "legacy-feature-delta.csv",
+      "bytes": 314,
+      "sha256": "1f900e80e3e96a48ef0449b54a6b67b412e15d65061ecae29881205917d10fa5"
+    },
+    {
+      "path": "oof-predictions.csv",
+      "bytes": 582179,
+      "sha256": "b86c56506a10b8352af214261ba48c4886f64f6d5b2145c7d5a2159a1309e268"
+    },
+    {
+      "path": "pooled-comparison.png",
+      "bytes": 56108,
+      "sha256": "4b63b3d546e434a29d2b3c060822a71d7560aeedd6b4373f69b22d98f7472867"
+    },
+    {
+      "path": "pooled-metrics.csv",
+      "bytes": 370,
+      "sha256": "1487d7eaa2f7c146b20fba4f4595b52cb16c7c140fb7739cf8dd480bac884df2"
+    },
+    {
+      "path": "result.json",
+      "bytes": 14129,
+      "sha256": "2c26dc03706fccdc975c59585d4fa16732286ec98fcc75aa3a0e6f747a029bde"
+    },
+    {
+      "path": "source-timing-review.json",
+      "bytes": 919162,
+      "sha256": "c89f9924d8788b484f56734c513fa77e96678ba19979907d3fa0a9abaaba3582"
+    },
+    {
+      "path": "timing-events.csv",
+      "bytes": 667545,
+      "sha256": "a992f8c7919bd6bfd052aca1c75fdade5efdef35c780d98c8fd0872fb8a27d5b"
+    },
+    {
+      "path": "training-curves.json",
+      "bytes": 69911,
+      "sha256": "2ad4e919e0da163d8d31a6399d181f00394d0e9514ce103ec6147fcd308c1c5f"
+    },
+    {
+      "path": "training-curves.png",
+      "bytes": 103950,
+      "sha256": "5a1b9be8d7d91b52c7dc26c181ec608c2c9eb4062bb51f92e1b1f7a217b0f1c4"
+    }
+  ]
+}
