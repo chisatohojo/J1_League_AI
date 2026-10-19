@@ -1,0 +1,10 @@
+{
+  "started_at": "2026-10-19T21:56:59.496920+00:00",
+  "finished_at": "2026-10-19T21:57:10.566111+00:00",
+  "actual_exit": 0,
+  "timeout": false,
+  "timeout_seconds": 1200,
+  "training_entry_invocations": 1,
+  "automatic_retry_count": 0,
+  "execution_seal_sha256": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353"
+}

@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "zip_name": "NNResearch-phase2_3-20261020-065115.zip",
+  "zip_bytes": 1177411,
+  "zip_sha256": "93185124ea29244ce8cf62934db99997fa87ddae7ec59da2ecaafdf32effd083",
+  "payload_files": 119,
+  "payload_bytes": 4810003,
+  "crc": "PASS",
+  "zip_all_sha_readback": "PASS",
+  "extracted_all_sha_readback": "PASS",
+  "artifact_seal_sha256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "restored_model_readback": {
+    "actual_exit": 0,
+    "fits": 0,
+    "read_only_restored_copy": true,
+    "result": {
+      "status": "PASS",
+      "synthetic_probe_rows": 5,
+      "model_probability_max_abs_difference": 0.0,
+      "offset_rows": 2976,
+      "crossfit_models_read_back": 9,
+      "performance_evaluations": 0,
+      "fits": 0
+    }
+  }
+}

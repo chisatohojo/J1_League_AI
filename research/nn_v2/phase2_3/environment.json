@@ -1,0 +1,13 @@
+{
+  "joblib": "1.6.0",
+  "matplotlib": "3.11.1",
+  "scipy": "1.18.1",
+  "threadpoolctl": "3.6.0",
+  "core": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "python": "3.12.14",
+    "sklearn": "1.9.1"
+  },
+  "scope": "Post-execution environment inventory; original execution seal remains unchanged"
+}

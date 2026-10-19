@@ -1,0 +1,18 @@
+{
+  "status": "UNCHANGED",
+  "checked_at": "2026-10-19T21:58:20.506716+00:00",
+  "protected_files": 560,
+  "task_definitions": 2,
+  "live_predictions": 14,
+  "retrospective_matches": 98,
+  "source_inputs": 12,
+  "operational_head": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+  "operational_worktree": "clean",
+  "main": "05c1598f1fa087c39dc1450be65ed075675c1c4c",
+  "manifest_original_unchanged": true,
+  "runtime_unchanged": true,
+  "operational_config_unchanged": true,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED",
+  "operational_model_data_or_server_operations": false
+}

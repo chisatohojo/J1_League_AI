@@ -1,0 +1,10 @@
+{
+  "data_origin": "synthetic",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "actual_exit": 0,
+  "warnings_as_errors": true,
+  "junit_sha256": "46b0397d656fda256c224b987c697689e01c6f71bc9f567d1cc0acc37320a395",
+  "real_fits_during_synthetic_tests": 0
+}

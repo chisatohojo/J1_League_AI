@@ -1,0 +1,86 @@
+{
+  "status": "UNCHANGED_FIXED_ASSETS_WITH_EXPECTED_AUTONOMOUS_MORNING_UPDATE",
+  "checked_at": "2026-10-19T22:00:42.130584+00:00",
+  "protected_files_unchanged": 550,
+  "expected_autonomous_mutable_changes": [
+    {
+      "scope": "runtime",
+      "path": "official/completed_matches.csv",
+      "before_sha256": "789e61056b0ace3957b48519775962cfde5ea54e1166afc065b49c32e8a7114e",
+      "after_sha256": "7dcf0ace5ac4381e26a5aba6ca88b34628d6d55fa3d57197795a7b536351bc5d"
+    },
+    {
+      "scope": "runtime",
+      "path": "official/latest.json",
+      "before_sha256": "2d427bc0a2b1089c48c5d23a55dd1df0172f358c7ecc0df027784935d91a1529",
+      "after_sha256": "33c6595c7c416d8e6f966ff11889d891ba7ad430022ea42b134ab221034b5707"
+    },
+    {
+      "scope": "runtime",
+      "path": "official/review.md",
+      "before_sha256": "9d1524796a0b1cb1a7f2027c0d90662140ac3a8a1a247e4df0d4c7214d2bcffa",
+      "after_sha256": "f70ac16fc5773953024789b0df4be60149ecfaee6c642e0a03c67415c00d1893"
+    },
+    {
+      "scope": "runtime",
+      "path": "official/schedule.csv",
+      "before_sha256": "73f3b4f5cd5bdc155c3e5f6ec953227ff228072cf20ff51f8adec65ec1202865",
+      "after_sha256": "930dc619a53ccb3b78f968583dfb12c522820481246d4e3a626b91d110535fd1"
+    },
+    {
+      "scope": "runtime",
+      "path": "official/update_summary.json",
+      "before_sha256": "dec5bec058f62a0c0a22fa72c89204bd1ebfe559e297fc6850bae9820975b638",
+      "after_sha256": "58d5013d12894a5f01ae5007f981d3a155bc03daf0c16b91afb9361b81392087"
+    },
+    {
+      "scope": "runtime",
+      "path": "view/champion_home.json",
+      "before_sha256": "57cb8a9e0f2e19b58f8f65adefb21010efa2dd1b6035a12d759d56de81b1e77b",
+      "after_sha256": "274618121882d7eb9e732337396a5227720b3394db567e77659afbc6754e01ef"
+    },
+    {
+      "scope": "runtime",
+      "path": "view/champion_rounds.json",
+      "before_sha256": "cc3ad8c201b9d5d63a49f64e26543f9c5077f3478c2f3f25bb06e3fb7db48e3a",
+      "after_sha256": "6addbd43b93d3b5a4170d5190bf7e3d4eaf6a3f10d8bc1af0aaedf0ebbdb331e"
+    },
+    {
+      "scope": "runtime",
+      "path": "view/update-status.json",
+      "before_sha256": "b89c0957f7e597f48a4dce2761c215328793647c5230d5df824132e6f6dff520",
+      "after_sha256": "064f69216022a66c55b96bbce9d176d9e531940dc4cab1f4db4d9c9c5c15e776"
+    },
+    {
+      "scope": "display-store",
+      "path": "current.json",
+      "before_sha256": "790ffa442b7479a9822a527826b2c72f4ab4a4aaee821f7be12dceec7bcc8a8f",
+      "after_sha256": "736443bb5fe6a740bd72b911fb5f9a94d312713b5cfce7ff6571c3f91904de44"
+    },
+    {
+      "scope": "display-store",
+      "path": "status.json",
+      "before_sha256": "b4e5d13c64b362f293106388623abb82ec53374e436fc55115565735256744f0",
+      "after_sha256": "3441c27d9a248c8a71a132e06d0a00e2c8c99a5565504d0d8f457f3b3d3a863b"
+    }
+  ],
+  "source_inputs_unchanged": 12,
+  "saved_predictions_unchanged": 14,
+  "task_definitions_unchanged": 2,
+  "task_execution_was_not_started_by_research": true,
+  "update_state": {
+    "state": "ready",
+    "startedAt": "2026-10-19T22:00:02.636692+00:00",
+    "finishedAt": "2026-10-19T22:00:04.417176+00:00",
+    "lastSuccessAt": "2026-10-19T22:00:04.417176+00:00",
+    "errorCode": null
+  },
+  "current_official_pointer": {
+    "manifest_sha256": "b8eee29d3b5ff286e50c2a171a56cff7da9afaab5ee3bc0ca64447f1b50a8e87",
+    "revision_id": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7"
+  },
+  "operational_head": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+  "main": "05c1598f1fa087c39dc1450be65ed075675c1c4c",
+  "research_operational_writes": 0,
+  "training_completed_before_scheduled_update": true
+}

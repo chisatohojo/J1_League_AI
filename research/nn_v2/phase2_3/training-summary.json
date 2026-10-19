@@ -1,0 +1,44 @@
+{
+  "status": "TRAINED_AND_SEALED_RESEARCH_ONLY",
+  "study_id": "nn_v2_residual_20261020_01",
+  "fit_counts": {
+    "adam_updates": 200,
+    "crossfit_baseline": 9,
+    "final_baseline": 1,
+    "logistic_fit_calls": 10,
+    "residual_nn": 1,
+    "scaler_fit_calls": 11
+  },
+  "hashes": {
+    "final-baseline/model.joblib": "b14c68b04d7c710dc78695aff274ea43ef34ccc73ed935998da1c3d26657beb2",
+    "final-baseline/scaler.joblib": "a3d47ad31bc2f59d963e78e7b61d1c5449559f56aa4dbc3bb9830e5a94bfab66",
+    "residual/artifact.json": "62b31d2b6da274d6980bfa717050c6c080d42bbed3c36df07a801d4f209f5128",
+    "residual-scaler.npz": "69f2690ca10ea57b387dd60186033143680b0de8029f8e9a04af885ebede6086",
+    "crossfit-offsets.npz": "5ba01491f8c7e9c300953baf8e8762527751e6bc2d50e55c10dee21db0caed70",
+    "crossfit-offsets.csv": "5c09c03f77c0681e32454a81485e5dd2bbbffab976b97b636e840b9e57c5f425",
+    "training-loss.csv": "9791c8de6c43d23b6f507913a78634b75d98dc6ec4a06f6dfbb65f112e584c49",
+    "training-loss.png": "e2b15280863c1da47ad0b74883d3f8485bc5676a35ef3a67c0bd01066e04a346",
+    "artifact-seal.json": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f"
+  },
+  "training_objective_update1": 1.0933591278294177,
+  "training_objective_update200": 1.0677315769569444,
+  "updates": 200,
+  "technical_readback": {
+    "status": "PASS",
+    "synthetic_probe_rows": 5,
+    "model_probability_max_abs_difference": 0.0,
+    "offset_rows": 2976,
+    "crossfit_models_read_back": 9,
+    "performance_evaluations": 0,
+    "fits": 0
+  },
+  "manifest_sha256": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb",
+  "execution_seal_sha256": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "performance_evaluations": 0,
+  "performance_superiority": "NOT_EVALUATED",
+  "future_predictions_saved": 0,
+  "T0": null,
+  "enrollment": null,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED"
+}

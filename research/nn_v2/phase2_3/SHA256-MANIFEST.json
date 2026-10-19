@@ -1,0 +1,86 @@
+{
+  "schema": "nn_v2_phase2_3_public_sha256_v1",
+  "study_id": "nn_v2_residual_20261020_01",
+  "status": "TRAINED_AND_SEALED_RESEARCH_ONLY",
+  "base_commit": "6918724605275aaa142f210d20bbf45f8bbf3a34",
+  "files": [
+    {
+      "path": "research/nn_v2/phase2_3/.gitattributes",
+      "bytes": 67,
+      "sha256": "85a119e9cdcafac9e51b2de1d6dcb8d36f6e40b80bc0877011a16888980eb048"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/artifact-sha256.json",
+      "bytes": 5919,
+      "sha256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/backup-verification.json",
+      "bytes": 782,
+      "sha256": "1d1331a16c4133ac6fe643b19cac56b85cff186730dbf16e6858aa44d89eae8a"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/environment.json",
+      "bytes": 303,
+      "sha256": "a3d9bf76a8cc18e295566172233482a0bea19fa7c7bf5f9a128ce42b9dbcba1a"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/execution-receipt.json",
+      "bytes": 335,
+      "sha256": "1ca1d7e6d97ebeeb54ca74dfa6fad2260ebbd566c862358f35c2e5c592aa2312"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/post-scheduled-update-protection.json",
+      "bytes": 3625,
+      "sha256": "7db0ec20d120c1bbc262052810acd93d45386049cc43aeb3f49ee87af93538bd"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/protection-verification.json",
+      "bytes": 585,
+      "sha256": "cd6ae95dbd540fbfd32ff013d82aeefeadd6e5103d952f3da481a3b5029d7590"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/RESTORE_GUIDE.md",
+      "bytes": 2355,
+      "sha256": "f3e3e2aba601610bb82e0f1b7a3788a39daaf4e8e469472331be5877fd65a41b"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/RESULTS.md",
+      "bytes": 7487,
+      "sha256": "f5e24e231339e2c300a389288eb10c898888217c1dffbf398b80d96cdf3e1a22"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/synthetic-results.json",
+      "bytes": 256,
+      "sha256": "84686ba0aa2c78682f88d9ae13ec241bcc33d03d11885814ce0ba67f588fba8b"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/training-loss.csv",
+      "bytes": 4671,
+      "sha256": "9791c8de6c43d23b6f507913a78634b75d98dc6ec4a06f6dfbb65f112e584c49"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/training-loss.png",
+      "bytes": 57137,
+      "sha256": "e2b15280863c1da47ad0b74883d3f8485bc5676a35ef3a67c0bd01066e04a346"
+    },
+    {
+      "path": "research/nn_v2/phase2_3/training-summary.json",
+      "bytes": 1917,
+      "sha256": "7ad25f8c3e2b2959f234980cce828f4f7575a7ec4608b882f8b237cb9383213c"
+    },
+    {
+      "path": "src/modeling/nn_v2_training.py",
+      "bytes": 21673,
+      "sha256": "5eaa52e573d5c928d4d2a275f2ac3a761f26e068a236602e33b53dd688c78369"
+    },
+    {
+      "path": "tests/test_nn_v2_training.py",
+      "bytes": 4139,
+      "sha256": "e97fc44dc5329de50fb0e32a6188f5188e0091c26950746c9f90c3facefb6c27"
+    }
+  ],
+  "performance_evaluations": 0,
+  "future_predictions_saved": 0,
+  "T0": null
+}
