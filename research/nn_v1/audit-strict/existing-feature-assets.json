@@ -1,0 +1,62 @@
+[
+  {
+    "path": "data/processed/features/2015_2024_j1_draw_propensity_features.csv",
+    "rows": 3208,
+    "sha256": "97b33269a11b62f94dbd4b83924b97cc1cb1cb250ae0eb636ca5d8ccc6ba36a5",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_first_score_features.csv",
+    "rows": 3208,
+    "sha256": "aa5beb436695e0382ab39039f9b98de85aec73cfafc29765b060a451f1435f9a",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_goal_timing_features.csv",
+    "rows": 3208,
+    "sha256": "260e79cec4836243586556c0e253818ed063d27870d74649c939502287919e42",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_h2h_features.csv",
+    "rows": 3208,
+    "sha256": "ab51fd674ee1665591e4b4b152a92f12ffd020211db3e541047c3066815784ff",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_player_workload_features.csv",
+    "rows": 3208,
+    "sha256": "00e59ace4870f1c1b09e1a1ab02403430697ab72cb6a7399f9bf50c7003dd552",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_starter_df_features.csv",
+    "rows": 3208,
+    "sha256": "056963dd4707f122754d596ac6865721052cc3a31589a3a02941faca683aa674",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_substitution_timing_features.csv",
+    "rows": 3208,
+    "sha256": "898c7d53ed429d36920fd67b218333d837f5d2604c99c3556e47584721b9161f",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2015_2024_j1_team_discipline_features.csv",
+    "rows": 3208,
+    "sha256": "40a7581dd9fa9f85c3d2eaf3942a73390098f78c34664770cc1d28d06cf9f1f3",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/2025_2026_27_j1_rolling_xg_features.csv",
+    "rows": 660,
+    "sha256": "8cb2ab3f00690d99b924429e485ae4b8141f182e057012e22c930402caaeedc6",
+    "used_for_training": false
+  },
+  {
+    "path": "data/processed/features/previous_season_jstats_features.csv",
+    "rows": 2438,
+    "sha256": "c2f1f2e784b68806f656524e96e5b0ab321f804fd9d349e28b899adeeb6e8870",
+    "used_for_training": false
+  }
+]

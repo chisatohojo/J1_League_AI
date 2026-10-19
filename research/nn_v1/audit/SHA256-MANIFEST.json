@@ -1,0 +1,30 @@
+{
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "path": "attempt.json",
+      "bytes": 203,
+      "sha256": "be798b3365bdefa02e50a3c2e9043d7edb3a05f99620b0cb8b9faae45b8b6c6c"
+    },
+    {
+      "path": "DATA_AUDIT.md",
+      "bytes": 1277,
+      "sha256": "8123a8e20a47d712ff3ff50a2a779ea4839c686cc5ee4711896ad85bb1c73610"
+    },
+    {
+      "path": "dataset-audit.json",
+      "bytes": 2455,
+      "sha256": "d6e15e3c95b58d47a46a7affc02a2e076b48a04e6fa3c47d5b659f99b6622918"
+    },
+    {
+      "path": "existing-feature-assets.json",
+      "bytes": 2183,
+      "sha256": "9aee490c30fe66e4b54a4cb275826fa0e3074f11549f6e1bf0a862e2f62f3e12"
+    },
+    {
+      "path": "feature-audit.csv",
+      "bytes": 55957,
+      "sha256": "b17a3ab7dfecb4881da488b3a637a74c000567943b2a2fd1a60a8b1a56b6b65b"
+    }
+  ]
+}

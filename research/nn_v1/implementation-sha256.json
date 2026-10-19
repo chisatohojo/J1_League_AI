@@ -1,0 +1,12 @@
+{
+  "src/modeling/nn_research_v1.py": "d88be8a9eae4aef280453416fabed39b11fe8e4d0147ed06418ac80ad1a060cd",
+  "src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
+  "src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
+  "src/features/form.py": "ef28e5c4467393d2176532792a6ff3984b7d972cf9b156a8def0043a37316294",
+  "src/modeling/player_workload_evaluation.py": "7517880be643e7891eb7d0eb426d1dd57744ef5f7b730ce7713457e953457d76",
+  "src/collect/matches.py": "0b2f2916131a54e413fb7347a16960f1c59880c24741584a4bd491a43821842c",
+  "src/collect/teams.py": "b0b77a3b2a583a047a8d3399076e083ad5d5f2699aa8c6cd0c6fe82515128e6c",
+  "requirements-lock.txt": "3aea21392b63f9fc3dfbcf00e44cb825a3eb7453d130492dde8bcb5da14ddc04",
+  "research/nn_v1/frozen-spec.json": "f047670931d8335f7d6a2356988aade1b850048de4adb42bd8cc55aa71c81062",
+  "research/nn_v1/input-pins.json": "fca2c3d66931f1fd3ee3ad8f156db22d6f77f425a6fc0d1586b1b3365578fd41"
+}
