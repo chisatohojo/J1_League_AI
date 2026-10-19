@@ -1,0 +1,120 @@
+{
+  "schema": "nn_v1_close_v2_design_documents_sha256_v1",
+  "research_base_commit": "2af07472900b23936a7cfbad1431f2dbd354170d",
+  "status": "DESIGN_ONLY_NOT_FROZEN_FOR_TRAINING",
+  "new_training_and_performance_evaluations": 0,
+  "files": [
+    {
+      "path": "research/nn_v1/CLOSURE.md",
+      "bytes": 3317,
+      "sha256": "5ec55c77ac219a3bc144299b852f352fac5a5fd24ff916501c73183778dd6d74"
+    },
+    {
+      "path": "research/nn_v1/closure-verification.json",
+      "bytes": 2778,
+      "sha256": "019a98af7a8aba43da0de484ec57f2878bb2d4476800ce80ca8052fc092a95b6"
+    },
+    {
+      "path": "research/nn_v2/DESIGN.md",
+      "bytes": 10820,
+      "sha256": "eeb70ef3cedb1b53e2e59ae76b23ac328ef315815fd2eb4bb853851bb7f2f804"
+    },
+    {
+      "path": "research/nn_v2/PIT_AUDIT_PLAN.md",
+      "bytes": 8083,
+      "sha256": "447dd0711edaf2e686bcc8fa0939f4cf4b4dade3c1f73a8a53e43dc28448599b"
+    },
+    {
+      "path": "research/nn_v2/FUTURE_EVALUATION_PLAN.md",
+      "bytes": 6978,
+      "sha256": "64822df6c06d89401d21148687691b5131d0e6d965a2483795163523d31836b3"
+    }
+  ],
+  "existing_reference_files_read_only": [
+    {
+      "path": "research/nn_v1/frozen-spec.json",
+      "bytes": 2791,
+      "sha256": "5554ca48fa1ffa8a3fe7a8bd9b1bb0e61e7380d39b03f107b6c39bd69d461587"
+    },
+    {
+      "path": "research/nn_v1/input-pins.json",
+      "bytes": 1421,
+      "sha256": "fca2c3d66931f1fd3ee3ad8f156db22d6f77f425a6fc0d1586b1b3365578fd41"
+    },
+    {
+      "path": "research/nn_v1/implementation-sha256.json",
+      "bytes": 1893,
+      "sha256": "5e1f197669e300e455139c4ddf52f7e8b7bc3fe0cba8d24668226e5003c41e43"
+    },
+    {
+      "path": "research/nn_v1/TIMING_POLICY.md",
+      "bytes": 5175,
+      "sha256": "4554d357d022845171671eaeb2fa11e758ed0109fad01a154acfd0462bb3f3a2"
+    },
+    {
+      "path": "research/nn_v1/phase1_2/RESULTS.md",
+      "bytes": 8809,
+      "sha256": "349c6e92a1167bb431e19decbef6f367013b2753fa169ac32739409e0851b076"
+    },
+    {
+      "path": "docs/MODEL_ARCHITECTURE_BENCHMARK_RESULT.md",
+      "bytes": 3668,
+      "sha256": "fa144ad2dfca25ea05e4449b53844ac18dfef84c73991ba7e1d236b807810dd1"
+    },
+    {
+      "path": "docs/MODEL_ARCHITECTURE_BENCHMARK_SPEC.md",
+      "bytes": 14053,
+      "sha256": "06366707c637c910c81dc3f08de81cdd061f4c8f5388f3ebad4ff47ddb988829"
+    },
+    {
+      "path": "docs/MODEL_FREEZE_BEFORE_2026.md",
+      "bytes": 4614,
+      "sha256": "cd501e478c7026954efea78238a20d95b236a70e4a0655775a61622b68768cff"
+    },
+    {
+      "path": "docs/DATA_ASSET_INVENTORY.md",
+      "bytes": 15762,
+      "sha256": "ab8dd0a6acdfbf326f7642ff1f9e4da7d558d7102d5138d857838ffc2c83d5bb"
+    },
+    {
+      "path": "src/modeling/mlp_baseline_rolling_validation.py",
+      "bytes": 5291,
+      "sha256": "8a38a43cd87552d3c4331a4bc76f385647d663f3a940e6f34d8b30a11bff5c37"
+    },
+    {
+      "path": "src/modeling/logistic_elo_home_advantage_tuning.py",
+      "bytes": 4408,
+      "sha256": "55ca48b5a3a70eaac75fd593201e66ac7518bff084c9db450c9513d2ceae0507"
+    }
+  ],
+  "sources_consulted_on": "2026-10-19",
+  "sources": [
+    {
+      "url": "https://arxiv.org/abs/1512.03385",
+      "title": "Deep Residual Learning for Image Recognition",
+      "scope": "Residual-learning inspiration only; not evidence of J1 predictive improvement"
+    },
+    {
+      "url": "https://arxiv.org/abs/2106.11959",
+      "title": "Revisiting Deep Learning Models for Tabular Data",
+      "scope": "Comparable protocols and absence of universal architecture superiority; not J1 evaluation"
+    },
+    {
+      "url": "https://aclanthology.org/D14-1179/",
+      "title": "Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation",
+      "scope": "Gated sequence encoder concept only"
+    },
+    {
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html",
+      "title": "scikit-learn 1.9.1 MLPClassifier API",
+      "scope": "Public constructor/fit contract has no fixed external logit-offset argument"
+    },
+    {
+      "url": "https://scikit-learn.org/stable/common_pitfalls.html",
+      "title": "scikit-learn 1.9.1 Common pitfalls",
+      "scope": "Preprocessing fitted on training data; does not certify this dataset historical PIT"
+    }
+  ],
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED"
+}

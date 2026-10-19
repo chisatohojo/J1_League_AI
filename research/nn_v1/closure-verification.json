@@ -1,0 +1,66 @@
+{
+  "verified_at_utc": "2026-10-19T12:28:04.750152+00:00",
+  "status": "PASS",
+  "decision": "CLOSE_NN_V1_RETAIN_ARTIFACTS",
+  "completed_commit": "2af07472900b23936a7cfbad1431f2dbd354170d",
+  "run_directory": "%LOCALAPPDATA%/J1AI/NNResearch-phase1_2-20261019-142912/run",
+  "run_ledger_sha256": "f2438b10c7f630bbc71e4a8150bb4a992b06cd88a9a92d327240c23cdf6b37ea",
+  "artifact_model_sha256": "30b159ed8cb6da84f210def283ab2c242073463c4895ac8d279adc5c03e8f55a",
+  "artifact_scaler_sha256": "dada7aab10cb8cf706bd96fed311edd262a2ee167162464137bac563c4985c0b",
+  "artifact_metadata_sha256": "a08a5415d01c547bd411d5d28ea04380ae9def319a0e41ba195e66cc8333d87e",
+  "oof_sha256": "b86c56506a10b8352af214261ba48c4886f64f6d5b2145c7d5a2159a1309e268",
+  "graphs_sha256": {
+    "fold-log-loss.png": "0c4ea61800f92db5792ddb423283c2cb74ac4d9982595877e6c382a2c62e0e90",
+    "pooled-comparison.png": "4b63b3d546e434a29d2b3c060822a71d7560aeedd6b4373f69b22d98f7472867",
+    "training-curves.png": "5a1b9be8d7d91b52c7dc26c181ec608c2c9eb4062bb51f92e1b1f7a217b0f1c4"
+  },
+  "run_payload_files": 26,
+  "zip_name": "NNResearch-phase1_2-20261019-142912.zip",
+  "zip_sha256": "b29104508988a4fa2237f81e6a1da63b4afdf6edde45464a26aa167cdfb15b27",
+  "zip_bytes": 1599048,
+  "zip_payload_files_checked": 89,
+  "zip_crc": "PASS",
+  "zip_sha256_all_payload": "PASS",
+  "zip_run_bytes_equal_original": true,
+  "frozen_implementation_files_unchanged": 18,
+  "protected_files_unchanged": 560,
+  "task_definition_sha256": {
+    "J1AI-Champion-Morning": "e052d282c38f0edd4812dd989bc04c84dd60ccecee08dcd433ea523dfa85a5b5",
+    "J1AI-Champion-Evening": "69ca6d2d6b339980131572c2161f496454795e8cba30ceadd5cb73d695513311"
+  },
+  "data_capacity_audit": {
+    "2015_2024": {
+      "match_targets": 3208,
+      "both_sides_full5": 3106,
+      "at_least_one_side_cold_start": 102,
+      "team_sequences_not_independent_targets": 6416
+    },
+    "2015_2025": {
+      "match_targets": 3588,
+      "both_sides_full5": 3481,
+      "at_least_one_side_cold_start": 107,
+      "team_sequences_not_independent_targets": 7176
+    }
+  },
+  "training_calls_this_phase": 0,
+  "performance_evaluation_calls_this_phase": 0,
+  "artifact_permission_changes": 0,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED",
+  "frozen_status": "CLOSE_NN_V1_RETAIN_ARTIFACTS",
+  "v1_retraining_permitted": false,
+  "v1_parameter_changes_permitted": false,
+  "write_once_storage_claim": false,
+  "v1_result_reference": {
+    "elo_logistic": {
+      "log_loss": 1.0560637375940591
+    },
+    "form_logistic": {
+      "log_loss": 1.0599213626339463
+    },
+    "mlp": {
+      "log_loss": 1.1894862762075415
+    }
+  },
+  "verification_scope": "Read-only integrity and feature-capacity audit; no fit, predict, score, parameter change or permission change"
+}
