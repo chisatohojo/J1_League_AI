@@ -1,0 +1,68 @@
+{
+  "verified_at_utc": "2026-10-19T22:46:56.888600+00:00",
+  "acquisition_copy_checks": [
+    {
+      "match_page_id": "101101",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_001.html",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_000.html",
+      "sha256": "0010ecaf65eb6caf5420e64599b64e100a6c2d7b5c2ae5d51daf0b21b6fec26e",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101101",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_001.metadata.json",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_000.metadata.json",
+      "sha256": "34151cfce948b97e47170daf6376caea047541796e3ec17cdc10a977c28ccb2e",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101102",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_002.html",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_001.html",
+      "sha256": "0d7fa8f56401bf8dbfbd10f34e6138f922e6d45ac7763be4edcf987b7f211354",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101102",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_002.metadata.json",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_001.metadata.json",
+      "sha256": "60746b8a954149c667f177b391c789d23b9639df685fac128eaf27162d70142a",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101103",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_003.html",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_002.html",
+      "sha256": "b0f6c91bf295d6e6e58bdee891328f1a46d7a518fa18b3ae05e0b874c6145270",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101103",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_003.metadata.json",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_002.metadata.json",
+      "sha256": "f7ba2bf0fe81d68365b1599f8636a66ad67e73040c9fa7666dfe99caabc81ff2",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101104",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_004.html",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_003.html",
+      "sha256": "85ca6f3301b2f8fde3e5c9af00070bda04099ecf57c2095244faed84c1b16c1a",
+      "byte_identical": true
+    },
+    {
+      "match_page_id": "101104",
+      "snapshot_file": "snapshots\\20261017T133613718777Z-21f0d67d\\evidence_004.metadata.json",
+      "acquisition_file": "acquisitions\\e55c566b9d92411caea9fb2483b4ffd4\\evidence_003.metadata.json",
+      "sha256": "c5fbf25e8bc3781f68b11062acebabaf0a31e6e94027dcb3a8a6fd45a4b3f1f1",
+      "byte_identical": true
+    }
+  ],
+  "historical_collector_commit": "b93e232537d0d19f306e45ac0c8d6fec2cfb3954",
+  "historical_collector_git_blob_sha256": "5e91025142d583d09f2417724f9cbaeed50339275390d46000d3a73179cbe956",
+  "current_collector_git_blob_identical": true,
+  "historical_process_loaded_module_sha_recorded": false,
+  "historical_execution_cause_claim": "Saved transition is exactly reproducible by the unchanged collector; no past process memory trace is asserted.",
+  "protected_files_checked": 805,
+  "mismatches": []
+}

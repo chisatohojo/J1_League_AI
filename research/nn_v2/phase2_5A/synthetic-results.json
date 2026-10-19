@@ -1,0 +1,26 @@
+{
+  "new_tests_passed": 40,
+  "related_tests_passed": 102,
+  "related_skipped": 1,
+  "counts": {
+    "tests": 103,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "skip_reason": "Optional local archived official pages are not test fixtures; four real raw sources were independently parsed by this audit.",
+  "junit_sha256": "694ffa1e996bcdafa50fefbf4ac01bbbcc1144dba51222aae54689be1f39cdbe",
+  "warnings": "treated as errors",
+  "fixture_input": "synthetic only",
+  "audit_actual_process_exit": 0,
+  "audit_process_invocations": 2,
+  "initial_audit_exit": 1,
+  "initial_failure": "Over-broad network audit hook rejected local gethostname during pandas import before any report output; corrected to deny actual socket I/O. Original logs retained.",
+  "real_fits": 0,
+  "real_performance_evaluations": 0,
+  "real_probability_calculations": 0,
+  "T0_registrations": 0,
+  "enrolled_fixtures": 0,
+  "future_predictions_saved": 0,
+  "network_fetches": 0
+}

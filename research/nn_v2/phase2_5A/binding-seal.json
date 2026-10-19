@@ -1,0 +1,13 @@
+{
+  "T0": null,
+  "binding_sha256": "6e1309539a5fc5ab58a82d36035e5d96a6da462701d5253e3b83dd332b8181f0",
+  "enrolled": 0,
+  "evaluations": 0,
+  "fits": 0,
+  "probability_calculations": 0,
+  "raw_source_network_fetches": 0,
+  "real_predictions_saved": 0,
+  "source_pin_sha256": "b911d3383524aced0287cff38fb98a22a071ab0f57e17ce60f511f5db0198184",
+  "study_id": "nn_v2_residual_20261020_01",
+  "verified_at_utc": "2026-10-19T22:46:24.758681+00:00"
+}

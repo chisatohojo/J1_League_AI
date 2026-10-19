@@ -1,0 +1,8 @@
+{
+  "src/modeling/nn_v2_completion_binding.py": "79800180d86e86bd4679f55f2e67714dfac198f7081bdf07e3ce07d942aa336b",
+  "scripts/audit_nn_v2_completion_binding.py": "b32577cad803aca3df978f9a5cdbdf79b70ded902cfe4f5bac50bb3baaf1f46f",
+  "tests/test_nn_v2_completion_binding.py": "d4b6eacbe2b101c4747a6227259364835c6c7f521ec2d97d6c2468cc46ab5100",
+  "src/collect/jleague_ongoing.py": "5e91025142d583d09f2417724f9cbaeed50339275390d46000d3a73179cbe956",
+  "src/collect/jleague_ongoing_source.py": "7032b8679b10d4055e8b6aa4201cf8a690f6270b388539ca3d5c999d63def408",
+  "scripts/build_dashboard_feed.py": "b16a68a497d068e99304a954923f7ac29e337a29f36613551dac8cdd76e9ed00"
+}
