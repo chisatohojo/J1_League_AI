@@ -1,0 +1,12 @@
+{
+  "started_at_utc": "2026-10-19T21:41:33.981714+00:00",
+  "finished_at_utc": "2026-10-19T21:42:06.916381+00:00",
+  "actual_exit": 0,
+  "timeout": false,
+  "timeout_seconds": 1200,
+  "automatic_retry_count": 0,
+  "training_entry_invocations": 0,
+  "prior_audit_exit": 1,
+  "prior_audit_preserved": true,
+  "correction": "auditor detail alias namespace aligned with existing collector; no input changes"
+}

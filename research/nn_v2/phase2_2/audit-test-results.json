@@ -1,0 +1,21 @@
+{
+  "data_origin": "synthetic_only",
+  "tests": 19,
+  "failures": 0,
+  "errors": 0,
+  "seconds": 1.743,
+  "actual_exit": 0,
+  "warnings_as_errors": true,
+  "junit_sha256": "cf192ec6990ecdd4156560b626e119e68d5c8ed152f566a218c26058997fc322",
+  "code_sha256": {
+    "src/modeling/nn_v2_pretraining_audit.py": "a947b3d84414501e93cc763fa9620685a43d8ec0cd10b7c3bc9d5f22719c3776",
+    "scripts/audit_nn_v2_pretraining.py": "cf69eba8c807606d54a1d295f6bd9936b0f8f3b551819df954c60aa6b646e7a8",
+    "tests/test_nn_v2_pretraining_audit.py": "949387a183d6eca4172ac1fa228265522d66d361b4ddb8140318ef7fe31f8e8c"
+  },
+  "reused_phase2_1_tests": 115,
+  "reuse_evidence": "Unchanged implementation and exact original JUnit SHA verified; not rerun",
+  "reused_phase2_1_junit_sha256": "c49978d6ebd94f3a5ef8eab244737d42cd649efd1d2dcd6a760972328c7131fd",
+  "real_fits": 0,
+  "real_performance_evaluations": 0,
+  "future_predictions_saved": 0
+}

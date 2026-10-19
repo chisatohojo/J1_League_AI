@@ -1,0 +1,21 @@
+{
+  "status": "UNCHANGED",
+  "checked_at_utc": "2026-10-19T21:42:38.587544+00:00",
+  "protected_files_same_sha": 560,
+  "task_definitions_unchanged": 2,
+  "operational_head": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+  "operational_worktree": "clean",
+  "main": "05c1598f1fa087c39dc1450be65ed075675c1c4c",
+  "v1_run_payload_sha_verified": 26,
+  "v1_zip_crc_sha": "PASS",
+  "champion_model_unchanged": true,
+  "saved_live_predictions_unchanged": 14,
+  "retrospective_matches_unchanged": 98,
+  "official_revision_unchanged": true,
+  "operational_config_unchanged": true,
+  "display_store_unchanged": true,
+  "servers_modified": false,
+  "training_output_exists": false,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED"
+}

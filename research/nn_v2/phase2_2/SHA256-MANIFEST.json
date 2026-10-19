@@ -1,0 +1,81 @@
+{
+  "schema": "nn_v2_phase2_2_research_sha256_v1",
+  "study_id": "nn_v2_residual_20261020_01",
+  "base_commit": "a424c1591d4642daca33d5cb9f64ab80c84d063c",
+  "full_local_study_manifest_sha256": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb",
+  "files": [
+    {
+      "path": "research/nn_v2/phase2_2/.gitattributes",
+      "bytes": 67,
+      "sha256": "85a119e9cdcafac9e51b2de1d6dcb8d36f6e40b80bc0877011a16888980eb048"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/audit-result.json",
+      "bytes": 2704,
+      "sha256": "7d19edc6a856b7238d448263b65b9dbdb6ce868ecc7a776669a1b3942eb4236b"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/audit-test-results.json",
+      "bytes": 921,
+      "sha256": "eb21ccba3e3334b3e26e6cd2b84bb1f235a1ad3b46bd52fafc2d47c998d9f708"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/crossfit-splits.csv",
+      "bytes": 1802,
+      "sha256": "e6571a023f1fe2290ada8a7f92eac883e612c62a662191d9ae21459ee610e428"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/execution-receipt.json",
+      "bytes": 406,
+      "sha256": "2f6b299555b067bf44b868efdba5a49b4fee51720ea0f38abd229ee235262271"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/future-capacity.json",
+      "bytes": 1563,
+      "sha256": "45abaabec9e9d3dd9923c7dcbdb96bd1d086884b1758e6c8e8fbbef98efdcad7"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/protection-verification.json",
+      "bytes": 726,
+      "sha256": "61608ae8486db59df531d01f5036be867efa5b46e5e2b49065843151f9353bf1"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/RESULTS.md",
+      "bytes": 8533,
+      "sha256": "39d1eaf21d2691dd494d93a3dc55e3b83a7df3698d4cad637590eac1862c79b4"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/study-manifest-index.json",
+      "bytes": 19490,
+      "sha256": "8156e66413fc777e57318d30bf52e6e6040a24b6f78731f0cc9054d4b2a671ec"
+    },
+    {
+      "path": "research/nn_v2/phase2_2/TRAINING_RUNBOOK.md",
+      "bytes": 6957,
+      "sha256": "0f6040c3b93b9966e9bf879c30deaf199ca762ed661c9a35e792eaeae094fc86"
+    },
+    {
+      "path": "research/nn_v2/STATUS.md",
+      "bytes": 1025,
+      "sha256": "df48d2e45d54946689b5b7d7e10ac83a17321a68900d3c3ec4376ab9a4a11385"
+    },
+    {
+      "path": "scripts/audit_nn_v2_pretraining.py",
+      "bytes": 13819,
+      "sha256": "cf69eba8c807606d54a1d295f6bd9936b0f8f3b551819df954c60aa6b646e7a8"
+    },
+    {
+      "path": "src/modeling/nn_v2_pretraining_audit.py",
+      "bytes": 13173,
+      "sha256": "a947b3d84414501e93cc763fa9620685a43d8ec0cd10b7c3bc9d5f22719c3776"
+    },
+    {
+      "path": "tests/test_nn_v2_pretraining_audit.py",
+      "bytes": 6809,
+      "sha256": "949387a183d6eca4172ac1fa228265522d66d361b4ddb8140318ef7fe31f8e8c"
+    }
+  ],
+  "real_fits": 0,
+  "real_performance_evaluations": 0,
+  "future_predictions_saved": 0
+}
