@@ -28,6 +28,10 @@ from src.collect.teams import load_team_master
 from src.features.elo_history import _prepare_ordinary_matches
 from src.features.form import add_form_features
 from src.modeling.player_workload_evaluation import _add_elo
+from src.features.nn_research_timing import (
+    POLICY, TIMING_COLUMNS, build_event_features, validate_timed_state, review_cache,
+    REVIEW_PATH,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 FEATURES = (
@@ -86,10 +90,18 @@ def specification():
         "final_training_rows": 3588, "primary_metric": "multiclass_log_loss",
         "brier_definition": "mean(sum((p-one_hot)**2, axis=1))",
         "cpu_threads": 1, "tuning": False, "early_stopping": False,
-        "chronology": "original-kickoff PIT required; recorded-date features are audit-only until the resumption case is resolved",
+        "chronology": POLICY,
         "resumption_exception": {"match_id": "30700", "recorded_date": "2024-11-22",
-                                 "original_date": "2024-08-24", "disposition": "UNRESOLVED_BLOCKS_ALL_HISTORICAL_FITTING",
-                                 "acknowledgement_bypass": False},
+                                 "original_kickoff": "2024-08-24T19:03:00+09:00",
+                                 "history_cutoff": "2024-08-24T00:00:00+09:00",
+                                 "result_effective": "2024-11-23T00:00:00+09:00",
+                                 "label": "final_90_min_draw", "source_date_unchanged": True},
+        "evidence_manifest_sha256": sha(ROOT / "research/nn_v1/timing-v1_1/evidence-manifest.json"),
+        "timing_registry_sha256": sha(REVIEW_PATH),
+        "all_three_models_share_event_features": True,
+        "legacy_historical_reference_is_required_gate": False,
+        "unknown_timing_case": "STOP before any fit",
+        "historical_publication_asof_proven": False,
         "spent_validation": True, "evaluate_2025": False, "use_2026": False,
         "convergence_warning_policy": "record; no retry; finite fixed-budget fit is not a technical exception",
         "production_connection": False,
@@ -146,7 +158,7 @@ def validate_features(frame):
     return x
 
 
-def build_features(matches):
+def legacy_features(matches):
     """Reuse reviewed day-batched Elo and form; reject duplicate day/club."""
     ordered = matches.sort_values(["match_date", "match_id"], kind="stable").reset_index(drop=True)
     # _add_elo checks unique appearances/day before any result update. Thus
@@ -160,12 +172,17 @@ def build_features(matches):
     return frame
 
 
+def build_features(matches):
+    frame = build_event_features(matches)
+    validate_features(frame)
+    return frame
+
+
 def require_original_kickoff_timing(matches):
-    """Never waive a known temporal defect just to retain the requested count."""
+    """The registered event needs validated original-start/result metadata."""
     if "match_id" not in matches or matches.match_id.isna().any():
         raise ValueError("Missing temporal identity")
-    if matches.match_id.astype(str).eq("30700").any():
-        raise ValueError("Unresolved original-kickoff timing: match 30700; historical fitting/evaluation is on HOLD")
+    validate_timed_state(matches)
 
 
 def probabilities(p, count):
@@ -239,10 +256,10 @@ def score_model(name, model, validation):
         return probabilities(model.predict_proba(x[columns]), len(validation))
 
 
-def reference_gate(measured, scope):
-    actual = [measured[k] for k in ("log_loss", "brier", "accuracy")]
-    if not np.allclose(actual, REFERENCE[scope], rtol=0, atol=1e-12):
-        raise ValueError(f"Frozen Champion A historical reference mismatch: {scope}")
+def legacy_reference_delta(measured, scope):
+    """Different chronology: diagnostic comparison, never an acceptance gate."""
+    return {k: float(measured[k] - ref) for k, ref in
+            zip(("log_loss", "brier", "accuracy"), REFERENCE[scope])}
 
 
 def evaluate(frame, output):
@@ -262,10 +279,10 @@ def evaluate(frame, output):
             model, training = fit(name, train)
             p = score_model(name, model, valid)
             measured = metrics(valid.result, p)
-            if name == "elo_logistic":
-                reference_gate(measured, year)
             folds.append({"model": name, "fold": year, "train": len(train), **measured,
                           **{k: v for k, v in training.items() if k != "loss_curve"}})
+            if name == "elo_logistic":
+                folds[-1]["legacy_reference_delta"] = legacy_reference_delta(measured, year)
             if name == "mlp":
                 curves[str(year)] = training["loss_curve"]
             result = valid[["match_id", "season", "match_date", "home_team_id", "away_team_id", "result"]].copy()
@@ -281,26 +298,27 @@ def evaluate(frame, output):
         if len(selected) != 1678 or not selected.match_id.is_unique:
             raise ValueError("Pooled OOF membership mismatch")
         m = metrics(selected.result, selected[["p_away", "p_draw", "p_home"]])
-        if name == "elo_logistic":
-            reference_gate(m, "pooled")
         pooled.append({"model": name, **m})
+        if name == "elo_logistic":
+            pooled[-1]["legacy_reference_delta"] = legacy_reference_delta(m, "pooled")
     pd.DataFrame(folds).to_csv(output / "fold-metrics.csv", index=False)
     pd.DataFrame(pooled).to_csv(output / "pooled-metrics.csv", index=False)
     oof.to_csv(output / "oof-predictions.csv", index=False)
     return folds, pooled, curves
 
 
-def audit(source_root, source, state, pins, output):
+def audit(source_root, source, state, pins, output, timing_review=None):
     summary = {
         "rows": len(state), "historical_rows": int(state.season.lt(2025).sum()),
         "season_counts": {str(k): int(v) for k, v in state.season.value_counts().sort_index().items()},
         "ordinary_J1_only": True, "input_sha256": pins,
         "unknown_original_publication_times": True,
-        "historical_PIT_claim": "prior recorded match dates; final-result availability/corrections not proven as-of",
+        "historical_PIT_claim": "original-start prior-day features; final-result publication/correction availability not proven as-of",
         "exceptions": [{"match_id": "30700", "recorded_date": "2024-11-22",
-                        "original_kickoff_date": "2024-08-24", "original_kickoff_PIT": False,
-                        "training_eligible": False, "disposition": "UNRESOLVED_BLOCKS_ALL_HISTORICAL_FITTING"}],
-        "historical_training_readiness": "HOLD",
+                        "original_kickoff_date": "2024-08-24", "original_kickoff_feature_time_resolved": True,
+                        "result_effective": "2024-11-23T00:00:00+09:00",
+                        "disposition": "REGISTERED_FEATURE_RESULT_EVENT_SPLIT"}],
+        "historical_training_readiness": "READY_CHRONOLOGY_ONLY_NO_FIT",
         "source_dates_changed": False, "same_day_team_collisions": 0,
         "missing_value_policy": "fail; cold-start history totals=0 with available count=0",
         "existing_features_used_as_training_input": False,
@@ -316,8 +334,8 @@ def audit(source_root, source, state, pins, output):
                 coverage=float(values.notna().mean()), selected=True,
                 minimum=float(values.min()), maximum=float(values.max()),
                 admitted_to_historical_training=False,
-                original_kickoff_timing="UNRESOLVED: match 30700; whole-run HOLD",
-                timing="strictly earlier recorded date; match 30700 resumption-date exception",
+                original_kickoff_timing="resolved feature/result split; publication as-of not proven",
+                timing="only results effective by the original feature-day midnight",
                 provenance="pinned yearly CSVs + exact TeamMaster + reviewed Elo/form helpers"))
     inventory = []
     allowed_ids = set(source.match_id)
@@ -346,13 +364,31 @@ def audit(source_root, source, state, pins, output):
     lines = ["# Training-data audit", "", f"Ordinary J1: {len(state)} rows; historical evaluation: 3208.",
         "Nine selected features are finite and have 100% computational coverage. Empty-history totals are genuine zeros, not future-value imputation.",
         "", "## Timing boundary", "",
-        "All inputs derive from prior recorded dates. Publication/correction timestamps are not proven; this is historical reconstruction, not a strict contemporaneous as-of claim.",
-        "Match 30700 uses its recorded 2024-11-22 resumption date, not its original 2024-08-24 kickoff. The user requires original-kickoff PIT: ALL historical fitting/evaluation is on HOLD until its treatment is established. An acknowledgement cannot bypass this guard. No row is dropped or silently moved.",
+        "All inputs derive from results effective at the original feature-day midnight. Publication/correction timestamps are not proven; this is historical reconstruction, not a strict contemporaneous publication as-of claim.",
+        "Match 30700 freezes features before 2024-08-24, retains its Draw label and original CSV date 2024-11-22, and becomes completed history only from 2024-11-23. No halftime score is a completed-history event. All three research models share this chronology; the old frozen metric values are informational, not an equality gate.",
         "", "## Other assets", "",
         "`feature-audit.csv` lists every saved feature column's observed ordinary-J1 coverage and missingness. `existing-feature-assets.json` records its source SHA. These are audit-only; none is joined into training.",
         "Current-match scores/results/stats are labels or post-match evidence, never feature inputs. xG lacks 2015--2024 coverage. Snapshots/suspensions lack the necessary historical PIT proof. Existing closed/deferred features remain excluded.",
         "", "## Scope", "", "2020--2024 were previously explored. 2025 is a spent test used only in final training. No 2026 performance is accessed. No benchmark decision is rewritten."]
     (output / "DATA_AUDIT.md").write_text("\n\n".join(lines) + "\n", encoding="utf-8")
+    if timing_review is not None:
+        write_json(output / "source-timing-review.json", timing_review)
+    old = legacy_features(source).set_index("match_id")
+    new = state.set_index("match_id")
+    delta = []
+    for mid in new.index:
+        for c in FEATURES:
+            if new.loc[mid, c] != old.loc[mid, c]:
+                delta.append({"match_id": mid, "feature": c, "legacy": float(old.loc[mid, c]),
+                              "event_policy": float(new.loc[mid, c])})
+    pd.DataFrame(delta, columns=["match_id", "feature", "legacy", "event_policy"]).to_csv(output / "legacy-feature-delta.csv", index=False)
+    state[["match_id", "season", "home_team_id", "away_team_id", *TIMING_COLUMNS]].to_csv(output / "timing-events.csv", index=False)
+    write_json(output / "chronology-comparison.json", {
+        "old_policy": "recorded source date for feature and result", "new_policy": POLICY,
+        "changed_fixture_ids": sorted({d["match_id"] for d in delta}), "changed_feature_cells": len(delta),
+        "source_row_count": len(source), "source_dates_changed": False,
+        "legacy_reference_gate": False, "historical_fit_evaluate_final_fit": [0, 0, 0],
+        "all_three_models_share_feature_builder": True})
 
 
 def plots(folds, pooled, curves, output):
@@ -394,14 +430,15 @@ def run(source_root, output, *, audit_only=False):
         raise ValueError("Outputs must be outside the read-only source repository")
     verify_spec(ROOT / "research/nn_v1/frozen-spec.json")
     source, pins = load_source(source_root, ROOT / "research/nn_v1/input-pins.json")
+    timing_review = review_cache(source_root, source)
     state = build_features(source)
     if not audit_only:
-        require_original_kickoff_timing(source)
+        require_original_kickoff_timing(state)
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "attempt.json", {"started_at": now(), "spec_sha256": sha(ROOT / "research/nn_v1/frozen-spec.json"),
                                         "original_kickoff_required": True, "audit_only": audit_only})
     try:
-        audit(source_root, source, state, pins, output)
+        audit(source_root, source, state, pins, output, timing_review)
         if audit_only:
             seal(output)
             return {"status": "AUDIT_COMPLETE_NO_FIT", "rows": len(state)}
@@ -415,7 +452,7 @@ def run(source_root, output, *, audit_only=False):
         artifact.mkdir()
         joblib.dump(final.named_steps["classifier"], artifact / "model.joblib")
         joblib.dump(final.named_steps["scaler"], artifact / "scaler.joblib")
-        state[["match_id", "season", "match_date", "home_team_id", "away_team_id"]].to_csv(artifact / "training-manifest.csv", index=False)
+        state[["match_id", "season", "match_date", "home_team_id", "away_team_id", *TIMING_COLUMNS]].to_csv(artifact / "training-manifest.csv", index=False)
         write_json(artifact / "metadata.json", {"role": "research_only_not_champion", "trained_at": now(),
             "training_rows": len(state), "training_period": ["2015", "2025"], "feature_order": FEATURES,
             "target_mapping": {"0": "Away", "1": "Draw", "2": "Home"}, "specification": specification(),
@@ -423,7 +460,7 @@ def run(source_root, output, *, audit_only=False):
             "scaler_sha256": sha(artifact / "scaler.joblib"), "training_manifest_sha256": sha(artifact / "training-manifest.csv"),
             "versions": {"python": platform.python_version(), "sklearn": sklearn.__version__, "numpy": np.__version__, "pandas": pd.__version__, "joblib": joblib.__version__},
             "training": {k: v for k, v in training.items() if k != "loss_curve"},
-            "strict_original_kickoff_PIT": True,
+            "feature_result_chronology": POLICY, "historical_publication_asof_proven": False,
             "prediction_use": "not connected to production"})
         # Deserialize only our just-created objects and compare actual arrays;
         # no extra final-training or 2025 evaluation calls are performed.
@@ -435,7 +472,7 @@ def run(source_root, output, *, audit_only=False):
                 raise ValueError("Serialized weight mismatch")
         write_json(output / "training-curves.json", curves)
         plots(folds, pooled, curves, output)
-        result = {"status": "RESEARCH_COMPLETE", "historical_reference": "PASS_1e-12",
+        result = {"status": "RESEARCH_COMPLETE", "historical_reference": "COMPARISON_ONLY_DIFFERENT_CHRONOLOGY",
                   "oof_rows_per_model": 1678, "pooled": pooled, "final_training": training,
                   "historical_model_fits": 15, "final_mlp_fits": 1, "tuning": False,
                   "completed_at": now(), "phase_A": "BLOCKED", "phase_B": "NOT_AUTHORIZED"}

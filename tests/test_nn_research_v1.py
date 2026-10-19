@@ -9,6 +9,12 @@ import pytest
 from src.modeling import nn_research_v1 as n
 
 
+@pytest.fixture(autouse=True)
+def synthetic_evidence_review(monkeypatch):
+    # These tests use invented fixtures, never the operational cache or data.
+    monkeypatch.setattr(n, "review_cache", lambda *a: {"status": "SYNTHETIC_ONLY", "files": []})
+
+
 def matches():
     # Four independent clubs per day; shuffled IDs exercise deterministic order.
     rows = []
@@ -108,13 +114,13 @@ def test_fit_scaler_training_only_and_class_mapping():
         assert report["iterations"] <= (500 if name == "mlp" else 1000)
 
 
-def test_original_kickoff_guard_precedes_fits_and_output_creation(tmp_path, monkeypatch):
+def test_forged_resumption_identity_stops_before_fits_and_output(tmp_path, monkeypatch):
     source = matches()
     source.loc[0, "match_id"] = "30700"
     monkeypatch.setattr(n, "load_source", lambda *args: (source, {}))
     monkeypatch.setattr(n, "fit", lambda *args: pytest.fail("Must not fit"))
     output = tmp_path / "output"
-    with pytest.raises(ValueError, match="original-kickoff"):
+    with pytest.raises(ValueError, match="resumption identity"):
         n.run(tmp_path / "source", output)
     assert not output.exists()
 
@@ -146,10 +152,9 @@ def test_frozen_spec_rejects_parameter_changes(tmp_path):
         n.verify_spec(p)
 
 
-def test_reference_gate_detects_drift():
-    n.reference_gate(dict(zip(("log_loss", "brier", "accuracy"), n.REFERENCE[2020])), 2020)
-    with pytest.raises(ValueError, match="reference mismatch"):
-        n.reference_gate({"log_loss": 1, "brier": 0.5, "accuracy": 0.5}, 2020)
+def test_legacy_reference_is_comparison_not_acceptance_gate():
+    assert n.legacy_reference_delta(dict(zip(("log_loss", "brier", "accuracy"), n.REFERENCE[2020])), 2020) == {"log_loss": 0, "brier": 0, "accuracy": 0}
+    assert n.legacy_reference_delta({"log_loss": 2, "brier": 1, "accuracy": 0}, 2020)["log_loss"] > 0
 
 
 def test_model_error_stops_without_retry_or_final_fit(tmp_path, monkeypatch):
@@ -172,6 +177,7 @@ def test_model_error_stops_without_retry_or_final_fit(tmp_path, monkeypatch):
 def test_fit_cannot_bypass_original_kickoff_guard(name, monkeypatch):
     source = n.build_features(matches())
     source.loc[0, "match_id"] = "30700"
+    source = source.drop(columns=list(n.TIMING_COLUMNS))
     monkeypatch.setattr(n, "estimator", lambda *args: pytest.fail("Must stop before constructing a model"))
     with pytest.raises(ValueError, match="original-kickoff"):
         n.fit(name, source)
@@ -181,7 +187,7 @@ def test_evaluator_stops_before_earliest_fold_if_unresolved_match_is_later(tmp_p
     source = n.build_features(matches())
     source.loc[0, ["match_id", "season"]] = ["30700", 2024]
     monkeypatch.setattr(n, "fit", lambda *a: pytest.fail("Not even an earlier fold may fit"))
-    with pytest.raises(ValueError, match="original-kickoff"):
+    with pytest.raises(ValueError, match="resumption identity"):
         n.evaluate(source, tmp_path)
 
 
@@ -207,7 +213,6 @@ def test_expanding_windows_are_train_only_and_never_score_2025(tmp_path, monkeyp
         return np.full((len(validation), 3), 1 / 3)
     monkeypatch.setattr(n, "fit", fake_fit)
     monkeypatch.setattr(n, "score_model", fake_score)
-    monkeypatch.setattr(n, "reference_gate", lambda *args: None)
     folds, pooled, curves = n.evaluate(source, tmp_path)
     assert len(calls) == len(folds) == 15
     assert [p["n"] for p in pooled] == [1678] * 3

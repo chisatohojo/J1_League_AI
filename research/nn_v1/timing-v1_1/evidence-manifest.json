@@ -1,0 +1,78 @@
+{
+  "version": "nn_timing_evidence_v1_1",
+  "sources": [
+    {
+      "url": "https://data.j-league.or.jp/SFMS02/?match_card_id=30700",
+      "final_url": "https://data.j-league.or.jp/SFMS02/?match_card_id=30700",
+      "status": 200,
+      "retrieval_started_at_utc": "2026-10-19T04:27:23.842692+00:00",
+      "retrieved_at_utc": "2026-10-19T04:27:24.233022+00:00",
+      "retrieved_at_jst": "2026-10-19T13:27:24.233022+09:00",
+      "bytes": 122808,
+      "sha256": "219a98411597a5bd5756d28c27c134cdd0932134b880def6d1a0ff91d71f6613",
+      "local_raw_name": "sfms02-30700.html",
+      "validation": [
+        "exact home/away",
+        "final score 1-1",
+        "original 19:03",
+        "8/24 halt and 11/22 restart"
+      ]
+    },
+    {
+      "url": "https://www.jleague.jp/news/article/28819/",
+      "final_url": "https://www.jleague.jp/news/article/28819/",
+      "status": 200,
+      "retrieval_started_at_utc": "2026-10-19T04:27:24.234023+00:00",
+      "retrieved_at_utc": "2026-10-19T04:27:24.563336+00:00",
+      "retrieved_at_jst": "2026-10-19T13:27:24.563336+09:00",
+      "bytes": 756461,
+      "sha256": "b75363f1558f4c84ef48ca3e9833c4072e9d867ba99bc1069ab18ce694b50e49",
+      "local_raw_name": "news-28819.html",
+      "validation": [
+        "canonical",
+        "2024 J1 round 28",
+        "halt at halftime",
+        "restart 11/22 19:00 from 1-0"
+      ]
+    },
+    {
+      "url": "https://www.jleague.jp/match/j1/2024/112201/lineup/",
+      "final_url": "https://www.jleague.jp/match/j1/2024/112201/lineup/",
+      "status": 200,
+      "retrieval_started_at_utc": "2026-10-19T04:27:24.564334+00:00",
+      "retrieved_at_utc": "2026-10-19T04:27:25.036361+00:00",
+      "retrieved_at_jst": "2026-10-19T13:27:25.036361+09:00",
+      "bytes": 1494267,
+      "sha256": "308cf213de7ba598699f42025c058ed79c431e7acdccbfb243cb33e7bc268350",
+      "local_raw_name": "lineup-112201.html",
+      "validation": [
+        "canonical",
+        "date/time",
+        "home/away",
+        "finished result corroborated"
+      ]
+    }
+  ],
+  "facts": {
+    "match_id": "30700",
+    "namespace": "jleague_data_site_sfms02",
+    "home_team_id": "team_0030",
+    "away_team_id": "team_0010",
+    "season": 2024,
+    "round": 28,
+    "original_kickoff": "2024-08-24T19:03:00+09:00",
+    "halftime_home": 1,
+    "halftime_away": 0,
+    "resumed_at": "2024-11-22T19:00:00+09:00",
+    "final_home": 1,
+    "final_away": 1,
+    "final_label": 1,
+    "history_cutoff": "2024-08-24T00:00:00+09:00",
+    "result_effective": "2024-11-23T00:00:00+09:00"
+  },
+  "historical_publication_asof_proven": false,
+  "result_effective_is_policy_boundary_not_final_whistle": true,
+  "raw_html_committed": false,
+  "raw_storage": "independent local evidence store; retrieve copies by raw name and SHA",
+  "registry_sha256": "c31a1937ced71674d1cefda1362363e7647da6df6583115012abc3ea92a91473"
+}

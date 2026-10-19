@@ -1,6 +1,8 @@
 # Audit manifests hash exact output bytes, including original line endings.
 audit/** -text whitespace=cr-at-eol
 audit-strict/** -text whitespace=cr-at-eol
+audit-timing-v1_1/** -text whitespace=cr-at-eol
+timing-v1_1/** -text whitespace=cr-at-eol
 *.json -text whitespace=cr-at-eol
 *.csv -text whitespace=cr-at-eol
 *.joblib -text

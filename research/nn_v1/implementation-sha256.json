@@ -1,5 +1,5 @@
 {
-  "src/modeling/nn_research_v1.py": "d88be8a9eae4aef280453416fabed39b11fe8e4d0147ed06418ac80ad1a060cd",
+  "src/modeling/nn_research_v1.py": "71ee9db9f29f60fedb35edf580c4f577703403e1a9c108c1c5263f0719ba8b9f",
   "src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
   "src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
   "src/features/form.py": "ef28e5c4467393d2176532792a6ff3984b7d972cf9b156a8def0043a37316294",
@@ -7,6 +7,14 @@
   "src/collect/matches.py": "0b2f2916131a54e413fb7347a16960f1c59880c24741584a4bd491a43821842c",
   "src/collect/teams.py": "b0b77a3b2a583a047a8d3399076e083ad5d5f2699aa8c6cd0c6fe82515128e6c",
   "requirements-lock.txt": "3aea21392b63f9fc3dfbcf00e44cb825a3eb7453d130492dde8bcb5da14ddc04",
-  "research/nn_v1/frozen-spec.json": "f047670931d8335f7d6a2356988aade1b850048de4adb42bd8cc55aa71c81062",
-  "research/nn_v1/input-pins.json": "fca2c3d66931f1fd3ee3ad8f156db22d6f77f425a6fc0d1586b1b3365578fd41"
+  "research/nn_v1/frozen-spec.json": "5554ca48fa1ffa8a3fe7a8bd9b1bb0e61e7380d39b03f107b6c39bd69d461587",
+  "research/nn_v1/input-pins.json": "fca2c3d66931f1fd3ee3ad8f156db22d6f77f425a6fc0d1586b1b3365578fd41",
+  "src/features/nn_research_timing.py": "02e254ca4af6fdf62913033443fa15c8eee115bdb45b8093c9aa703a64588902",
+  "tests/test_nn_research_timing.py": "5fe197923aac13c525f9e5571dd0f8527521be0a427be77fa9d9d4b1794a6794",
+  "tests/test_nn_research_v1.py": "9aa63e7b45b1e5512ca097f2054f8aa0813a93b6a011eaa641940e5f09133d7c",
+  "research/nn_v1/README.md": "4d59274d38e34158ebe7b7164251bbf9cdf80de3503e81e7b5a6167ef501e913",
+  "research/nn_v1/STATUS.md": "070e96f8b1f2aa0e059bfaf83ce2429ef0e270fe409257efde3520e38eb7ba0b",
+  "research/nn_v1/TIMING_POLICY.md": "4554d357d022845171671eaeb2fa11e758ed0109fad01a154acfd0462bb3f3a2",
+  "research/nn_v1/timing-v1_1/evidence-manifest.json": "d61ea0665e89d573ecf914b033dc2cc2f63fac56ba434004a2b1425543086ff5",
+  "research/nn_v1/timing-v1_1/reviewed-interruptions.json": "c31a1937ced71674d1cefda1362363e7647da6df6583115012abc3ea92a91473"
 }

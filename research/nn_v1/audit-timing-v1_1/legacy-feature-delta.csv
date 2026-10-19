@@ -1,0 +1,8 @@
+match_id,feature,legacy,event_policy
+30700,elo_diff,-9.879785575924416,-23.138035476119057
+30700,home_last5_points,7.0,3.0
+30700,away_last5_points,8.0,10.0
+30700,home_last5_goals_for,5.0,6.0
+30700,away_last5_goals_for,12.0,11.0
+30700,home_last5_goals_against,3.0,8.0
+30700,away_last5_goals_against,7.0,6.0

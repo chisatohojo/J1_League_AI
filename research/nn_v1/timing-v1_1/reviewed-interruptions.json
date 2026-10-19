@@ -1,0 +1,113 @@
+{
+  "16837": {
+    "source_date": "2015-04-04",
+    "source_kickoff": "18:34",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "ed38128e8393d5425a8024dcfac7c3931e657f77dda4912126ecdf915979cbc9",
+    "cached_raw_sha256": "a039fbb52d14a7e3eb76cee1df43c7f8225e2785298ed1b3be10519435a0f8a7",
+    "interruption_minutes": 23
+  },
+  "16924": {
+    "source_date": "2015-05-30",
+    "source_kickoff": "19:04",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "73a55ed0091335f844c1b62977b05fa0cd7abf332e76153b04fefea4c3ee214e",
+    "cached_raw_sha256": "ba8b55e29b2dcca9ae6a570984059895ab6a0db1673f0c96e1c4e6320e79cbd7",
+    "interruption_minutes": 2
+  },
+  "16925": {
+    "source_date": "2015-05-30",
+    "source_kickoff": "19:04",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "bee3df5dd5fa908d201d7793870f446a0c685181a38d5290e8e504168f97c375",
+    "cached_raw_sha256": "02c9078124d0d1e2209620f0e79ad69452881a5024dae5202d400b871f0b9f3d",
+    "interruption_minutes": 10
+  },
+  "16926": {
+    "source_date": "2015-05-30",
+    "source_kickoff": "19:04",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "fb1d87bfef1ef22f7627d3b068228c51a8524a2f9f7809a8fbd61259e65a4e93",
+    "cached_raw_sha256": "44d04c204231740f0d25532be44c52755807ce7de7ca965e72221b058567a2e2",
+    "interruption_minutes": 6
+  },
+  "19247": {
+    "source_date": "2017-08-05",
+    "source_kickoff": "18:33",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "dadb2617d964aa2723922f4be222168cdd69a2a7066dc504c0d77ea1d9a9e987",
+    "cached_raw_sha256": "66f2b214f69619754f4d4e80d1366231962d9903822e97eade1fc61fdcf0df7a",
+    "interruption_minutes": 10
+  },
+  "19292": {
+    "source_date": "2017-09-10",
+    "source_kickoff": "18:35",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "b2abe6c669454081716a990cf1e699bdf24e4fc5f24b19059c85c5d0593eb902",
+    "cached_raw_sha256": "eedf9c9c59c198fcdcf8b814dfc23322fba258de064925a026e1a7eabb570158",
+    "interruption_minutes": 10
+  },
+  "21007": {
+    "source_date": "2018-10-20",
+    "source_kickoff": "14:03",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "9e73c0a16a464ecb6503d5ce0e6258b71f990f2ccd8ed48dcbc0d50c80091ffd",
+    "cached_raw_sha256": "93d91d41c4d53eec336881a2e8862bbe634f20b8e0f3961d32ac95e2152eb7cb",
+    "interruption_minutes": 46
+  },
+  "23945": {
+    "source_date": "2020-07-26",
+    "source_kickoff": "18:03",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "4280da10ee21419331ccd7cacdddd328fc97ca4744af7cb32c89b4a767b8c472",
+    "cached_raw_sha256": "c1398e424363be762ada54a723a8ba06debe14b689c1a015de77d486beebddd5",
+    "interruption_minutes": 60
+  },
+  "24011": {
+    "source_date": "2020-09-05",
+    "source_kickoff": "18:04",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "bd13236c3f3f7a6cbafc6785fd3ddedfa9056986af0f22b448e1a286ecb3f3c5",
+    "cached_raw_sha256": "4111c48ec519eb716dab891c0088fb7ba61f527d871c72e892429f5fb2a3b066",
+    "interruption_minutes": 65
+  },
+  "28311": {
+    "source_date": "2023-06-11",
+    "source_kickoff": "16:03",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "9434cf9ede4647f71421ba4430467d408ebafc52ed069351862623c1602506f2",
+    "cached_raw_sha256": "860f092640d1ebe1735103e71983c2608405561e73bd630048e16a7f4cfdc2fc",
+    "interruption_minutes": 15
+  },
+  "30653": {
+    "source_date": "2024-07-14",
+    "source_kickoff": "18:03",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "f05c751759c55aa8fb211e7a50d1d3d5fd1cbf73447f4aa92da73cd74aa1dab8",
+    "cached_raw_sha256": "a6eb9b78481f9365ca5babce1e71d1532cacfe8a029bfedf2f140ff16b4efbfe",
+    "interruption_minutes": 6
+  },
+  "30671": {
+    "source_date": "2024-08-07",
+    "source_kickoff": "19:03",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "26fde48e30e8addead383b80bb22e5f67dcbff0f4fce43c0782a243e12bd8fea",
+    "cached_raw_sha256": "a3c4926efe10a9da40e18643e2c9020edb594d3223390e38ea9f79cbb7e6aa71",
+    "interruption_minutes": 87
+  },
+  "30700": {
+    "source_date": "2024-11-22",
+    "source_kickoff": "19:00",
+    "classification": "registered_multi_day_resumption",
+    "note_sha256": "02b5583417fd4893f154e57a6abee55bd692ca3bb18ada515f22f83f078fb25d",
+    "cached_raw_sha256": "2158b3a2fa379c4c23ab8e63115e20f30484f9d880717cea1450fd0836fa2f84"
+  },
+  "32440": {
+    "source_date": "2025-09-13",
+    "source_kickoff": "18:04",
+    "classification": "reviewed_within_day_interruption",
+    "note_sha256": "9a2ca8829b27b1a6ad39e5750e6dae57edc85b51bb5790c7381e69ec6ee40619",
+    "cached_raw_sha256": "049502b7d242cb86315692a8066dffc82ac43fb60cf689716e738fbafc38bba1",
+    "interruption_minutes": 44
+  }
+}

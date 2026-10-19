@@ -1,4 +1,4 @@
-# NN research v1 (Phase 1)
+# NN research v1 (Phase 1.1 chronology preparation)
 
 Independent research only. Champion A, the formal architecture benchmark,
 production predictions, dashboard, tasks and main are unchanged.
@@ -18,38 +18,61 @@ python -B -m pytest tests/test_nn_research_v1.py
 python -B -m src.modeling.nn_research_v1 --source-root <existing-data-repository> --output <new-empty-output> --audit-only
 ```
 
-The audit-only command does not fit any model. The historical execution command
-is blocked until the chronology issue below is resolved. There is no
-acknowledgement flag to bypass it.
+The audit-only command does not fit/evaluate a model. Phase 1.1 authorizes only
+chronology implementation/audit/tests. Historical and final training require a
+later execution instruction; they are not performed as part of this preparation.
 Output directories must not exist: partial or completed runs cannot be reused.
 There is no automatic retry or parameter selection.
 
 ## Chronology
 
-Features use only ordinary J1 results on earlier recorded match dates, continuous
-Elo (initial 1500, K=30, HA=175), and a cross-season five-match club history.
-All same-date feature reads precede result updates. A club appearing twice on a
-date is rejected. Cold starts use empty-history zero totals and an explicit
+Features use continuous Elo (initial 1500, K=30, HA=175) and a cross-season
+five-match club history, with separate feature and final-result events.
+For normal fixtures, results are available from the next calendar day's midnight
+in JST. A club appearing twice on a feature date is rejected.
+Cold starts use empty-history zero totals and an explicit
 0--5 matches-available count, never an imputed future value.
 
-Source limitation requiring explicit disposition: match 30700 began on
-2024-08-24 and resumed on 2024-11-22. The existing source and frozen reference use
-the latter date. Those features are not features before its original kickoff.
-The user explicitly requires original-kickoff timing. Therefore historical
-fitting/evaluation and the final research-model fit are **HOLD / NOT_RUN**.
-Neither acknowledging the resumption date nor silently dropping/moving the row
-can authorize fitting. No trained historical model, performance comparison or
-evaluation graph is claimed. The implementation and synthetic tests are saved
-for continuation after a chronology policy is established.
+Registered fixture **30700** has these distinct fields:
 
-`audit/` and `frozen-spec.initial.json` retain the initial, pre-clarification
-audit/spec (no historical fits). `audit-strict/` and `frozen-spec.json` supersede
-their chronology policy. The nine features and model hyperparameters are
-unchanged. No source date or formal benchmark decision is modified.
+| Field | JST value / meaning |
+|---|---|
+| Fixture identity | `jleague_data_site_sfms02:30700`, Urawa home / Kawasaki away |
+| Feature timestamp | 2024-08-24 19:03, original kickoff |
+| History cutoff | 2024-08-24 00:00; only earlier-date completed results |
+| Recorded source date | 2024-11-22, retained without editing the source CSV |
+| Final label | Draw, final 90-minute score 1-1 |
+| Result-effective timestamp | 2024-11-23 00:00, conservative next-day boundary |
+
+The feature vector is frozen before the original match day. The final result is
+applied once after the resumption day, using the ratings/history current at that
+result event. No intermediate 1-0 halftime score enters completed history.
+The result-effective boundary is a policy, not an invented final-whistle time.
+
+All three research models use this same event stream. Exact equality to frozen
+Champion A metric values is no longer an acceptance gate: its old source-date
+chronology differs. Future comparisons are informational, and the formal
+benchmark/Champion A remain unchanged. No historical performance was computed.
+
+`timing-v1_1/evidence-manifest.json` records the three explicitly supplied official
+URLs, retrieval timestamps, exact raw-body SHAs, reviewed facts and limitations.
+Full fetched HTML stays in an independent local evidence store, not GitHub.
+`reviewed-interruptions.json` registers 30700 and 13 reviewed minute-scale
+within-day interruptions. Every source fixture's cached page/metadata must pass
+the research audit. Unknown timing notes, missing/changed reviewed notes,
+unverified structures, metadata/SHA conflicts or unsupported annotations STOP.
+
+`audit/`, `audit-strict/`, `frozen-spec.initial.json` and
+`frozen-spec.phase1-hold.json` retain earlier audit-only evidence and superseded
+policies. `audit-timing-v1_1/` and `frozen-spec.json` are current. The nine features,
+model hyperparameters and 3,588-row population are unchanged. No fixture is
+dropped and no original CSV date is moved.
 
 Historical publication/correction timestamps are also not proven by the final
 cached result tables. Computational coverage is not proof of contemporaneous
-availability. See `audit-strict/DATA_AUDIT.md` and `STATUS.md`.
+availability. This is an original-feature-time historical reconstruction, not
+proof of the original official publication/correction state. See
+`audit-timing-v1_1/DATA_AUDIT.md`, `TIMING_POLICY.md` and `STATUS.md`.
 
 ## Interpretation and artifacts
 

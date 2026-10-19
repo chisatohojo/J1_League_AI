@@ -1,0 +1,50 @@
+{
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "path": "attempt.json",
+      "bytes": 199,
+      "sha256": "b64a9b20afc5709b7b0af79e6ad6bda01eb34ebe226e8aeb00a4f94b7437d3ee"
+    },
+    {
+      "path": "chronology-comparison.json",
+      "bytes": 402,
+      "sha256": "aa11a642bb8837425873f9aca1d6444d60a19f4f8a890190aa51f66d1a8e9ea0"
+    },
+    {
+      "path": "DATA_AUDIT.md",
+      "bytes": 1462,
+      "sha256": "a07dc4839cbd3e3cd8eb48d192a866ea1ca2019a16e60960b88144e9aeb6cb53"
+    },
+    {
+      "path": "dataset-audit.json",
+      "bytes": 2674,
+      "sha256": "d7862c1b21e79fbf898a2fa0cb92b9bb30b295a74efcef7c596368c50941c60e"
+    },
+    {
+      "path": "existing-feature-assets.json",
+      "bytes": 2183,
+      "sha256": "9aee490c30fe66e4b54a4cb275826fa0e3074f11549f6e1bf0a862e2f62f3e12"
+    },
+    {
+      "path": "feature-audit.csv",
+      "bytes": 60475,
+      "sha256": "3f30b8ade7bbaca50f8d06771669e77583a5df5532d184e508c672a7bd7d1b0a"
+    },
+    {
+      "path": "legacy-feature-delta.csv",
+      "bytes": 314,
+      "sha256": "1f900e80e3e96a48ef0449b54a6b67b412e15d65061ecae29881205917d10fa5"
+    },
+    {
+      "path": "source-timing-review.json",
+      "bytes": 919162,
+      "sha256": "c89f9924d8788b484f56734c513fa77e96678ba19979907d3fa0a9abaaba3582"
+    },
+    {
+      "path": "timing-events.csv",
+      "bytes": 667545,
+      "sha256": "a992f8c7919bd6bfd052aca1c75fdade5efdef35c780d98c8fd0872fb8a27d5b"
+    }
+  ]
+}

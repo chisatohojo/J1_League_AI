@@ -1,0 +1,28 @@
+{
+  "schema": "nn_timing_v1_1_sha256",
+  "files": [
+    {
+      "path": "evidence-manifest.json",
+      "bytes": 2950,
+      "sha256": "d61ea0665e89d573ecf914b033dc2cc2f63fac56ba434004a2b1425543086ff5"
+    },
+    {
+      "path": "protection-verification.json",
+      "bytes": 338,
+      "sha256": "be38e06b7f45af04a1a6df8d678a5ad0fab71f9edb65744af717832a106dd9d6"
+    },
+    {
+      "path": "real-data-verification.json",
+      "bytes": 1327,
+      "sha256": "eb5f871ac6c4d3347a3204d11c230818d75c7e92e3060c364ea423881bb08441"
+    },
+    {
+      "path": "reviewed-interruptions.json",
+      "bytes": 4994,
+      "sha256": "c31a1937ced71674d1cefda1362363e7647da6df6583115012abc3ea92a91473"
+    }
+  ],
+  "frozen_spec_sha256": "5554ca48fa1ffa8a3fe7a8bd9b1bb0e61e7380d39b03f107b6c39bd69d461587",
+  "implementation_ledger_sha256": "5e1f197669e300e455139c4ddf52f7e8b7bc3fe0cba8d24668226e5003c41e43",
+  "audit_ledger_sha256": "f110d1ff2187f028636cf5d6bb2fa6a10aaacc04f23975c095347594ed5e3bfa"
+}

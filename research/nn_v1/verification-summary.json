@@ -1,15 +1,27 @@
 {
   "status": "PASS",
   "protected_files_sha256_unchanged": 560,
-  "windows_task_definitions_unchanged": 2,
-  "operational_HEAD_unchanged": true,
-  "operational_worktree_clean": true,
+  "cached_official_pages_unchanged": 3588,
+  "cached_metadata_unchanged": 3588,
+  "task_definitions_unchanged": 2,
+  "operational_HEAD_and_worktree_unchanged": true,
   "main_unchanged": true,
+  "historical_fit_evaluate_final_fit": [
+    0,
+    0,
+    0
+  ],
+  "readiness": "READY_CHRONOLOGY_ONLY",
+  "tests_passed": 108,
   "historical_fit_calls": 0,
   "historical_evaluation_calls": 0,
   "final_model_fit_calls": 0,
-  "synthetic_tests_passed": 89,
+  "official_fresh_evidence_pages": 3,
+  "reviewed_multi_day_resumptions": 1,
+  "reviewed_minute_interruptions": 13,
+  "unknown_timing_cases": 0,
+  "source_rows": 3588,
+  "rows_2024": 380,
   "phase_A": "BLOCKED",
-  "phase_B": "NOT_AUTHORIZED",
-  "historical_reference_metrics_recomputed": false
+  "phase_B": "NOT_AUTHORIZED"
 }

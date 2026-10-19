@@ -1,0 +1,17 @@
+{
+  "old_policy": "recorded source date for feature and result",
+  "new_policy": "nn_original_kickoff_events_v1_1",
+  "changed_fixture_ids": [
+    "30700"
+  ],
+  "changed_feature_cells": 7,
+  "source_row_count": 3588,
+  "source_dates_changed": false,
+  "legacy_reference_gate": false,
+  "historical_fit_evaluate_final_fit": [
+    0,
+    0,
+    0
+  ],
+  "all_three_models_share_feature_builder": true
+}

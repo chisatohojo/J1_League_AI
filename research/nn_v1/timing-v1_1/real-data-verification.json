@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "scope": "read-only feature/event audit, not model evaluation",
+  "generated_at_utc": "2026-10-19T04:44:16.601867+00:00",
+  "source_rows": 3588,
+  "rows_2024": 380,
+  "historical_rows_2015_2024": 3208,
+  "feature_fields": 9,
+  "nonfinite_feature_values": 0,
+  "duplicate_ids": 0,
+  "source_dates_unchanged": true,
+  "independent_prior_only_oracle": "PASS",
+  "prior_history_rows": 3097,
+  "max_prior_history_date": "2024-08-17",
+  "feature_vector_30700": {
+    "elo_diff": -23.138035476119057,
+    "home_last5_matches_available": 5,
+    "home_last5_points": 3,
+    "home_last5_goals_for": 6,
+    "home_last5_goals_against": 8,
+    "away_last5_matches_available": 5,
+    "away_last5_points": 10,
+    "away_last5_goals_for": 11,
+    "away_last5_goals_against": 6
+  },
+  "final_label_30700": 1,
+  "trace_type": "research replay, not historical saved prediction",
+  "events_30700": [
+    {
+      "event": "features_frozen",
+      "match_id": "30700",
+      "at": "2024-08-24T00:00:00+09:00"
+    },
+    {
+      "event": "result_applied",
+      "match_id": "30700",
+      "at": "2024-11-23T00:00:00+09:00"
+    }
+  ],
+  "all_feature_events": 3588,
+  "all_result_events": 3588,
+  "historical_fit_calls": 0,
+  "historical_evaluate_calls": 0,
+  "final_fit_calls": 0
+}
