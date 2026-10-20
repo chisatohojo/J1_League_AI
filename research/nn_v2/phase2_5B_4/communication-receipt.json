@@ -1,0 +1,32 @@
+{
+  "HTTP_200": 27,
+  "TLS_certificate_hostname_verification": true,
+  "actual_acquisition_date": "2026-10-20",
+  "actual_fixture_GET": 27,
+  "all_request_response_save_audit_UTC_order_verified": true,
+  "authorized_fixture_GET_max": 276,
+  "batch_seals": {
+    "batch-01": "7d288c7b3e52c904f6be9bdea1678bd9990fb4dd0e3b6e1581f95caaf3d8e46f",
+    "batch-02": "11cb134e051314d87d4ad26400a45241c1fd3f2fb1186b45746b4b957a0b8c51",
+    "batch-03": "45374329730273a146d51d48ff762223c40d8917f7237adec002f665c32a8357"
+  },
+  "body_bytes": 3356435,
+  "body_cap_bytes_per_response": 2097152,
+  "body_cap_total_bytes": 578813952,
+  "global_deadline_seconds": 4500,
+  "global_elapsed_seconds": 142.40599999999904,
+  "global_permit_sha256": "27574880d22bf95ef80993fbf39d4a5164374d076a93b24ff0d1a72aaeface2d",
+  "minimum_actual_gap_seconds": 5.178071,
+  "notice_schedule_index_GET": 0,
+  "parallel": 0,
+  "parent_worker_deadline_seconds": 10,
+  "per_URL_GET_max": 1,
+  "per_request_details_local_only": true,
+  "prior_twelve_GET": 0,
+  "redirect": 0,
+  "retry": 0,
+  "robots_GET": 0,
+  "status": "PASS_WITH_TERMINAL_PARSE_HOLD",
+  "supervisor_receipt_sha256": "ed8ad901e9abe899f63462365111bcf85f7759d8f201e7923517f77cf25f6053",
+  "timeout_seconds": 10
+}

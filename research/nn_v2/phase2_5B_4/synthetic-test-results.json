@@ -1,0 +1,30 @@
+{
+  "acquisition_implementation_unchanged": true,
+  "added_after_stop": "A new staff role or a known/unknown remark mixture cannot silently expand the allowlist",
+  "existing_related_tests": 190,
+  "final_PASS": 217,
+  "network_GET_in_tests": 0,
+  "new_phase_tests": 27,
+  "pre_network_PASS": 215,
+  "runs": [
+    {
+      "artifact": "preflight-tests.xml",
+      "errors": 0,
+      "failures": 0,
+      "sha256": "9210b631c3925e1114922193fd8932a0d6b3e868050b731c6e98e656c41c1842",
+      "skipped": 0,
+      "tests": 215
+    },
+    {
+      "artifact": "final-tests.xml",
+      "errors": 0,
+      "failures": 0,
+      "sha256": "d8745b6d70dc8896d24b77bd8346c6670cba66496fc27d826e4d473d135855b9",
+      "skipped": 0,
+      "tests": 217
+    }
+  ],
+  "status": "PASS",
+  "tests_exercise_full_276_mock_success_and_global_stop": true,
+  "warnings_as_errors": true
+}

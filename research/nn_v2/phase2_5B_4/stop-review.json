@@ -1,0 +1,19 @@
+{
+  "automatic_restart": false,
+  "batch": 3,
+  "contract_not_modified_after_stop": true,
+  "description": "Unregistered staff role in a disciplinary warning; no timing signal detected",
+  "diagnosis_sha256": "81c33711d93e668e4a6324427af39fd15b19c853de98492a8452fbf35b818cbc",
+  "formal_HOLD_retained": true,
+  "identity_result_contradictions": 0,
+  "individual_ID_and_raw_remarks_kept_local": true,
+  "network_failures": 0,
+  "newly_proven_timing_exceptions": 0,
+  "reason_code": "UNKNOWN_NON_TIMING_REMARK_REQUIRES_REVIEW",
+  "remarks_category": "UNKNOWN_FORMAT",
+  "status": "HOLD_REQUIRES_OFFLINE_REMARK_CONTRACT_REVIEW",
+  "strict_identity_result_date_header_checks": "PASS",
+  "unrecognized_forms": 1,
+  "unresolved_implementation_defects": 0,
+  "within_batch": 3
+}

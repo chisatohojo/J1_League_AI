@@ -1,0 +1,19 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_23_batch_statuses_included": true,
+  "all_archive_entry_SHA": "PASS",
+  "archive_bytes": 2339753,
+  "archive_name": "research-evidence.zip",
+  "archive_sha256": "4ec2e7ac3b6bd33dbac7cd0ef494ec24e9880f159d0bb6083bb03feea879ed6f",
+  "independent_extraction_SHA": "PASS",
+  "mismatches": 0,
+  "new_raw_pages_including_HOLD": 27,
+  "payload_bytes": 10333131,
+  "payload_files": 363,
+  "payload_manifest_sha256": "e14ecb2813940354892ff2c55f1cf786628e75ac01aa809c49b035dc9265f31b",
+  "prior_twelve_snapshot_copies_included": true,
+  "public_metadata_readback": "Separate final readback receipt before commit",
+  "separate_drive": true,
+  "status": "PASS",
+  "verified_at_utc": "2026-10-20T10:15:04.975534+00:00"
+}

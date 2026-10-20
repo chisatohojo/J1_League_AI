@@ -1,0 +1,22 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "acquired_SHA_ledger_sha256": "10cfbf0be65172c4ff33a0ce68f7a00202a3ca4fe5c9076aa44f78c5b073caab",
+  "combined_pilot_and_new_parser_PASS": 38,
+  "combined_pilot_and_new_raw_saved": 39,
+  "new_fixed_selection": 276,
+  "new_parser_HOLD": 1,
+  "new_parser_PASS": 26,
+  "new_targets": 0,
+  "new_unique_requested_and_saved": 27,
+  "not_attempted": 249,
+  "original_missing": 288,
+  "pilot_unique_acquired": 12,
+  "prior_twelve_reaccessed": 0,
+  "selection_sha256": "24bc14472a99b7676d98c16d4c26d74f0f72e53f70333831580e9f3968efc37d",
+  "source_listing_anchor_proofs": 276,
+  "source_listing_ledger_sha256": "eaa5fe35e86e9918b566353e2ccc0adde43ee8c5842133c0fcaedb60fc69644f",
+  "stable_order": "series, calendar date, numeric official data-site ID",
+  "status": "PASS",
+  "unfetched_local_ledger_sha256": "b8ec5743237d5ed850e52b32d788c919348640f9ed7abe4ffc9c1bf8a54628fc"
+}

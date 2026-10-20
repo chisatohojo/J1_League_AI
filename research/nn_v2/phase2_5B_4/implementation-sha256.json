@@ -1,0 +1,16 @@
+{
+  "code_bodies_not_published": true,
+  "copied_transport_source_sha256": "b3895883d10a41e3f286061c6bf6f166f1e67ab2a1c575c02a2e041f49a8c3f1",
+  "local_code": {
+    "batch-fetch.py": "b7028ec56c9370e2592adb330903e540083800494634511039b89bc3157b7fed",
+    "final-audit.py": "36a747559f0242b093ac397d689b0f16e61a07aa28b28238ce52bc3a328e7e44",
+    "prepare.py": "41c24f93f4c99c2931489ee06f1d31c98ca2d083777cbaab820d7437c82457e3",
+    "supervise.py": "99b36c52a7818d5c30bede513ae4654babe6a9d42d1292dd1f3820f83e2fd6a9"
+  },
+  "public_tests": {
+    "tests/test_nn_timing_bounded_batches.py": "0a0379c80481631ff192a4f6c08a30474aa74d615d3b00802e02d816090d1c2f",
+    "tests/test_nn_timing_bounded_stop.py": "2129e62dcf0aeffc6416af49ac02fe6918d3ad9a1224506b27cbdffe8e0d43b9"
+  },
+  "sealed_access_guard_sha256": "f61e38544e4653a09d52c2dd8a63d835abd08f2806bfd392622e61b2fdc5fb32",
+  "sealed_parser_sha256": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad"
+}

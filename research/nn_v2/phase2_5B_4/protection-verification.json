@@ -1,0 +1,21 @@
+{
+  "SHA_mismatches": 0,
+  "T0_registration": 0,
+  "checked_at_utc": "2026-10-20T10:11:29.627271+00:00",
+  "file_sets_unchanged": {
+    "ChampionUpdates-evening-20261017-01": 985,
+    "NNResearch-phase2_5B_2-20261020-180825": 102,
+    "NNResearch-phase2_5B_3-20261020-183612": 148,
+    "NNResearch-v2-study-20261020-01": 55
+  },
+  "files_verified": 10227,
+  "future_prediction_save": 0,
+  "main_unchanged": true,
+  "other_worktrees_unchanged": 2,
+  "performance_evaluation": 0,
+  "real_fit": 0,
+  "real_probability_calculation": 0,
+  "status": "PASS",
+  "target_registration": 0,
+  "tasks_unchanged": 2
+}

@@ -1,0 +1,135 @@
+{
+  "batch_plan_local_sha256": "247f80f77173bb50ae7b374b7e6bf4a319be4e9bb5b86b4c0a7e716a0dce9973",
+  "execution_report_local_sha256": "6fcec346c9fa299b3ab42be0c9c13a24dbc16983f6ccc2237d24fc7da28844fa",
+  "global_status": "HOLD_BOUNDED_EVIDENCE_ACQUISITION",
+  "planned_batches": 23,
+  "records": [
+    {
+      "PASS": 12,
+      "attempted": 12,
+      "batch": 1,
+      "finished_at_utc": "2026-10-20T10:09:51.667740+00:00",
+      "preflight_sha256": "6243cf1730d86c8ac0274f810f3e047fa233c9d714c4ed7368c0df36f4cf64cc",
+      "selected": 12,
+      "status": "PASS"
+    },
+    {
+      "PASS": 12,
+      "attempted": 12,
+      "batch": 2,
+      "finished_at_utc": "2026-10-20T10:10:57.056969+00:00",
+      "preflight_sha256": "b25673d693df89a4f28deca50b2917ef777adbd39dd0b9471f168e2e18fccc18",
+      "selected": 12,
+      "status": "PASS"
+    },
+    {
+      "PASS": 2,
+      "attempted": 3,
+      "batch": 3,
+      "finished_at_utc": "2026-10-20T10:11:13.341033+00:00",
+      "preflight_sha256": "83c35d1970575bcaee2ef6d14fdee5138c9edcae69af9f80e5af67160b171cf3",
+      "selected": 12,
+      "status": "HOLD"
+    },
+    {
+      "attempted": 0,
+      "batch": 4,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 5,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 6,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 7,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 8,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 9,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 10,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 11,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 13,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 14,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 15,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 16,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 17,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 18,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 19,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 20,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 21,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 22,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 23,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    }
+  ]
+}

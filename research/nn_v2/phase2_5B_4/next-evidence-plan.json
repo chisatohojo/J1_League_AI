@@ -1,0 +1,27 @@
+{
+  "A_does_not_prove_B_C_D": true,
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "actual_notice_or_schedule_GET": 0,
+  "additional_GET_for_saved_page_review": 0,
+  "already_acquired_detail_remark_review": 1,
+  "direct_notice_candidates_identified": false,
+  "new_explicit_approval_required_for_any_remaining_acquisition": true,
+  "no_automatic_result_admission": true,
+  "original_schedule_and_notice_rows_in_this_selection": 276,
+  "original_schedule_reference_sha256": "daff0158ce4d36910969d656bbf05d3c33fb24a6f09ffd0219625755d18b48b2",
+  "per_identity_missing_evidence_ledger_sha256": "50368219c0876797261df8e375924200073498be5635714c3e00b942adc4914b",
+  "prediction_point_as_of_rows_in_this_selection": 276,
+  "requirements": [
+    "Offline review of the preserved unknown staff-warning form without rewriting the stopped run",
+    "Initial announced schedules with exact fixture identity and publication/acquisition times",
+    "Applicable official postponement, restart and change notices linked to each fixture",
+    "Adequate completion/result-availability chronology",
+    "Acquisition proof by a separately specified prediction point"
+  ],
+  "resume_authorized_after_stop": false,
+  "saved_official_index_candidates": 2,
+  "specific_notice_count": "UNKNOWN",
+  "status": "HOLD_DETAIL_ACQUISITION_AND_TIMING_PROVENANCE",
+  "unacquired_details": 249
+}

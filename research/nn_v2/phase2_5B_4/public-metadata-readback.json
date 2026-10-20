@@ -1,0 +1,28 @@
+{
+  "SHA_mismatches": 0,
+  "copied_files": 18,
+  "files": {
+    "research/nn_v2/phase2_5B_4/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_4/PROTOCOL.md": "e8ee487ef9333db4c32758a64e75d95809f32ca84b3a2fcaceb0ab5c041354a7",
+    "research/nn_v2/phase2_5B_4/RESULTS.md": "b0c4cc92df3781978742ea1777b3b46ddce75e6d5cce8ad77bf537769ffb1b7d",
+    "research/nn_v2/phase2_5B_4/backup-verification.json": "0c7eb100ad89649860cda559e8a295af21a5920bf845ea3a3f3fc4af656c67a4",
+    "research/nn_v2/phase2_5B_4/batch-execution-summary.json": "d7cfd838effa67475462d8fd40f82e6ad7f629852e6b37048b45af53dc24b401",
+    "research/nn_v2/phase2_5B_4/communication-receipt.json": "60172a96be959a94f6ea30ee5f9988c53068e33df30d7a341345460771890842",
+    "research/nn_v2/phase2_5B_4/implementation-sha256.json": "bbe4689916a0b93016739d9448bcca08bed68f5e7950fec55d4144c44b181b64",
+    "research/nn_v2/phase2_5B_4/input-sha256.json": "27fff11d676ba5109b891803a3910735362c9d90354805491d2cc757ff6d6a25",
+    "research/nn_v2/phase2_5B_4/local-evidence-index.json": "a8f294a3e72a7636dd923813465bd55bf3c7c5fbbe5477c8450778b9cb4e24ff",
+    "research/nn_v2/phase2_5B_4/next-evidence-plan.json": "9270aed7abfbf55230a298ff1cf565a6c80d6ec1fa2d109da8362314e7b031e9",
+    "research/nn_v2/phase2_5B_4/preflight-summary.json": "4dd06d42a9ece95aa865dc15c6d7184bb9f1716744c920989c06bc7d02931258",
+    "research/nn_v2/phase2_5B_4/protection-verification.json": "0bdf7b970b705ca66b491fc71aecd1956d6ab8015a76c440b0f30d561f4a8103",
+    "research/nn_v2/phase2_5B_4/readiness.json": "bc816ce0bf3a47ec7fe3276dff0999a06bb42864dd26181876b60faad6a2b731",
+    "research/nn_v2/phase2_5B_4/set-reconciliation.json": "0725a6e47fae962be88153fd90068db831c99c45cd4c26c7f1df7150ed401f44",
+    "research/nn_v2/phase2_5B_4/stop-review.json": "772e7747da575430675d492a6e9b746d12464ec780460ed7938a110a32255116",
+    "research/nn_v2/phase2_5B_4/synthetic-test-results.json": "93c710a6c26412d63422bb68168d3639742804506606eae3059c4a533e64126d",
+    "tests/test_nn_timing_bounded_batches.py": "0a0379c80481631ff192a4f6c08a30474aa74d615d3b00802e02d816090d1c2f",
+    "tests/test_nn_timing_bounded_stop.py": "2129e62dcf0aeffc6416af49ac02fe6918d3ad9a1224506b27cbdffe8e0d43b9"
+  },
+  "self_and_final_manifest_checked_in_local_sidecar": true,
+  "separate_drive": true,
+  "status": "PASS",
+  "verified_at_utc": "2026-10-20T10:15:37.245672+00:00"
+}

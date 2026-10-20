@@ -1,0 +1,17 @@
+{
+  "base_HEAD": "31a0de9c6e6d91728f8507a7097225e828321938",
+  "binding_manifest_sha256": "6e1309539a5fc5ab58a82d36035e5d96a6da462701d5253e3b83dd332b8181f0",
+  "input_verification_local_sha256": "193da0aba8ecbcdf7d0f94cc359e768106a8296005c3e56f00ace2e99330eba8",
+  "prior_twelve_reverification_sha256": "827362afae4c02b5194c2730de4f4d1b08d663a878a8732f841764396f620e1e",
+  "references": {
+    "research/nn_v2/phase2_5B_3/PROTOCOL.md": "435d09d76c4b41c410bfb76b7f63ecfe4d2f5a0e4751442cdfe1052f9c3eec9b",
+    "research/nn_v2/phase2_5B_3/RESULTS.md": "7903bcdf0c43f1c7b4d6762f95fc839c43c43aa349612158648b0c26dfc260a8",
+    "research/nn_v2/phase2_5B_3/original-schedule-evidence-plan.json": "4287e3b0a1ba16c2d3658b2560d2b97948d0d660f9d57abdb3f6990e97b96ef7",
+    "research/nn_v2/phase2_5B_3/remaining-acquisition-plan.json": "7d084787f820377f9c82fdef9b293337f07912709bd551a1b071715c087e25ba"
+  },
+  "study_seals": {
+    "artifact-seal.json": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+    "execution-seal.json": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+    "study-manifest.json": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+  }
+}
