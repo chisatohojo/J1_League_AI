@@ -1,0 +1,120 @@
+{
+  "automatic_resume": 0,
+  "fixed_batch_plan_SHA": "7bcebef33dbda7c4594ec11de1f5cfa689caef6657bd829209d6b355ee0da06a",
+  "global_report_SHA": "70099e3f575e82671c4f070a655202bfae9b5a2caa40d2d53652a9aa64f8ed28",
+  "planned_batches": 21,
+  "records": [
+    {
+      "PASS": 3,
+      "attempted": 4,
+      "batch": 1,
+      "finished_at_utc": "2026-10-20T11:00:43.445366+00:00",
+      "preflight_sha256": "e610852aa383e52aa6c652aa84147837cdb88949d5863a5dbfd2e4354bef4d0b",
+      "selected": 12,
+      "status": "HOLD"
+    },
+    {
+      "attempted": 0,
+      "batch": 2,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 3,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 4,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 5,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 6,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 7,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 8,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 9,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 10,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 11,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 13,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 14,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 15,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 16,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 17,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 18,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 19,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 20,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "attempted": 0,
+      "batch": 21,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    }
+  ],
+  "started_batches": 1,
+  "status": "HOLD_BOUNDED_EVIDENCE_ACQUISITION",
+  "unstarted_batches": 20
+}

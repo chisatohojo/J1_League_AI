@@ -1,0 +1,25 @@
+{
+  "JUnit_SHA": "bf2a6bc696fb5dce68300e86a41590b861a309b92e3fcfd0fefb4a6ec87e8fee",
+  "coverage": [
+    "Exact249 scope and rejection of old276 permit",
+    "Final nine-page batch and last-page failure",
+    "Global stop on unknown role/timing/429/timeout",
+    "Cross-batch five-second completion gap",
+    "No repeated execute or prior39 refresh",
+    "Executor/parser/adapter/rule and packet integrity",
+    "Different fixture interpreter rule rejected",
+    "Altered packet rejected before strict parser"
+  ],
+  "errors": 0,
+  "evidence_network_GET": 0,
+  "existing_related_tests": 261,
+  "failures": 0,
+  "new_executor_tests": 29,
+  "previous_completed_run_reused_by_SHA": true,
+  "saved_new_packet_offline_replays_after_resume": 4,
+  "skipped": 0,
+  "status": "PASS",
+  "test_reexecutions_after_resume": 0,
+  "tests": 290,
+  "warnings_as_errors": true
+}

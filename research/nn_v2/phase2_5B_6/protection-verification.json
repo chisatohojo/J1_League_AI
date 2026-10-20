@@ -1,0 +1,43 @@
+{
+  "SHA_mismatches": 0,
+  "T0_registration": 0,
+  "checked_at_utc": "2026-10-20T11:02:27.879162+00:00",
+  "file_sets_unchanged": {
+    "ChampionUpdates-evening-20261017-01": 985,
+    "NNResearch-phase2_5B_4-20261020-190037": 366,
+    "NNResearch-phase2_5B_5-20261020-192445": 343,
+    "NNResearch-v2-study-20261020-01": 55
+  },
+  "future_prediction_save": 0,
+  "main_unchanged": true,
+  "model_payloads_raw_SHA_verified": 53,
+  "new_real_fit": 0,
+  "old_phase4_formal_counts": {
+    "HOLD": 1,
+    "PASS": 26,
+    "not_acquired": 249
+  },
+  "original_protection_artifact_SHA": "92b3794cb156a9f01f7e975835b1a29bdf6ae4fded1c591577f6b34d9f2edc50",
+  "other_worktrees_unchanged": 2,
+  "performance_evaluation": 0,
+  "protected_files": 10973,
+  "real_probability_calculation": 0,
+  "resumption_SHA_mismatches": 0,
+  "resumption_checked_at_UTC": "2026-10-20T11:44:47.765503+00:00",
+  "resumption_file_set_verification": {
+    "file_sets_unchanged": {
+      "ChampionUpdates-evening-20261017-01": 985,
+      "NNResearch-phase2_5B_4-20261020-190037": 366,
+      "NNResearch-phase2_5B_5-20261020-192445": 343,
+      "NNResearch-v2-study-20261020-01": 55
+    },
+    "source_files_added_or_removed": 0,
+    "status": "PASS"
+  },
+  "resumption_protected_files": 10973,
+  "source_evidence_preserved_since_resumption": true,
+  "status": "PASS",
+  "target_registration": 0,
+  "tasks_unchanged": 2,
+  "trained_model_loaded": 0
+}

@@ -1,0 +1,22 @@
+{
+  "URL_duplicates": 0,
+  "acquired_source_SHA_ledger_SHA": "386b9d1a87d6e2c17c7677b943164a5e19c40ed3985c9822aab8f9981495bc55",
+  "combined_independent_PASS": 42,
+  "combined_raw_saved": 43,
+  "executor_prior39_replay_SHA": "c320126a023e21264257de9624547f2242b6b05bdbc53afef2d2cf1cf1a40983",
+  "new_GET_and_raw_saved": 4,
+  "new_HOLD": 1,
+  "new_PASS": 3,
+  "new_fixed_selection": 249,
+  "official_ID_collisions": 0,
+  "original_candidates": 288,
+  "original_partition_proof_SHA": "0cb2c7b4f8b16190befbbf1f57aee866f85870b5956dde61c35decf03835e041",
+  "out_of_scope_targets": 0,
+  "prior39_overlap": 0,
+  "prior39_replay_SHA": "ae2c61da921d2a35eaefe544c79bc71f1d4b1733eb9418cd5979f1c639b9766f",
+  "prior_independent_PASS": 39,
+  "selection_SHA": "fc72104b18ccb46348726d3a3c43f22eea4d11acbe7872c46727d89a8fb3c1e0",
+  "status": "PASS",
+  "unacquired": 245,
+  "unacquired_245_ledger_SHA": "59fccbe87893437d4aaf2fd4eee25232b60da872de30069110b51bd7b900e999"
+}

@@ -1,0 +1,23 @@
+{
+  "batch": 1,
+  "context_SHA": "d1e2186a3e4a896e1cd0c16c227305bff8222f3ab9a88943e7447d60e63d4a57",
+  "description": "Warning directed to the unregistered coach role; existing head-coach/interpreter permissions do not apply",
+  "exception_ledger_SHA": "7c01af792b8ed4b7c0a82320fe8c97d6d3f4fd07ff4cbf827802c0e1ca58489e",
+  "identity_result_contradictions": 0,
+  "individual_identity_and_verbatim_remarks_kept_local": true,
+  "internal_adapter_reason": "REVIEW_FIXTURE_SCOPE",
+  "network_failures": 0,
+  "new_allowlist_rules": 0,
+  "new_physical_timing_exception_proven": false,
+  "paragraph_count": 1,
+  "reason": "UNKNOWN_NON_TIMING_REMARK_REQUIRES_REVIEW",
+  "remarks_category": "UNKNOWN_FORMAT",
+  "restarted": false,
+  "review_rule_changed": false,
+  "status": "HOLD_REQUIRES_NEW_INDEPENDENT_OFFLINE_REVIEW",
+  "stop_stage": "reviewed_remark_adapter",
+  "strict_identity_datetime_regulation_result_checks": "PASS",
+  "timing_signals_detected": 0,
+  "unresolved_implementation_defects": 0,
+  "within_batch": 4
+}

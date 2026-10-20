@@ -1,0 +1,23 @@
+{
+  "acquisition_fixed_before_network": {
+    "adapter": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+    "executor-249.py": "6627cc2db07ddedf2e33985a1444b866ffaa7c99021061432b98916d0d5ddc9e",
+    "global_permit": "384bfd8945646b26bab9a6ed5571de807d609c2f6c68bd5af30718421945e428",
+    "review_rule": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+    "selection": "fc72104b18ccb46348726d3a3c43f22eea4d11acbe7872c46727d89a8fb3c1e0",
+    "strict_parser": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad"
+  },
+  "code_bodies_and_individual_rule_kept_local": true,
+  "execution_code_changes_detected": 0,
+  "final_audit_created_after_acquisition_not_used_as_executor": true,
+  "fixed_components_current_SHA_equal": true,
+  "original_final_audit_artifacts_reused_not_rerun": true,
+  "post_acquisition_code_SHA": {
+    "complete-package.py": "1d29679ee23d46b2dbc74304d61ea64d262b2e4675e1b55390fa5c761dbaa0ad",
+    "final-audit.py": "dc47778ed65ff1673681a051ad32f2d18432507abe8a1f366d2a2a2b43c73d72",
+    "resume-audit.py": "b3713a400a0190381d95f10f8d66f5dae6e7fe535cc4f119c0ce80d60c9231cc"
+  },
+  "public_test_SHA": {
+    "tests/test_nn_timing_executor249.py": "07ca2a01725cf8318abf4d9ae27e8d6531c3ab5ecb7aa706dde5818cf8aa6928"
+  }
+}

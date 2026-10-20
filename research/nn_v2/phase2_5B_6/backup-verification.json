@@ -1,0 +1,20 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_archive_entry_SHA": "PASS",
+  "archive_SHA": "18f6e1167ac05556b973b7bce9311e08b9145a578e4b3f9cf9aee59a0ee3d5f3",
+  "archive_bytes": 2755293,
+  "archive_name": "research-evidence-resumed.zip",
+  "independent_extraction_SHA": "PASS",
+  "mismatches": 0,
+  "new_saved_pages_including_HOLD": 4,
+  "old_stopped_records_and_pre_resume_artifacts_preserved": true,
+  "payload_bytes": 11702715,
+  "payload_files": 438,
+  "payload_manifest_SHA": "cea13c35112030645c051eef5ce46769c164031240470894260f851bd5dcec94",
+  "previous39_source_copies_included": true,
+  "public_metadata_readback": "Separate final readback receipt before commit",
+  "separate_drive": true,
+  "status": "PASS",
+  "total_original_source_page_copies": 43,
+  "verified_at_UTC": "2026-10-20T11:47:58.933113+00:00"
+}

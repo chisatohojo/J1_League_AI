@@ -1,0 +1,86 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "T0_registration": 0,
+  "URL_and_ID_collisions": 0,
+  "batch_seal_verified_SHA": "92a18df9508cf5aabcd9f94f19ada4602cf33fc55092adf4a762bfc6541c15b2",
+  "blocked_network_or_deserialization_attempts": 0,
+  "combined_independent_PASS": 42,
+  "combined_raw_saved": 43,
+  "execution_code_changes_detected": 0,
+  "execution_components": {
+    "adapter": {
+      "current_SHA": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+      "current_mtime_UTC": "2026-10-20T10:26:14.711237+00:00",
+      "execution_pinned_SHA": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+      "same": true
+    },
+    "executor": {
+      "current_SHA": "6627cc2db07ddedf2e33985a1444b866ffaa7c99021061432b98916d0d5ddc9e",
+      "current_mtime_UTC": "2026-10-20T10:56:17.875440+00:00",
+      "execution_pinned_SHA": "6627cc2db07ddedf2e33985a1444b866ffaa7c99021061432b98916d0d5ddc9e",
+      "same": true
+    },
+    "review_rule": {
+      "current_SHA": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+      "current_mtime_UTC": "2026-10-20T10:27:55.988523+00:00",
+      "execution_pinned_SHA": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+      "same": true
+    },
+    "strict_parser": {
+      "current_SHA": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+      "current_mtime_UTC": "2026-10-20T09:24:10.793291+00:00",
+      "execution_pinned_SHA": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+      "same": true
+    }
+  },
+  "executor_reexecutions": 0,
+  "existing_final_audit_outputs_reused": true,
+  "formal_new_counts": {
+    "GET": 4,
+    "HOLD": 1,
+    "HTTP200": 4,
+    "PASS": 3,
+    "not_acquired": 245
+  },
+  "future_prediction_save": 0,
+  "global_candidate_count": 288,
+  "global_permit_verified_SHA": "384bfd8945646b26bab9a6ed5571de807d609c2f6c68bd5af30718421945e428",
+  "main_unchanged": true,
+  "new_communication_permits": 0,
+  "new_evidence_GET_since_resume": 0,
+  "new_real_fit": 0,
+  "original_final_audit_not_rerun": true,
+  "other_worktrees_unchanged": 2,
+  "performance_evaluation": 0,
+  "phase_A": "BLOCKED",
+  "phase_B": "NOT_AUTHORIZED",
+  "pinned_inputs_verified": 150,
+  "postprocessing_code": {
+    "SHA": "dc47778ed65ff1673681a051ad32f2d18432507abe8a1f366d2a2a2b43c73d72",
+    "direct_network_execution_or_model_call_found": false,
+    "file": "final-audit.py",
+    "included_in_acquisition_permit_inputs": false,
+    "mtime_UTC": "2026-10-20T11:02:15.687345+00:00",
+    "purpose": "Separate post-acquisition offline audit; completed output artifacts reused, not re-executed"
+  },
+  "prior39_independent_PASS_separate": 39,
+  "processes_terminated": 0,
+  "protected_SHA_mismatches": 0,
+  "protected_files": 10973,
+  "real_probability_calculation": 0,
+  "related_active_acquisition_processes": 0,
+  "resume_verified_at_UTC": "2026-10-20T11:44:47.765503+00:00",
+  "retrieval_terminal_HOLD_before_reported_usage_limit": true,
+  "status": "HOLD_BOUNDED_EVIDENCE_ACQUISITION",
+  "target_registration": 0,
+  "tasks_unchanged": 2,
+  "test_reexecutions": 0,
+  "tests_reused": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 290
+  },
+  "usage_limit_source": "User report; not a retrieval or parser error"
+}

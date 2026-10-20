@@ -1,0 +1,21 @@
+# Independent249 official evidence acquisition
+
+Start at research HEAD `bff8c63efcdb4fada9f75fb7806a4789b91a9af4`. This phase independently authorizes at most249 GETs, one per exact saved remaining URL. The old276 permit is not resumed or executed. Prior39 URLs, robots, notices, schedules, scripts and other targets are excluded.
+
+Reverify model/study seals by raw-byte SHA without deserializing trained artifacts. Verify original snapshots, raw/metadata/request binding, old stopped records, code and protected files. Replay all39 packets through the fixed adapter and the new executor's read-only composition, requiring39 PASS and identical prior adapter results. Freeze all249 rows, official-link anchor proofs, TeamMaster clubs, full competition/season/round headers, dates/kickoffs,90-minute results and source SHA before network.
+
+Split the stable remaining order into20 batches of12 and a last batch of9. A new global permit binds this exact249 selection, all inputs, the new executor SHA, parser SHA, adapter SHA and review-rule SHA. Before each batch, create a separate SHA-bound preflight with its rows, prior consumed set, output root, counters, access witness and limits. Outputs are exclusive files in a new ACL-isolated, reparse-checked research root.
+
+Unchanged parser SHA: `009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad`. Adapter: `reviewed_staff_warning_exact_witness_v2`, SHA `7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49`. Review-rule SHA: `42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99`. The reviewed interpreter warning remains bound to its one exact historical fixture, verbatim text, raw/metadata/request SHA and structure. It cannot authorize another fixture or staff role.
+
+Only saved exact HTTPS URLs on `data.j-league.or.jp`, port443, with default certificate and hostname verification. Per-request timeout10s and parent worker deadline10s. No concurrent requests, retries, redirects, cookie reuse or linked-page fetching. Minimum5s after response/worker completion, across batch boundaries as well. Body cap2MiB per page and498MiB globally. A global4500s supervisor and acquisition-loop deadline bound execution; timeout cleanup is also finite.
+
+The single-request transport function is verbatim the sealed pilot worker. New permit validation requires249 rows, the exact selection SHA,21 batches,39 forbidden previous URLs, correct code/dependency SHA and the new output namespace. Each URL is allocated once before spawning a worker; a repeated execute fails on the create-new global start receipt before any GET.
+
+Recheck cached access conditions before network and every started batch using the local24-hour freshness bound. Freshness does not claim conditions can never change. Stricter known conditions or restricted response take precedence. A required robots refresh causes HOLD and needs separate approval; it never uses a fixture slot.
+
+For each complete HTTP200 packet, validate integrity and invoke the unchanged strict parser through the fixed adapter. Record strict and adapter outcomes separately. Unknown remarks, timing signals, identity/date/result contradictions, SHA errors,403/429, redirects or process/network failure stop the whole run. Preserve raw/metadata and stage-specific failure details, seal the failed batch, and mark future batches NOT_STARTED_AFTER_GLOBAL_STOP. No automatic continuation exists.
+
+Request start, response completion, snapshot save and audit completion retain actual UTC. Record A final detail identity/results/remarks separately from B physical interruption/completion/result-availability chronology, C initial schedule/change notices and D source acquired by a prediction point. A PASS never passes B–D or creates a historical result event. HISTORY/PREDICTION stay HOLD.
+
+All249 PASS plus the disjoint39+249=288 set reconciliation yields DETAIL_EVIDENCE_ACQUIRED_RESEARCH_ONLY; otherwise HOLD_BOUNDED_EVIDENCE_ACQUISITION. Preserve the old26 PASS/1 HOLD/249 unacquired run unchanged. Back up acquired successes and failures, code, receipts, ledgers and SHA on another drive; check ZIP CRC, every entry SHA and independent extracted bytes. Git receives public aggregates, specification, SHA and synthetic tests only.

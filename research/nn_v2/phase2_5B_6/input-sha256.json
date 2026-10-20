@@ -1,0 +1,17 @@
+{
+  "base_HEAD": "bff8c63efcdb4fada9f75fb7806a4789b91a9af4",
+  "input_verification_SHA": "23e38d290ab918cb2fe193f54cb85e5e809d499966917e31782338cd531189a8",
+  "references": {
+    "research/nn_v2/phase2_5B_5/REMARK_CONTRACT.md": "c73d280e8e35fdab51b31fac0098020d66d72688c186933bf195a5b70405e53b",
+    "research/nn_v2/phase2_5B_5/RESULTS.md": "2dc6430b1aef30c5626632c475fcfbddf2465a643741528e2a0c2570657b4e28",
+    "research/nn_v2/phase2_5B_5/implementation-sha256.json": "68d0cf583015749a057e7fed1221d62c73387b1271f42bcf85fc295a575d87f1",
+    "research/nn_v2/phase2_5B_5/remaining-acquisition-plan.json": "2482ffb127980e235c47dd517a27931495dc926ab9f33c0d7846e686c85e87e3"
+  },
+  "resume_start_preexisting_artifact_index_SHA": "082aae2112ddf9d61c9ec40e6d67d45f910a3060d1c0b1c61fc85aee7d6c668b",
+  "resume_verification_SHA": "565a37caf698f3c9777180a33ba09a83f108c08275a1a4f04e93da68e26171ef",
+  "study_seals": {
+    "artifact-seal.json": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+    "execution-seal.json": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+    "study-manifest.json": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+  }
+}
