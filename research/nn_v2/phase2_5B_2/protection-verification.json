@@ -1,0 +1,32 @@
+{
+  "binding_revalidated_from_all_original_packets": true,
+  "execution_seal_sha256": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "existing_parent_ACLs_modified": false,
+  "main": "05c1598f1fa087c39dc1450be65ed075675c1c4c",
+  "mismatches": [],
+  "model_artifact_seal_sha256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "model_payload_files_verified": 53,
+  "new_research_and_backup_child_ACLs_only": true,
+  "operational_writes": 0,
+  "other_worktree_heads_and_status_unchanged": true,
+  "protected_files": 9945,
+  "retrospective_unchanged": 98,
+  "runtime_and_study_file_sets_unchanged": true,
+  "saved_predictions_unchanged": 14,
+  "sealed_binding_sha256": "6e1309539a5fc5ab58a82d36035e5d96a6da462701d5253e3b83dd332b8181f0",
+  "source_and_existing_runtime_unchanged": true,
+  "status": "PASS",
+  "study_manifest_sha256": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb",
+  "tasks": [
+    {
+      "XML_definition_unchanged": true,
+      "name": "J1AI-Champion-Evening",
+      "normalized_sha256": "9c3e9094ebbb72054be3435d476ced9d97603f30454b9a663ea2d44c1a35f502"
+    },
+    {
+      "XML_definition_unchanged": true,
+      "name": "J1AI-Champion-Morning",
+      "normalized_sha256": "37318e1aca535c1bd615eb62b6fc02a8c57220be58fe5583eb802cd6e3c79698"
+    }
+  ]
+}

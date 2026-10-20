@@ -1,0 +1,33 @@
+{
+  "TLS_verification": true,
+  "all_HTTP_status": 200,
+  "automatic_retries": 0,
+  "body_total_bytes": 871392,
+  "distinct_URLs_attempted": 7,
+  "largest_body_bytes": 128013,
+  "largest_request_duration_seconds": 0.328411,
+  "minimum_response_complete_to_next_request_start_seconds": 5.17033,
+  "not_attempted_selected": 5,
+  "parallel_downloads": 0,
+  "redirects_followed": 0,
+  "request_durations_seconds": [
+    0.328411,
+    0.251312,
+    0.282365,
+    0.208643,
+    0.279981,
+    0.282253,
+    0.247971
+  ],
+  "requests_per_URL_max": 1,
+  "response_complete_to_next_request_start_seconds": [
+    244.07327,
+    5.17033,
+    5.180127,
+    5.180223,
+    5.176892,
+    5.186347
+  ],
+  "selected_count": 12,
+  "unselected_candidates_not_accessed": 276
+}

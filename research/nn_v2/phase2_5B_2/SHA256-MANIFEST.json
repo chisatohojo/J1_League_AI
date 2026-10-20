@@ -1,0 +1,14 @@
+{
+  ".gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+  "PROTOCOL.md": "26c76bc14c1427ad7b75cb3b7f32a1542eb11a6bc267892e38923966ce6441b5",
+  "RESULTS.md": "8b5e6281680ff4efea6e788ed20bbdbe1918af2e448a9e68c782269da6a646de",
+  "backup-verification.json": "e83f943ec5ac84aa5949251f5a828d01c8b26cb1d86209c9ebbd09e418aaaa7e",
+  "implementation-sha256.json": "5e377bf52cd54d8c39bfd65a9202aebb1221850644dca017775ef77e24f40645",
+  "local-evidence-index.json": "c9bbb72c1b85eee68f256613ec81f2485760e91d5236e252d79aa23f17fce297",
+  "preflight-summary.json": "7313f8e54c062681f109255cb7fa1397606d69c28de677eeff1a417c8839ed86",
+  "protection-verification.json": "bdcd729d175ca9778c225634959476a5ce0653a9b41104c25522518cfa7c8e41",
+  "readiness.json": "002c5156f821c39ebceb4d159368b449841bceeaa0f595ad782c7e79e096e496",
+  "remaining-acquisition-plan.json": "ce217598b3e1edf5b1c11445bf80577fe4ed522e0e1b3f2a42a2be4089980472",
+  "request-limit-audit.json": "5613b9152373b3528afed94a4157a54a636d7b9904585517f0fa3687bc58042c",
+  "synthetic-results.json": "79aea62e5132836d61e2e2a07d98d05916e46968dbd5cc8749658abcc741e3f4"
+}

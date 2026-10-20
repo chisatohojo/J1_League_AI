@@ -1,0 +1,37 @@
+{
+  "actual_acquisition_implementations_preserved_locally": true,
+  "existing_reference_files_read_only": [
+    {
+      "path": "src/collect/jleague_hyakunen_source.py",
+      "sha256": "4f59dbb13e5ce2ff4600374a7825410b407e3932697f52ce68a496ef4b963b6e"
+    },
+    {
+      "path": "src/collect/teams.py",
+      "sha256": "b0b77a3b2a583a047a8d3399076e083ad5d5f2699aa8c6cd0c6fe82515128e6c"
+    },
+    {
+      "path": "src/features/nn_research_timing.py",
+      "sha256": "02e254ca4af6fdf62913033443fa15c8eee115bdb45b8093c9aa703a64588902"
+    },
+    {
+      "path": "src/modeling/nn_v2_completion_binding.py",
+      "sha256": "79800180d86e86bd4679f55f2e67714dfac198f7081bdf07e3ce07d942aa336b"
+    }
+  ],
+  "files": [
+    {
+      "path": "tests/test_nn_timing_evidence_pilot.py",
+      "sha256": "66b6fc708e890fa8d4e28cef450ec6e6f69da9e2070fefdc290da9ffadbd68fd"
+    }
+  ],
+  "initial_acquisition_source_sha256": "ae12f8c9006f254db950b89cbbc74da85194f73a857caffb58b4e241a1c64e9e",
+  "local_only_implementation": {
+    "artifact": "implementation-final.py",
+    "backup_archive": "pilot-evidence.zip",
+    "body_not_added_to_GitHub": true,
+    "sha256": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad"
+  },
+  "post_stop_header_fix_network_requests": 0,
+  "repository_acquisition_module_added": false,
+  "reviewed_acquisition_source_sha256": "2acbc4b16bf85b1c755a2c7f57d067453aed8fbdafdff26de369a1204677f572"
+}
