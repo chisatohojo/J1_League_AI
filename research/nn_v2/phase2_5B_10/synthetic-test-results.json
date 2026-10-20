@@ -1,0 +1,11 @@
+{
+  "JUnit_SHA256": "2121d6c36ade8827a626e0ea029323f480a15e5142465000768e8f8b29aa38c8",
+  "PASS": 517,
+  "errors": 0,
+  "existing_cases": 463,
+  "failures": 0,
+  "new_executor_cases": 54,
+  "skips": 0,
+  "test_source_SHA256": "6a971283335ba82a33891a11987ef28907e262c295ad4b87fcb2df2d0d99c510",
+  "warnings_as_errors": true
+}

@@ -1,0 +1,37 @@
+{
+  "GET_dispatched": 37,
+  "HTTP200_complete": 37,
+  "allocated_attempts": 37,
+  "automatic_restart": 0,
+  "body_bytes": 4564860,
+  "executor_SHA256": "b417806c5d181e7392676d6945b36cb0c2525544348f248c6d305dc447514d40",
+  "formal_stop_reason": "UNKNOWN_NON_TIMING_REMARK_REQUIRES_REVIEW",
+  "formal_stop_stage": "reviewed_remark_adapter",
+  "max_GET": 209,
+  "max_per_URL_GET": 1,
+  "minimum_observed_completion_to_next_request_seconds": 5.18904,
+  "outer_process": {
+    "cleanup": {
+      "attempted": false,
+      "deadline_seconds": 35
+    },
+    "exit_code": 0,
+    "finished_at_UTC": "2026-10-20T23:16:31.236935+00:00",
+    "invocations": 1,
+    "outer_deadline_seconds": 4550,
+    "owned_process_still_running": false,
+    "permit_SHA256": "83842163d2c2f7bb804c1697a8925d36f80ce407c372e342ffdc1c53681f9fac",
+    "retries": 0,
+    "started_at_UTC": "2026-10-20T23:13:13.629037+00:00",
+    "stderr_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_SHA256": "0e4b2dc52a98169fc8d930c87f4477613e280a32dc5b40ed3d13eef486813720",
+    "timed_out": false
+  },
+  "parallel": 0,
+  "permit_SHA256": "83842163d2c2f7bb804c1697a8925d36f80ce407c372e342ffdc1c53681f9fac",
+  "previous79_reaccessed": 0,
+  "redirect": 0,
+  "retry": 0,
+  "robots_or_notice_schedule_GET": 0,
+  "status": "RECONCILED"
+}

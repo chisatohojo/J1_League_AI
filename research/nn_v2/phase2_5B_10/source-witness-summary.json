@@ -1,0 +1,16 @@
+{
+  "A_B_C_D_ledger_SHA256": "ccbefc0642568975721c880b9f9e86540190b3c0929c6a96dc4eed43e19e22cf",
+  "A_implies_B_C_D": false,
+  "B_actual_event_result_availability_chronology": "HOLD",
+  "C_original_schedule_changes": "HOLD",
+  "D_prediction_cutoff_acquisition_proof": "HOLD",
+  "ledger_SHA256": "5469221b7a40bf63e323c4a925711b40517e2fbaa1795ca5b6316f0cc6aa7b4f",
+  "new_HOLD": 1,
+  "new_PASS": 36,
+  "new_complete_pages": 37,
+  "new_offline_reanalysis_SHA256": "1994a8c6bbe179f859dd29efefcdc28e6d1c796914f76da800342df08b41ef4b",
+  "previous79_reanalysis_PASS": 79,
+  "previous79_unchanged": true,
+  "remaining_exact_ledger_SHA256": "8a997d5e0e3b11d364a728df0b53866a840d0aed7fdabf2a0a18ce893ae74477",
+  "result_event_admission_authorized": false
+}

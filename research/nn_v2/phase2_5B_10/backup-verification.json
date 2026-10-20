@@ -1,0 +1,18 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "d3b27e3eb8cb4af3f4306b59327cbe67bd978b438e7bec16759de4c109c14eb5",
+  "archive_bytes": 5746374,
+  "archive_name": "research-evidence.zip",
+  "independent_extraction_all_SHA": "PASS",
+  "mismatches": 0,
+  "new_complete_pages": 37,
+  "payload_bytes": 22810942,
+  "payload_files": 923,
+  "payload_manifest_SHA256": "760b4e31e7be0998be29e5c081cb4b81d4785cc53c8ac3c7a348d689a25827d0",
+  "prior79_source_copies": 79,
+  "separate_drive": true,
+  "status": "PASS",
+  "success_and_HOLD_evidence_preserved": true,
+  "verified_at_UTC": "2026-10-20T23:18:04.417910+00:00"
+}

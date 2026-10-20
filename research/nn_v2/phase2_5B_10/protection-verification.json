@@ -1,0 +1,18 @@
+{
+  "at_UTC": "2026-10-20T23:17:12.030850+00:00",
+  "historical11_attribution": "Retained without retrospective blanket attribution",
+  "immutable_SHA_mismatches": 0,
+  "main_unchanged": true,
+  "model_payloads_verified": 53,
+  "new_operational_changes": 0,
+  "old79_snapshots_unchanged": true,
+  "old_sealed_parsers_rules_executors_permits_unchanged": true,
+  "other_worktrees_unchanged": 2,
+  "parent_network_allowed": false,
+  "prior_reconciled_07_task_changes_retained": 10,
+  "protected_files": 13169,
+  "research_writes_to_operational_paths": 0,
+  "status": "PASS",
+  "task_XML_unchanged": 2,
+  "task_overlap_observed": false
+}

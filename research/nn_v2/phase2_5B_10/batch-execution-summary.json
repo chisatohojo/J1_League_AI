@@ -1,0 +1,170 @@
+{
+  "HOLD": 1,
+  "PASS": 36,
+  "max_batches": 18,
+  "not_attempted": 172,
+  "rows": [
+    {
+      "HOLD": 0,
+      "PASS": 12,
+      "attempted": 12,
+      "batch": 1,
+      "not_attempted": 0,
+      "selected": 12,
+      "status": "PASS"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 12,
+      "attempted": 12,
+      "batch": 2,
+      "not_attempted": 0,
+      "selected": 12,
+      "status": "PASS"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 12,
+      "attempted": 12,
+      "batch": 3,
+      "not_attempted": 0,
+      "selected": 12,
+      "status": "PASS"
+    },
+    {
+      "HOLD": 1,
+      "PASS": 0,
+      "attempted": 1,
+      "batch": 4,
+      "not_attempted": 11,
+      "selected": 12,
+      "status": "HOLD"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 5,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 6,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 7,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 8,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 9,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 10,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 11,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 12,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 13,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 14,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 15,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 16,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 17,
+      "not_attempted": 12,
+      "selected": 12,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    },
+    {
+      "HOLD": 0,
+      "PASS": 0,
+      "attempted": 0,
+      "batch": 18,
+      "not_attempted": 5,
+      "selected": 5,
+      "status": "NOT_STARTED_AFTER_GLOBAL_STOP"
+    }
+  ]
+}

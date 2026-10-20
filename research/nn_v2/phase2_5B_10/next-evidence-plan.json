@@ -1,0 +1,38 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "cumulative_acquired": 116,
+  "current_permit_terminal": true,
+  "further_GET_authorized": false,
+  "future_prediction_authorized": false,
+  "general_classifier": "GENERAL_REMARK_CLASSIFIER_NOT_PROVEN",
+  "general_classifier_connected_or_imported": false,
+  "new_permit_required_for_any_further_acquisition": true,
+  "next_steps": [
+    "Review unresolved saved evidence independently without changing the stopped run",
+    "Any adapter extension needs separate authorization, a separate version and full offline regression",
+    "Further acquisition requires a new exact-set permit and independent authorization",
+    "Audit actual chronology, original schedules/change notices and prediction-cutoff acquisition proof independently"
+  ],
+  "remaining_batch_sizes": [
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    4
+  ],
+  "remaining_detail_pages": 172,
+  "remaining_exact_ledger_SHA256": "8a997d5e0e3b11d364a728df0b53866a840d0aed7fdabf2a0a18ce893ae74477",
+  "result_event_admission_authorized": false,
+  "status": "INDEPENDENT_OFFLINE_REVIEW_REQUIRED"
+}

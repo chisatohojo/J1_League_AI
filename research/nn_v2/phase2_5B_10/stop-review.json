@@ -1,0 +1,23 @@
+{
+  "disciplinary_code_meaning_inferred": false,
+  "execution_report_SHA256": "724e0a9d14a7b4896057afc5166f104dcaa49309656286a2dda29ab2794173c8",
+  "no_new_rule_or_normal_match_classification": true,
+  "observed_unregistered_annotation_kind": "Manager dismissal annotation, not a reviewed warning witness",
+  "paragraph_counts": [
+    1
+  ],
+  "physical_interruption_absence_NOT_proven": true,
+  "raw_metadata_request_full_A11_and_byte_positions_preserved_privately": true,
+  "reasons": [
+    "UNKNOWN_NON_TIMING_REMARK_REQUIRES_REVIEW"
+  ],
+  "registry_SHA256": "7ab4c50648e7e7567fdea7ee559228fb0837b9da592546deae7f91ea11b50051",
+  "status": "INDEPENDENT_OFFLINE_REVIEW_REQUIRED",
+  "strict_checks_status": [
+    "PARSE_VERIFIED_FINAL_RECORD_ONLY"
+  ],
+  "timing_signals": [
+    []
+  ],
+  "unknown_or_unresolved_cases": 1
+}

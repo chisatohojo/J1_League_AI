@@ -1,0 +1,20 @@
+{
+  "adapter_v2": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+  "adapter_v3": "0cc5cb1a382090a49e905418ba918e9063ad723eade091e7ddc459e82c28a425",
+  "adapter_v4": "dd73800f969914310f213890e08e5e54a17142b86ac6f5ff413cc79e0474e39d",
+  "audit_common": "02fe038143031c8130ed6a9f0305307b38b59fcc22325c3f5ff213d9e68467cf",
+  "batch18_plan": "b4193a18d88fcc11a02aad4f0f6652046436194faa89a602a4c35af0104533df",
+  "coach_rule": "dc66a3af02541714233e9af057a0a009a644ac0230ec3ac874728260729e1266",
+  "code_changed_after_first_GET": false,
+  "executed_executor": "b417806c5d181e7392676d6945b36cb0c2525544348f248c6d305dc447514d40",
+  "executed_launcher": "dcb57b8619a4af73ee37739f2bf2297b481456dcfb89559bf8785bb360b45e4f",
+  "executed_permit": "83842163d2c2f7bb804c1697a8925d36f80ce407c372e342ffdc1c53681f9fac",
+  "final_audit": "e13aa42e2b7df2f83dca4d4994b23fcb4648e49b7a47a824ff84c55d93a44bce",
+  "gk_rule": "7baf4dbb5b14dbea2794097b6a3dbeab616cb43f0e4bdc38a21b77bb4fdb8466",
+  "interpreter_rule": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+  "package_evidence": "8e38b21f86c525b8ab7eb57619b259df42dac7793974ca176640c9d84ffa6123",
+  "publish_aggregates": "6c9db9baa53b4481615644c7b19e5a351a1fb804af650a7c6be0413d14987943",
+  "selection209": "2919bf783a35034dd988208da92f2a5ad8b3611f960cbb5e08cd888ef381b6fc",
+  "shadow_classifier_imported_or_connected": false,
+  "strict_parser": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad"
+}

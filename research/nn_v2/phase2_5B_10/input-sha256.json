@@ -1,0 +1,15 @@
+{
+  "execution_input_seal": "815bbd69d66020b116f6eb20f6441b728ec5cdaf8ba9027a2041c9f8e6aa154f",
+  "execution_seal": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "frozen_completed_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "full209_plan": "560687f81e4764ac5397c9507eedf8b9305a0757758f4c0faf69677ca5093237",
+  "model_payloads": 53,
+  "model_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "previous79_regression": "50d730f0608164a64f42a8151c970566ae93dfccb61264364ad7db482fb508c0",
+  "protection_start": "f2ed3cc1f21766e33e1214a3f0f33134a22fab54b9735312c46c05781494cd9e",
+  "remaining209_ledger": "2919bf783a35034dd988208da92f2a5ad8b3611f960cbb5e08cd888ef381b6fc",
+  "source_rows_and_real_links": "f4b9f14c51eb20b59d982408fb1de96cd6045443fd63afcdcc93389b7ac37a79",
+  "start_HEAD": "00e63efcff4768319ee0dcd5a697e961f4d04f17",
+  "study": "nn_v2_residual_20261020_01",
+  "study_manifest": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+}
