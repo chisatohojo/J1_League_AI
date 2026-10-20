@@ -1,0 +1,12 @@
+{
+  ".gitattributes": "364fa15807191d37cc20885b00f06f5f5d990b51dcba070e481efad05bf128ee",
+  "ADAPTER_CONTRACT.md": "fca0ca19ab69eed27c9b915c5de59387a6ae09f00f6fc56ace751c4f532d6560",
+  "implementation-sha256.json": "93ee44f1910957db5a2e4fda093b65cbeae250a02baa8af75b08a7767c885482",
+  "legacy-parity.json": "306078574f7ae0c5787503068aeafb6443886c45f836cee0f2f1a015c055e6f3",
+  "local-evidence-index.json": "2c3a7ef650308d9479e144313495e0ff7be6d609ef1c4602ec1dc78b8d678d6d",
+  "protection-verification.json": "0c9b8c3d9f923a3b81c7cedfab53c774cfc11906ac789a71f30de0928cf4a4ea",
+  "readiness.json": "7ae9d50a59705a49e4694f2d450cc28e7829eaa451eaae3c5aabf15a1053382c",
+  "RESULTS.md": "74322fe3f9101e952f491654e71ab603edca17021f01bfc8d84ddd7c25755617",
+  "source-witness-coverage.json": "832969c393f46aa07514836e08e804d8af200e0d43906e1085bcd37851bca0bb",
+  "synthetic-results.json": "e736be56e53f0afec143dac1cd163b97ffdf2d95f5222f8f058ee691341b3254"
+}

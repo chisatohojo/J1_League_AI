@@ -1,0 +1,2 @@
+# Keep the new phase's published byte hashes stable on Windows checkouts.
+*.json text eol=lf

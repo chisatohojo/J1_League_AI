@@ -1,0 +1,59 @@
+{
+  "status": "PASS",
+  "rows": 3588,
+  "features": [
+    "elo_diff",
+    "home_last5_matches_available",
+    "away_last5_matches_available",
+    "home_last5_points",
+    "away_last5_points",
+    "home_last5_goals_for",
+    "away_last5_goals_for",
+    "home_last5_goals_against",
+    "away_last5_goals_against"
+  ],
+  "max_absolute_delta": 0.0,
+  "finite": true,
+  "ranges": {
+    "elo_diff": [
+      -478.00890065105955,
+      476.29475701578394
+    ],
+    "home_last5_matches_available": [
+      0.0,
+      5.0
+    ],
+    "away_last5_matches_available": [
+      0.0,
+      5.0
+    ],
+    "home_last5_points": [
+      0.0,
+      15.0
+    ],
+    "away_last5_points": [
+      0.0,
+      15.0
+    ],
+    "home_last5_goals_for": [
+      0.0,
+      19.0
+    ],
+    "away_last5_goals_for": [
+      0.0,
+      20.0
+    ],
+    "home_last5_goals_against": [
+      0.0,
+      20.0
+    ],
+    "away_last5_goals_against": [
+      0.0,
+      19.0
+    ]
+  },
+  "historical_acquisition_as_of_claim": false,
+  "result_events_applied_exactly_once": 3588,
+  "real_fixture_feature_events": 3588,
+  "fictitious_final_state_probes": 1
+}

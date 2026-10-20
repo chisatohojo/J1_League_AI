@@ -1,0 +1,38 @@
+{
+  "files": [
+    {
+      "path": "src/features/nn_future_history.py",
+      "sha256": "6fbfafad8e7eca56cadd2b3ed52c1ba5101f84a1c629921f9ffde4ef448abb16"
+    },
+    {
+      "path": "scripts/audit_nn_future_history.py",
+      "sha256": "4a27d35101c08af17afba6a1663c2bcbd1c1b4539374f70c946a7278dc9bf2b5"
+    },
+    {
+      "path": "tests/test_nn_future_history.py",
+      "sha256": "bef207a909a33ad95036ac525de287e515c2c286ff12e16571155a1204bdc88e"
+    }
+  ],
+  "existing_reference_files_read_only": [
+    {
+      "path": "src/features/nn_research_timing.py",
+      "sha256": "02e254ca4af6fdf62913033443fa15c8eee115bdb45b8093c9aa703a64588902"
+    },
+    {
+      "path": "src/features/elo.py",
+      "sha256": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4"
+    },
+    {
+      "path": "src/modeling/nn_v2_offsets.py",
+      "sha256": "605f052734d4eadce64bef012a0a1c5c87bdffddddca066493eec6c26bd7e897"
+    },
+    {
+      "path": "src/modeling/nn_v2_completion_binding.py",
+      "sha256": "79800180d86e86bd4679f55f2e67714dfac198f7081bdf07e3ce07d942aa336b"
+    },
+    {
+      "path": "src/modeling/nn_residual_v2.py",
+      "sha256": "170df64f860eda2c81683799bb362f38eff3d54493f93619cb5148ec86f846af"
+    }
+  ]
+}

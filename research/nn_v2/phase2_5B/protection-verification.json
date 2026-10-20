@@ -1,0 +1,30 @@
+{
+  "checked_at_utc": "2026-10-20T06:59:16.573141+00:00",
+  "protected_files": 9281,
+  "mismatches": [],
+  "prior_805_unchanged": true,
+  "nn_v2_model_seal_sha256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "model_payload_files_verified": 53,
+  "input_pins_verified": 12,
+  "tasks": [
+    {
+      "name": "J1AI-Champion-Morning",
+      "definition_unchanged": true,
+      "xml_normalized_sha256": "37318e1aca535c1bd615eb62b6fc02a8c57220be58fe5583eb802cd6e3c79698"
+    },
+    {
+      "name": "J1AI-Champion-Evening",
+      "definition_unchanged": true,
+      "xml_normalized_sha256": "9c3e9094ebbb72054be3435d476ced9d97603f30454b9a663ea2d44c1a35f502"
+    }
+  ],
+  "task_comparison": "CLI line endings normalized; all XML content unchanged",
+  "other_worktree_heads_and_status_unchanged": true,
+  "main": "05c1598f1fa087c39dc1450be65ed075675c1c4c",
+  "runtime_and_study_file_sets_unchanged": true,
+  "saved_pre_match_predictions_unchanged": 14,
+  "retrospective_predictions_unchanged": 98,
+  "source_runtime_config_publications_raw_metadata_unchanged": true,
+  "network_source_fetches": 0,
+  "operational_writes": 0
+}

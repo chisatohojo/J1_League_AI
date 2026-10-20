@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "passed": 297,
+  "skipped": 1,
+  "failed": 0,
+  "new_adapter_tests": 48,
+  "warnings_as_errors": true,
+  "junit_sha256": "896c6a262a6dd4aea9643c4bf481b54b13a598660a48dc0ebca2a5cda048eda5",
+  "skip": "Existing optional archived official page fixture is not distributed; actual saved real sources were separately audited",
+  "real_data_fits": 0,
+  "real_probabilities": 0
+}
