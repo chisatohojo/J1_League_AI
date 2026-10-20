@@ -1,0 +1,14 @@
+{
+  "A_B_C_D_per_fixture_ledger_SHA256": "ed9d7f508d73881327cc1156c78679039facb19f74b0e8570cb0e754a1be72a1",
+  "B_actual_chronology": "HOLD",
+  "C_original_schedule_and_change_notices": "HOLD",
+  "D_prediction_point_acquisition": "HOLD",
+  "new_HOLD": 1,
+  "new_PASS": 35,
+  "new_complete_detail_pages": 36,
+  "new_page_offline_reanalysis_SHA256": "afad08d96c031c3368cdc68a4bd21252ed2160b175ae07f677a3562435024e37",
+  "previous43_reanalysis_PASS": 43,
+  "previous43_sealed_packets_unchanged": true,
+  "source_SHA_ledger_SHA256": "21440784f130be16e2243be5fbb4ac39b02e45b899b051763edf7126306146a6",
+  "unacquired_exact_ledger_SHA256": "2919bf783a35034dd988208da92f2a5ad8b3611f960cbb5e08cd888ef381b6fc"
+}

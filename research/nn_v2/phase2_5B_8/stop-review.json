@@ -1,0 +1,15 @@
+{
+  "annotation_NOT_adopted_as_known_non_timing": true,
+  "observed_unregistered_role": "GKコーチ",
+  "paragraph_count_in_stopped_page": 1,
+  "physical_interruption_absence_NOT_proven": true,
+  "raw_metadata_request_and_full_A11_context_preserved": true,
+  "role_or_warning_permission_generalized": false,
+  "rules_unchanged_during_and_after_execution": true,
+  "status": "HOLD_REQUIRES_INDEPENDENT_OFFLINE_REVIEW",
+  "stop_receipt_SHA256": "5e69f0db045d6bdb9345df150f0ada1d14f08f0ad0012c91726638649f8b7445",
+  "strict_final_detail_identity_datetime_result_checks": "PASS_ON_ALL36",
+  "strict_timing_signals_detected_in_stop": 0,
+  "unknown_annotation_cases": 1,
+  "unresolved_registry_SHA256": "46cac860851ce8a3224e6d61c8849bd867bad4d4f53f967719617870269e2b10"
+}

@@ -1,0 +1,23 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "T0": 0,
+  "automatic_restart": 0,
+  "cumulative_acquired": 79,
+  "cumulative_independent_PASS": 78,
+  "executed_permit_invocations": 1,
+  "future_prediction_save": 0,
+  "new_GET": 36,
+  "new_HOLD": 1,
+  "new_PASS": 35,
+  "not_attempted": 209,
+  "old43_unchanged": true,
+  "performance_evaluation": 0,
+  "real_fit": 0,
+  "real_probability": 0,
+  "remaining_unacquired": 209,
+  "status": "HOLD_BOUNDED_EVIDENCE_ACQUISITION",
+  "target_registration": 0
+}

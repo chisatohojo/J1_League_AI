@@ -1,0 +1,9 @@
+{
+  "SHA_mismatches": 0,
+  "base_public_file_ledger_SHA256": "d3393264dd357afbf467e6669d1307b50cf1c85a3831d90e15142f8deb03c868",
+  "own_receipt_and_final_manifest": "Separately copied and read back after creation; full final set archived with CRC and independent restoration",
+  "public_artifacts_and_test_read_back": 18,
+  "raw_or_personal_data_in_public_backup": false,
+  "status": "PASS",
+  "verified_at_UTC": "2026-10-20T22:18:41.099976+00:00"
+}

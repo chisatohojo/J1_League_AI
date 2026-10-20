@@ -1,0 +1,33 @@
+{
+  "GET_dispatched": 36,
+  "HTTP200_complete": 36,
+  "allocated_attempts": 36,
+  "automatic_restart": 0,
+  "body_bytes": 4449499,
+  "executor_SHA256": "e77430b88c02e83ab6a9770b6c8a88540d833cb4ecc09c9e02d92c58f62c3c03",
+  "existing_scheduled_task_observations": "Independent, not invoked by research and not charged to the research GET permit",
+  "formal_stop_reason": "UNKNOWN_NON_TIMING_REMARK_REQUIRES_REVIEW",
+  "formal_stop_stage": "reviewed_remark_adapter",
+  "max_GET": 245,
+  "max_per_URL_GET": 1,
+  "minimum_observed_completion_to_next_request_seconds": 5.19706,
+  "outer_process": {
+    "exit_code": 0,
+    "finished_at_UTC": "2026-10-20T22:14:42.676223+00:00",
+    "invocations": 1,
+    "outer_deadline_seconds": 4550,
+    "permit_SHA256": "4a070825a23503f28712760210c4ca02df6936aba368cb637b748ce2b8b536fe",
+    "retries": 0,
+    "started_at_UTC": "2026-10-20T22:11:30.690629+00:00",
+    "stderr_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_SHA256": "c7dc7594522775f53f6bc40055de9add7a8ed947e72638e6d8dee3307a503c46",
+    "timed_out": false
+  },
+  "parallel": 0,
+  "permit_SHA256": "4a070825a23503f28712760210c4ca02df6936aba368cb637b748ce2b8b536fe",
+  "previous43_reaccessed": 0,
+  "redirect": 0,
+  "retry": 0,
+  "robots_or_notice_schedule_GET": 0,
+  "status": "RECONCILED"
+}

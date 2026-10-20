@@ -1,0 +1,39 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "actual_result_event_admission_authorized": false,
+  "already_acquired_cumulative": 79,
+  "current_global_permit_terminally_stopped": true,
+  "future_prediction_authorized": false,
+  "new_executor_or_permit_execution_authorized": false,
+  "remaining_batch_sizes": [
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    5
+  ],
+  "remaining_detail_pages": 209,
+  "required_next_steps": [
+    "Review the complete saved unregistered-role remark independently",
+    "Any justified adapter change requires a separate version and full synthetic/saved-page regression",
+    "Further detail acquisition requires independent authorization and a newly sealed exact remainder permit",
+    "Audit actual event/result availability, original schedules/change notices and prediction-time source acquisition separately"
+  ],
+  "status": "INDEPENDENT_OFFLINE_REVIEW_REQUIRED",
+  "unacquired_exact_ledger_SHA256": "2919bf783a35034dd988208da92f2a5ad8b3611f960cbb5e08cd888ef381b6fc",
+  "unknown_annotation_cases": 1
+}
