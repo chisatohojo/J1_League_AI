@@ -1,0 +1,22 @@
+{
+  "A11_blocks": 1,
+  "actual_interruption_absence_proven": false,
+  "entire_block_bytes_and_position_bound": true,
+  "evidence_review_SHA256": "ac69f0de89f9b400ec3b88f832189ff747edf98dee79568f290acba6f6ac402b",
+  "no_other_unreviewed_A11_notes": true,
+  "original_acquisition_UTC_preserved": true,
+  "paragraphs": 1,
+  "personal_names_and_individual_history_published": false,
+  "positive_context": [
+    "In-match minute",
+    "Explicit warning expression and literal code",
+    "Club and named staff",
+    "Explicit coach role"
+  ],
+  "reviewed_witnesses": 1,
+  "role_generalization": false,
+  "rule_SHA256": "dc66a3af02541714233e9af057a0a009a644ac0230ec3ac874728260729e1266",
+  "status": "ACCEPT_EXACT_COACH_WITNESS_ONLY",
+  "verbatim_HTML_and_text_bound": true,
+  "warning_code_meaning_inferred": false
+}

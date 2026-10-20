@@ -1,0 +1,15 @@
+{
+  "HISTORY": "HOLD",
+  "HOLD": 0,
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "acquisition_authorized": false,
+  "new_executor_created": false,
+  "newly_reviewed_exact_coach_witnesses": 1,
+  "permit_created": false,
+  "prior42_unchanged": true,
+  "saved_pages_PASS": 43,
+  "status": "READY_FOR_NEW_BOUNDED_ACQUISITION_APPROVAL",
+  "unacquired": 245
+}

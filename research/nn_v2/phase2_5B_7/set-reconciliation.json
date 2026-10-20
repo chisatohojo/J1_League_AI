@@ -1,0 +1,16 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "acquired": 43,
+  "original": 288,
+  "previous_43_overlap": 0,
+  "saved_literal_official_links_verified": 245,
+  "unacquired": 245,
+  "validation": {
+    "batches": 21,
+    "new_GET": 0,
+    "previous_forbidden": 43,
+    "remaining": 245,
+    "status": "PLAN_ONLY_NOT_AUTHORIZED"
+  }
+}

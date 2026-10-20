@@ -1,0 +1,17 @@
+{
+  "JUnit_SHA256": "96cdbe96344638d5108abbf0247d2c8e1a2492c37fefe65d6f98fe0618cac286",
+  "errors": 0,
+  "failures": 0,
+  "network_acquisition": 0,
+  "new_contract_cases": 66,
+  "passed": 356,
+  "performance_evaluation": 0,
+  "prior_related_cases": 290,
+  "real_inference": 0,
+  "skipped": 0,
+  "status": "PASS",
+  "test_source_SHA256": "b9d21bcb3bab2070d521b575f8c217d079590955c295299b0f602e339445db15",
+  "trained_data_fit": 0,
+  "transport_is_synthetic_and_mocked": true,
+  "warnings_as_errors": true
+}

@@ -1,0 +1,23 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_7/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_7/REMARK_CONTRACT.md": "1501cdcbee621f9948c71caddda0955e863a8f91250b4c155149116d072f5697",
+    "research/nn_v2/phase2_5B_7/RESULTS.md": "92f1648f04272c025504e9e2f5975f520fc3eadb3dab2d565adb8bef4effcc98",
+    "research/nn_v2/phase2_5B_7/backup-verification.json": "5f97d898a2865adf4b88ce8547156982d42d631e62b4898ea4eb381af72861d8",
+    "research/nn_v2/phase2_5B_7/evidence-limitations.json": "036c8a4e955bb921b39af417d03826b66bc26fc49c1340837850260f3c71a66c",
+    "research/nn_v2/phase2_5B_7/implementation-sha256.json": "132e8511e81c45db17db8da7f15f77196c1c621d5757b7908b0637b4790e50c2",
+    "research/nn_v2/phase2_5B_7/input-sha256.json": "02fafd7c4059b7e9ec854567331e81dfc99ae2ada2b382ddc751f7e43d9d0a5f",
+    "research/nn_v2/phase2_5B_7/local-evidence-index.json": "2cae3632fdfba90da224b1535331303edab598d0f84f4f779c6485ce1913e625",
+    "research/nn_v2/phase2_5B_7/offline-regression-summary.json": "4ff41ca50df02f1d045ac1520b258fd184adb6985411e03f0800bbff113e38de",
+    "research/nn_v2/phase2_5B_7/protection-verification.json": "1fd8eef93c2a2007be58ee450725b2b78a4de30d59380e8d1b54b9221f7fc26d",
+    "research/nn_v2/phase2_5B_7/public-metadata-readback.json": "6da746aa8324e79dcd300cf96cc4cc4ecf17cab0f71148648538aa4ed6c4ad84",
+    "research/nn_v2/phase2_5B_7/readiness.json": "34b36282794326b70f3b2fce481fb126f79c7b86e3ae3119f123b808e811a997",
+    "research/nn_v2/phase2_5B_7/remaining-acquisition-plan.json": "c344bc5db82d2480aafce7f018d2597c0a0ac214b6b2db6cfc6d95fc75d59693",
+    "research/nn_v2/phase2_5B_7/review-summary.json": "a3d11306b8c2ec54c7dc08b831b5c550829cdb0afbbe46b0292efc3e978355bc",
+    "research/nn_v2/phase2_5B_7/set-reconciliation.json": "b1700ad7bb7d57c1fcc0f5fb5b05a3f4c0539793d2372a561f64dc075d60a41e",
+    "research/nn_v2/phase2_5B_7/synthetic-test-results.json": "0f4814f8fe69032b9e6fffdec22ac126ee461c1c6983a4c20f0e7cdcd97ca5e5",
+    "tests/test_nn_reviewed_coach_contract.py": "b9d21bcb3bab2070d521b575f8c217d079590955c295299b0f602e339445db15"
+  },
+  "self_excluded": true
+}

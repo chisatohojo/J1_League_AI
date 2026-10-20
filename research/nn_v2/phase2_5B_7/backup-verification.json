@@ -1,0 +1,16 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "e2909effd3ac56888e65edb9d0e294b9de2e386936be482ba5e275930d483f37",
+  "archive_bytes": 2929623,
+  "archive_name": "research-offline-evidence.zip",
+  "independent_extraction_all_SHA": "PASS",
+  "mismatches": 0,
+  "original_saved_packet_copies": 43,
+  "payload_bytes": 12197570,
+  "payload_files": 324,
+  "payload_manifest_SHA256": "966f1aecb3691dd8bf4330382922dc6f5ba2b313f7113e09e9bfffa8003ff05c",
+  "separate_drive": true,
+  "status": "PASS",
+  "verified_at_UTC": "2026-10-20T13:22:44.156740+00:00"
+}

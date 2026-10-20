@@ -1,0 +1,18 @@
+{
+  "GET": 0,
+  "HOLD": 0,
+  "PASS": 43,
+  "coach_exact_witness_newly_accepted": 1,
+  "existing_exact_interpreter_scope_unchanged": true,
+  "final_adapter_regression_SHA256": "9fcd748ebd63deccdf17a00523422ae6827479702a82fc475ed1f75332a9c80e",
+  "offline_results_SHA256": "b284ec5fd4df705448810f9c0c5b30ef0db6cb45700985b27cd3b14e776a9f1b",
+  "original_B6_formal_counts": {
+    "HOLD": 1,
+    "PASS": 3,
+    "not_acquired": 245
+  },
+  "original_B6_formal_result_unchanged": true,
+  "permits": 0,
+  "previous42_semantics_unchanged": true,
+  "strict_identity_result_datetime_unchanged": 43
+}

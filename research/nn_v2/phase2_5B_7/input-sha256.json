@@ -1,0 +1,16 @@
+{
+  "artifact_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "execution_seal": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "packet_index_43": "39a78cbf8668ddd59313ebd6af28d0cd2a41a152b88a320736a7964074faeb04",
+  "preexisting_difference_ledger": "411dc9a4571eaf677115aac58dd6d5d06959b6bebead49ee86ac03ffe7e54f80",
+  "previous_B6_public_manifest": "4eecb6b0b54ee12177858c41b7873c5c1c186b85d2b1f99e2ad18fa664c18c92",
+  "protected_start_ledger": "0e19c0980a347bdc5b51eb050f76aee913d3a9f4be74855506c15339e323a398",
+  "source_SHA_ledger_43": "2f8549ff88f106985f517468a011dc22e55bb3f2971c02a3c6ae1cdfe6cf0651",
+  "start_HEAD": "f7d22051c900f118392d04ce7a03b7512dcda1f4",
+  "study": "nn_v2_residual_20261020_01",
+  "study_manifest": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb",
+  "unchanged_B6_executor": "6627cc2db07ddedf2e33985a1444b866ffaa7c99021061432b98916d0d5ddc9e",
+  "unchanged_B6_permit": "384bfd8945646b26bab9a6ed5571de807d609c2f6c68bd5af30718421945e428",
+  "unchanged_stop_context": "d1e2186a3e4a896e1cd0c16c227305bff8222f3ab9a88943e7447d60e63d4a57",
+  "unchanged_stop_review": "86d19053e44852a4f8781d284f9e0eaf950c132f4ea8bae70b0ce5515a86cdd7"
+}
