@@ -1,0 +1,18 @@
+{
+  "A_HOLD": 0,
+  "A_PASS": 79,
+  "A_status": "READY_FOR_NEW_BOUNDED_ACQUISITION_APPROVAL",
+  "B_candidate_implemented": true,
+  "B_connected_to_A_or_acquisition": false,
+  "B_shadow_observations": 79,
+  "B_status": "GENERAL_REMARK_CLASSIFIER_NOT_PROVEN",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "acquisition_execution_authorized": false,
+  "communication_permit_created": false,
+  "network_enabled": false,
+  "pending_detail_pages": 209,
+  "prior78_semantics_unchanged": true
+}

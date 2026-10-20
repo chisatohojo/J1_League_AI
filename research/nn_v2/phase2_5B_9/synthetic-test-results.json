@@ -1,0 +1,19 @@
+{
+  "JUnit_SHA256": "9242635bc66bd9f4ee0732f15e7b3bf0a4830e25de22e63fb8078925a5219221",
+  "errors": 0,
+  "existing_cases": 403,
+  "failures": 0,
+  "network_acquisition": 0,
+  "new_A_cases": 60,
+  "new_B_cases": 75,
+  "public_test_SHA256": {
+    "test_nn_reviewed_gk_contract.py": "41db180eff3ba45683a0b89cb50c0fe8a6cad194840ebd7b64610e70cb13add9",
+    "test_nn_staff_warning_shadow.py": "87e70592d85803608a418599d0b59d5be658658d2f986756fa610fcff52fb3db"
+  },
+  "real_inference": 0,
+  "skipped": 0,
+  "status": "PASS",
+  "tests": 538,
+  "trained_data_fit": 0,
+  "warnings_as_errors": true
+}

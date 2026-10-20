@@ -1,0 +1,32 @@
+{
+  "all_positive_literal_codes": [
+    "C3"
+  ],
+  "candidate_implementation_SHA256": "1c6ef11fe9e94cb1715c7444104f8e98924dccf25b0fcb9c0cd1952e31daaec8",
+  "connected_to_A_or_acquisition": false,
+  "final_results_SHA256": "c8d35952b036c9807c8bdb8329fa66fa70df46dce644c4c6e6f8de0a6589345c",
+  "history_admission": false,
+  "literal_role_counts": {
+    "コーチ": 1,
+    "監督": 3,
+    "通訳": 1,
+    "ＧＫコーチ": 1
+  },
+  "no_A11_pages": 71,
+  "original_results_SHA256": "84fdfc7fc1001d5821e3cba45775c78cd6b7159051095aa17fe618a9cddacbcf",
+  "outcomes": {
+    "HOLD_UNCLASSIFIED": 2,
+    "NOT_CLASSIFIED": 71,
+    "STRUCTURAL_CANDIDATE_ONLY": 6
+  },
+  "pages": 79,
+  "prediction_or_performance_metrics_computed": false,
+  "real_non_warning_A11_pages": 2,
+  "real_staff_warning_positive_pages": 6,
+  "representative_independently_labelled_timing_unknown_correction_negatives_available": false,
+  "source_witness_verified": false,
+  "status": "GENERAL_REMARK_CLASSIFIER_NOT_PROVEN",
+  "synthetic_tests_do_not_replace_independent_real_negative_evidence": true,
+  "timing_evidence_verified": false,
+  "version": "staff_warning_structure_shadow_candidate_v1"
+}

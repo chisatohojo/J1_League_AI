@@ -1,0 +1,17 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "428ea962684f0f3beb4805a59d379de13320ebc059dcc35336f3ffa771ae11fb",
+  "archive_bytes": 4003704,
+  "archive_name": "offline-review-and-shadow.zip",
+  "independent_extraction_all_SHA": "PASS",
+  "individual_and_shadow_artifacts_separate": true,
+  "mismatches": 0,
+  "payload_bytes": 16000557,
+  "payload_files": 580,
+  "payload_manifest_SHA256": "fd13cb2f4a89a9d3e0f9a171e4176bd4bcb2156982aef57a28e51eac620b9b70",
+  "saved_original_packet_copies": 79,
+  "separate_drive": true,
+  "status": "PASS",
+  "verified_at_UTC": "2026-10-20T22:51:44.106516+00:00"
+}

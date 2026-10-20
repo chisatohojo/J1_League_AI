@@ -1,0 +1,19 @@
+{
+  "A11_blocks": 1,
+  "complete_identity_packet_UTC_and_A11_bytes_location_pinned": true,
+  "evidence_review_SHA256": "1253010b457003327de79a94c06a0cec08ff361b24e4c393e1276fcfa77fe9b0",
+  "other_unknown_A11_annotations": 0,
+  "paragraphs": 1,
+  "physical_interruption_absence_proven": false,
+  "positive_context": [
+    "In-match minute",
+    "Explicit warning expression and literal code",
+    "Club and named staff",
+    "Explicit fullwidth GK-coach role"
+  ],
+  "review_rule_SHA256": "7baf4dbb5b14dbea2794097b6a3dbeab616cb43f0e4bdc38a21b77bb4fdb8466",
+  "reviewed_snapshots": 1,
+  "roles_normalized_or_generalized": false,
+  "status": "ACCEPT_EXACT_GK_COACH_WITNESS_ONLY",
+  "warning_code_rule_meaning_inferred": false
+}

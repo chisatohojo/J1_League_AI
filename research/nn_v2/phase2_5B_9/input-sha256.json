@@ -1,0 +1,15 @@
+{
+  "artifact_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "execution_seal": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "packet_index79": "82292d0894fceb93878b125db16a8d322e80e8bc919c4cce55ef82a33cda99ad",
+  "protected_start": "fc24923b42d45eea58c1cd9fdf1560721b1afbfdf246270dd1939e5aa2f8a1ee",
+  "source209_ledger": "2919bf783a35034dd988208da92f2a5ad8b3611f960cbb5e08cd888ef381b6fc",
+  "source_B8_execution_seal": "b203e565e6a6b281554389cabef60eee090cc7a93f0e32b0a5cec2a855ec8344",
+  "source_B8_formal_report": "5e69f0db045d6bdb9345df150f0ada1d14f08f0ad0012c91726638649f8b7445",
+  "source_B8_payload_manifest": "71666fc1705cdc0bf1fb95725b98faf83551353be4218f3a29a69650374fd69d",
+  "source_B8_stop_registry": "46cac860851ce8a3224e6d61c8849bd867bad4d4f53f967719617870269e2b10",
+  "source_SHA_ledger79": "24df7d043fa2c08e43495f8aeefb6c4c870f3859c96240cf14a9cb930414211b",
+  "start_HEAD": "24047aab5d52a45df276234d47a6763701cb4b20",
+  "study": "nn_v2_residual_20261020_01",
+  "study_manifest": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+}

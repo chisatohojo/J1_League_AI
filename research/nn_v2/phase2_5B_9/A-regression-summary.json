@@ -1,0 +1,15 @@
+{
+  "HOLD": 0,
+  "PASS": 79,
+  "independent_results_SHA256": "5c8a0e9ac915a01d4f9a54e06a643b18666308a902dad6262ebd99f3a717cc43",
+  "network_GET": 0,
+  "newly_reviewed_exact_GK_witnesses": 1,
+  "old_B8_formal_counts_unchanged": {
+    "HOLD": 1,
+    "PASS": 35,
+    "not_acquired": 209
+  },
+  "previous78_semantic_fields_unchanged": true,
+  "strict_identity_result_datetime_PK_ET_fields_unchanged": 79,
+  "wrapper_version_changed_only_on_old78": true
+}

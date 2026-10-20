@@ -1,0 +1,29 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "acquired": 79,
+  "acquired_remaining_overlap": 0,
+  "batch_sizes": [
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    5
+  ],
+  "literal_saved_official_links_verified": 209,
+  "original": 288,
+  "remaining": 209
+}
