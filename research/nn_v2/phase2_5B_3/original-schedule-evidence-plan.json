@@ -1,0 +1,20 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "additional_access_authorized": false,
+  "candidate_reference_sha256": "d7789d84a8178d5d1a38f47df63f5e43b6ccb1f23f235e5bf8d54177b5be974d",
+  "exact_saved_official_index_candidates": 2,
+  "index_candidate_URLs_kept_local": true,
+  "local_plan_sha256": "daff0158ce4d36910969d656bbf05d3c33fb24a6f09ffd0219625755d18b48b2",
+  "new_index_GET": 0,
+  "new_notice_GET": 0,
+  "pilot_pages_initial_announcement_unproven": 12,
+  "required": [
+    "Original announced schedule with identity and published/observed timestamp",
+    "All official changes/postponement/restart notices for affected fixtures",
+    "Stable link from notice to exact fixture and proof of final completion boundary"
+  ],
+  "specific_direct_notice_identified": false,
+  "specific_notice_count": "UNKNOWN",
+  "status": "HOLD_ORIGINAL_SCHEDULE_PROVENANCE"
+}

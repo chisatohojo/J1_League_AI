@@ -1,0 +1,23 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_3/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_3/PROTOCOL.md": "435d09d76c4b41c410bfb76b7f63ecfe4d2f5a0e4751442cdfe1052f9c3eec9b",
+    "research/nn_v2/phase2_5B_3/RESULTS.md": "7903bcdf0c43f1c7b4d6762f95fc839c43c43aa349612158648b0c26dfc260a8",
+    "research/nn_v2/phase2_5B_3/backup-verification.json": "ff68cf17baed282b08ffabd24b1ca7c69d2f3af59c89863d56f7a7dfc97ade00",
+    "research/nn_v2/phase2_5B_3/communication-receipt.json": "7e82af3c92ac76913704ac99e40a404c796149d6654694fc4a1f63f6bfe3e746",
+    "research/nn_v2/phase2_5B_3/implementation-sha256.json": "9b2bb59ce28dca682d29764c7fb5d7f5187a94c4e80153d9c518887d2774eb04",
+    "research/nn_v2/phase2_5B_3/input-sha256.json": "efea8634b11895ee6b22fc788f2188de4cbd278fab3198dc1856c67cfb92bb2e",
+    "research/nn_v2/phase2_5B_3/local-evidence-index.json": "07c92c9e6a6ab41b0d9f811d357df7e0c08ba74b36c3a4b2141be819ea7f26d7",
+    "research/nn_v2/phase2_5B_3/original-schedule-evidence-plan.json": "4287e3b0a1ba16c2d3658b2560d2b97948d0d660f9d57abdb3f6990e97b96ef7",
+    "research/nn_v2/phase2_5B_3/preflight-summary.json": "d8ba43f380ac53d401d873ecaa4f8c1cd6ec6e3ec8d3734e6dd98f9030a52644",
+    "research/nn_v2/phase2_5B_3/protection-verification.json": "5195248bca882b44696a407c8bd1e5de79f05be6e1c8338124fec0122db2bd5b",
+    "research/nn_v2/phase2_5B_3/public-metadata-readback.json": "2913a856a64936f09f705aa61a8dcafa9e6ae590a37fa5bfd635b4473d867a2d",
+    "research/nn_v2/phase2_5B_3/readiness.json": "b259d31af3109a70bd3beabdf666ed443754cbc04649de20b31734096fc828b3",
+    "research/nn_v2/phase2_5B_3/remaining-acquisition-plan.json": "7d084787f820377f9c82fdef9b293337f07912709bd551a1b071715c087e25ba",
+    "research/nn_v2/phase2_5B_3/synthetic-test-results.json": "ed021dcd4d7ec5c0081df13d97f898f60a379b94ca62e2e7c7d8501459e89efa",
+    "tests/test_nn_timing_completion_transport.py": "dfb638f9374b2027e23fa16dcb4bcd5f0c0e0c03080c4fcdbe4441e02665e21c",
+    "tests/test_nn_timing_pilot_completion.py": "eb3bcdd0e37e659fa9e125cbda1864d5652263c1f86354f39bdade195d278c2c"
+  },
+  "self_excluded": true
+}

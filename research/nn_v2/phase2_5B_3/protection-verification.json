@@ -1,0 +1,24 @@
+{
+  "SHA_mismatches": 0,
+  "T0_registration": 0,
+  "checked_at_utc": "2026-10-20T09:49:13.855081+00:00",
+  "file_sets_unchanged": {
+    "ChampionUpdates-evening-20261017-01": 985,
+    "NNResearch-phase2_5B_2-20261020-180825": 102,
+    "NNResearch-v2-study-20261020-01": 55
+  },
+  "future_prediction_save": 0,
+  "main_unchanged": true,
+  "model_payloads_preverified": 53,
+  "model_seal_sha256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "old_snapshot_files": 46,
+  "other_worktrees_unchanged": 2,
+  "performance_evaluation": 0,
+  "protected_files": 10061,
+  "real_fit": 0,
+  "real_probability_calculation": 0,
+  "snapshot_seals_reverified": 4,
+  "status": "PASS",
+  "target_registration": 0,
+  "tasks_unchanged": 2
+}

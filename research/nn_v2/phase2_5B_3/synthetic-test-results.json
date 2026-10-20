@@ -1,0 +1,52 @@
+{
+  "corrected_test_fixture_only": "Added full expected header to mocked parent-execution test; fetcher/parser unchanged.",
+  "existing_related_tests": 156,
+  "final_status": "PASS",
+  "final_tests": 190,
+  "network_calls_in_tests": 0,
+  "new_phase_tests": 34,
+  "pre_network_tests": 187,
+  "runs": [
+    {
+      "artifact": "offline-tests.xml",
+      "errors": 0,
+      "failures": 0,
+      "sha256": "a2846a0838ee434d7a5dc30b3d4c64286b8daa76aeb99c00986ab2ffb5c276b6",
+      "skipped": 0,
+      "tests": 170
+    },
+    {
+      "artifact": "authorized-tests.xml",
+      "errors": 0,
+      "failures": 0,
+      "sha256": "c65d708b86aef89d90dbc88ba95f7035f11e584b0316e1a0528e6a7be5c10f2f",
+      "skipped": 0,
+      "tests": 187
+    },
+    {
+      "artifact": "final-tests.xml",
+      "errors": 0,
+      "failures": 1,
+      "sha256": "708d48d5668a507cedf51d18ecab31697a2a97c79b3c543aced944bfdd873c38",
+      "skipped": 0,
+      "tests": 190
+    },
+    {
+      "artifact": "final-tests-corrected.xml",
+      "errors": 0,
+      "failures": 0,
+      "sha256": "87cdc99fea0f25457ccfc9dc6236a1928dfb56a86db33db3f81f379820211112",
+      "skipped": 0,
+      "tests": 190
+    }
+  ],
+  "suites": [
+    "test_nn_timing_pilot_completion.py",
+    "test_nn_timing_completion_transport.py",
+    "test_nn_timing_evidence_pilot.py",
+    "test_jleague_hyakunen_source.py",
+    "test_nn_research_timing.py",
+    "test_nn_v2_completion_binding.py"
+  ],
+  "warnings_as_errors": true
+}

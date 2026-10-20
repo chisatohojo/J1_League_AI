@@ -1,0 +1,14 @@
+{
+  "local_code_bodies_not_published": true,
+  "local_implementations": {
+    "bounded-fetch.py": "b3895883d10a41e3f286061c6bf6f166f1e67ab2a1c575c02a2e041f49a8c3f1",
+    "completion-guard.py": "f61e38544e4653a09d52c2dd8a63d835abd08f2806bfd392622e61b2fdc5fb32",
+    "final-offline-audit.py": "1af9057da1c8c1113aa0845d43c52c4829607ad52a9cb9b1d04bd14aec2ef58a"
+  },
+  "no_operational_collector_used": true,
+  "public_tests": {
+    "tests/test_nn_timing_completion_transport.py": "dfb638f9374b2027e23fa16dcb4bcd5f0c0e0c03080c4fcdbe4441e02665e21c",
+    "tests/test_nn_timing_pilot_completion.py": "eb3bcdd0e37e659fa9e125cbda1864d5652263c1f86354f39bdade195d278c2c"
+  },
+  "sealed_parser_copy_sha256": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad"
+}

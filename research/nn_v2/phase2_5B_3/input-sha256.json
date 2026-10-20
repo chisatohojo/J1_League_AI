@@ -1,0 +1,21 @@
+{
+  "binding_revalidation_local_sha256": "e7e811dbc8946768a4c8cdba6e2421da767997b0d214c195fcdb40edd9f3c1b1",
+  "input_verification_local_sha256": "43c72f23b61900d20ce1cd539df8af4d260d84b1fb9ada933e45a3a159768456",
+  "model_payloads_verified": 53,
+  "model_study_seals": {
+    "artifact-seal.json": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+    "execution-seal.json": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+    "study-manifest.json": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+  },
+  "references": {
+    "research/nn_v2/phase2_5A/binding-manifest.json": "6e1309539a5fc5ab58a82d36035e5d96a6da462701d5253e3b83dd332b8181f0",
+    "research/nn_v2/phase2_5B/ADAPTER_CONTRACT.md": "fca0ca19ab69eed27c9b915c5de59387a6ae09f00f6fc56ace751c4f532d6560",
+    "research/nn_v2/phase2_5B/RESULTS.md": "74322fe3f9101e952f491654e71ab603edca17021f01bfc8d84ddd7c25755617",
+    "research/nn_v2/phase2_5B/source-witness-coverage.json": "832969c393f46aa07514836e08e804d8af200e0d43906e1085bcd37851bca0bb",
+    "research/nn_v2/phase2_5B_2/PROTOCOL.md": "26c76bc14c1427ad7b75cb3b7f32a1542eb11a6bc267892e38923966ce6441b5",
+    "research/nn_v2/phase2_5B_2/RESULTS.md": "8b5e6281680ff4efea6e788ed20bbdbe1918af2e448a9e68c782269da6a646de",
+    "research/nn_v2/phase2_5B_2/preflight-summary.json": "7313f8e54c062681f109255cb7fa1397606d69c28de677eeff1a417c8839ed86",
+    "research/nn_v2/phase2_5B_2/remaining-acquisition-plan.json": "ce217598b3e1edf5b1c11445bf80577fe4ed522e0e1b3f2a42a2be4089980472"
+  },
+  "research_HEAD_start": "88f8cc0724d815a4cd520c68f5ae125b095965e6"
+}
