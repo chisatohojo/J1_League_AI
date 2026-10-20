@@ -1,0 +1,22 @@
+{
+  "HOLD": 0,
+  "PASS": 39,
+  "exact_review_rule_applied_pages": 1,
+  "new_evidence_GET": 0,
+  "new_independent_results_sha256": "05b2cf42ef3f5674725e16ecb265c56c0a94eb934fa9fd2403c956480967c43c",
+  "old_phase4_formal_counts": {
+    "HOLD": 1,
+    "PASS": 26,
+    "not_acquired": 249
+  },
+  "old_run_rewritten": false,
+  "old_run_status": "HOLD_BOUNDED_EVIDENCE_ACQUISITION",
+  "packet_index_sha256": "0d8d0216ec1572d3dedda9be98c020fb3d65ad77a3d9e7ae51aa1ced668381d1",
+  "pages": 39,
+  "phase4_saved_pages": 27,
+  "pilot_pages": 12,
+  "prior_PASS_pages_unchanged": 38,
+  "review_rule_sha256": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+  "status": "PASS",
+  "target_nonremark_identity_result_datetime_fields_unchanged": true
+}

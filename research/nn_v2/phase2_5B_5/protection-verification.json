@@ -1,0 +1,40 @@
+{
+  "SHA_mismatches": 0,
+  "T0_registration": 0,
+  "acquisition_code_unchanged": true,
+  "checked_at_utc": "2026-10-20T10:32:19.852796+00:00",
+  "file_sets_unchanged": {
+    "ChampionUpdates-evening-20261017-01": 985,
+    "NNResearch-phase2_5B_2-20261020-180825": 102,
+    "NNResearch-phase2_5B_3-20261020-183612": 148,
+    "NNResearch-phase2_5B_4-20261020-190037": 366,
+    "NNResearch-v2-study-20261020-01": 55
+  },
+  "future_prediction_save": 0,
+  "main_unchanged": true,
+  "model_payloads_raw_SHA_verified": 53,
+  "new_communication_permits": 0,
+  "new_evidence_GET": 0,
+  "original_raw_metadata_unchanged": true,
+  "other_worktrees_unchanged": 2,
+  "performance_evaluation": 0,
+  "phase4_batch_seals": {
+    "batch-01": "7d288c7b3e52c904f6be9bdea1678bd9990fb4dd0e3b6e1581f95caaf3d8e46f",
+    "batch-02": "11cb134e051314d87d4ad26400a45241c1fd3f2fb1186b45746b4b957a0b8c51",
+    "batch-03": "45374329730273a146d51d48ff762223c40d8917f7237adec002f665c32a8357"
+  },
+  "protected_files": 10613,
+  "real_fit": 0,
+  "real_probability_calculation": 0,
+  "status": "PASS",
+  "stopped_phase4_delivery_receipt_sha256": "ded0d592687698ac982c0240aaba77b9ec6aa081a0c5b572010ce76006a5bbc7",
+  "stopped_phase4_formal_counts": {
+    "HOLD": 1,
+    "PASS": 26,
+    "not_acquired": 249
+  },
+  "stopped_phase4_report_sha256": "6fcec346c9fa299b3ab42be0c9c13a24dbc16983f6ccc2237d24fc7da28844fa",
+  "target_registration": 0,
+  "tasks_unchanged": 2,
+  "trained_model_loaded": 0
+}

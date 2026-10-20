@@ -1,0 +1,22 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_5/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_5/REMARK_CONTRACT.md": "c73d280e8e35fdab51b31fac0098020d66d72688c186933bf195a5b70405e53b",
+    "research/nn_v2/phase2_5B_5/RESULTS.md": "2dc6430b1aef30c5626632c475fcfbddf2465a643741528e2a0c2570657b4e28",
+    "research/nn_v2/phase2_5B_5/backup-verification.json": "9989b36d1848587be5f1da4722557f62c76caec4333e7bd0ff4668e9dce3e7c9",
+    "research/nn_v2/phase2_5B_5/contract-diff.json": "0f985baefa2e9fa9941844a60de6eaad034f8c88eb8328e9c4794f79cacc091c",
+    "research/nn_v2/phase2_5B_5/implementation-sha256.json": "68d0cf583015749a057e7fed1221d62c73387b1271f42bcf85fc295a575d87f1",
+    "research/nn_v2/phase2_5B_5/input-sha256.json": "d7143c2498dfa1ebeef298c0043709597b61aecc7e694111b7602321c698e67c",
+    "research/nn_v2/phase2_5B_5/local-evidence-index.json": "a250e9fe718e8044452c11f583a6a895004a78bdd305f0773c98455354ecf73d",
+    "research/nn_v2/phase2_5B_5/offline-regression-summary.json": "5c501084156222589ca586486d3e03493b529e6089f3e4bbaced07168d21310a",
+    "research/nn_v2/phase2_5B_5/protection-verification.json": "dbc7aba33a5a9681012590bb5cbe634a5fe523597123357381e41545635c5ddd",
+    "research/nn_v2/phase2_5B_5/public-metadata-readback.json": "38602f848635ac44ef7a22f865affd4b735d8c0db1c6fbfb9d2d665425ed6dab",
+    "research/nn_v2/phase2_5B_5/readiness.json": "9aa81e6ea37d2c4981b39e3f7e974bbd6ece9c5f39809c9571c66fd9b15967cc",
+    "research/nn_v2/phase2_5B_5/remaining-acquisition-plan.json": "2482ffb127980e235c47dd517a27931495dc926ab9f33c0d7846e686c85e87e3",
+    "research/nn_v2/phase2_5B_5/synthetic-test-results.json": "5456486fecec12eb2896295dc839b72feb8c796c4011205f7d2bab8ed2a9c918",
+    "research/nn_v2/phase2_5B_5/target-analysis-summary.json": "c82efe19a309255464c040ad7f4dc1fafd66467dc7ace8642f16b33ca5587780",
+    "tests/test_nn_reviewed_remark_contract.py": "406f08f63daae8efd994de0e3a8be40ecaa14dd1ea4e08bd02471d201c1b1b59"
+  },
+  "self_excluded": true
+}

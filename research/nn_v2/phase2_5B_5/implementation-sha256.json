@@ -1,0 +1,14 @@
+{
+  "local_code_bodies_and_individual_rule_not_published": true,
+  "local_implementations": {
+    "offline-review.py": "fbde53f032e56a6cf79585ed1e349c0dc96a04fdb16d9536f35a1ba19ebb8e8a",
+    "remark-contract-v2.py": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49"
+  },
+  "local_review_rule_sha256": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+  "new_adapter_has_no_network_entrypoint": true,
+  "public_test": {
+    "tests/test_nn_reviewed_remark_contract.py": "406f08f63daae8efd994de0e3a8be40ecaa14dd1ea4e08bd02471d201c1b1b59"
+  },
+  "unchanged_old_acquisition_sha256": "b7028ec56c9370e2592adb330903e540083800494634511039b89bc3157b7fed",
+  "unchanged_strict_parser_sha256": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad"
+}

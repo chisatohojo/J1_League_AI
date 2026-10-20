@@ -1,0 +1,19 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_archive_entry_SHA": "PASS",
+  "archive_bytes": 2272686,
+  "archive_name": "research-review.zip",
+  "archive_sha256": "29972f93d595c0e7398e15b8032edd97738bbbc94a813ccae78a29ca972264bc",
+  "independent_extraction_SHA": "PASS",
+  "mismatches": 0,
+  "new_review_and_rule_and249_plan_included": true,
+  "old_HOLD_records_copied_without_rewrite": true,
+  "payload_bytes": 9139226,
+  "payload_files": 340,
+  "payload_manifest_sha256": "358356d1e4863fc50dadbfd4989cbbf11a6e4cbe24c5df2e334f80f05e3f1ade",
+  "public_metadata_readback": "Separate final readback receipt before commit",
+  "separate_drive": true,
+  "source_pages_copied": 39,
+  "status": "PASS",
+  "verified_at_utc": "2026-10-20T10:33:38.240648+00:00"
+}

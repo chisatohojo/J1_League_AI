@@ -1,0 +1,25 @@
+{
+  "JUnit_sha256": "d2177eb0140fe50655e18f1ab8393a214ef8ff3483f1fd91cd03d51e05061d33",
+  "coverage": [
+    "Exact reviewed interpreter structure",
+    "Coach/interpreter path distinction",
+    "Unregistered roles",
+    "Unknown timing/non-timing mixtures",
+    "Interrupt/resume/postpone HOLD",
+    "Cross-fixture/competition/time/score rejection",
+    "Raw/metadata/request/rule tampering",
+    "Rehashed packet cannot replace approved witness",
+    "No prefix/suffix/spacing/paragraph fallback",
+    "Strict parser HOLD cannot be overridden",
+    "249-plan cannot enable network or revisit39 pages"
+  ],
+  "errors": 0,
+  "existing_related_tests": 217,
+  "failures": 0,
+  "network_GET": 0,
+  "new_contract_tests": 44,
+  "skipped": 0,
+  "status": "PASS",
+  "tests": 261,
+  "warnings_as_errors": true
+}

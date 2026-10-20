@@ -1,0 +1,18 @@
+{
+  "base_HEAD": "9fe7962aca64b0f58d4bf2d54daebd26ed94523f",
+  "model_study_seals": {
+    "artifact-seal.json": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+    "execution-seal.json": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+    "study-manifest.json": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+  },
+  "original_phase4_selection_sha256": "24bc14472a99b7676d98c16d4c26d74f0f72e53f70333831580e9f3968efc37d",
+  "prior_twelve_validation_sha256": "bf8548d1ee9d3b3ea5c8f42715bebfb0ef8a71a6e41f072d6e6cde993f6699ca",
+  "references": {
+    "research/nn_v2/phase2_5B_4/PROTOCOL.md": "e8ee487ef9333db4c32758a64e75d95809f32ca84b3a2fcaceb0ab5c041354a7",
+    "research/nn_v2/phase2_5B_4/RESULTS.md": "b0c4cc92df3781978742ea1777b3b46ddce75e6d5cce8ad77bf537769ffb1b7d",
+    "research/nn_v2/phase2_5B_4/communication-receipt.json": "60172a96be959a94f6ea30ee5f9988c53068e33df30d7a341345460771890842",
+    "research/nn_v2/phase2_5B_4/implementation-sha256.json": "bbe4689916a0b93016739d9448bcca08bed68f5e7950fec55d4144c44b181b64",
+    "research/nn_v2/phase2_5B_4/stop-review.json": "772e7747da575430675d492a6e9b746d12464ec780460ed7938a110a32255116"
+  },
+  "stopped_phase4_report_sha256": "6fcec346c9fa299b3ab42be0c9c13a24dbc16983f6ccc2237d24fc7da28844fa"
+}

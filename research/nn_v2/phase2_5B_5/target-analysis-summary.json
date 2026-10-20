@@ -1,0 +1,27 @@
+{
+  "annotation_has_no_schedule_or_restart_instruction": true,
+  "basis_is_not_only_absence_of_timing_keywords": true,
+  "context_artifact_sha256": "306f8f0e50bad617076914792ef37c9e64ec547e4f3f20dc7467d5bce23463e8",
+  "full_text_identity_names_and_actual_acquisition_times_kept_local": true,
+  "metadata_sha256": "2298ce3696c1af8c4c076794a48ffb47531f2f4345d1de750c1e641afda351e2",
+  "namespace": "jleague_data_site_sfms02",
+  "new_match_day_acquisition_claim": false,
+  "official_identity_competition_season_round_clubs_datetime_regulation_score": "VERIFIED_UNCHANGED",
+  "old_hold_origin": "Legacy role/form allowlist rejected the interpreter warning after strict base checks passed",
+  "other_notes": 0,
+  "paragraph_count": 1,
+  "physical_match_timing_exception_absence_proven": false,
+  "positive_context_fields": [
+    "in-match minute",
+    "warning expression and code",
+    "club",
+    "named staff",
+    "explicit interpreter role"
+  ],
+  "raw_sha256": "ac0cf1c1c5f37b29dcaf935efa89ae5814d0bbc7b40c56ef831ebfbb92240771",
+  "remarks_block": "ONE_A11_AFTER_COACHES_BEFORE_MATCH_INFORMATION",
+  "remarks_heading": "OFFICIAL_REMARKS",
+  "request_sha256": "7ea90fb0eb1be17f953815b5462fa599d2aefd40548f853e715323b64fd73544",
+  "review_rule_sha256": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+  "status": "REVIEWED_NON_TIMING_STAFF_DISCIPLINARY_WARNING"
+}

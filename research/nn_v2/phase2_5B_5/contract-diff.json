@@ -1,0 +1,25 @@
+{
+  "known_unknown_mixture_allowed": false,
+  "new_interpreter_role_is_not_globally_allowed": true,
+  "new_result_event_admission": false,
+  "new_rule_count": 1,
+  "new_rule_requires": [
+    "Approved canonical rule SHA",
+    "All fixture-scope fields",
+    "Full expected and parsed competition/season/round header",
+    "Complete strict parsed result",
+    "Raw/metadata/request SHA and original UTC",
+    "Whole remarks list with no timing notes",
+    "A11 inclusive byte location and SHA",
+    "Exactly one whole paragraph and remarks heading",
+    "Verbatim HTML/text and positive reassembled disciplinary fields"
+  ],
+  "new_rule_scope": "ONE_EXACT_FIXTURE_AND_VERBATIM_REMARK_AND_PACKET_SHA",
+  "new_version": "reviewed_staff_warning_exact_witness_v2",
+  "old_acquisition_and_allowlist_unchanged": true,
+  "old_known_categories_unchanged": true,
+  "old_strict_parser_unchanged": true,
+  "partial_match_fallback": false,
+  "strict_HOLD_can_be_overridden": false,
+  "unknown_role_fallback": false
+}
