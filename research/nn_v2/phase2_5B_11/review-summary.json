@@ -1,0 +1,19 @@
+{
+  "A11_blocks": 1,
+  "A9_player_dismissal_is_a_separate_table_person_and_minute": true,
+  "acquisition_time_NOT_backdated": true,
+  "disciplinary_code_meaning_NOT_inferred": true,
+  "exact_rule_SHA256": "e5d2221e6a39c75a2bc94f99957cc83cee1e78790882fb983c284a4b22463182",
+  "explicit_manager_role_and_dismissal_expression": true,
+  "home_A10_manager_matches_A11_person_exactly": true,
+  "match_interruption_resumption_abandonment_not_equated_to_person_dismissal": true,
+  "minute_display_NOT_wall_clock_or_result_availability_timestamp": true,
+  "no_match_interruption_or_completion_time_statement_in_A11": true,
+  "no_other_unreviewed_A11_annotation": true,
+  "paragraphs": 1,
+  "physical_interruption_absence_NOT_proven": true,
+  "private_context_SHA256": "2a42ac491e86ebe5413fdd153952de4f6b9705c991c0468e9a31c96c4a814951",
+  "private_review_SHA256": "dbf5dd2e25845f89a3b0c4becdce72822e41c0f17ecf721108c0e81635de9577",
+  "private_review_contains_identity_full_A11_bytes_positions_and_personal_context": true,
+  "status": "ACCEPT_EXACT_MANAGER_DISMISSAL_WITNESS_ONLY"
+}

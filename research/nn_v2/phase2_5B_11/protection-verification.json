@@ -1,0 +1,32 @@
+{
+  "SHA_mismatches": 0,
+  "T0": 0,
+  "checked_at_UTC": "2026-10-21T09:37:48.668670+00:00",
+  "fit": 0,
+  "historical11_attribution": "No new blanket attribution",
+  "main_unchanged": true,
+  "network_GET": 0,
+  "new_permits": 0,
+  "new_task_output_changes": 0,
+  "offline_forbidden_event_attempts": [],
+  "old116_raw_metadata_request_unchanged": true,
+  "old_B10_formal_counts_unchanged": {
+    "HOLD": 1,
+    "PASS": 36,
+    "not_acquired": 172
+  },
+  "old_adapters_review_rules_executors_permits_unchanged": true,
+  "operational_file_set_and_content_unchanged_since_start": true,
+  "other_worktrees_unchanged": 2,
+  "performance_evaluation": 0,
+  "prediction_save": 0,
+  "prior07_task_reconciled_changes_retained": 10,
+  "protected_files": 14116,
+  "real_probability": 0,
+  "sealed_model_payloads_raw_SHA_verified": 53,
+  "status": "PASS",
+  "target_registration": 0,
+  "task_overlap_observed": false,
+  "tasks_XML_unchanged": 2,
+  "trained_model_loads": 0
+}

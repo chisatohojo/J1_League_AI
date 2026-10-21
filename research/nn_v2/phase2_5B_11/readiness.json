@@ -1,0 +1,19 @@
+{
+  "HISTORY": "HOLD",
+  "HOLD": 0,
+  "PASS": 116,
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "acquisition_execution_authorized": false,
+  "communication_permit_created": false,
+  "design_connected_to_acquisition": false,
+  "design_status": "TWO_STAGE_DESIGN_CANDIDATE_SYNTHETIC_ONLY",
+  "general_classifier": "GENERAL_REMARK_CLASSIFIER_NOT_PROVEN",
+  "general_classifier_imported_or_called": false,
+  "network_enabled": false,
+  "new_executor_created": false,
+  "pending_detail_pages": 172,
+  "prior115_semantics_unchanged": true,
+  "status": "READY_FOR_NEW_BOUNDED_ACQUISITION_APPROVAL"
+}

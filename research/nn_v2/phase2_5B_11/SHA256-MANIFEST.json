@@ -1,0 +1,26 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_11/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_11/A_REMARK_CONTRACT.md": "c8ece4e45a0ef973bcdbad4f15c8dbdc0b726efb307a1d0329a772cba32d6424",
+    "research/nn_v2/phase2_5B_11/CONTRACT_DIFF.md": "69f5555c37a7f08cbcff775a81452abe924fb67ca859504aa7a3ebb11a0581d0",
+    "research/nn_v2/phase2_5B_11/RESULTS.md": "bf764fcce0ab57e8ca22676e2b29ef612d53f8142c9e3076a9edc2756142bdf3",
+    "research/nn_v2/phase2_5B_11/TWO_STAGE_DESIGN.md": "379ed2c99682c167d8eadb22f0b47c8a250fce7c4a22e9873b85ecddfd7f6d00",
+    "research/nn_v2/phase2_5B_11/backup-verification.json": "44797ce42aab7e760717ef47c6834ee134f6c20f53bc0de9611b8aa9ee22ebdc",
+    "research/nn_v2/phase2_5B_11/implementation-sha256.json": "f9ef2c429ce6b136db5fba7e0036567bebead18007b81c1b198743257cafee6c",
+    "research/nn_v2/phase2_5B_11/input-sha256.json": "fcbd1fbd0b5db54666c5fdb2491e9b79a2e7fe1d0bcc1ab5924af7f53a2368c3",
+    "research/nn_v2/phase2_5B_11/local-evidence-index.json": "eb5c3fde00e676320b7f9675e7b1cce2d50bc14294414d62356fdb04eaa71ecc",
+    "research/nn_v2/phase2_5B_11/protection-verification.json": "e2527330cc05f464a52dbe9e3ee01e028232c102421d4f9925e8e01b302fc7ea",
+    "research/nn_v2/phase2_5B_11/public-metadata-readback.json": "edbd5a04345716e5a1426d532265787207b5e442536d82e7ce149af2eedc08f6",
+    "research/nn_v2/phase2_5B_11/readiness.json": "bf6a3f6aee364258772d1a184ace77324824a0a127075b9ba1b4590f913bad87",
+    "research/nn_v2/phase2_5B_11/remaining-acquisition-plan.json": "f32acc0d3a96551e9f8251eeef055e5a095c3c8418f4e8f0c54de80fd025fc39",
+    "research/nn_v2/phase2_5B_11/review-summary.json": "97a9a1fa77d3c869731ab3c11a7a48ea4c5f29766c92459e782d7c6820c6665c",
+    "research/nn_v2/phase2_5B_11/set-reconciliation.json": "14904cd54d4109cf39a0e222dfa676ef64ad8b613a1a2010346a0989c814fe9a",
+    "research/nn_v2/phase2_5B_11/source-witness-summary.json": "16a30cfc71fd81f333c5f7bde006a983e8334aa2cde8e7a255008b134c30997f",
+    "research/nn_v2/phase2_5B_11/synthetic-test-results.json": "44f38cc93cefd6a08a10ddfab49df34a515cd0f8ebc6b455251da710f2de7845",
+    "research/nn_v2/phase2_5B_11/two_stage_design_model.py": "35294433a57c44ed3f1278418c1814276efead9840ef15a90fb9ffd5eb6f7e57",
+    "tests/test_nn_reviewed_manager_contract.py": "bd3034ee79f8eddeddde6f01d10d726f53210f4965dd1f3136190215b8fb3424",
+    "tests/test_nn_two_stage_design.py": "a4656e130aad5f9e06c66499e7e2aabc698de9a00ccc7eab7ed7a86b119d7fe0"
+  },
+  "self_excluded": true
+}

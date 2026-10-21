@@ -1,0 +1,11 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "acquired": 116,
+  "network_GET": 0,
+  "official_links_source_audit_SHA256": "f4b9f14c51eb20b59d982408fb1de96cd6045443fd63afcdcc93389b7ac37a79",
+  "original": 288,
+  "overlap": 0,
+  "remaining_source_ledger_SHA256": "8a997d5e0e3b11d364a728df0b53866a840d0aed7fdabf2a0a18ce893ae74477",
+  "unacquired": 172
+}

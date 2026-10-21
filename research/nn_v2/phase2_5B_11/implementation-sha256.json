@@ -1,0 +1,20 @@
+{
+  "audit_common": "cbec49c8a55326fd06a8cbe344478a4fd5f19c2ec294dd685471ac361e3535e9",
+  "final_audit": "5c9f0a967eeb442287f1509b8f6203ce512c7a6fc9e3c3ba05145d2831eeebe1",
+  "new_manager_rule": "e5d2221e6a39c75a2bc94f99957cc83cee1e78790882fb983c284a4b22463182",
+  "package_evidence": "97f7fd98ba23e75c97a76ab8c056042329d359866169e7b83715c8e926b0a6c7",
+  "publish_aggregates": "cf68c0361375ebc310bbdc06bb504d631f40991b9975315dad83cc07b2f40ed5",
+  "remaining_plan": "96871750e880032422d4623655f2e8172c5509148e7dd8c9ebf43f93d446973e",
+  "review_runner": "990d6be174d5ada719b5d3c20904d0314e70f016e33207c0406959ca2772fb99",
+  "reviewed_manager_rule": "e5d2221e6a39c75a2bc94f99957cc83cee1e78790882fb983c284a4b22463182",
+  "start_audit": "f0e113429259403f96d487c8c632eec3b7559f89beb05a1cbe483cc750df718b",
+  "two_stage_design_model": "35294433a57c44ed3f1278418c1814276efead9840ef15a90fb9ffd5eb6f7e57",
+  "unchanged_coach_rule": "dc66a3af02541714233e9af057a0a009a644ac0230ec3ac874728260729e1266",
+  "unchanged_gk_rule": "7baf4dbb5b14dbea2794097b6a3dbeab616cb43f0e4bdc38a21b77bb4fdb8466",
+  "unchanged_interpreter_rule": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+  "unchanged_strict_parser": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+  "unchanged_v2_adapter": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+  "unchanged_v3_adapter": "0cc5cb1a382090a49e905418ba918e9063ad723eade091e7ddc459e82c28a425",
+  "unchanged_v4_adapter": "dd73800f969914310f213890e08e5e54a17142b86ac6f5ff413cc79e0474e39d",
+  "v5_adapter": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354"
+}

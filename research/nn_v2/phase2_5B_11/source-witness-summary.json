@@ -1,0 +1,20 @@
+{
+  "A_B_C_D_ledger_SHA256": "de79e9e318a91c04fd49a75835c5bb2373b4739500cdd83c7d5498d1094df082",
+  "B_actual_event_and_result_availability_chronology": "HOLD",
+  "C_original_schedule_and_changes": "HOLD",
+  "D_prediction_cutoff_acquisition_proof": "HOLD",
+  "HOLD": 0,
+  "acquired_packets": 116,
+  "event_admission_authorized": false,
+  "independent_PASS": 116,
+  "newly_reclassified_packets": 1,
+  "old_B10_formal_record_unchanged": {
+    "HOLD": 1,
+    "PASS": 36,
+    "not_acquired": 172
+  },
+  "packet_index_SHA256": "36706034b71cfa080d23a2f0cdff44b5b7c6f6e58cd587ce10bfec621ec37a98",
+  "prior115_semantic_fields_unchanged": true,
+  "reanalysis_SHA256": "c0dd19224d7a7d936082b771c5cd4a914b53ed74cc027ecc30927f706928928d",
+  "source_SHA_ledger_SHA256": "938086d3a2b33c2d289ff39033ea0b6ab5405b305ba50189ba11d6ca7281ad3c"
+}

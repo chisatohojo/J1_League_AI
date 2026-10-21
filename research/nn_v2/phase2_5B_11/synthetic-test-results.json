@@ -1,0 +1,22 @@
+{
+  "JUnit_SHA256": "99ee2f2568626c544d63d7c570c62afbec87400a878318df4190f2342c97feb5",
+  "errors": 0,
+  "existing_cases": 517,
+  "failures": 0,
+  "initial_JUnit_preserved_SHA256": "8d076c077b1c539108b0ecd8035b934b83f36f1645d5f91b05691eae0edc89a9",
+  "initial_test_fixture_error": "A manager-warning regression fixture incorrectly combined warning text with a dismissal code; corrected to the existing warning form without changing adapter or original evidence",
+  "network_acquisition": 0,
+  "new_design_cases": 34,
+  "new_manager_cases": 66,
+  "public_test_SHA256": {
+    "test_nn_reviewed_manager_contract.py": "bd3034ee79f8eddeddde6f01d10d726f53210f4965dd1f3136190215b8fb3424",
+    "test_nn_two_stage_design.py": "a4656e130aad5f9e06c66499e7e2aabc698de9a00ccc7eab7ed7a86b119d7fe0"
+  },
+  "real_fit": 0,
+  "real_inference": 0,
+  "skipped": 0,
+  "status": "PASS",
+  "tests": 617,
+  "trained_model_loads": 0,
+  "warnings_as_errors": true
+}

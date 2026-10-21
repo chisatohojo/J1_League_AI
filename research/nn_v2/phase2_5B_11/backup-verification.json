@@ -1,0 +1,17 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "10733759aacbdd73d468adbf31d1e71acb00dcfb70a0e1111ebe30a1e68154e1",
+  "archive_bytes": 5614454,
+  "archive_name": "offline-review-and-design.zip",
+  "independent_extraction_all_SHA": "PASS",
+  "individual_review_and_design_artifacts_separate": true,
+  "mismatches": 0,
+  "payload_bytes": 21117497,
+  "payload_files": 874,
+  "payload_manifest_SHA256": "de625fd6dddeb23b6fedb1394274070ce940c4f7a35972b4917e0b72f9a79e01",
+  "saved_original_packet_copies": 116,
+  "separate_drive": true,
+  "status": "PASS",
+  "verified_at_UTC": "2026-10-21T09:40:48.456759+00:00"
+}
