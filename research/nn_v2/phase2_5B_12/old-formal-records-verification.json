@@ -1,0 +1,34 @@
+{
+  "old_raw_metadata_request_seals_unchanged": true,
+  "past_HOLD_replays_are_not_current_v5_HOLD": true,
+  "rows": [
+    {
+      "HOLD": 1,
+      "PASS": 26,
+      "phase": "B4",
+      "report_SHA256": "6fcec346c9fa299b3ab42be0c9c13a24dbc16983f6ccc2237d24fc7da28844fa",
+      "unacquired": 249
+    },
+    {
+      "HOLD": 1,
+      "PASS": 3,
+      "phase": "B6",
+      "report_SHA256": "70099e3f575e82671c4f070a655202bfae9b5a2caa40d2d53652a9aa64f8ed28",
+      "unacquired": 245
+    },
+    {
+      "HOLD": 1,
+      "PASS": 35,
+      "phase": "B8",
+      "report_SHA256": "5e69f0db045d6bdb9345df150f0ada1d14f08f0ad0012c91726638649f8b7445",
+      "unacquired": 209
+    },
+    {
+      "HOLD": 1,
+      "PASS": 36,
+      "phase": "B10",
+      "report_SHA256": "724e0a9d14a7b4896057afc5166f104dcaa49309656286a2dda29ab2794173c8",
+      "unacquired": 172
+    }
+  ]
+}

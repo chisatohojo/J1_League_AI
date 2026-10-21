@@ -1,0 +1,22 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "communication_permits_created": 0,
+  "detail_HOLD": 0,
+  "detail_PASS": 116,
+  "general_classifier_connected": false,
+  "historical_quarantines_reproduced": 4,
+  "historical_synthetic_successors_PASS": 4,
+  "history_admitted": 0,
+  "network_GET": 0,
+  "next_acquisition_authorized": false,
+  "pending": 172,
+  "real_network_safety_proven": false,
+  "real_worker_connected": false,
+  "source_acquired_replayed": 116,
+  "source_integrity_verified": 116,
+  "status": "TWO_STAGE_OFFLINE_VERIFIED_RESEARCH_ONLY",
+  "timing_evidence_status": "HOLD_B_C_D"
+}

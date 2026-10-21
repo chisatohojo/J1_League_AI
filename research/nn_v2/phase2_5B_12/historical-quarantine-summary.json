@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "annotation_kind": "interpreter warning",
+      "detail_status": "HOLD",
+      "following_synthetic_detail_PASS": 1,
+      "historical_contract": "legacy",
+      "history_admission_status": false,
+      "old_formal_HOLD_exactly_reproduced": true,
+      "old_report_SHA256": "6fcec346c9fa299b3ab42be0c9c13a24dbc16983f6ccc2237d24fc7da28844fa",
+      "quarantine_receipt_SHA256": "6c223a0646f5c025731a384be708fb0c169d60030168df25482c1e87d8c2959e",
+      "quarantine_status": true,
+      "source_integrity_verified": true,
+      "timing_evidence_status": "HOLD_B_C_D"
+    },
+    {
+      "annotation_kind": "coach warning",
+      "detail_status": "HOLD",
+      "following_synthetic_detail_PASS": 1,
+      "historical_contract": "v2",
+      "history_admission_status": false,
+      "old_formal_HOLD_exactly_reproduced": true,
+      "old_report_SHA256": "70099e3f575e82671c4f070a655202bfae9b5a2caa40d2d53652a9aa64f8ed28",
+      "quarantine_receipt_SHA256": "2ad7b1957995da69340156dafd1101cb8d14407f9c8c936a50338ab578a02417",
+      "quarantine_status": true,
+      "source_integrity_verified": true,
+      "timing_evidence_status": "HOLD_B_C_D"
+    },
+    {
+      "annotation_kind": "GK coach warning",
+      "detail_status": "HOLD",
+      "following_synthetic_detail_PASS": 1,
+      "historical_contract": "v3",
+      "history_admission_status": false,
+      "old_formal_HOLD_exactly_reproduced": true,
+      "old_report_SHA256": "5e69f0db045d6bdb9345df150f0ada1d14f08f0ad0012c91726638649f8b7445",
+      "quarantine_receipt_SHA256": "e1088e8d90db58a5fd9acae5afe8d44ad29d4d9076c9ee4d3d38127eeffa9d94",
+      "quarantine_status": true,
+      "source_integrity_verified": true,
+      "timing_evidence_status": "HOLD_B_C_D"
+    },
+    {
+      "annotation_kind": "manager dismissal",
+      "detail_status": "HOLD",
+      "following_synthetic_detail_PASS": 1,
+      "historical_contract": "v4",
+      "history_admission_status": false,
+      "old_formal_HOLD_exactly_reproduced": true,
+      "old_report_SHA256": "724e0a9d14a7b4896057afc5166f104dcaa49309656286a2dda29ab2794173c8",
+      "quarantine_receipt_SHA256": "ee30ac778144854562f446d45a55eb9b0fe1efcfbfc1651f2971f932d1c931a0",
+      "quarantine_status": true,
+      "source_integrity_verified": true,
+      "timing_evidence_status": "HOLD_B_C_D"
+    }
+  ],
+  "current_v5_status_of_these_cases": "PASS",
+  "historical_cases": 4,
+  "historical_quarantined": 4,
+  "history_admitted": 0,
+  "original_HOLD_results_reproduced_exactly": 4,
+  "private_full_result_SHA256": "67688cb2ffa751e0236420d1eb9e6e14de7f55423ab78d0bfab0c040744cd194",
+  "real_new_requests": 0,
+  "synthetic_successors_PASS": 4
+}

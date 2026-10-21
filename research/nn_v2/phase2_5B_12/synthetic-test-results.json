@@ -1,0 +1,25 @@
+{
+  "added_partial_packet_crash_case": "Partial packet bytes are fsynced before abrupt interruption; missing receipt blocks successor, aggregate and restart",
+  "development_fixes": [
+    "Accept absent/null reason on a PASS without raising TypeError",
+    "Count Stage A sealed originals separately from Stage B completed reviews",
+    "Require integer one for original GET count, rejecting boolean"
+  ],
+  "errors": 0,
+  "failures": 0,
+  "final_JUnit_SHA256": "5968b17754f12b5888c52a27aea5d08623ddc2c1e466ccc3c1a428c4047c197b",
+  "initial_JUnit_preserved_SHA256": "48d134d4ece0a9ad6d0eb6e7b2158d941617a008313ed513b993d8fda47029a2",
+  "intermediate_JUnit_preserved_SHA256": "8efa1f00d414b6793913b8535b77c1168487c5b873d808913ac63bc942ec91ee",
+  "new_two_stage_cases": 79,
+  "previous_695_JUnit_SHA256": "fc13229ee9ee14c108c237d093a03ca8d5f38d858cfe4798e8bd84cffcce7abe",
+  "previous_695_source_SHA256": "8aea8219b9ef56446f43270f9d009b3513fab3620f3af713c7ae0c78ea0666df",
+  "prior_related_cases": 617,
+  "real_fit": 0,
+  "real_inference": 0,
+  "real_network": 0,
+  "skipped": 0,
+  "status": "PASS",
+  "test_source_SHA256": "dfde537540e2e15d5d4b451f30038bac85cb312066bf52986cef2141de80bba3",
+  "tests": 696,
+  "warnings_as_errors": true
+}

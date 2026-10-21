@@ -1,0 +1,22 @@
+{
+  "all_v5_semantic_fields_identical": true,
+  "communication_permits_created": 0,
+  "detail_HOLD": 0,
+  "detail_PASS": 116,
+  "final_replay_output_ledger_SHA256": "99b1fcc367313be654cc00498c8fb8031621753ad8238ed1978ff8f9d4936147",
+  "formal_results_not_changed": true,
+  "history_admitted": 0,
+  "network_GET": 0,
+  "new_official_requests": 0,
+  "quarantined": 0,
+  "receipt_count": 116,
+  "saved_official_sources_replayed": 116,
+  "source_acquired": 116,
+  "source_integrity_verified": 116,
+  "source_revision_ledger_SHA256": "4eee1552d7c03a9ddd523ec1647807beb370178bfec711396481c65f1b81bb5e",
+  "status": "OFFLINE_REPLAY_COMPLETED",
+  "stop": null,
+  "synthetic_sources_in_this_run": 0,
+  "timing_evidence_status": "HOLD_B_C_D",
+  "version": "two_stage_saved_byte_replay_v1"
+}

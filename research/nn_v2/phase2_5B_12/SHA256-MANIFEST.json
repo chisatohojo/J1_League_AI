@@ -1,0 +1,26 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_12/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_12/CONTRACT.md": "2b4ed7691a0bb460ae09252f1e8ffe513fadb70923d86cc2d4128f0e8c72dbb7",
+    "research/nn_v2/phase2_5B_12/RESULTS.md": "44b94120529c821fe95ed81698a484b0a5c81dae336762b14d8a67bc424464f7",
+    "research/nn_v2/phase2_5B_12/STATE_TRANSITIONS.md": "27e7655b518411ee9ab657f807713e50022b73c63992e42737be384c533e36a3",
+    "research/nn_v2/phase2_5B_12/backup-verification.json": "0ea2f365289c9bcf97cb03536964d8ae7bc54f5f4860c919f5612fe541e441e8",
+    "research/nn_v2/phase2_5B_12/boundary-verification.json": "5a8b27659a743ec11192d9121af687c6d2acd016153f33fdd00e688f7b1fb8ff",
+    "research/nn_v2/phase2_5B_12/compatibility-summary.json": "19c0881e98ebe67b8a1d2412778a1f9e191b2cce2a588acca6e9dd0fa27dc42b",
+    "research/nn_v2/phase2_5B_12/fixed-set-verification.json": "4aca0b0b00b2e095059d3168b24f517ec7695669169e710ff824c751eba0ecd9",
+    "research/nn_v2/phase2_5B_12/historical-quarantine-summary.json": "317bc5d53ea142facd86d789385b7f95b83c81151fa42010287af99b51c6ac88",
+    "research/nn_v2/phase2_5B_12/implementation-sha256.json": "9d72c2454864211b1478f48654426276b5af80a4d46340f10564820772b97ec9",
+    "research/nn_v2/phase2_5B_12/input-sha256.json": "761c090cfe10334240de54c4d481a77bbc4b58b8b29c1bf04a16ea130c8dbf3d",
+    "research/nn_v2/phase2_5B_12/local-evidence-index.json": "07946ecd71f4c5303344a278b04476aa47c350ac24f2ceb33eb830db34b47af2",
+    "research/nn_v2/phase2_5B_12/next-stage.json": "8a69fede4bf6abb10b26efff0cef8f62e2d176c82a8434697ceb370d68cd8cbf",
+    "research/nn_v2/phase2_5B_12/offline_two_stage.py": "3aab900c9251c1f34398febd3fc1667170d5c2126bbc9fca3c8a0af31dc4edc4",
+    "research/nn_v2/phase2_5B_12/old-formal-records-verification.json": "2b0287776193ca09e833292d66fef59824ddbb90a2611fd4ddfbf048ab6f0e8e",
+    "research/nn_v2/phase2_5B_12/protection-verification.json": "1e7365cd751b8456ec028f5eca1b53acb138c795611109cebfd2603d6ae729fc",
+    "research/nn_v2/phase2_5B_12/public-metadata-readback.json": "36d1a8de2bed4dca5c0afc5be174227260846d5e7509f1a9a2128da3f526ba31",
+    "research/nn_v2/phase2_5B_12/readiness.json": "d7356b425df72858c42b245faa330e21606dc64618c30d51dbccd7330bef70cc",
+    "research/nn_v2/phase2_5B_12/synthetic-test-results.json": "89a2c46a5f6da57dfcd129c13267ed686305f1344b30b53fe3b47601959a1971",
+    "tests/test_nn_two_stage_offline.py": "dfde537540e2e15d5d4b451f30038bac85cb312066bf52986cef2141de80bba3"
+  },
+  "self_excluded": true
+}

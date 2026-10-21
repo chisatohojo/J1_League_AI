@@ -1,0 +1,19 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "b6323f02fcaa081cf53f2c24dd13420755d5f4f404a93b021b06aceb7e973531",
+  "archive_bytes": 11424232,
+  "archive_name": "two-stage-offline-evidence.zip",
+  "at_UTC": "2026-10-21T10:13:53.393300+00:00",
+  "current_and_prior_run_artifacts_separate": true,
+  "historical_case_count": 4,
+  "independent_extraction_all_SHA": "PASS",
+  "independent_readback": "PASS",
+  "mismatches": 0,
+  "payload_bytes": 38495404,
+  "payload_files": 2581,
+  "payload_manifest_SHA256": "5a4e718769677d640e042f7d4e333d4303424276f5b2ab4033c33581789a9f54",
+  "saved_official_packet_count": 116,
+  "separate_drive": true,
+  "status": "PASS"
+}
