@@ -1,0 +1,19 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "URL_overlap": 0,
+  "analysis_HOLD_current": 3,
+  "analysis_PASS_cumulative": 176,
+  "cumulative_acquired": 179,
+  "new_acquired": 48,
+  "original": 288,
+  "original157_ledger_SHA256": "097ade660e9b2a8191e643e35ceafbe726ff685a87d24b55665504a90a82bfb4",
+  "original157_plan_SHA256": "b233ab4795dd7c3932b51dec6b1caec9214485c049bd731845219af1fe180530",
+  "prior_acquired": 131,
+  "remaining109_ledger_SHA256": "2a40d5048f519caa02685f8380002a593b107192ade8c8408f32d20dfade8843",
+  "remaining109_plan_SHA256": "6a0e767364b34418197687e82b692e6a9ccbd1ed1d0b3d07d0f67faf371ad2bc",
+  "remaining_acquisition_authorized": false,
+  "selection_rule": "Fixed first48 of existing157, unchanged order, four12-page batches",
+  "status": "PASS",
+  "unacquired": 109
+}

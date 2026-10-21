@@ -1,0 +1,26 @@
+{
+  "FlushFileBuffers_readback_SHA": true,
+  "all_final_job_process_counts": 0,
+  "all_worker_exit_before_acceptance": true,
+  "exclusive_create_restricted_owner_DACL_reparse_leases": true,
+  "four_boundary_transport_rechecks": true,
+  "kernel_PID_parent_PID_image_SHA_creation_FILETIME_Job_membership_verified": true,
+  "live_HTTP_workers": 48,
+  "native_process_storage_fault_cases_reexecuted": 46,
+  "outer_owned_parent": 1,
+  "power_loss_directory_durability_proven": false,
+  "prior_local_worker_replay_deliveries": 139,
+  "remaining_risks": [
+    "Privileged owner/admin/kernel and all filesystem/filter races not exhaustively proven",
+    "DACL mutation detected before acceptance rather than atomically prohibited",
+    "Process crashes do not prove power-loss durability",
+    "No automatic generalization beyond fixed48 or exact reviewed remarks"
+  ],
+  "resume_current_acquisition_processes": 0,
+  "resume_process_termination": 0,
+  "resume_readonly_owner_ACL_reparse_audit": "PASS",
+  "status": "PASS_IN_TESTED_WINDOWS_SCOPE",
+  "suspended_assign_before_resume": true,
+  "universal_atomic_ACL_path_guarantee_proven": false,
+  "unowned_processes_terminated": 0
+}

@@ -1,0 +1,18 @@
+{
+  "acquisition_permit": "0d368a9461bfcc660b611c25e406b8f0b7d5c4c069dccb7b3ed606cd09dc6838",
+  "batch_plan_four": "2cfe82bd70acd98c93ce5da15b05a1626cb9d9cd18da972591b7d66d9de64b23",
+  "execution_seal": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "frozen_research_completed_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "model_payloads_verified": 53,
+  "model_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "original131_index": "54cf0eae03e0bcb1d58858bd24eda1d23ccf66587bdc450aa51a1e281887e353",
+  "original131_v5_results": "d44c1a8716e1e627a35cd8943ef2536978bb50e9fa138351607ae659fb4848c0",
+  "original_protection_baseline": "9515142c36cb8322c29e1a90528b6bd5e3322a16e63519f99a564b9336718b96",
+  "remaining109_ledger": "2a40d5048f519caa02685f8380002a593b107192ade8c8408f32d20dfade8843",
+  "remaining109_plan": "6a0e767364b34418197687e82b692e6a9ccbd1ed1d0b3d07d0f67faf371ad2bc",
+  "resumed_protection_ledger": "96a79581d7606689f9a6bbd52274c6169c763eec45d75eb0773be411a808a4d6",
+  "selected48": "24e6174dd10a0225a288af67a24fcf35248f054ea40fe5133c584522931a7112",
+  "start_HEAD": "74a60febc353d50030342b98e5fdb334bedc05b2",
+  "study": "nn_v2_residual_20261020_01",
+  "study_manifest": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+}

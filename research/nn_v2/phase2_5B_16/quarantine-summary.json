@@ -1,0 +1,12 @@
+{
+  "actual_HTTP_unknown_remark_HOLD": 3,
+  "actual_different_URL_GET_after_quarantine": 3,
+  "classified_normal": 0,
+  "history_admitted": 0,
+  "independent_readback_verified": 3,
+  "individual_text_or_identity_published": false,
+  "private_registry_SHA256": "25251d92c70550412aac95b19bf4427e762caef85b1f9d57460d45360a86c91d",
+  "raw_metadata_request_and_all_detached_seals_receipts_verified": true,
+  "sealed_quarantine_packets": 3,
+  "status": "REAL_HTTP_QUARANTINE_OBSERVED_AND_VERIFIED"
+}

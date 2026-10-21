@@ -1,0 +1,28 @@
+{
+  "evening_failed_task": {
+    "cause_or_research_attribution": "NOT_INFERRED",
+    "date_local": "2026-10-21",
+    "last_result": 1,
+    "new_acquisition_files": 25,
+    "normal_successful_update_proven": false,
+    "private_audit_SHA256": "bae9adde5ac059ca39665a7cb11453c61903f7b8ca9f51dfa063911c292ff4f4",
+    "slot": "22:00",
+    "status_changes": 1
+  },
+  "historical_unattributed_differences": 11,
+  "morning_task": {
+    "date_local": "2026-10-22",
+    "fixed_research_revision_unchanged": true,
+    "last_result": 0,
+    "new_artifacts": 85,
+    "new_operational_prediction_rows": 5,
+    "new_revision_used_by_research": false,
+    "private_audit_SHA256": "0c142bfa8e6f99077336d223921f9262e1a016a1820db81ef65958e022c9653b",
+    "projection_changes": 13,
+    "revision_manifest_binding_verified": true,
+    "slot": "07:00"
+  },
+  "previous07_reconciled_changes": 10,
+  "status": "PASS_INDEPENDENTLY_RECONCILED",
+  "tasks_not_modified_stopped_reexecuted": true
+}

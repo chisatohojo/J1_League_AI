@@ -1,0 +1,40 @@
+{
+  "TLS_versions": [
+    "TLSv1.2"
+  ],
+  "acquisition_finished_UTC": "2026-10-21T13:29:32.926599+00:00",
+  "acquisition_started_UTC": "2026-10-21T13:25:10.206313+00:00",
+  "auto_resume": 0,
+  "batch_boundary_intervals_seconds": [
+    5.259611,
+    5.233843,
+    5.334347
+  ],
+  "batch_plan_SHA256": "2cfe82bd70acd98c93ce5da15b05a1626cb9d9cd18da972591b7d66d9de64b23",
+  "cached_robots_age_at_execution_seconds": 4433.65065,
+  "cached_robots_status": 404,
+  "cached_robots_to_first_detail_seconds": 4433.827826,
+  "cert_and_hostname_verification": true,
+  "cleanup_deadline": 2,
+  "detail_GET": 48,
+  "detail_HTTP_200": 48,
+  "detail_URLs": 48,
+  "detail_body_bytes": 5940271,
+  "detail_max_body_bytes": 131313,
+  "detail_permit_SHA256": "0d368a9461bfcc660b611c25e406b8f0b7d5c4c069dccb7b3ed606cd09dc6838",
+  "global_progress_deadline": 900,
+  "min_completion_to_next_start_seconds": 5.199966,
+  "new_robots_permit_created": false,
+  "outer_deadline": 1020,
+  "parallel": 0,
+  "parent_deadline": 12,
+  "private_communication_ledger_SHA256": "7647c2094d015096d4ae0decc4dd065aa4a9adb026e2fe32aa26a2f00fdc29ac",
+  "redirects": 0,
+  "retries": 0,
+  "robots_404_meaning": "Exact URL has no published rules; site-wide permission not proven",
+  "robots_GET_separate": 0,
+  "robots_permit_SHA256": null,
+  "selected_set_SHA256": "24e6174dd10a0225a288af67a24fcf35248f054ea40fe5133c584522931a7112",
+  "socket_timeout": 10,
+  "status": "PASS"
+}

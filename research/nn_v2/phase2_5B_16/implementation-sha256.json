@@ -1,0 +1,40 @@
+{
+  "acquisition_dependencies": {
+    "batch-fetch.py": "b7028ec56c9370e2592adb330903e540083800494634511039b89bc3157b7fed",
+    "expanded_http_integration.py": "0a69e76e5f6a73502320087e05ee31992f621006032ccf29f99142c65070bf53",
+    "expanded_http_worker.py": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc",
+    "implementation-final.py": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+    "local_integration.py": "a6ed54fec4b3c3345e7afd95c1f3d52a1e577011fdd9d58de0e954e77d3490a8",
+    "local_worker.py": "32cf3b965a4700e018c284912368e04569cf0cfe0ac62c2a0972a10992660be5",
+    "multibatch_executor.py": "12eed3fee09742c1f9fbf31804334e96b26d50ba786a83a83d987e2f002b8702",
+    "multibatch_http_integration.py": "c9a9cb8dbd7ab4f93526f35c90eb1ab50836f872150eaf114c95028e4edfe6ad",
+    "multibatch_http_worker.py": "2ca9384df2f0a363c7760fce592a388f1754b4410df4a5cd2f620f3d3f0a210c",
+    "offline_two_stage.py": "3aab900c9251c1f34398febd3fc1667170d5c2126bbc9fca3c8a0af31dc4edc4",
+    "remark-contract-v2.py": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+    "remark-contract-v3.py": "0cc5cb1a382090a49e905418ba918e9063ad723eade091e7ddc459e82c28a425",
+    "remark-contract-v4.py": "dd73800f969914310f213890e08e5e54a17142b86ac6f5ff413cc79e0474e39d",
+    "remark-contract-v5.py": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354",
+    "reviewed-coach-rule.json": "dc66a3af02541714233e9af057a0a009a644ac0230ec3ac874728260729e1266",
+    "reviewed-gk-rule.json": "7baf4dbb5b14dbea2794097b6a3dbeab616cb43f0e4bdc38a21b77bb4fdb8466",
+    "reviewed-manager-rule.json": "e5d2221e6a39c75a2bc94f99957cc83cee1e78790882fb983c284a4b22463182",
+    "reviewed-rule.json": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+    "windows_local.py": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1"
+  },
+  "acquisition_launcher": "f753b756a1b1d28e6b8352bb66c7b681320606357dac75c1762b0d42564a5b0d",
+  "acquisition_preflight": "86e0d2b4da2aad90f74ca34b8d3ccfd255eb17d0116852ffbc1cd863e9f8fa7e",
+  "acquisition_private_executor": "8f4e6481cc585a1badf7247650f06bc6cd5fa64ebb079e35704b581180529192",
+  "acquisition_public_code": {
+    "multibatch_executor.py": "12eed3fee09742c1f9fbf31804334e96b26d50ba786a83a83d987e2f002b8702",
+    "multibatch_http_integration.py": "c9a9cb8dbd7ab4f93526f35c90eb1ab50836f872150eaf114c95028e4edfe6ad",
+    "multibatch_http_worker.py": "2ca9384df2f0a363c7760fce592a388f1754b4410df4a5cd2f620f3d3f0a210c"
+  },
+  "new_delivery_auditor": "66dece9d81608c3cdffbfabd139737a837b3e5db161e425666ce47980f310406",
+  "new_packager": "0a248a7f6dab29ad45016a517ff370b2aed4a1953f21736e1172088ca2a4cf7f",
+  "new_postprocess_contract": "d5d6e28f5f73f294d2dbb7810c113a9fd881248c214f0d6b4c865f18864ddc0a",
+  "new_postprocessing_code_is_not_acquisition_code": true,
+  "new_private_postprocess_audit": "9c8fe5cf19b300b334e5b5bf47d452ffab6f01680e43235d70a250f7d9a64ae6",
+  "new_protection_audit": "d9e5028f0f043300b19da5ce443d8d27e7acec2d47fa6bc5b4dc553431dbb1bb",
+  "new_public_backup_verifier": "e10a493504dfd16e75d1a8a3f365ad7f92c7bb46a1479ee091d9ebeefe3eb6bc",
+  "new_publisher": "0df18f9a0a500e0695039f8aefba1ca83f6e69f6b4c643ad861a52feb80b6a6e",
+  "old_post_acquisition_final_audit": "70a49b724b5ac30c98384428dc4273f8c467731aaf3c55611a3f2bcc0202840c"
+}

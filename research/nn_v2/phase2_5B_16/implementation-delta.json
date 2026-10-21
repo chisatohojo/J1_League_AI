@@ -1,0 +1,68 @@
+{
+  "files": [
+    {
+      "after": "multibatch_http_worker.py",
+      "after_SHA256": "2ca9384df2f0a363c7760fce592a388f1754b4410df4a5cd2f620f3d3f0a210c",
+      "before": "expanded_http_worker.py",
+      "before_SHA256": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc",
+      "diff": [
+        "--- expanded_http_worker.py\n",
+        "+++ multibatch_http_worker.py\n",
+        "@@ -1,4 +1,4 @@\n",
+        "-\"\"\"Single approved GET for the twelve-page expansion in an owned Windows job. No retry, redirect or replay mode.\"\"\"",
+        "+\"\"\"Single approved GET for the forty-eight-page multibatch run in an owned Windows job. No retry, redirect or replay mode.\"\"\"",
+        " from datetime import datetime, timezone",
+        " import hashlib",
+        " import http.client",
+        "@@ -22,10 +22,10 @@\n",
+        " ",
+        " ",
+        " def validate(permit, task):",
+        "-    require(permit['version']=='real_http_expanded_pilot_v1' and permit['host']==HOST, 'PERMIT_KIND_HOST')",
+        "+    require(permit['version']=='real_http_multibatch_v1' and permit['host']==HOST, 'PERMIT_KIND_HOST')",
+        "     kind=permit['kind']; rows=permit['rows']",
+        "     require(kind in {'DETAIL','ROBOTS'}, 'PERMIT_KIND')",
+        "-    require(len(rows)==(12 if kind=='DETAIL' else 1) and permit['max_GET']==len(rows), 'PERMIT_CAP')",
+        "+    require(len(rows)==(48 if kind=='DETAIL' else 1) and permit['max_GET']==len(rows), 'PERMIT_CAP')",
+        "     urls=[r['url'] for r in rows]",
+        "     require(len(set(urls))==len(urls) and len({r['identity'] for r in rows})==len(rows), 'DUPLICATE')",
+        "     for r in rows:"
+      ],
+      "reason": "Separate48-page approval schema and cap; independent module imports; transport, Job, storage and Stage A/B behavior retained"
+    },
+    {
+      "after": "multibatch_http_integration.py",
+      "after_SHA256": "c9a9cb8dbd7ab4f93526f35c90eb1ab50836f872150eaf114c95028e4edfe6ad",
+      "before": "expanded_http_integration.py",
+      "before_SHA256": "0a69e76e5f6a73502320087e05ee31992f621006032ccf29f99142c65070bf53",
+      "diff": [
+        "--- expanded_http_integration.py\n",
+        "+++ multibatch_http_integration.py\n",
+        "@@ -1,4 +1,4 @@\n",
+        "-\"\"\"Twelve-page research pilot. Owned jobs and sealed Stage A/B; no history admission.\"\"\"",
+        "+\"\"\"Forty-eight-page research multibatch. Owned jobs and sealed Stage A/B; no history admission.\"\"\"",
+        " from contextlib import ExitStack",
+        " from dataclasses import replace",
+        " import json",
+        "@@ -7,7 +7,7 @@\n",
+        " import time",
+        " from windows_local import DirectoryLease, OwnedJob, Close, open_handle, acl_audit, secure_mkdir, read_bytes_locked, write_new_locked",
+        " from local_integration import leased_store_class, LocalManager",
+        "-from expanded_http_worker import validate, encoded, sha, now, require, AGENT",
+        "+from multibatch_http_worker import validate, encoded, sha, now, require, AGENT",
+        " ",
+        " ",
+        " class HttpManager:"
+      ],
+      "reason": "Separate48-page approval schema and cap; independent module imports; transport, Job, storage and Stage A/B behavior retained"
+    },
+    {
+      "after_SHA256": "12eed3fee09742c1f9fbf31804334e96b26d50ba786a83a83d987e2f002b8702",
+      "new": "multibatch_executor.py",
+      "reason": "New lazy four-batch executor: verify all sealed receipts, GET sets and transport hashes after every12; recheck access before every batch"
+    }
+  ],
+  "old_files_unchanged": true,
+  "status": "PREDECLARED_DELTA_TEST_PASSED",
+  "strict_parser_v5_and_rules_unchanged": true
+}

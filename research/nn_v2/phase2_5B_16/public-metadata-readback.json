@@ -1,0 +1,9 @@
+{
+  "SHA_mismatches": 0,
+  "base_public_file_ledger_SHA256": "8450340ed0ff2f1f2b63b3dcb6a8f7a137ac0108e7d6d4f32169eb04e66d2918",
+  "own_receipt_and_manifest": "Detached final ledger includes receipt and self-excluded public manifest; all archived and restored",
+  "public_artifacts_and_tests_read_back": 29,
+  "raw_or_personal_evidence_in_public_backup": false,
+  "status": "PASS",
+  "verified_at_UTC": "2026-10-21T22:27:43.342506+00:00"
+}
