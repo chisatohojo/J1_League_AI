@@ -1,0 +1,34 @@
+{
+  "dataset": "07989ef5648f686aad4a0de02c13801fe118cb6253c37f422cdcb665f831d7e0",
+  "final_audit": "fdf9ed5e1006bf3b3cf019c2db997f7be72e33ae5acd3d732e090088510cb03b",
+  "launcher": "5bd7cc8d88f76b101782b5899afc19f0bfa792e182db0dce8af4536aaef4564e",
+  "package_evidence": "119de0654dbc569c09f5a3ea38cbe790a8aac7ef8a09dd83404dc733d324448d",
+  "pinned_dependencies": {
+    "batch-fetch.py": "b7028ec56c9370e2592adb330903e540083800494634511039b89bc3157b7fed",
+    "expanded_http_integration.py": "0a69e76e5f6a73502320087e05ee31992f621006032ccf29f99142c65070bf53",
+    "expanded_http_worker.py": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc",
+    "http_integration.py": "5b02a0a916e943d6e03b5df326542f2772a3bb8c9b489c976689562b9c1ecb45",
+    "http_worker.py": "a6c249c01917c1fe4a4687168aef2c778ec76494cb74cbb5dc9b1b9c651ae08f",
+    "implementation-final.py": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+    "local_integration.py": "a6ed54fec4b3c3345e7afd95c1f3d52a1e577011fdd9d58de0e954e77d3490a8",
+    "local_worker.py": "32cf3b965a4700e018c284912368e04569cf0cfe0ac62c2a0972a10992660be5",
+    "offline_two_stage.py": "3aab900c9251c1f34398febd3fc1667170d5c2126bbc9fca3c8a0af31dc4edc4",
+    "remark-contract-v2.py": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+    "remark-contract-v3.py": "0cc5cb1a382090a49e905418ba918e9063ad723eade091e7ddc459e82c28a425",
+    "remark-contract-v4.py": "dd73800f969914310f213890e08e5e54a17142b86ac6f5ff413cc79e0474e39d",
+    "remark-contract-v5.py": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354",
+    "reviewed-coach-rule.json": "dc66a3af02541714233e9af057a0a009a644ac0230ec3ac874728260729e1266",
+    "reviewed-gk-rule.json": "7baf4dbb5b14dbea2794097b6a3dbeab616cb43f0e4bdc38a21b77bb4fdb8466",
+    "reviewed-manager-rule.json": "e5d2221e6a39c75a2bc94f99957cc83cee1e78790882fb983c284a4b22463182",
+    "reviewed-rule.json": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+    "windows_local.py": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1"
+  },
+  "preflight": "9445b690a7531ba08a0a0eab683b30c0afedb93b8959bde4ac20571c71422489",
+  "private_executor": "35c51acfe408f9eaedf7d678e132222f6c085c6949c3350cac936bebdf9b2bcd",
+  "public_code": {
+    "expanded_http_integration.py": "0a69e76e5f6a73502320087e05ee31992f621006032ccf29f99142c65070bf53",
+    "expanded_http_worker.py": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc"
+  },
+  "publish_aggregates": "07ade7534e6a6e376da95eb7bfbbbf0c67f57e2f68bfee8e7b3239b74c2c928e",
+  "seal_publication": "a4ea75eaf1acc0c488b5ca994e9b69c55d01a69e19126639bceb658d44e168e4"
+}

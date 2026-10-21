@@ -1,0 +1,29 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_15/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_15/RESULTS.md": "1d7ff0c794eedb1e07521b7b147be4e7fe1248ebc790d12772d8ef7241ddf7a9",
+    "research/nn_v2/phase2_5B_15/SPEC.md": "05d7bee73820886536d8a4abd7f0c0ab56c9d135136fb26f2ec59c2ed854ddeb",
+    "research/nn_v2/phase2_5B_15/UNPROVEN.md": "956d29b56cf9abe4818e9f72436023ab440f0c2743ff5e94acef5a8c63acb154",
+    "research/nn_v2/phase2_5B_15/backup-verification.json": "e0d73e80e4015b6f0474ec4b830d5764ab85bade9667fdb7497f2cf9c72e041d",
+    "research/nn_v2/phase2_5B_15/communication-summary.json": "5b6b19a33a844fb4fd543ce9e1de79c9ca6fe2e4eab596451ba57b84da6d48af",
+    "research/nn_v2/phase2_5B_15/compatibility-summary.json": "f4c45691026a8b3380485f80fdd781478ea27d5224378c5686bd71833efa565b",
+    "research/nn_v2/phase2_5B_15/expanded_http_integration.py": "0a69e76e5f6a73502320087e05ee31992f621006032ccf29f99142c65070bf53",
+    "research/nn_v2/phase2_5B_15/expanded_http_worker.py": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc",
+    "research/nn_v2/phase2_5B_15/fixed-set-verification.json": "51f7c0b0b595982df81b9a26e29fdf5e881763e645297ea4b12fa5c9b34560f5",
+    "research/nn_v2/phase2_5B_15/implementation-delta.json": "170f76e8713f0f112c663ac08773e3138f1c30cb04dea8f85b7411c962aff062",
+    "research/nn_v2/phase2_5B_15/implementation-sha256.json": "65de487b778fa5990df7890479653fd88808b838c5e18c04e949da9c3885b6f9",
+    "research/nn_v2/phase2_5B_15/input-sha256.json": "49380c97ba02192b74b2cf11cbab0d55f103ac58cd6f5461a309d38061803a94",
+    "research/nn_v2/phase2_5B_15/local-evidence-index.json": "7f73f069422c0bec04537b6d61983349e792b42a030c9751fd75b082e901e445",
+    "research/nn_v2/phase2_5B_15/next-stage.json": "b966f7f9db7859bb3bf06cec785735907f5fa06d5e402445508b3f78cef12815",
+    "research/nn_v2/phase2_5B_15/old-formal-records-verification.json": "9a16c0742a139a78d332ce132a20d36caae2b789bf20cc7fdda468284a007444",
+    "research/nn_v2/phase2_5B_15/process-storage-summary.json": "de5e8054100077d1be4f73c4f17036d9615c0e72613e2a802adba086bc6662f9",
+    "research/nn_v2/phase2_5B_15/protection-verification.json": "a4c1ab08db274c6ae8107e42501e35005965f8076c0abffade6806cf7d38cd49",
+    "research/nn_v2/phase2_5B_15/public-metadata-readback.json": "2827702f82dfcc0d1133d3ce59a1bac905f763974873420e01f85c11440e9162",
+    "research/nn_v2/phase2_5B_15/readiness.json": "8e84ea394d87f578bdc9b52ec9274c55c1fdcefdccd7c9cf4cb4f80825e664f2",
+    "research/nn_v2/phase2_5B_15/stage-summary.json": "39366dad8300190ee0f0644c57ade7ad97e4adc8fe0be5c0f3d33091cb40377c",
+    "research/nn_v2/phase2_5B_15/synthetic-test-results.json": "c066348cf95e7e0e95a98706f6518a72ef3a5bbb88607e0f2e9100d4f226eee5",
+    "tests/test_nn_two_stage_http_expansion.py": "9d8d499dec9b3fa193a5a05c56ce0f7f986b82045b64cfee3d7397b8022b29bd"
+  },
+  "self_excluded": true
+}

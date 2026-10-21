@@ -1,0 +1,18 @@
+{
+  "JUnit_SHA256": "7da69fa674c83a223af162dcc93e90a3345b79880d006bc29700948852b1cc31",
+  "completed_before_live_HTTP": true,
+  "errors": 0,
+  "failures": 0,
+  "initial_errors": 0,
+  "native_OS_fault_evidence_SHA256": "f4967e82aebc70c824556b61ffee84e17af6cf6c6c3dc963c661f71fdd746eab",
+  "new_HTTP_expansion_cases": 58,
+  "official_test_GET": 0,
+  "old_three_page_permit_rejected": true,
+  "predeclared_source_delta_regression_verified": true,
+  "prior_related_cases": 798,
+  "skipped": 0,
+  "status": "PASS",
+  "test_source_SHA256": "9d8d499dec9b3fa193a5a05c56ce0f7f986b82045b64cfee3d7397b8022b29bd",
+  "tests": 856,
+  "warnings_as_errors": true
+}

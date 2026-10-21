@@ -1,0 +1,20 @@
+{
+  "A_final_detail_PASS": 12,
+  "B_event_timeline_HOLD": 12,
+  "C_original_schedule_HOLD": 12,
+  "D_prediction_cutoff_HOLD": 12,
+  "all_receipts_and_source_review_seals_readback_verified": true,
+  "detail_HOLD": 0,
+  "detail_PASS": 12,
+  "historical_offline_is_not_live_quarantine_proof": true,
+  "historical_offline_quarantine_cases": 4,
+  "history_admitted": 0,
+  "private_A_D_SHA256": "acd93db3e12967b5cb01184756d5e13cadd81726a98bbaa5d3b2c288eab8fe98",
+  "quarantine": 0,
+  "real_HTTP_quarantine": "REAL_HTTP_QUARANTINE_NOT_OBSERVED",
+  "receipt_committed_before_next_URL": true,
+  "receipt_count": 12,
+  "source_acquired": 12,
+  "source_integrity_verified": 12,
+  "status": "PASS"
+}

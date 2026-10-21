@@ -1,0 +1,23 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "95630debb8de2dabfd4f30ef9bcc9018dee60b28ce68dc920c0bce18ca7b33d0",
+  "archive_bytes": 20556825,
+  "archive_name": "real-http-expanded-pilot-evidence.zip",
+  "at_UTC": "2026-10-21T12:53:06.042569+00:00",
+  "historical_quarantine_count": 4,
+  "independent_extraction_all_SHA": "PASS",
+  "independent_readback": "PASS",
+  "mismatches": 0,
+  "native_fault_fixtures": 45,
+  "new_detail_packets": 12,
+  "new_robots_packets": 0,
+  "original_packet_count": 119,
+  "payload_bytes": 71316503,
+  "payload_files": 3183,
+  "payload_manifest_SHA256": "ac2f77c657acea03178a1d784110cad87f62c9f6b39edd8602b812482ebfa874",
+  "real_HTTP_quarantines": 0,
+  "reparse_objects_metadata_only": 0,
+  "separate_drive": true,
+  "status": "PASS"
+}

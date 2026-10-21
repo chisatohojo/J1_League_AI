@@ -1,0 +1,12 @@
+{
+  "all_v5_semantic_fields_identical": true,
+  "current_v5_HOLD": 0,
+  "detail_HOLD": 0,
+  "detail_PASS": 119,
+  "historical_exact_HOLD_reproductions": 4,
+  "historical_quarantine_receipts_before_successors": 4,
+  "new_integration_offline_replay_SHA256": "2b165faf296411a01797b61fb7618790bda8de8290d3ce513e83c74c55fca204",
+  "old_original_writes": 0,
+  "saved119_replayed": 119,
+  "status": "PASS"
+}

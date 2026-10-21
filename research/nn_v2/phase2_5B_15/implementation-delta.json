@@ -1,0 +1,63 @@
+{
+  "files": [
+    {
+      "after": "expanded_http_worker.py",
+      "after_SHA256": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc",
+      "before": "http_worker.py",
+      "before_SHA256": "a6c249c01917c1fe4a4687168aef2c778ec76494cb74cbb5dc9b1b9c651ae08f",
+      "diff": [
+        "--- http_worker.py\n",
+        "+++ expanded_http_worker.py\n",
+        "@@ -1,4 +1,4 @@\n",
+        "-\"\"\"Single approved GET in an owned Windows job. No retry, redirect or replay mode.\"\"\"",
+        "+\"\"\"Single approved GET for the twelve-page expansion in an owned Windows job. No retry, redirect or replay mode.\"\"\"",
+        " from datetime import datetime, timezone",
+        " import hashlib",
+        " import http.client",
+        "@@ -22,10 +22,10 @@\n",
+        " ",
+        " ",
+        " def validate(permit, task):",
+        "-    require(permit['version']=='real_http_small_pilot_v1' and permit['host']==HOST, 'PERMIT_KIND_HOST')",
+        "+    require(permit['version']=='real_http_expanded_pilot_v1' and permit['host']==HOST, 'PERMIT_KIND_HOST')",
+        "     kind=permit['kind']; rows=permit['rows']",
+        "     require(kind in {'DETAIL','ROBOTS'}, 'PERMIT_KIND')",
+        "-    require(len(rows)==(3 if kind=='DETAIL' else 1) and permit['max_GET']==len(rows), 'PERMIT_CAP')",
+        "+    require(len(rows)==(12 if kind=='DETAIL' else 1) and permit['max_GET']==len(rows), 'PERMIT_CAP')",
+        "     urls=[r['url'] for r in rows]",
+        "     require(len(set(urls))==len(urls) and len({r['identity'] for r in rows})==len(rows), 'DUPLICATE')",
+        "     for r in rows:"
+      ],
+      "reason": "Separate12-page approval schema and cap; independent module imports; transport, Job, storage and Stage A/B behavior retained"
+    },
+    {
+      "after": "expanded_http_integration.py",
+      "after_SHA256": "0a69e76e5f6a73502320087e05ee31992f621006032ccf29f99142c65070bf53",
+      "before": "http_integration.py",
+      "before_SHA256": "5b02a0a916e943d6e03b5df326542f2772a3bb8c9b489c976689562b9c1ecb45",
+      "diff": [
+        "--- http_integration.py\n",
+        "+++ expanded_http_integration.py\n",
+        "@@ -1,4 +1,4 @@\n",
+        "-\"\"\"Three-page research pilot. Owned jobs and sealed Stage A/B; no history admission.\"\"\"",
+        "+\"\"\"Twelve-page research pilot. Owned jobs and sealed Stage A/B; no history admission.\"\"\"",
+        " from contextlib import ExitStack",
+        " from dataclasses import replace",
+        " import json",
+        "@@ -7,7 +7,7 @@\n",
+        " import time",
+        " from windows_local import DirectoryLease, OwnedJob, Close, open_handle, acl_audit, secure_mkdir, read_bytes_locked, write_new_locked",
+        " from local_integration import leased_store_class, LocalManager",
+        "-from http_worker import validate, encoded, sha, now, require, AGENT",
+        "+from expanded_http_worker import validate, encoded, sha, now, require, AGENT",
+        " ",
+        " ",
+        " class HttpManager:"
+      ],
+      "reason": "Separate12-page approval schema and cap; independent module imports; transport, Job, storage and Stage A/B behavior retained"
+    }
+  ],
+  "old_files_unchanged": true,
+  "status": "PREDECLARED_DELTA_TEST_PASSED",
+  "strict_parser_v5_and_rules_unchanged": true
+}

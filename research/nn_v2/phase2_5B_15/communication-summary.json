@@ -1,0 +1,33 @@
+{
+  "TLS_versions": [
+    "TLSv1.2"
+  ],
+  "acquisition_finished_UTC": "2026-10-21T12:48:14.339989+00:00",
+  "acquisition_started_UTC": "2026-10-21T12:47:12.804079+00:00",
+  "auto_resume": 0,
+  "cached_robots_age_at_execution_seconds": 2156.290289,
+  "cached_robots_status": 404,
+  "cached_robots_to_first_detail_seconds": 2156.444524,
+  "cert_and_hostname_verification": true,
+  "cleanup_deadline": 2,
+  "detail_GET": 12,
+  "detail_HTTP_200": 12,
+  "detail_URLs": 12,
+  "detail_body_bytes": 1474601,
+  "detail_max_body_bytes": 126880,
+  "detail_permit_SHA256": "6ba09c62ed7dba1086f2af5978062d5f6b2313a27cf38af3bb9fea590d385fb9",
+  "min_completion_to_next_start_seconds": 5.197389,
+  "new_robots_permit_created": false,
+  "outer_deadline": 240,
+  "parallel": 0,
+  "parent_deadline": 12,
+  "private_communication_ledger_SHA256": "340f2422e5f85da6e779cc3059a998d05c0a99ecd209e53f78d702d8798c4826",
+  "redirects": 0,
+  "retries": 0,
+  "robots_404_meaning": "Only the exact robots URL has no published rules; site-wide permission not proven",
+  "robots_GET_separate": 0,
+  "robots_permit_SHA256": null,
+  "selected_set_SHA256": "a2f2eddc944da3bdfb7e30eb15d0f9a2023dacf0bd2f303796718793be0d1034",
+  "socket_timeout": 10,
+  "status": "PASS"
+}

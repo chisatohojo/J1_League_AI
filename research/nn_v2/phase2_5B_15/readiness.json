@@ -1,0 +1,19 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "Stage_A_sealed": 12,
+  "acquired": 12,
+  "bulk_acquisition_authorized": false,
+  "detail_GET": 12,
+  "detail_HOLD": 0,
+  "detail_PASS": 12,
+  "general_classifier_connected": false,
+  "history_admission_authorized": false,
+  "pending": 157,
+  "pilot_scope": "Only twelve fixed official detail pages",
+  "real_HTTP_quarantine": "REAL_HTTP_QUARANTINE_NOT_OBSERVED",
+  "separate_robots_GET": 0,
+  "status": "TWO_STAGE_REAL_HTTP_EXPANDED_PILOT_VERIFIED_RESEARCH_ONLY"
+}

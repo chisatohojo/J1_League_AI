@@ -1,0 +1,16 @@
+{
+  "complete169_plan": "3911c30054109acc5fc168fe4a6dd609d4b0be3a9a6b428c4aaca75b00f0d5c8",
+  "execution_seal": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "frozen_completed_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "model_payloads_verified": 53,
+  "model_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "original119_packet_index": "9618218bb65148421d10b607a982c1e081ef84f3c547a34388728db9afcb3c1f",
+  "original119_v5_results": "df8d9ed0831e10f09568553b903352cd561961d9f4b19068549d5919f0412357",
+  "pending169_ledger": "357907fdd997e127c4048353c0c2ef38efd870a4ac7149efcd82f9001d17a3a1",
+  "previous_phase_payload_manifest": "28bb8f50c5ac0c01ed8693b8cffefff88e7b049607ae0aa10a4e5a30191eff6a",
+  "protection_start": "d9c61b85d529a917a8642055f609568b40f935beac0d9defe53a676da7aa4d27",
+  "selection_twelve": "a2f2eddc944da3bdfb7e30eb15d0f9a2023dacf0bd2f303796718793be0d1034",
+  "start_HEAD": "f57c1e646e755c058a11fb6fd9e789f80bf34b08",
+  "study": "nn_v2_residual_20261020_01",
+  "study_manifest": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+}
