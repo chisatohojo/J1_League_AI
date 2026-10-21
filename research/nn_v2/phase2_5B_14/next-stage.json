@@ -1,0 +1,16 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "current_permits_consumed": true,
+  "current_pilot_finished": true,
+  "general_classifier_connected": false,
+  "history_admission_authorized": false,
+  "independent_timing_schedule_and_prediction_cutoff_acquisition_audits_required": true,
+  "new_target_set_executor_permit_and_explicit_authorization_required": true,
+  "pending": 169,
+  "real_HTTP_quarantine_observed": false,
+  "remaining169_ledger_SHA256": "357907fdd997e127c4048353c0c2ef38efd870a4ac7149efcd82f9001d17a3a1",
+  "remaining169_plan_SHA256": "3911c30054109acc5fc168fe4a6dd609d4b0be3a9a6b428c4aaca75b00f0d5c8",
+  "remaining_acquisition_authorized": false,
+  "status": "SEPARATE_BOUNDED_EXECUTION_APPROVAL_REQUIRED"
+}

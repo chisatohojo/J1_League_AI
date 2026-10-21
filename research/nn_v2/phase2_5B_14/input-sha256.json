@@ -1,0 +1,16 @@
+{
+  "complete172_plan": "96871750e880032422d4623655f2e8172c5509148e7dd8c9ebf43f93d446973e",
+  "execution_seal": "bc3f2e74cfcea598c5c16aa88d083e8d8ea16c52e17e901781cd9a74558fb353",
+  "frozen_completed_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "model_payloads_verified": 53,
+  "model_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "original116_packet_index": "36706034b71cfa080d23a2f0cdff44b5b7c6f6e58cd587ce10bfec621ec37a98",
+  "original116_v5_results": "c0dd19224d7a7d936082b771c5cd4a914b53ed74cc027ecc30927f706928928d",
+  "pending172_ledger": "8a997d5e0e3b11d364a728df0b53866a840d0aed7fdabf2a0a18ce893ae74477",
+  "previous_phase_payload_manifest": "81b97ed1772a0f55a0afc1c79c21d15b95dca95aaa736d5774e79b2c40ae57a9",
+  "protection_start": "8c43a43bf46bb002d7fc63bb148dd4fb1b780091b696f0640be7dc8590a09ab6",
+  "selection_three": "ceaf8de274417f3d2cb16a091ce4b089f8969add359657d9e7b8e8d85b758b29",
+  "start_HEAD": "f585a9fc7460d68f57e2332024d7c1f2ec8bd5b5",
+  "study": "nn_v2_residual_20261020_01",
+  "study_manifest": "75d51da6e8c984666fe5630330a3b962e37ff32d0fb3d294aaf3989f0ebf44cb"
+}

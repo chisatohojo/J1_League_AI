@@ -1,0 +1,23 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "edec9aba026a571df75b4e3ab0aa6db7eee0d44aa3b40758ecbd81ea644330e6",
+  "archive_bytes": 34944740,
+  "archive_name": "real-http-small-pilot-evidence.zip",
+  "at_UTC": "2026-10-21T12:17:54.467325+00:00",
+  "historical_quarantine_count": 4,
+  "independent_extraction_all_SHA": "PASS",
+  "independent_readback": "PASS",
+  "mismatches": 0,
+  "native_fault_fixtures": 45,
+  "new_detail_packets": 3,
+  "new_robots_packets": 1,
+  "original_packet_count": 116,
+  "payload_bytes": 117829723,
+  "payload_files": 4949,
+  "payload_manifest_SHA256": "28bb8f50c5ac0c01ed8693b8cffefff88e7b049607ae0aa10a4e5a30191eff6a",
+  "real_HTTP_quarantines": 0,
+  "reparse_objects_metadata_only": 0,
+  "separate_drive": true,
+  "status": "PASS"
+}

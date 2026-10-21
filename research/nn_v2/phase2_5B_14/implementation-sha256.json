@@ -1,0 +1,32 @@
+{
+  "dataset": "8928bff58f6ca2422eb2c945fc11b5fd2afbf08bb81053e38d33497a121dd8a7",
+  "final_audit": "10607c228b2652a47a0b5c2be3e77070b82cb33edc6157d7f0f2d95375e4e536",
+  "launcher": "5bd7cc8d88f76b101782b5899afc19f0bfa792e182db0dce8af4536aaef4564e",
+  "package_evidence": "73f9a38274c934e1876e42e886ef87bed18ce4ba76db3c61f43075adac282532",
+  "pinned_dependencies": {
+    "batch-fetch.py": "b7028ec56c9370e2592adb330903e540083800494634511039b89bc3157b7fed",
+    "http_integration.py": "5b02a0a916e943d6e03b5df326542f2772a3bb8c9b489c976689562b9c1ecb45",
+    "http_worker.py": "a6c249c01917c1fe4a4687168aef2c778ec76494cb74cbb5dc9b1b9c651ae08f",
+    "implementation-final.py": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+    "local_integration.py": "a6ed54fec4b3c3345e7afd95c1f3d52a1e577011fdd9d58de0e954e77d3490a8",
+    "local_worker.py": "32cf3b965a4700e018c284912368e04569cf0cfe0ac62c2a0972a10992660be5",
+    "offline_two_stage.py": "3aab900c9251c1f34398febd3fc1667170d5c2126bbc9fca3c8a0af31dc4edc4",
+    "remark-contract-v2.py": "7879e2825f06533a63aa9bd59de0b3aebb4cf092b8aae5baab1ee5e1a74f2b49",
+    "remark-contract-v3.py": "0cc5cb1a382090a49e905418ba918e9063ad723eade091e7ddc459e82c28a425",
+    "remark-contract-v4.py": "dd73800f969914310f213890e08e5e54a17142b86ac6f5ff413cc79e0474e39d",
+    "remark-contract-v5.py": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354",
+    "reviewed-coach-rule.json": "dc66a3af02541714233e9af057a0a009a644ac0230ec3ac874728260729e1266",
+    "reviewed-gk-rule.json": "7baf4dbb5b14dbea2794097b6a3dbeab616cb43f0e4bdc38a21b77bb4fdb8466",
+    "reviewed-manager-rule.json": "e5d2221e6a39c75a2bc94f99957cc83cee1e78790882fb983c284a4b22463182",
+    "reviewed-rule.json": "42effeacc98654a17608d88c328f555783bd48407b5176c8abfef5bb4644bf99",
+    "windows_local.py": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1"
+  },
+  "preflight": "11401fd6f7db310a2c6fb2441e7d363a8365a18351e98e8f0cbe93eeccda114c",
+  "private_executor": "85d1c3cf702180dbe87d435e19af04c1b6fcedba19339b9d4c8a81572b008799",
+  "public_code": {
+    "http_integration.py": "5b02a0a916e943d6e03b5df326542f2772a3bb8c9b489c976689562b9c1ecb45",
+    "http_worker.py": "a6c249c01917c1fe4a4687168aef2c778ec76494cb74cbb5dc9b1b9c651ae08f"
+  },
+  "publish_aggregates": "8cd4ace341d22f95b90bd3bbc24349aa661311f55ee9a5d14286c92b489d41c7",
+  "seal_publication": "1b06e891f9647e033626a9faa4a66f6890ebb82b66609988e517a74059c3798e"
+}

@@ -1,0 +1,19 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "URL_overlap": 0,
+  "analysis_HOLD_current": 0,
+  "analysis_PASS_cumulative": 119,
+  "cumulative_acquired": 119,
+  "new_acquired": 3,
+  "original": 288,
+  "original172_ledger_SHA256": "8a997d5e0e3b11d364a728df0b53866a840d0aed7fdabf2a0a18ce893ae74477",
+  "original172_plan_SHA256": "96871750e880032422d4623655f2e8172c5509148e7dd8c9ebf43f93d446973e",
+  "prior_acquired": 116,
+  "remaining169_ledger_SHA256": "357907fdd997e127c4048353c0c2ef38efd870a4ac7149efcd82f9001d17a3a1",
+  "remaining169_plan_SHA256": "3911c30054109acc5fc168fe4a6dd609d4b0be3a9a6b428c4aaca75b00f0d5c8",
+  "remaining_acquisition_authorized": false,
+  "selection_rule": "Fixed first3 of existing172 ledger, no replacement or lookahead",
+  "status": "PASS",
+  "unacquired": 169
+}

@@ -1,0 +1,16 @@
+{
+  "JUnit_SHA256": "926bdcc6e51cde1a93878796a1e41c5bc0ce2dd495602b0b4e1f4b7fe982a866",
+  "completed_before_live_HTTP": true,
+  "errors": 0,
+  "failures": 0,
+  "initial_errors": "Two test-name/path-limit setup errors corrected with explicit bounded parameter IDs; earlier results retained privately",
+  "native_OS_fault_evidence_SHA256": "4c48b730fb0262c0684907549639fc3a453b3e261f057be1a171593b9abbf50b",
+  "new_HTTP_pilot_cases": 56,
+  "official_test_GET": 0,
+  "prior_related_cases": 742,
+  "skipped": 0,
+  "status": "PASS",
+  "test_source_SHA256": "1ca44fac1f0409fca593052eb25470d93079d709dcd05ef8b66f72efd20630d4",
+  "tests": 798,
+  "warnings_as_errors": true
+}
