@@ -1,0 +1,16 @@
+{
+  "Job_Object_KILL_ON_JOB_CLOSE": true,
+  "all_kernel_PID_parent_PID_creation_time_image_path_and_image_SHA_verified": true,
+  "all_replay_jobs_empty_at_close": true,
+  "assigned_suspended_before_resume": true,
+  "cleanup_timeout_case": "Injected zero cleanup budget; real owned-job termination and bounded rescue verified",
+  "historical_case_workers": 8,
+  "job_active_process_limit": 4,
+  "normal_exit_abnormal_exit_timeout_owned_descendant_cleanup_parent_crash_verified_on_Windows": true,
+  "normal_replay_workers": 116,
+  "private_process_audit_SHA256": "02d9635cf7f0ec8db62cbec2e8cb088f2eecdfabd4ca435ee530f3aff2db1539",
+  "process_fault_evidence_index_SHA256": "06c54990c7bfcf86f9620df9ea6b7d230f1743bc82fe51e33ea2a36815a76aa7",
+  "status": "PASS",
+  "unowned_peer_not_terminated": true,
+  "worker_exit_before_stage_acceptance": true
+}

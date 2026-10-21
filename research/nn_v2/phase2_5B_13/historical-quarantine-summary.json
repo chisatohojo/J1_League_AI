@@ -1,0 +1,10 @@
+{
+  "all_quarantine_receipts_confirmed_before_next_worker": true,
+  "current_v5_HOLD": 0,
+  "historical_exact_HOLD_replays": 4,
+  "history_admitted": 0,
+  "old_formal_records_unchanged": true,
+  "private_history_SHA256": "ebfe3bb50ec2db4e986bea4e5381d92aa606c06a2d51faee4326815f623d5d6d",
+  "quarantines": 4,
+  "saved_normal_successors_PASS": 4
+}

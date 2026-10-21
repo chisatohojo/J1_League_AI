@@ -1,0 +1,12 @@
+{
+  "all_v5_semantic_fields_identical": true,
+  "detail_HOLD": 0,
+  "detail_PASS": 116,
+  "history_admitted": 0,
+  "local_worker_deliveries": 116,
+  "old_original_writes": 0,
+  "private_summary_SHA256": "bcfb384a0abb160afe2636b6adc567572a3f9687ddc80c017697a4b6a48521a8",
+  "source_integrity_verified": 116,
+  "source_originals": 116,
+  "status": "PASS"
+}

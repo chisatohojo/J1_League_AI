@@ -1,0 +1,20 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "4a350689f426931975dec9d8869e7bf2c952aa15737a055c86675bf766ba7e63",
+  "archive_bytes": 34313268,
+  "archive_name": "windows-local-integration-evidence.zip",
+  "at_UTC": "2026-10-21T11:19:56.761791+00:00",
+  "historical_quarantine_count": 4,
+  "independent_extraction_all_SHA": "PASS",
+  "independent_readback": "PASS",
+  "mismatches": 0,
+  "native_fault_fixtures": 45,
+  "original_packet_count": 116,
+  "payload_bytes": 112461201,
+  "payload_files": 4872,
+  "payload_manifest_SHA256": "81b97ed1772a0f55a0afc1c79c21d15b95dca95aaa736d5774e79b2c40ae57a9",
+  "reparse_objects_metadata_only": 1,
+  "separate_drive": true,
+  "status": "PASS"
+}

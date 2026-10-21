@@ -1,0 +1,18 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "acquisition_authorized": false,
+  "actual_HTTP_safety_proven": false,
+  "communication_permits_created": 0,
+  "general_classifier_connected": false,
+  "historical4_quarantines": true,
+  "history_admitted": 0,
+  "native_OS_test_cases": 46,
+  "normal116_PASS": true,
+  "official_network_GET": 0,
+  "pending": 172,
+  "related_tests_PASS": 742,
+  "status": "TWO_STAGE_LOCAL_INTEGRATION_VERIFIED_RESEARCH_ONLY"
+}

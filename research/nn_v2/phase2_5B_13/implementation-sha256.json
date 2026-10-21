@@ -1,0 +1,20 @@
+{
+  "final_audit": "22306b474463c528188f5b993b1e2a3c585f606d6aaf32efb48c096a79b3af32",
+  "fixed_packet_index": "36706034b71cfa080d23a2f0cdff44b5b7c6f6e58cd587ce10bfec621ec37a98",
+  "new_code": {
+    "fault_harness.py": "e0b6d8cb11530978f43de1f42d79c8bb76ee94b0ec2397e852531783b10ccd93",
+    "local_integration.py": "a6ed54fec4b3c3345e7afd95c1f3d52a1e577011fdd9d58de0e954e77d3490a8",
+    "local_worker.py": "32cf3b965a4700e018c284912368e04569cf0cfe0ac62c2a0972a10992660be5",
+    "windows_local.py": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1"
+  },
+  "old_offline_implementation": "3aab900c9251c1f34398febd3fc1667170d5c2126bbc9fca3c8a0af31dc4edc4",
+  "old_v5_adapter": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354",
+  "package_evidence": "9b0c396937467c19c578caa88f3bdb4774fc5fb2d092d122857ef2c84bab49f5",
+  "packet_index": "36706034b71cfa080d23a2f0cdff44b5b7c6f6e58cd587ce10bfec621ec37a98",
+  "publish_aggregates": "01973bbb4d93b7e965ac1950101d73fc57ff5694a53f1fd6e1f58c7f45532e9a",
+  "runner": "8532723d87b9bddef8ccef7a376577ed4cfd89505cd112196a0eddc86be07251",
+  "seal_publication": "afb6189a6258534f3c4876999d3ad20afcd2013d1a2f45b23b6d4d90bc46c93a",
+  "start_audit": "6cb7ad3ce08c2e2bdde9d864704e3e3a87c4e9bb0e7d20fcb41d882dac6df956",
+  "test_source": "1ef5448bda70b072479817d4eaec635b487eb269947c8c4a48810a55caa26f70",
+  "v5_adapter": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354"
+}

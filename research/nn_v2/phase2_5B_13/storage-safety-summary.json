@@ -1,0 +1,19 @@
+{
+  "actual_concurrent_DACL_mutation_detected_before_commit": true,
+  "actual_directory_junction_and_symlink_rejected": true,
+  "actual_junction_swap_between_path_check_and_open_detected": true,
+  "actual_post_handle_swap_prevented": true,
+  "actual_rename_race_denied_while_GENERIC_READ_no_share_DELETE_handles_held": true,
+  "atomic_DACL_immutability_guaranteed": false,
+  "exclusive_create_owner_DACL_verified": true,
+  "file_FlushFileBuffers_readback_SHA_verified": true,
+  "limits": [
+    "Owner/admin/kernel-level adversaries and every alternate Windows filesystem/filter path are not exhaustively proven",
+    "ACL mutation is detected before acceptance; changing ACL itself is not atomically prohibited",
+    "Crash tests terminate processes; sudden power loss and directory persistence are not proven"
+  ],
+  "power_loss_directory_durability_proven": false,
+  "seal_receipt_crashes_readonly_audited_no_restart": true,
+  "status": "PASS_IN_TESTED_WINDOWS_SCOPE",
+  "universal_atomic_path_guarantee_proven": false
+}

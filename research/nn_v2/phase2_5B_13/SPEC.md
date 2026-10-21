@@ -1,0 +1,31 @@
+# Windowsローカル結合契約
+
+構成は、親のLocalManager、実子processのlocal_worker、変更していないPhase 2.5B-12 Stage A/B、保存・receipt管理である。workerは親が新領域へ保存した3種類のbyte列を返すだけで、公式URLはmetadata内のidentity文字列として扱う。HTTP client・外部socket API・通信permit・運用collector・スケジューラ・モデル・共通備考分類候補と接続しない。全体は研究用コードに隔離し、運用APIへclockやfixtureを渡す機能を追加していない。
+
+## Process所有権
+
+親は固定Python executableでworkerをsuspended起動し、Job Objectへ所属させてからresumeする。JobはKILL_ON_JOB_CLOSEと同時process数上限4を持つ。保持したprocess handleからkernel PID/parent PID、creation FILETIME、image pathとimage SHAを確認する。worker自身のPID申告だけを信頼しない。コードファイルは読取りhandleを保持し、実行中の書換え・差し替えを防ぐ。
+
+worker deadlineは通常10秒以下。timeout・異常終了・所属job内の子process残存では、そのJob Objectだけを停止する。PID一覧から他processを探索・終了する方式は使わない。cleanupにも有限期限を設定する。期限を使い切った場合はSTOPとし、保持している同じjobに限って有限のrescueを行う。実試験では、親のos._exitでJob handleが閉じるとworkerが停止し、Job外のpeerは残った。
+
+終了handleのsignalとjob accountingの更新には短い遅延があり得るため、正常終了後に最大0.2秒の確認を行う。初回のaccounting値、settle後の値、最終所属process数を分けてreceiptへ保存する。workerが正常終了し、返したbytes・task SHA・result SHA・PID・receiptが一致した後だけStage Aへ渡す。
+
+## 保存と競合
+
+専用の新規領域をexclusive-createし、ownerを実token SID、DACLを当該user・SYSTEM・Administratorsに限定してnative APIで確認する。directoryはGENERIC_READを要求しFILE_SHARE_DELETEを付けずに祖先から保持する。属性読取りだけのhandleではrenameを防げないことを初期実OS試験で検出し、修正した。
+
+Junction/symlink/reparseを拒否する。書込み先は宣言した新root配下の平坦なbundleに限定する。parentを保持した状態でCREATE_NEW・OPEN_REPARSE_POINT・排他的file handleを用い、FlushFileBuffers・同handleでのreadback・SHAを確認する。namespace確認後にjunctionへ差し替える競合はopen時に拒否し、handle取得後のdirectory renameは共有違反で阻止した。root ACLは入出力前後にも再確認し、実OSでのACL変更競合をcommit前に検出した。
+
+この方式はowner/admin等によるACL変更自体の原子的禁止や、全Windows filesystem/filter/rename方式に対する普遍的証明ではない。ACL検出前に新root内で未確定bytesが書かれる場合があるが、seal/receiptとしてacceptせず全体STOPする。未確認事項は[別表](UNPROVEN.md)に記す。
+
+## 二段階との結合
+
+親は入力を逐次生成し、Stage A/Bとreceipt確認が次の入力を要求するまで次workerを起動しない。正常な原本は封印・解析PASS、未知備考だけならHOLDで隔離する。隔離packet・seal・receiptの読戻し確定後だけ、後続の別入力へ進める。SHA・identity・結果・HTTP/TLS相当の矛盾、保存失敗は全体STOPであり備考HOLDへ落とさない。解析契約のTypeError等もSTOPにする。
+
+取得済み原本数、解析PASS数、隔離HOLD数、未取得の固定集合を別に扱う。詳細PASSでも時刻証拠B〜DはHOLD、history admissionはfalse。隔離を除いて完全な履歴として出力する機能はない。
+
+失敗したmanagerはterminalとなり、同一URLの再処理を起動前に拒否する。既存root・claim・出力を再使用する入口もない。途中raw/metadata、seal前、receipt前、receipt後・次worker前の実異常終了は保存物を読取り専用で照合する。失敗runの自動再開は行わない。
+
+## ローカル故障機能の範囲
+
+fault_harnessとworkerのfault列挙は、sleep・異常終了・部分保存・Job内のsleep子process・監査境界の合成probeだけを持つ。ネットワークprobeはsys.auditの合成イベントであり、socket接続を行わない。HTTP 403/429・redirect・TLS・GET/rate等は保存byte／合成応答の検証であり、実HTTP応答の実証ではない。Task SHAを固定し、親が所有する新しい出力にだけ返す。

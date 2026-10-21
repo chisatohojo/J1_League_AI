@@ -1,0 +1,13 @@
+{
+  "complete_plan_SHA256": "96871750e880032422d4623655f2e8172c5509148e7dd8c9ebf43f93d446973e",
+  "duplicates": 0,
+  "network_GET": 0,
+  "original": 288,
+  "original_acquired": 116,
+  "overlap": 0,
+  "pending_ledger_SHA256": "8a997d5e0e3b11d364a728df0b53866a840d0aed7fdabf2a0a18ce893ae74477",
+  "permits_created": 0,
+  "plan_changed": false,
+  "status": "PASS",
+  "unacquired": 172
+}

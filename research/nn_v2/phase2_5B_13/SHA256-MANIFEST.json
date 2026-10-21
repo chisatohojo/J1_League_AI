@@ -1,0 +1,30 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_13/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_13/RESULTS.md": "1d66d1bcc1ca7cce86261789d55bc4ed4d80fd93e4e35469a06ee0e026138c1e",
+    "research/nn_v2/phase2_5B_13/SPEC.md": "f274ad693d826df2be255e410f7a9776e692137c484dd8d5a4801781a732118c",
+    "research/nn_v2/phase2_5B_13/UNPROVEN.md": "48f1f3dd155ae8236a7ecfa48498ec1f47c68a47a0d1f0c3553a1415d5bb44ae",
+    "research/nn_v2/phase2_5B_13/backup-verification.json": "c143dbfe0a767781ae571015c183407672e03c6ef0de7b3d166e9985fc0b5644",
+    "research/nn_v2/phase2_5B_13/compatibility-summary.json": "ebe35cf8947398be2d1e4f7ad8207ba1dc478288f1273f1ad036b9f4b2e48d20",
+    "research/nn_v2/phase2_5B_13/fault_harness.py": "e0b6d8cb11530978f43de1f42d79c8bb76ee94b0ec2397e852531783b10ccd93",
+    "research/nn_v2/phase2_5B_13/fixed-set-verification.json": "f491f23f3d98e91674dc436c536a4f233566f51ae44db24f825be6d43e86fc9a",
+    "research/nn_v2/phase2_5B_13/historical-quarantine-summary.json": "7e36907564e7044bc27325ac87ad8249e51cd5fa42266b2bf83fe701f7b0df57",
+    "research/nn_v2/phase2_5B_13/implementation-sha256.json": "712ba3ee23abfa07bb7f31109754270da559e6656f355d51ea03ffb890856109",
+    "research/nn_v2/phase2_5B_13/input-sha256.json": "a3485da70fafa073428a46d5a1a8d1aac00dba4f8a6df79581f49794de8ddbe5",
+    "research/nn_v2/phase2_5B_13/local-evidence-index.json": "c059a7f2a089dce077a237d7fb3bc9ad1f3f4289a23f42f4ae3c645466df03cb",
+    "research/nn_v2/phase2_5B_13/local_integration.py": "a6ed54fec4b3c3345e7afd95c1f3d52a1e577011fdd9d58de0e954e77d3490a8",
+    "research/nn_v2/phase2_5B_13/local_worker.py": "32cf3b965a4700e018c284912368e04569cf0cfe0ac62c2a0972a10992660be5",
+    "research/nn_v2/phase2_5B_13/next-stage.json": "1824eabce0b034aaa3751766b9ab2c1af36c1ff23721b77cd51a46ba7835792b",
+    "research/nn_v2/phase2_5B_13/old-formal-records-verification.json": "9a16c0742a139a78d332ce132a20d36caae2b789bf20cc7fdda468284a007444",
+    "research/nn_v2/phase2_5B_13/process-ownership-summary.json": "3caf72e1f781f7b3acef7b328bf998a177bcc311069ad6a3f6dad79214050aca",
+    "research/nn_v2/phase2_5B_13/protection-verification.json": "fea4383f52da9901633d7932466373575465e825329db4f6e1b5e7e4cade42d8",
+    "research/nn_v2/phase2_5B_13/public-metadata-readback.json": "0a00ec16de5e5721a30ea9befe802b08d3527f73970af03ceb065dd1abb52795",
+    "research/nn_v2/phase2_5B_13/readiness.json": "7699db45a62245f126dc2bdf106ef7269f8966d4ee9bf2ee25c40b6c5405b86f",
+    "research/nn_v2/phase2_5B_13/storage-safety-summary.json": "35150585f6768a2ab4c49cca5ca568d3f0e5f73f4f1acdaf87dc52e47f78ca59",
+    "research/nn_v2/phase2_5B_13/synthetic-test-results.json": "ce7bd398886b329be4767c942bee126f17c6519a72b7c27bf1f048f643a648c4",
+    "research/nn_v2/phase2_5B_13/windows_local.py": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1",
+    "tests/test_nn_two_stage_local.py": "1ef5448bda70b072479817d4eaec635b487eb269947c8c4a48810a55caa26f70"
+  },
+  "self_excluded": true
+}

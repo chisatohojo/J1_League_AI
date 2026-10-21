@@ -1,0 +1,16 @@
+{
+  "JUnit_SHA256": "96bcf3d10d7ae78d88fcb02e153312b52d8b3f93142860758c1377ae01456754",
+  "earlier_full_JUnit_SHA256": "35ac128914e908d14586d2d2895fc7593e65d3cdd00a5ac77c9d4e2b3d9ceb44",
+  "errors": 0,
+  "failures": 0,
+  "initial_native_JUnit_SHA256": "09b2409d34170039b69d2bb990f30ee94dc76f411f3ae0a9d4744f1a42bfa7df",
+  "native_evidence_index_SHA256": "06c54990c7bfcf86f9620df9ea6b7d230f1743bc82fe51e33ea2a36815a76aa7",
+  "native_local_cases": 46,
+  "official_network_GET": 0,
+  "prior_related_cases": 696,
+  "skipped": 0,
+  "status": "PASS",
+  "test_source_SHA256": "1ef5448bda70b072479817d4eaec635b487eb269947c8c4a48810a55caa26f70",
+  "tests": 742,
+  "warnings_as_errors": true
+}
