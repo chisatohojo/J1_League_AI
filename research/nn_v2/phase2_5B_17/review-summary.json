@@ -1,0 +1,30 @@
+{
+  "A11_full_HTML_byte_ranges_and_SHA_pinned": true,
+  "affirmatively_reviewed_non_timing": 3,
+  "ambiguous_or_insufficient_evidence": 0,
+  "disciplinary_or_medical_rule_meanings_inferred": false,
+  "evidence_inconsistency": 0,
+  "exact_rule_SHA256": [
+    "ebf39b874d93de484c4e3dedaa3c6b0608f7387db5dda1d6531756d245ca19fa",
+    "5e11d6d738ced29472e2407ab25938bbadcdb2b5091d1f9465dd28bfb3909f93",
+    "f3d0619acc792d0c998bcfe4b03b45d56eac2571f290e6dcead4e389a2a5e7d0"
+  ],
+  "independent_cases": 3,
+  "individual_identity_text_names_or_paths_published": false,
+  "minute_staff_warning_cases": 1,
+  "original_acquisition_UTC_preserved": true,
+  "original_quarantine_and_successor_order_reverified": 3,
+  "physical_interruption_absence_proven": false,
+  "postmatch_staff_warning_cases": 1,
+  "private_registry_SHA256": "8deceb81f428029a1bf2f07eba966197aa512d04c31c3ebdc54974088d949128",
+  "private_review_SHA256": "9dbf54b6c88e0a609045c8ee95995b6bfb871bedefb5ee016b3814fd08adbb61",
+  "result_available_wall_time_proven": false,
+  "reviewed_paragraph_counts": [
+    2,
+    1,
+    1
+  ],
+  "status": "PASS",
+  "substitution_annotation_pair_cases": 1,
+  "timing_exception_or_suspicion_unresolved": 0
+}

@@ -1,0 +1,15 @@
+{
+  "Stage_A_original_acquired": 179,
+  "history_admitted": 0,
+  "new_GET": 0,
+  "new_independent_analysis_HOLD": 0,
+  "new_independent_analysis_PASS": 179,
+  "old_rule_files_changed": 0,
+  "original_source_seals_and_quarantine_packets_changed": 0,
+  "phase16_official_new_PASS": 45,
+  "phase16_official_quarantine_HOLD": 3,
+  "phase16_official_unacquired": 109,
+  "phase16_original_record_rewritten": false,
+  "private_results_SHA256": "a8b84db93798a56ff03d071fd33d298f1bf8eedbe920d0ab43343a4528ff62ac",
+  "status": "PASS"
+}

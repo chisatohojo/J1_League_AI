@@ -1,0 +1,17 @@
+{
+  "ID_collisions": 0,
+  "URL_duplicates": 0,
+  "URL_overlap": 0,
+  "acquired": 179,
+  "independent_HOLD": 0,
+  "independent_PASS": 179,
+  "network_enabled": false,
+  "new_executor_created": false,
+  "new_permit_created": false,
+  "original": 288,
+  "remaining109_ledger_SHA256": "2a40d5048f519caa02685f8380002a593b107192ade8c8408f32d20dfade8843",
+  "remaining109_plan_SHA256": "6a0e767364b34418197687e82b692e6a9ccbd1ed1d0b3d07d0f67faf371ad2bc",
+  "remaining_collection_authorized": false,
+  "status": "PASS",
+  "unacquired": 109
+}

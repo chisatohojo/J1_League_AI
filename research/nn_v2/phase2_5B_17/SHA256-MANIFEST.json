@@ -1,0 +1,22 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_17/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_17/REMARK_CONTRACT.md": "c89b67a208ce38e705ebd75934930ecfa3526c7aed2db8c9415ddd397cd1fdbf",
+    "research/nn_v2/phase2_5B_17/RESULTS.md": "43eb0319dc5b703ceb3c759dde8c4349c93f09243f1c7d1a21291498f9778427",
+    "research/nn_v2/phase2_5B_17/backup-verification.json": "414956cd0c7d167786ae446e228f2802f50835a04e7b58374cb87c720af6cf78",
+    "research/nn_v2/phase2_5B_17/compatibility-summary.json": "f1f717016003045455da32925966f26fc07e7e35b86fa0c7cde2fe7fdd642e26",
+    "research/nn_v2/phase2_5B_17/exact_quarantine_review.py": "3e1204b10bcb362bdfcc949bb15c177c07de3c866665706c2e17262980d5cdfa",
+    "research/nn_v2/phase2_5B_17/fixed-set-verification.json": "b7178d78910bd8c7c75d80e979fe3133e9438d09f3196e719eb1900a15a7b718",
+    "research/nn_v2/phase2_5B_17/implementation-sha256.json": "09b75b10ea7f1c5bd6e55929f8fc8977d1849ae00a08aebf8264764407811ab3",
+    "research/nn_v2/phase2_5B_17/input-sha256.json": "5280a43916b50c739f356e26dd691e6fa634a8bd571a16dcb26702e92cfc35a8",
+    "research/nn_v2/phase2_5B_17/next-stage.json": "793a76ce9f5f07e6ebd33a62cd1018a551b74555d8706ced1fbec00acf5f0748",
+    "research/nn_v2/phase2_5B_17/old-record-preservation.json": "073842ff3830e7350b862d772e5f008dfa260fcc11f74bd5baa6311023b026ac",
+    "research/nn_v2/phase2_5B_17/protection-summary.json": "86e352095cd83b2e092e2a5f5e34292c56b9bce93766bd5973eb92423aefeb5c",
+    "research/nn_v2/phase2_5B_17/readiness.json": "29211b20c28da423319b74995de95b006de359bd34f5f30786b19d16a3df80c1",
+    "research/nn_v2/phase2_5B_17/review-summary.json": "aaffacdbf11a9fc83ba19dd723a3953c1812c26d2f3d4d8eb30d3043a6f4b6fe",
+    "research/nn_v2/phase2_5B_17/test-provenance.json": "6a0194db36b093fccdb0deb03c3f53a17918e9f91b6c029e17156cf6df3b1cf2",
+    "tests/test_nn_quarantine_review_v6.py": "0ffb313e0928d82ba12bf6a969d1ffdefee1af8a2321ad4040e62fb0d952de33"
+  },
+  "self_excluded": true
+}

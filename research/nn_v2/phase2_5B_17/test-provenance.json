@@ -1,0 +1,30 @@
+{
+  "at_UTC": "2026-10-21T22:52:19.572223+00:00",
+  "new_JUnit_SHA256": "b52c50901db655273030df663ab5d89a7a0f811986369223292d049a902bb6c6",
+  "new_adapter_SHA256": "3e1204b10bcb362bdfcc949bb15c177c07de3c866665706c2e17262980d5cdfa",
+  "new_test_source_SHA256": "0ffb313e0928d82ba12bf6a969d1ffdefee1af8a2321ad4040e62fb0d952de33",
+  "new_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 54
+  },
+  "new_timestamp": "2026-10-22T07:49:28.614470+09:00",
+  "real_GET": 0,
+  "reused_evidence": [
+    {
+      "JUnit_SHA256": "8ce397d3be03b8bda9de40e43a018401352ca2e957b834395ff465b70de42715",
+      "original_timestamp": "2026-10-21T22:19:34.700009+09:00",
+      "reexecuted_this_phase": false,
+      "tests": 935
+    },
+    {
+      "JUnit_SHA256": "4cfc5cc4c4b8b35f01a4343a1e6074c724171b5d36a175de783a48300bcf1f5a",
+      "original_timestamp": "2026-10-22T07:11:47.945376+09:00",
+      "reexecuted_this_phase": false,
+      "tests": 9
+    }
+  ],
+  "status": "PASS",
+  "warnings_as_errors": true
+}

@@ -1,0 +1,31 @@
+{
+  "Stage_A_integrity_reverified": 179,
+  "Stage_A_original_seals": 179,
+  "all_strict_semantic_fields_unchanged": true,
+  "at_UTC": "2026-10-21T22:50:41.563994+00:00",
+  "history_admitted": 0,
+  "new_JUnit_SHA256": "b52c50901db655273030df663ab5d89a7a0f811986369223292d049a902bb6c6",
+  "new_test_source_SHA256": "0ffb313e0928d82ba12bf6a969d1ffdefee1af8a2321ad4040e62fb0d952de33",
+  "new_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 54
+  },
+  "no_forbidden_events_observed": true,
+  "original_phase16_HOLD": 3,
+  "original_phase16_PASS": 45,
+  "original_quarantines_preserved": 3,
+  "original_tests_reused": {
+    "phase16_postprocess": 9,
+    "precommunication": 935
+  },
+  "private_results_SHA256": "a8b84db93798a56ff03d071fd33d298f1bf8eedbe920d0ab43343a4528ff62ac",
+  "review_registry_SHA256": "8deceb81f428029a1bf2f07eba966197aa512d04c31c3ebdc54974088d949128",
+  "status": "PASS",
+  "v5_HOLD_originally": 3,
+  "v5_PASS_unchanged_in_full": 176,
+  "v6_HOLD": 0,
+  "v6_PASS": 179,
+  "v6_reclassified": 3
+}

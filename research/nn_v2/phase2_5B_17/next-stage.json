@@ -1,0 +1,23 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "acquired": 179,
+  "collection_authorized": false,
+  "collection_readiness_and_history_admission_are_separate": true,
+  "existing_ledger_and_plan_unchanged": true,
+  "history_admission": false,
+  "independent_unresolved_quarantines": 0,
+  "new_executor_created": false,
+  "new_permit_created": false,
+  "old_run_resume_authorized": false,
+  "original": 288,
+  "original_phase16_HOLD_packets_retained": 3,
+  "remaining_ledger_SHA256": "2a40d5048f519caa02685f8380002a593b107192ade8c8408f32d20dfade8843",
+  "remaining_plan_SHA256": "6a0e767364b34418197687e82b692e6a9ccbd1ed1d0b3d07d0f67faf371ad2bc",
+  "status": "NEXT_ACQUISITION_REQUIRES_SEPARATE_APPROVAL",
+  "transport_or_identity_result_or_SHA_error": "GLOBAL_STOP",
+  "unacquired": 109,
+  "unknown_remark_only": "ISOLATE_HOLD_AFTER_STAGE_A_AND_COMPLETE_PACKET_RECEIPT"
+}
