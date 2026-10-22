@@ -1,0 +1,194 @@
+{
+  "Git": {
+    "actual_commit_and_remote_readback": "Recorded separately after Git operation to avoid self-referential commit hash",
+    "allowed_operation": "Commit and normal push to Phase5B branch after Phase5B1 gates pass",
+    "merge": false
+  },
+  "Phase4_commit": "af776d2c7569d491200ab96509047e7d8ea178fc",
+  "Phase5B2": "NOT_EXECUTED_NO_VERIFIED_ISOLATION",
+  "Phase5B_overall": "NOT_VERIFIED",
+  "UTC": "2026-10-22T22:04:01.892899+00:00",
+  "actions": {
+    "OS_feature_or_ACL_change": 0,
+    "evaluation": 0,
+    "existing_files_deleted": 0,
+    "external_HTTP_DNS_probes": 0,
+    "fit": 0,
+    "inference": 0,
+    "mock_child": 0,
+    "official_GET": 0,
+    "production_prediction_or_feed_write": 0,
+    "production_reservation": 0,
+    "real_Champion_or_model_load": 0,
+    "real_worker": 0,
+    "task_run_stop_or_modify": 0
+  },
+  "base_commit": "dc03d498831033a1cfab29d8597f98c4ee807019",
+  "branch": "feature/weekend-phase5b-mock",
+  "documentation_SHA256": "e37d0816e29e2bdc90681a8a7f66d03521faa86e471b108baf4c5565e3824d58",
+  "evidence_SHA256": {
+    "host-contract-final.log": "fd26be8db672c9aef53e86b90ffb830b4884e5602773280d755973dbe47f1bba",
+    "host-contract-final.xml": "719faf6f62e1cc290233f53e320f728be9f12b4047a8b88292972e832a3d9d10",
+    "host-execution-guard.json": "bca114eddf82bfbdcd7cd825905dae82d7e0fa24d13422e03725437a3ec403d5",
+    "host-readonly-baseline.json": "36a4ceb539c10e8f09becf83273ccf3169f005d1d2dbcfc3a53081e6a76151e1",
+    "host-readonly-comparison-qualified.json": "77d72822920c6980681a2585203559ea99bc2cdf60389b4915d2c0da1ca618e7",
+    "host-readonly-final.json": "c7a3f8418dd287faec92631968ce2b470094ac498b87c587e4fab899ef719733",
+    "preserved-files.json": "7dc91a2e166d3db352c966b82c46bd58892f567dbf9491e1b55d72c986816967",
+    "prior-to-stable-baseline.json": "5852971b2f4b37179dc35ac7fbe91ba8a975ce98c0b4f6cf21989be114ed738c",
+    "protection-stable-final.json": "a801361c1134d7dfbfb3b1aabec3325c7badbec10682233d8f6e69a592b0f471",
+    "scheduled-task-independent-audit.json": "83341e09473fc50fba9c4d356c1c212b045b5595f37a09aa0c777ea628f15ff0"
+  },
+  "execution_guard": {
+    "OS_network_isolation_proven": false,
+    "child_processes": 0,
+    "exit_code": 0,
+    "forbidden_effect_attempts": [],
+    "plugins_autoload": false,
+    "real_worker_model_or_collection_modules_loaded": [],
+    "scope": "PURE_IN_PROCESS_APPLICATION_GUARD_ONLY",
+    "test_code_SHA256": {
+      "src/modeling/weekend_mock_contract.py": "7728282330e9b5b36ff254dda4fce407cbe600147a0fcf6b26c692430d0434c9",
+      "tests/test_weekend_mock_contract.py": "2b1518935ae2515e20fcaacc0a6056d751b454311b2ecb51aa97fcd15de2952d",
+      "tests/test_weekend_mock_static.py": "ab9985bc0c877183f824e72a1bd208d848cd6a5666b34053dfc55469dd3fe7f1"
+    }
+  },
+  "fixed_contract_document_SHA256": {
+    "docs/WEEKEND_BATCH_PHASE1.md": "de36bc154a10e531cefa323702c5b87877e5ccc4f3ab893fd52a7df9cb1aa501",
+    "docs/WEEKEND_BATCH_PHASE2.md": "58a33313b433825cc9e4d61b18125f33d1931739c334b13120b76a38049df13d",
+    "docs/WEEKEND_BATCH_PHASE3.md": "c2703f36a00c111d02858e3862f00a312fd6305c4a4bd4099d762516a70f70e8",
+    "docs/WEEKEND_BATCH_PHASE4.md": "f40ec46db168b59f600d4d4eed99aa30d501f61bd4e6dda27b3542adbab4b0ae",
+    "docs/WEEKEND_BATCH_PHASE5A.md": "b387b40aebda1731bbc335383f9f92d95fcd9633cb81989ae6cfa6284b717385"
+  },
+  "format_version": "weekend-phase5b1-host-validation-v1",
+  "gate": "PHASE5B1_HOST_STATIC_VERIFIED",
+  "logical_contract": {
+    "Phase4_worker_adapter_implemented": false,
+    "batch_published": false,
+    "durability_verified": false,
+    "evidence_kind": "PURE_FUNCTION_SIMULATION",
+    "history_admission": false,
+    "os_isolation_verified": false,
+    "persistent_ledger": false,
+    "receipt": "weekend-mock-contract-receipt-v1",
+    "request": "weekend-mock-request-v1",
+    "response": "weekend-mock-response-v1",
+    "stop_reasons": [
+      "STOP",
+      "CANCEL",
+      "TIMEOUT",
+      "CRASH"
+    ],
+    "worker_started": false
+  },
+  "observations": {
+    "HypervisorPresent": true,
+    "Sandbox_executable_exists": false,
+    "VM_candidates": "Conditional VirtualBox / VMware Workstation Windows-host releases or dedicated external Windows VM; compatibility/licensing/version not verified offline",
+    "current_host_configuration_changed": false,
+    "installation_VM_creation_reboot_elevation": 0,
+    "os": {
+      "BuildNumber": "26200",
+      "Caption": "Microsoft Windows 11 Home",
+      "OperatingSystemSKU": 101,
+      "Version": "10.0.26200"
+    },
+    "verified_isolated_guest": false
+  },
+  "preserved_initial_files_SHA256": {
+    "docs/WEEKEND_BATCH_PHASE5B.md": "d045b683b9149c8bb0b38e0f2d2bd8f00447828bad82e07ddbfc9c63d8ea300b",
+    "docs/WEEKEND_BATCH_PHASE5B_VALIDATION.json": "02c0cc22924422cc123543f8d08a78859aedd5b90faa35511c462f6183188a23",
+    "src/modeling/weekend_mock_contract.py": "52209959cbd32cadf82d58612e74a8de8f3178408c14bccbbed4cb8a8fc687ee",
+    "tests/test_weekend_mock_contract.py": "8b1e4a75296731a468bbe1527de85f691f3555bb426ce596e8695166e12da1d5",
+    "tests/test_weekend_mock_static.py": "ab9985bc0c877183f824e72a1bd208d848cd6a5666b34053dfc55469dd3fe7f1"
+  },
+  "previous_unsplit_gate": "PHASE5B_BLOCKED",
+  "protection": {
+    "browser_profile_contents_inspected": false,
+    "current_baseline_files": 45019,
+    "directory_ACLs_unchanged": true,
+    "file_identity_size_mtime_creation_differences": 0,
+    "hash_differences": 0,
+    "independent_scheduled_task": {
+      "baseline_window": "First baseline observations overlapped scheduled task; stable baseline captured after task completion",
+      "displayed_predictions_unchanged": true,
+      "error_code": "prediction_history_incomplete",
+      "evidence_SHA256": {
+        "after-scheduled-morning.json": "d295f726f56d86e6a95e89734ff2b2367ffb4ed8b757038c8f2d00faf99d082a",
+        "before-scheduled-morning.json": "e3cd8f54bf0a0434382e69a57fcdea5d05232d2d10d320a4a43e6e996d60cde8",
+        "scheduled-morning-process-observation.json": "6d5d87952d01218b41e44fce612945b3290a064cdc3da654ae7fb6f171c8b190"
+      },
+      "manifest_SHA256": "1a9c23806af32635cf72903e0b9257efca3e5d5b10500fb6d2b78e9806c117c6",
+      "normal_success_not_assumed": true,
+      "preexisting_interval_differences_not_automatically_attributed": true,
+      "prior_publications_and_saved_batches_unchanged": true,
+      "research_cause_not_inferred": true,
+      "source_revision": "ec06f50fe01d7d68206204d67272675160de795ac59f5873eb419413f64c25ca",
+      "status": "PASS",
+      "task_exit": 1,
+      "task_output_files_added": 40,
+      "task_repair_or_rerun": false,
+      "unresolved_pre_target_matches": 5,
+      "within_observation_changed_mutable_files": [
+        "official\\change_log.csv",
+        "official\\completed_matches.csv",
+        "official\\fixture_identity.csv",
+        "official\\latest.json",
+        "official\\review.md",
+        "official\\schedule.csv",
+        "official\\update_summary.json",
+        "view\\update-status.json"
+      ]
+    },
+    "main_and_all_other_worktrees_unchanged": true,
+    "model_payloads": 53,
+    "observed_GUI_browser_processes": 22,
+    "observed_process_identities_unchanged": false,
+    "previous_interval_changed_file_count": 12,
+    "previous_interval_missing_file_count": 0,
+    "previous_interval_not_attributed_automatically": true,
+    "renderer_change_cause_not_inferred": true,
+    "retained_GUI_process_identities": 21,
+    "retained_browser_parent_unchanged": true,
+    "saved_2026_10_24": 5,
+    "saved_2026_10_25": 0,
+    "saved_predictions": 19,
+    "status": "PASS",
+    "task_definitions_unchanged": true,
+    "task_execution_status_unchanged_after_stable_baseline": true,
+    "unattributed_renderer_replacements": 1,
+    "universal_browser_immutability_claim": false
+  },
+  "scope": "SYNTHETIC_ONLY_PURE_FUNCTIONS_AND_STATIC_READS",
+  "tests": {
+    "OS_negative_controls_executed": 0,
+    "Phase4_historical": {
+      "passed": 613,
+      "reexecuted": false,
+      "skipped": 1
+    },
+    "Phase5A_historical": {
+      "reexecuted": false,
+      "static_passed": 69
+    },
+    "errors": 0,
+    "failures": 0,
+    "negative_bearing_pure_cases": 104,
+    "passed": 114,
+    "preceding_93_pass_reexecuted_as_part_of_current_suite": true,
+    "prior_results_added_to_current_count": false,
+    "pure_contract_passed": 108,
+    "skipped": 0,
+    "static_regression_passed": 6,
+    "warnings_as_errors": true
+  },
+  "unverified": [
+    "OS network isolation / external-connection denial",
+    "Actual mock process / Job / parent identity / descendant cleanup / handle release",
+    "Owner SID / DACL / path-swap and reparse races / out-of-sandbox write denial",
+    "Receipt file persistence / flush / replace / readback / interprocess duplicate rejection",
+    "Real crash / timeout / Stop competition",
+    "Worker-backed Phase4 ten-match batch, saved reread and feed recovery",
+    "VM payload transfer and safe output recovery implementation",
+    "Windows power-loss durability"
+  ]
+}
