@@ -1,0 +1,3204 @@
+{
+  "format_version": "weekend-phase5b2-environment-preflight-v1",
+  "UTC": "2026-10-22T22:29:21.587099+00:00",
+  "gate": "PHASE5B2_ENV_STRATEGY_READY",
+  "repository": "chisatohojo/J1_League_AI",
+  "branch": "feature/weekend-phase5b2-env-preflight",
+  "base_commit": "2badf8f3f46c7e1a9c18d256ba8207f0dc3dfc2a",
+  "scope": "READ_ONLY_SURVEY_COMPARISON_AND_PLAN_ONLY",
+  "observations": {
+    "os": {
+      "method": "Win32_OperatingSystem + read-only CurrentVersion registry",
+      "status": "OBSERVED",
+      "evidence": "hardware-private.json",
+      "value": {
+        "edition": "Windows 11 Home",
+        "architecture": "x64",
+        "display_version": "25H2",
+        "build": "26200",
+        "UBR": 9711,
+        "registry_product_name": "Windows 10 Home",
+        "registry_product_name_not_current_OS_authority": true
+      }
+    },
+    "cpu": {
+      "method": "Win32_Processor + Intel model specification",
+      "status": "OBSERVED",
+      "evidence": "hardware-private.json",
+      "sources": [
+        "S01",
+        "S04"
+      ],
+      "value": {
+        "model": "12th Gen Intel(R) Core(TM) i9-12900K",
+        "cores": 16,
+        "logical_processors": 24,
+        "VT_x_model_support": true,
+        "EPT_SLAT_model_support": true,
+        "AMD_V": "NOT_APPLICABLE_INTEL",
+        "raw_CIM_virtualization_firmware": false,
+        "raw_CIM_VMM_extensions": false,
+        "raw_CIM_SLAT": false,
+        "effective_firmware_configuration": "UNKNOWN",
+        "raw_false_not_used_as_unsupported_or_disabled_proof": true
+      }
+    },
+    "memory": {
+      "method": "Win32_PhysicalMemory capacities and Win32_OperatingSystem available memory",
+      "status": "OBSERVED",
+      "evidence": "hardware-private.json",
+      "value": {
+        "installed_bytes": 17179869184,
+        "visible_bytes": 16800235520,
+        "available_bytes": 5238902784,
+        "available_at_UTC": "2026-10-22T22:19:09.7069670Z",
+        "proposed_start_gate_bytes": 9663676416,
+        "start_gate_currently_satisfied": false
+      }
+    },
+    "storage": {
+      "method": "Win32_LogicalDisk DriveType=3",
+      "status": "OBSERVED",
+      "evidence": "hardware-private.json",
+      "value": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 511407996928,
+          "FreeSpace": 35858497536
+        },
+        {
+          "DeviceID": "D:",
+          "FileSystem": "NTFS",
+          "Size": 999411412992,
+          "FreeSpace": 851740164096
+        },
+        {
+          "DeviceID": "E:",
+          "FileSystem": "NTFS",
+          "Size": 2000397791232,
+          "FreeSpace": 678819524608
+        }
+      ],
+      "physical_disk_independence": "UNKNOWN"
+    },
+    "hypervisor": {
+      "method": "Win32_ComputerSystem and Win32_DeviceGuard",
+      "status": "OBSERVED",
+      "evidence": "virtualization-private.json",
+      "sources": [
+        "S03"
+      ],
+      "value": {
+        "HypervisorPresent": true,
+        "VBS_status": 2,
+        "VBS_running": true,
+        "memory_integrity_running": true,
+        "security_services_running": [
+          2,
+          7
+        ],
+        "user_VM_availability": "UNKNOWN",
+        "user_VM_not_inferred_from_HypervisorPresent": true
+      }
+    },
+    "Windows_features": {
+      "method": "Win32_OptionalFeature read-only CIM; no elevated CBS query",
+      "status": "OBSERVED_CIM_ONLY",
+      "evidence": "virtualization-private.json",
+      "sources": [
+        "S02"
+      ],
+      "value": [
+        {
+          "name": "VirtualMachinePlatform",
+          "InstallState": 2,
+          "interpretation": "Disabled"
+        },
+        {
+          "name": "HypervisorPlatform",
+          "InstallState": 2,
+          "interpretation": "Disabled"
+        },
+        {
+          "name": "Microsoft-Windows-Subsystem-Linux",
+          "InstallState": 2,
+          "interpretation": "Disabled"
+        }
+      ],
+      "pending_reboot_or_CBS_state": "UNKNOWN"
+    },
+    "WHP": {
+      "method": "WinHvPlatform.dll file version only; no library load or API call",
+      "status": "UNKNOWN_USABILITY",
+      "evidence": "platform-api-presence-private.json",
+      "value": {
+        "UTC": "2026-10-22T22:23:33.0062600Z",
+        "WinHvPlatform_DLL_exists": true,
+        "file_version": "10.0.26100.9711 (WinBuild.160101.0800)",
+        "DLL_loaded_for_test": false,
+        "API_capability_or_partition_creation_invoked": false,
+        "mode_usable": "UNKNOWN",
+        "Sandbox_executable_exists": false
+      }
+    },
+    "WSL2": {
+      "method": "Current-user Lxss registry, optional feature, service/command presence only",
+      "status": "NOT_CONFIRMED_USABLE",
+      "evidence": "virtualization-private.json",
+      "value": {
+        "key_exists": false,
+        "registered_versions": [],
+        "executable_invoked": false,
+        "global_absence_proven": false
+      },
+      "WSL_executable_started": false
+    },
+    "installed_virtualizers": {
+      "method": "HKLM 64/32-bit and HKCU uninstall registry; known Program Files paths; PATH; services/drivers/processes",
+      "status": "NOT_DETECTED_IN_CHECKED_SCOPE",
+      "evidence": "software-private.json",
+      "value": {
+        "VirtualBox_version": null,
+        "VMware_Workstation_version": null,
+        "QEMU_version": null,
+        "matching_registry_entries": 0,
+        "running_matches": 0,
+        "driver_matches": 0,
+        "global_absence_proven": false
+      }
+    },
+    "existing_VMs": {
+      "method": "Default VirtualBox registry, VMware inventory and default VM dirs presence; no manager CLI invocation",
+      "status": "NOT_FOUND_IN_CHECKED_LOCATIONS",
+      "evidence": "software-private.json",
+      "value": {
+        "default_inventory_files_present": [
+          false,
+          false
+        ],
+        "default_locations_present": [
+          false,
+          false
+        ],
+        "global_absence_proven": false
+      },
+      "HyperV_query": {
+        "status": "UNKNOWN",
+        "error": "HRESULT 0x8004100e,Microsoft.Management.Infrastructure.CimCmdlets.GetCimInstanceCommand"
+      }
+    },
+    "firmware_details": {
+      "method": "Win32_BIOS version only; no BIOS UI, reboot or privileged BCD/SecureBoot query",
+      "status": "UNKNOWN_CONFIGURATION",
+      "evidence": "hardware-private.json",
+      "value": {
+        "version": "8.03",
+        "UEFI_virtualization_setting": "UNKNOWN",
+        "physical_SecureBoot": "UNKNOWN"
+      }
+    }
+  },
+  "recommendation": {
+    "status": "CONDITIONAL_PREFERENCE_NOT_APPROVED_FOR_CONSTRUCTION",
+    "selected": "B_VMWARE_WORKSTATION_PRO",
+    "version_family": "26H1",
+    "candidate_patch": "26H1u1_NOT_DOWNLOADED_OR_PINNED",
+    "reason": "Prefer documented VBS/WHP route without disabling host security; local usability remains unverified",
+    "basis": [
+      "S10",
+      "S11",
+      "S12",
+      "S13"
+    ],
+    "guest": "Windows 11 Pro x64 25H2, guest license/media not confirmed",
+    "vCPU": 2,
+    "RAM_GiB": 6,
+    "system_disk_GiB": 100,
+    "output_disk_GiB": 8,
+    "total_host_capacity_gate_GiB": 160,
+    "minimum_available_host_RAM_GiB": 9,
+    "storage_preference": "New data-volume root; C volume rejected; exact path/ACL not created",
+    "host_VBS_HVCI_preserved": true,
+    "nested_virtualization_required": false,
+    "guest_UEFI_SecureBoot_vTPM_required": true,
+    "input": "Read-only ISO containing pinned synthetic code/Python/wheels/fixtures only",
+    "output": "Opaque powered-off VM backup plus minimal human aggregate/digest plan; full bounded machine export unresolved",
+    "no_host_shares": true,
+    "network": "No guest NIC or host-network passthrough; other channels also reviewed",
+    "current_environment_ready_to_launch": false
+  },
+  "alternatives": [
+    {
+      "id": "A",
+      "product": "VirtualBox",
+      "decision": "Not preferred with active VBS; no security-disabling workaround",
+      "sources": [
+        "S07",
+        "S08",
+        "S09"
+      ]
+    },
+    {
+      "id": "C",
+      "product": "QEMU TCG/WHPX or dedicated external Windows VM",
+      "decision": "Alternative only; backend/device/performance/ownership not validated",
+      "sources": [
+        "S14",
+        "S15"
+      ]
+    },
+    {
+      "id": "D",
+      "product": "Restricted host process",
+      "decision": "Rejected for Phase5B2 production non-sharing boundary; no OS deny policy proven"
+    },
+    {
+      "id": "excluded",
+      "product": "Sandbox on current Home / WSL2 as Windows kernel substitute",
+      "decision": "Not adopted",
+      "sources": [
+        "S05",
+        "S06"
+      ]
+    }
+  ],
+  "required_dynamic_controls": [
+    {
+      "requirement": "Fixed SYNTHETIC_ONLY scope and exact mock entrypoint/image/request/batch/revision hashes",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "All virtual NICs absent/disabled and no NAT/bridge/host-only/USB NIC/remote network",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "No host folder, profile, raw host disk, physical device, clipboard, D&D or guest-control transfer",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Version-specific VMCI/vsock/device residual paths identified and denied or STOP",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Read-only synthetic ISO; isolated guest output and separately approved bounded export",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Guest non-privileged SID/DACL/Owner and write allowlist",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Job assignment before child resume; kernel ownership, descendants and handle release",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Timeout/cancel/Stop/crash with finite cleanup and no unowned process termination",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Receipt flush/replace/readback and request/batch binding; no duplicate/resume",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "Phase4 synthetic E2E and feed reread without respawn; no real data/model/HTTP",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "requirement": "VM results limited to guest/build/settings/storage; no host or power-loss guarantee",
+      "status": "NOT_EXECUTED"
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "U01",
+      "item": "WHP usable on this exact Home/full build while VBS/HVCI remain enabled",
+      "resolution": "Version-specific official requirements first; approved isolated boot only later"
+    },
+    {
+      "id": "U02",
+      "item": "Exact 26H1 patch installer/signature/SHA and Home/full-build support detail",
+      "resolution": "Obtain official release/configuration material; no download/login/install in this phase"
+    },
+    {
+      "id": "U03",
+      "item": "Current-version shared-device/VMCI/isolation controls",
+      "resolution": "Detailed manual returned 403; no inferred VMX keys or access-control bypass"
+    },
+    {
+      "id": "U04",
+      "item": "Guest license/media/OOBE/activation and offline preparation",
+      "resolution": "Apply actual Windows 11 terms to documented user entitlement; resolve 25H2 media/26H2 change and formally approved initial setup/activation; no host Home guest-rights assumption"
+    },
+    {
+      "id": "U05",
+      "item": "Available memory below 9 GiB planning gate",
+      "resolution": "Re-observe after user-selected quiet window or separately approved capacity plan; never terminate tasks/apps"
+    },
+    {
+      "id": "U06",
+      "item": "Final bounded output transfer and verifier-to-host readback implementation",
+      "resolution": "Minimal human aggregate/digest transfer is a bounded design candidate only; full machine export still requires approved version-specific backend and independently tested receiver"
+    },
+    {
+      "id": "U07",
+      "item": "Physical disk independence and storage/VM power-loss behavior",
+      "resolution": "Storage topology evidence and separate test plan; not inferred from volume letters"
+    },
+    {
+      "id": "U08",
+      "item": "Official page currently offers 26H2 while design proposed guest 25H2",
+      "resolution": "Confirm legitimate 25H2 media or explicitly approve a version change and recheck guest support; no automatic substitution"
+    }
+  ],
+  "stop_before_construction": [
+    "U01",
+    "U02",
+    "U03",
+    "U04",
+    "U05",
+    "U06",
+    "U08"
+  ],
+  "next_approval": {
+    "scope": "Information/media/configuration-plan completion only, before any install/VM creation",
+    "requested_items": [
+      "Exact official Workstation release/manual and signed installer identity",
+      "Guest Windows rights/media and OOBE/activation route",
+      "Bounded output readback design",
+      "Resolve 25H2 media versus official 26H2 offer",
+      "Confirm available memory above conservative start gate without stopping operational tasks"
+    ],
+    "separate_later_approvals": [
+      "installer download/login if needed",
+      "admin/driver/service/network-component changes",
+      "reboot/Windows feature or BIOS changes only if justified",
+      "VM creation/start",
+      "guest mock/negative controls",
+      "evidence-verified restoration/removal"
+    ]
+  },
+  "known_anomalies": {
+    "evidence_source": "Existing sealed Phase5B1 artifacts only",
+    "morning_task": {
+      "exit_code": 1,
+      "error_code": "prediction_history_incomplete",
+      "unresolved_history": 5,
+      "task_reexecuted": false,
+      "repair": false,
+      "normal_success_not_inferred": true,
+      "research_cause_not_inferred": true,
+      "source_revision": "ec06f50fe01d7d68206204d67272675160de795ac59f5873eb419413f64c25ca",
+      "potential_VM_effect": "Shared-host resource overlap only; no causal compatibility conclusion",
+      "source_evidence_SHA256": "83341e09473fc50fba9c4d356c1c212b045b5595f37a09aa0c777ea628f15ff0"
+    },
+    "Chrome": {
+      "renderer_replacements": 1,
+      "retained_process_identities": 21,
+      "same_retained_parent": true,
+      "cause": "UNKNOWN",
+      "reproduction_or_profile_operation": false,
+      "potential_VM_effect": "No profile sharing permitted; not a VM safety proof",
+      "source_evidence_SHA256": "77d72822920c6980681a2585203559ea99bc2cdf60389b4915d2c0da1ca618e7"
+    }
+  },
+  "protection": {
+    "status": "PASS",
+    "current_baseline_files": 45616,
+    "fixed_count_not_assumed": true,
+    "SHA_and_file_identity_metadata_differences": 0,
+    "NN_payloads": 53,
+    "NN_payloads_verified": true,
+    "existing_saved_predictions": 19,
+    "task_definitions_and_status_unchanged": true,
+    "main_and_all_old_worktrees_unchanged": true,
+    "Windows_feature_VBS_HVCI_state_rechecked": true,
+    "existing_VM_or_browser_configuration_changed": false,
+    "additional_investigation_audit": {
+      "UTC": "2026-10-22T22:48:46.430744+00:00",
+      "protected_files": 45616,
+      "status": "PASS",
+      "model_payloads": 53,
+      "model_payloads_verified": true,
+      "tasks_equal": true,
+      "task_definitions_equal": true,
+      "worktrees_equal": true,
+      "main_equal": true,
+      "hash_differences": 0,
+      "identity_metadata_differences": 0
+    }
+  },
+  "source_references": [
+    {
+      "id": "S01",
+      "title": "Intel CPU specifications",
+      "url": "https://www.intel.co.jp/content/www/jp/ja/products/sku/134599/intel-core-i912900k-processor-30m-cache-up-to-5-20-ghz/specifications.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "CPU model supports VT-x/EPT; not a host runtime test"
+    },
+    {
+      "id": "S02",
+      "title": "CIM optional feature values",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-optionalfeature",
+      "retrieval_status": "OBSERVED",
+      "claim": "InstallState 2 means Disabled"
+    },
+    {
+      "id": "S03",
+      "title": "VBS and memory integrity values",
+      "url": "https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity",
+      "retrieval_status": "OBSERVED",
+      "claim": "VBS=2 running; services 2 and 7 meaning"
+    },
+    {
+      "id": "S04",
+      "title": "Intel virtualization interpretation",
+      "url": "https://www.intel.com/content/www/us/en/support/articles/000005486/processors.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "Existing hypervisor may affect capability display"
+    },
+    {
+      "id": "S05",
+      "title": "Sandbox supported editions",
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/",
+      "retrieval_status": "OBSERVED",
+      "claim": "Windows Home unsupported"
+    },
+    {
+      "id": "S06",
+      "title": "Windows 11 VM requirements",
+      "url": "https://learn.microsoft.com/en-us/windows/whats-new/windows-11-requirements",
+      "retrieval_status": "OBSERVED",
+      "claim": "4GB RAM, 64GB storage, 2 virtual processors and virtual security requirements"
+    },
+    {
+      "id": "S07",
+      "title": "VirtualBox supported hosts",
+      "url": "https://docs.oracle.com/en/virtualization/virtualbox/7.2/user/installation.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "Windows 11 x86_64 host family listed"
+    },
+    {
+      "id": "S08",
+      "title": "VirtualBox base licensing and components",
+      "url": "https://docs.oracle.com/en/virtualization/virtualbox/7.2/user/Introduction.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "GPLv3 base; optional separately licensed Extension Pack"
+    },
+    {
+      "id": "S09",
+      "title": "VirtualBox Hyper-V conflicts",
+      "url": "https://docs.oracle.com/en/virtualization/virtualbox/7.2/user/Troubleshooting.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "Hyper-V conflict and performance caveat; do not adopt security-disabling workaround"
+    },
+    {
+      "id": "S10",
+      "title": "VMware supported hosts",
+      "url": "https://knowledge.broadcom.com/external/article/315653",
+      "retrieval_status": "OBSERVED",
+      "claim": "Windows 11 family listed for 26H1/26H1u1; not exact Home/build certification"
+    },
+    {
+      "id": "S11",
+      "title": "VMware VBS/WHP path",
+      "url": "https://knowledge.broadcom.com/external/article?legacyId=76918",
+      "retrieval_status": "OBSERVED",
+      "claim": "WHP path on VBS-enabled hosts; exact installed-host operation unverified"
+    },
+    {
+      "id": "S12",
+      "title": "VMware license/download conditions",
+      "url": "https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hyper.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "Free applicable desktop releases; portal account and terms required"
+    },
+    {
+      "id": "S13",
+      "title": "VMware VBS-mode visibility",
+      "url": "https://knowledge.broadcom.com/external/article/417896/after-the-host-os-upgrade-to-version-win.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "25H2 adds Hyper-V/WHP mode visibility; not a 26H1 isolation manual"
+    },
+    {
+      "id": "S14",
+      "title": "QEMU Windows accelerators",
+      "url": "https://www.qemu.org/docs/master/system/introduction.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "TCG/WHPX alternative; hardware-specific feasibility unverified"
+    },
+    {
+      "id": "S15",
+      "title": "QEMU explicit network/device settings",
+      "url": "https://www.qemu.org/docs/master/system/invocation.html",
+      "retrieval_status": "OBSERVED",
+      "claim": "Explicit no-NIC required instead of default user networking; not an approved command"
+    },
+    {
+      "id": "S16",
+      "title": "Windows Enterprise evaluation conditions",
+      "url": "https://www.microsoft.com/en-us/evalcenter/evaluate-windows-11-enterprise",
+      "retrieval_status": "OBSERVED",
+      "claim": "90-day evaluation and account/activation conditions; not presumed eligible/offline-ready"
+    },
+    {
+      "id": "S17",
+      "title": "Workstation 26H1 detailed manual",
+      "url": "https://techdocs.broadcom.com/us/en/vmware-cis/desktop-hypervisors/workstation-pro/26H1/using-vmware-workstation-pro.html",
+      "retrieval_status": "UNKNOWN_HTTP_403",
+      "claim": "No retry or access-control bypass; exact configuration recipe not verified"
+    },
+    {
+      "id": "S18",
+      "title": "Official older Workstation PDF",
+      "url": "https://techdocs2-prod.adobecqms.net/content/dam/broadcom/techdocs/us/en/pdf/vmware/desktop-hypervisors/workstation/vmware-workstation-pro-17-0.pdf",
+      "retrieval_status": "UNKNOWN_HTTP_403",
+      "claim": "Not usable as full text evidence or current-version guarantee"
+    },
+    {
+      "id": "S19",
+      "title": "Old Oracle URL",
+      "url": "https://docs.oracle.com/en/virtualization/virtualbox/7.2/user/BasicConcepts.html",
+      "retrieval_status": "UNKNOWN_HTTP_404",
+      "claim": "Not used as supporting evidence"
+    },
+    {
+      "id": "S20",
+      "title": "26H1 official announcement",
+      "url": "https://blogs.vmware.com/cloud-foundation/2026/05/14/announcing-vmware-workstation-and-fusion-26h1/",
+      "retrieval_status": "OBSERVED",
+      "claim": "26H1 Windows application is 64-bit; available from official portal; free categories"
+    },
+    {
+      "id": "S21",
+      "title": "Installing Workstation Pro",
+      "url": "https://knowledge.broadcom.com/external/article?articleNumber=387947",
+      "retrieval_status": "OBSERVED_GENERAL_GUIDE_NOT_EXACT_INSTALLER_INVENTORY",
+      "claim": "Administrator execution and restart in general procedure; actual 26H1 components remain unknown"
+    },
+    {
+      "id": "S22",
+      "title": "Windows 11 license terms April 2024",
+      "url": "https://www.microsoft.com/content/dam/microsoft/usetm/documents/windows/11/oem-%28pre-installed%29/UseTerms_OEM_Windows_11_English.pdf/",
+      "retrieval_status": "OBSERVED",
+      "claim": "Sections 1(a), 2(a,b,d(iv)), 4, 5; OEM path document covers retail/preinstalled in text, volume agreements separate; actual user entitlement unknown"
+    },
+    {
+      "id": "S23",
+      "title": "Official Windows 11 x64 media entry",
+      "url": "https://www.microsoft.com/ja-jp/software-download/windows11",
+      "retrieval_status": "OBSERVED_PAGE_ONLY_NO_BINARY",
+      "claim": "Page displayed 26H2; prior 25H2 plan not silently changed; VM multi-edition ISO; actual media not acquired"
+    },
+    {
+      "id": "S24",
+      "title": "Windows 11 system requirements and initial setup",
+      "url": "https://support.microsoft.com/en-us/windows/experience/compatibility/windows-11-system-requirements",
+      "retrieval_status": "OBSERVED",
+      "claim": "Pro personal initial setup requires Internet and Microsoft account; fully offline fresh guest preparation not established"
+    },
+    {
+      "id": "S25",
+      "title": "Tools components and shared-folder feature",
+      "url": "https://knowledge.broadcom.com/external/article/415374/customizing-vmware-tools-for-automated-w.html",
+      "retrieval_status": "OBSERVED_SCOPE_LIMITED",
+      "claim": "Product environment vSphere ESXi; not an exact Workstation 26H1 isolation-settings recipe"
+    },
+    {
+      "id": "S26",
+      "title": "WHP and VBS prerequisites",
+      "url": "https://knowledge.broadcom.com/external/article/315420",
+      "retrieval_status": "OBSERVED_LEGACY_ENVIRONMENT",
+      "claim": "15.5.5+ WHP path; Environment lists 15/16, does not certify current Home full build"
+    },
+    {
+      "id": "S27",
+      "title": "Windows Job Objects",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Process-group management, breakaway/inheritance/last-handle limits; not network/file isolation"
+    },
+    {
+      "id": "S28",
+      "title": "AssignProcessToJobObject",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-assignprocesstojobobject",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Rights, nested job constraints and errors require real Windows evidence"
+    },
+    {
+      "id": "S29",
+      "title": "Windows ACLs",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Windows ACE/DACL/SACL semantics differ from POSIX controls"
+    },
+    {
+      "id": "S30",
+      "title": "Windows buffered file I/O",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/flushing-system-buffered-i-o-data-to-disk",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Buffered file close is not itself forced flush; explicit flush distinct from power-loss validation"
+    },
+    {
+      "id": "S31",
+      "title": "ReplaceFileW",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Same-volume/replacement ACL/file identity/error semantics; WRITE_THROUGH flag unsupported; not claimed Python backend"
+    },
+    {
+      "id": "S32",
+      "title": "Python 3.12 os.fsync/replace",
+      "url": "https://docs.python.org/3.12/library/os.html",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "fsync uses _commit on Windows; same interface does not prove Windows durability or Linux equivalence"
+    },
+    {
+      "id": "S33",
+      "title": "AppContainer isolation",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/appcontainer-isolation",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Resource capabilities require a real configured and verified boundary; not established for current mock"
+    },
+    {
+      "id": "S34",
+      "title": "Linux cgroup v2",
+      "url": "https://docs.kernel.org/admin-guide/cgroup-v2.html",
+      "retrieval_status": "OBSERVED_DOCUMENTATION_ONLY",
+      "claim": "Linux group/resource/process controls are not Windows Job Object evidence"
+    }
+  ],
+  "source_evidence_kind": "Web tool extracted text, not raw HTTP capture, binaries, or runtime certification",
+  "actions": {
+    "VM_manager_invocations": 0,
+    "VM_created_started_removed": 0,
+    "mock_child": 0,
+    "real_worker": 0,
+    "model_load_fit_predict_evaluate": 0,
+    "official_football_HTTP": 0,
+    "external_connectivity_probes": 0,
+    "OS_feature_network_Firewall_or_ACL_changes": 0,
+    "elevation": 0,
+    "reboot": 0,
+    "task_run_stop_modify": 0,
+    "browser_or_profile_operations": 0,
+    "production_prediction_or_feed_write": 0,
+    "existing_file_cleanup": 0,
+    "installer_or_ISO_download": 0,
+    "official_document_reference_performed": true
+  },
+  "historical_tests": {
+    "Phase5B1_passed": 114,
+    "negative_bearing_pure_cases": 104,
+    "rerun": false,
+    "new_dynamic_tests": 0,
+    "unexecuted_not_counted_as_PASS": true
+  },
+  "documentation_SHA256": "7c1325006bb497165acd5b1e783aa4192af5d6b6ee25dcbaef71468d8cdfa5b6",
+  "input_SHA256": {
+    "docs/WEEKEND_BATCH_PHASE5A.md": "b387b40aebda1731bbc335383f9f92d95fcd9633cb81989ae6cfa6284b717385",
+    "docs/WEEKEND_BATCH_PHASE5A_VALIDATION.json": "014ffc360c757673e1b1e7e2571389e3ae240e022a460bb2a8fb1dd95d3c7003",
+    "docs/WEEKEND_BATCH_PHASE5B.md": "e37d0816e29e2bdc90681a8a7f66d03521faa86e471b108baf4c5565e3824d58",
+    "docs/WEEKEND_BATCH_PHASE5B_VALIDATION.json": "ec020c1f28896dba70d2d4ef6c2c5788389d58e401b97d885a0b091a4250b03b",
+    "src/modeling/weekend_mock_contract.py": "7728282330e9b5b36ff254dda4fce407cbe600147a0fcf6b26c692430d0434c9"
+  },
+  "private_evidence_SHA256": {
+    "additional-capacity-private.json": "be88ff5ae38022bd453b02fec5b132206d227c33b5c5a4cd7064145005511143",
+    "audit.py": "0df4ddc79ae49af135597e9ccf3af93aef94980b1fa4caf216a1cb45875da375",
+    "baseline-stable.json": "2af9792de51a040e900087840476769e7799b8b3f00d513ddfe04f53f03ac72b",
+    "build_report.py": "de7070ef5c75555544afe4da704a417f7acd17f1bbb129d698c8a52482c1616d",
+    "configuration-final-private.json": "3eeb2b1f203b7f1eac217ae27cc344f576cd2a2167d1b90f0db72ef7879b5ffb",
+    "hardware-private.json": "21adfecaab14389aa79aebb7abfedc2bd970b12a9585417346e7cc9a6c50bcda",
+    "official-pages-1.json": "aaf474f4bb66adeadb4c6a071f51184a459f47c8113b17a48f1759c53759eaa3",
+    "official-pages-2.json": "14b6010805355a71a8bcf45085b778a8ec6ea11c255ea9f42e810d9072a227ad",
+    "official-pages-3.json": "a7f5e15d7b3685beb51970b8cbe8f440d4197efccc061d41b40b767ffd134590",
+    "official-pages-4.json": "f8b17828b6b2a6326315661f8b70e3699989355d3003d80c84433c7bd619c8a0",
+    "official-pages-6.json": "3d81b9d83bf808717a0105501b6727bf1a388b0e844f66c03091ec5ff32c885a",
+    "official-pages-7.json": "08955946df59a766cdc6db86ac6acdc9ce850b24692b03fe90a8b4262480dfde",
+    "official-search-2.json": "d0f41ac33e13b6f8e3cce4cc850215768717ed6c0255e24f8ec9f77a25ef12f9",
+    "official-search-5.json": "292dfa24ace78c0b6ddf67aa18fe0cc233a518168a9b18271160d5730e18fa4f",
+    "platform-api-presence-private.json": "b50a7216548b2c950834ec59660a767f2ec40200efdbae9c4ae5a8d681206cf1",
+    "preflight.ps1": "0a5c7ef527eb2040edc51402bf0c96e4048a45b4452b0235a676414dc4ff158b",
+    "prior-to-stable-baseline.json": "a665ea8aaa0b8189dbb2b7405f5fa65e1a77de804e361aefb188eac3d365da02",
+    "protection-stable-final.json": "0b75f1a441e96c8836481b5ff2c9e803763de59add1f7c462b281bb12718580d",
+    "software-private.json": "6b1a6dd4eb806a7ace9b6de041ce4e313eacc23e01c07842bbf36caff70aa51e",
+    "virtualization-private.json": "ec31f70e7dbe1427d5ea3a60c23b5b6fbb54a8cbe3837fe237df3a874b10ccba"
+  },
+  "Git": {
+    "allowed_operation": "Docs-only commit and normal push after strategy static/protection PASS, including PARTIAL if honestly reported",
+    "target_branch": "feature/weekend-phase5b2-env-preflight",
+    "new_commit": "RECORDED_IN_POST_COMMIT_PRIVATE_RECEIPT_TO_AVOID_SELF_REFERENCE",
+    "pushed": "RECORDED_IN_POST_PUSH_PRIVATE_RECEIPT",
+    "merge": false,
+    "prior_no_commit_policy_retained_as_historical": true
+  },
+  "validation": {
+    "kind": "STRATEGY_STATIC_DOCUMENT_CODE_AND_PROVENANCE_ONLY",
+    "status": "PASS",
+    "checks_passed": 72,
+    "checks_failed": 0,
+    "dynamic_tests_executed": 0,
+    "historical_tests_rerun": false,
+    "JSON_syntax": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "historical_initial_validation": {
+    "kind": "STATIC_DOCUMENT_AND_PROVENANCE_ONLY",
+    "checks_passed": 45,
+    "checks_failed": 0,
+    "dynamic_tests_executed": 0,
+    "historical_tests_rerun": false,
+    "JSON_syntax": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "additional_investigation": {
+    "UTC": "2026-10-22T22:49:09.130092+00:00",
+    "kind": "OFFICIAL_REFERENCE_AND_PLAN_ADDENDUM_NO_VM_EXECUTION",
+    "preserved_reports": [
+      {
+        "file": "docs/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.md",
+        "before_sha256": "f9281a63ba9e95dbb30f7f044b59c74efd1f83a1b4ea7e3885238b5761e68806",
+        "copy_sha256": "f9281a63ba9e95dbb30f7f044b59c74efd1f83a1b4ea7e3885238b5761e68806"
+      },
+      {
+        "file": "docs/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.json",
+        "before_sha256": "9adf6dd94faaa67fc75898ecaea1eb4e8a8d560f85f1cf5580dd0b239df0b733",
+        "copy_sha256": "9adf6dd94faaa67fc75898ecaea1eb4e8a8d560f85f1cf5580dd0b239df0b733"
+      }
+    ],
+    "previous_private_evidence_namespace": "INITIAL_PREFLIGHT_IMMUTABLE_RECORDS",
+    "current_private_evidence_namespace": "ADDITIONAL_INVESTIGATION_CREATE_NEW_RECORDS",
+    "items": [
+      {
+        "id": 1,
+        "topic": "VMware 26H1 acquisition, hosts, WHP/VBS, installation",
+        "status": "PARTIALLY_CONFIRMED",
+        "sources": [
+          "S10",
+          "S12",
+          "S20",
+          "S21",
+          "S26"
+        ],
+        "confirmed": [
+          "official portal account and compliance route",
+          "Windows 11 family listed for 26H1/26H1u1",
+          "general administrative install/restart procedure"
+        ],
+        "UNKNOWN": [
+          "exact patch binary identity/signature/SHA",
+          "exact Home/full-build WHP compatibility and complete current component/isolation requirements"
+        ],
+        "download_or_install_performed": false
+      },
+      {
+        "id": 2,
+        "topic": "Windows 11 Pro x64 guest rights",
+        "status": "TERMS_CONFIRMED_ENTITLEMENT_UNKNOWN",
+        "sources": [
+          "S22"
+        ],
+        "host_Home_automatically_grants_guest_rights": false,
+        "volume_terms_substituted_for_retail": false,
+        "actual_user_license": "UNKNOWN",
+        "license_key_published": false
+      },
+      {
+        "id": 3,
+        "topic": "Guest media and preparation",
+        "status": "PARTIAL",
+        "sources": [
+          "S23",
+          "S24"
+        ],
+        "observed_official_offer": "26H2",
+        "prior_proposed_guest": "25H2",
+        "automatic_guest_version_change": false,
+        "media_downloaded": false,
+        "media_SHA256": "UNKNOWN",
+        "offline_fresh_OOBE": "NOT_ESTABLISHED",
+        "initial_online_provisioning_requires_separate_approval": true
+      },
+      {
+        "id": 4,
+        "topic": "Isolation configuration",
+        "status": "DESIGN_ONLY_EXACT_26H1_CONTROLS_UNKNOWN",
+        "sources": [
+          "S17",
+          "S25"
+        ],
+        "network": "NO_NIC_NO_NAT_BRIDGE_HOST_ONLY",
+        "shared_folders": false,
+        "shared_clipboard": false,
+        "drag_and_drop": false,
+        "USB_passthrough": false,
+        "Tools_default": "NOT_INSTALLED",
+        "VMCI_vsock_residual_paths": "UNKNOWN_REQUIRE_VERIFICATION_OR_STOP",
+        "unverified_VMX_keys_provided": false,
+        "dynamic_controls_executed": 0
+      },
+      {
+        "id": 5,
+        "topic": "Synthetic input, bounded export, disposal",
+        "status": "DESIGN_CANDIDATE_MACHINE_EXPORT_UNPROVEN",
+        "input": "Read-only ISO, pinned code/Python/wheels/synthetic fixtures only, no production material",
+        "minimal_export": {
+          "method": "Human console transcription of aggregate and digest, two readbacks",
+          "max_bytes": 4096,
+          "not_full_payload_independent_verification": true
+        },
+        "machine_export": {
+          "status": "UNKNOWN_TRANSFER_BACKEND_AND_UNIMPLEMENTED_RECEIVER",
+          "requires_separate_approval": true,
+          "max_files": 128,
+          "max_total_bytes": 16777216,
+          "max_file_bytes": 2097152,
+          "fixed_schema_names_only": true,
+          "reject_traversal_reparse_duplicates_external_XML": true
+        },
+        "opaque_VM_backup_not_guest_filesystem_mount": true,
+        "deletion_requires_backup_verification_and_separate_approval": true,
+        "procedures_executed": false
+      },
+      {
+        "id": 6,
+        "topic": "16 GiB host / 6 GiB guest resource gates",
+        "status": "CURRENT_START_GATE_NOT_MET",
+        "method": "Read-only Win32_OperatingSystem plus conservative planning thresholds, not vendor minimums",
+        "evidence": "memory-observation.json",
+        "installed_GiB": 16,
+        "guest_GiB": 6,
+        "start_available_GiB": 9,
+        "start_samples": 3,
+        "start_observation_window_seconds": 30,
+        "runtime_available_min_GiB": 2,
+        "runtime_low_memory_duration_seconds": 10,
+        "runtime_commit_percent_stop": 90,
+        "single_guest_only": true,
+        "system_volume_min_free_GiB": 20,
+        "new_VM_area_min_free_GiB": 160,
+        "thresholds_empirically_validated": false,
+        "actual_memory": {
+          "UTC": "2026-10-22T22:45:36.1605260Z",
+          "method": "Get-CimInstance Win32_OperatingSystem; read-only; no performance workload",
+          "visible_KiB": 16406480,
+          "available_KiB": 5408572,
+          "total_virtual_KiB": 42620880,
+          "free_virtual_KiB": 26307832,
+          "dynamic_VM_tests": 0
+        },
+        "no_automatic_task_or_app_termination": true
+      },
+      {
+        "id": 7,
+        "topic": "Task failure and Chrome renderer change",
+        "status": "EXISTING_EVIDENCE_REVIEWED_CAUSES_NOT_GENERALIZED",
+        "sources": [
+          "SEALED_PHASE5B1_TASK_AUDIT",
+          "SEALED_PHASE5B1_HOST_COMPARISON"
+        ],
+        "task_exit": 1,
+        "task_error": "prediction_history_incomplete",
+        "task_mutable_files_changed": 8,
+        "task_files_added": 40,
+        "Chrome_renderer_replacements": 1,
+        "Chrome_cause": "UNKNOWN",
+        "task_repair_or_rerun": false,
+        "browser_actions": false,
+        "VM_compatibility_inferred": false,
+        "risk": "Shared-host CPU/RAM/IO contention is possible, not causally established; avoid scheduled windows, preserve task state"
+      }
+    ],
+    "conclusion": "PARTIAL: documentary findings do not establish complete current-version isolation, guest rights/preparation, sufficient RAM, or complete export",
+    "next_approvals": [
+      "Choose exact Workstation patch and guest version/rights/provisioning/export plan",
+      "User portal/account/compliance actions, installer and ISO acquisition; license purchase if needed",
+      "Reviewed administrator installation components and any required reboot",
+      "VM creation and separately bounded initial provisioning connectivity if required",
+      "Offline isolation verification, mock execution and negative controls",
+      "Bounded export, verified restore and dedicated VM disposal"
+    ],
+    "current_approval_requests_issued": false,
+    "VM_construction_started": false
+  },
+  "additional_private_evidence_SHA256": {
+    "addendum.md": "abd94a5701ab0df48275cb137f5cd55917b67cd46310705ee781ecc0e49a4c7c",
+    "addendum_license_search_final.json": "119b8aa0aed72baadcfc8dc184bfb9a4f01fd55dffde926fc786472dae9ded99",
+    "addendum_new_search.json": "0423b0883fe2a425b16bdaf9a1401e407e439523092731a3f025940c977de7a0",
+    "addendum_official_pages3.json": "563883f235c9d89b3c09e8eb38d9486d680967383d54171fd90c32a3d8e60f05",
+    "addendum_pages1.json": "eb0356efd072e1690d4af8d9a54360343d5ea26c4adfca905f247d4a6643bac4",
+    "addendum_terms_requirements_install.json": "59bc7e5b30f42c7b0747ea17d8692b7d8ba7bbf913a0eef041ab67c18c49af46",
+    "addendum_vmware_final.json": "2794cd1e92b58514e94b6077c3589df07d3a23b5321dc8b7627e0e4b729cc013",
+    "audit.py": "bef9bbabe3f3dab85fbb27ec22ab0f6aa93a74a50e16e6cef51c2bbaf0d142b9",
+    "baseline-stable.json": "6bb84b96454edaa12b1a404179a8377c9107866e08d1f41429a8a7ec259a4f27",
+    "memory-observation.json": "2f3bdcf3ad57bd928399a0e8d22a4bf4dd88e953b0a8338ccbc6a82ed3c5420d",
+    "preserved/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.json": "9adf6dd94faaa67fc75898ecaea1eb4e8a8d560f85f1cf5580dd0b239df0b733",
+    "preserved/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.md": "f9281a63ba9e95dbb30f7f044b59c74efd1f83a1b4ea7e3885238b5761e68806",
+    "preserved-files.json": "2c9ae37a8f19a9496888be3ef4daec524e1d2118673bbbbdb829f332fcb36f43",
+    "prior-to-stable-baseline.json": "e9e613e942ea27dae475cb77a70c35d282e45a23985d7cc2172578b28f9f2981",
+    "protection-stable-final.json": "9aa4f323c32c758e1f5a54838550b6ce8ad5781a97f588f24cfbd231d935ef0c",
+    "update_reports.py": "58e51289dc4bf698145a087b4be0a336e64cd16373ed1e7c0e04d96ba85360b8"
+  },
+  "previous_environment_gate": "PHASE5B2_ENV_PARTIAL",
+  "previous_additional_validation": {
+    "kind": "STATIC_DOCUMENT_AND_PROVENANCE_ONLY",
+    "status": "PASS",
+    "checks_passed": 75,
+    "checks_failed": 0,
+    "dynamic_tests_executed": 0,
+    "historical_tests_rerun": false,
+    "JSON_syntax": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "environment_availability_gate": "PHASE5B2_ENV_PARTIAL",
+  "strategy_reassessment": {
+    "format_version": "phase5b-environment-strategy-v1",
+    "UTC": "2026-10-22T23:23:20.599233+00:00",
+    "gate": "PHASE5B2_ENV_STRATEGY_READY",
+    "environment_availability_gate": "PHASE5B2_ENV_PARTIAL",
+    "Phase5B_dynamic_gate": "NOT_VERIFIED",
+    "scope": "READ_ONLY_DESIGN_STATIC_VALIDATION_ONLY",
+    "preserved_reports": [
+      {
+        "file": "docs/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.md",
+        "before_SHA256": "ad7642ac7af95a7f31eccee0e46c343b105244267212bf446c7a93d21a61944a",
+        "copy_SHA256": "ad7642ac7af95a7f31eccee0e46c343b105244267212bf446c7a93d21a61944a",
+        "bytes": 37103
+      },
+      {
+        "file": "docs/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.json",
+        "before_SHA256": "f8d82168f1cf4b075116977e74bf4bf5ba523f61e9597c628edf3d85afe530bf",
+        "copy_SHA256": "f8d82168f1cf4b075116977e74bf4bf5ba523f61e9597c628edf3d85afe530bf",
+        "bytes": 37280
+      }
+    ],
+    "requirements_source": "User Phase5B Step0-10 plus current re-evaluation instruction; descriptive sub-IDs group requirements, Step7 original scenario cases mapped explicitly",
+    "classification_definitions": {
+      "A": "Host read-only/pure safe scope; no dynamic authorization inferred",
+      "B": "Host dynamic candidate only after separate OS boundary proof; not authorized now",
+      "C": "Prefer disposable Windows isolation for actual dangerous/OS-dependent checks; VM is policy choice, not inherent requirement of every API",
+      "D": "Separate future approval, outside mock acceptance"
+    },
+    "requirements": [
+      {
+        "id": "P0.01",
+        "requirement": "Git branch/HEAD/status/remote読取り",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "全worktreeの現状と差分を保存し衝突STOP",
+        "original_requirement_refs": [
+          "Step0.1"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.02",
+        "requirement": "Phase1-5A/5B1契約の読取り",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "固定commitと文書SHA照合",
+        "original_requirement_refs": [
+          "Step0.2"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.03",
+        "requirement": "設計との矛盾確認",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "Phase5A正本と新指示の境界差分を記録",
+        "original_requirement_refs": [
+          "Step0.3"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.04",
+        "requirement": "Phase4/5A依存関係確認",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "コードと仕様参照だけで依存を固定",
+        "original_requirement_refs": [
+          "Step0.4"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.05",
+        "requirement": "専用branch/worktree境界",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "既存専用worktreeで調査2文書だけ変更",
+        "original_requirement_refs": [
+          "Step0.5"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.06",
+        "requirement": "未コミット変更保全",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "正確な原本複製とSHA、既存変更不破棄",
+        "original_requirement_refs": [
+          "Step0.6"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.07",
+        "requirement": "保護baseline",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "全保護file SHA/identity、task query、他branch照合",
+        "original_requirement_refs": [
+          "Step0.7"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.08",
+        "requirement": "Python/pytest/OS依存情報",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "保存仕様とdistribution metadata読取り、実importしない",
+        "original_requirement_refs": [
+          "Step0.8"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.09",
+        "requirement": "専用directory/entrypoint指定",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "将来のallowlist仕様のみ、起動入口は未実装",
+        "original_requirement_refs": [
+          "Step0.9"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P0.10",
+        "requirement": "境界不明時STOP",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "環境の読取り・設計でworkerを実行しない",
+        "acceptance_evidence": "実行を始めず未確認として記録",
+        "original_requirement_refs": [
+          "Step0.10"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P1.01",
+        "requirement": "独立mock process起動",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PROCESS_IN_SELECTED_PATH",
+        "Linux_alternative": "GENERIC_PROCESS_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "process実行にはOS通信/書込み境界が必要",
+        "acceptance_evidence": "固定mock image/hash、親子identity、exit receipt",
+        "original_requirement_refs": [
+          "Step1.independent-process",
+          "Step7.normal.mock-start"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P1.02",
+        "requirement": "実worker/Champion/model import禁止",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "純粋moduleのAST・依存固定を読む",
+        "acceptance_evidence": "allowlist import、入口/fallback不在の静的証拠",
+        "original_requirement_refs": [
+          "Step1.no-real-worker-model"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P1.03",
+        "requirement": "source/fixture/Elo/outputの合成scope",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "data契約はOS非依存",
+        "acceptance_evidence": "synthetic namespace、scope、mock identity完全一致",
+        "original_requirement_refs": [
+          "Step1.synthetic-data"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::validate_request"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P1.04",
+        "requirement": "request/response schema・ID・revision・timeout値",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "bytesと仮時刻の純粋検査",
+        "acceptance_evidence": "canonical JSON、exact keys、ID/batch/revision、有限deadline拒否",
+        "original_requirement_refs": [
+          "Step1.io-schema",
+          "Step7.abnormal.request-id",
+          "Step7.abnormal.batch-id",
+          "Step7.abnormal.revision",
+          "Step7.abnormal.schema"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::validate_request",
+          "src/modeling/weekend_mock_contract.py::validate_response"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P1.05",
+        "requirement": "終了code/例外/途中切断の実transport",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PIPE_PROCESS",
+        "Linux_alternative": "GENERIC_TRANSPORT_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "純粋packet拒否とpipe切断/child exitは別",
+        "acceptance_evidence": "部分stdout、exit非0、上限、応答なしを成功にしない",
+        "original_requirement_refs": [
+          "Step1.exit-and-disconnect"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P1.06",
+        "requirement": "重複response/request/不正状態遷移",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "in-memory契約の証明に限定",
+        "acceptance_evidence": "tuple ledger terminal、二重response/commit拒否",
+        "original_requirement_refs": [
+          "Step1.duplicates",
+          "Step7.abnormal.duplicate-request"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::check_ledger",
+          "src/modeling/weekend_mock_contract.py::claim_request"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P1.07",
+        "requirement": "mock以外entrypointの実起動拒否",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PROCESS_IDENTITY",
+        "Linux_alternative": "GENERIC_PRECHECK_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "実executable identityの確認が必要",
+        "acceptance_evidence": "suspended create前allowlist、image hash・kernel identity、fallback0",
+        "original_requirement_refs": [
+          "Step1.entrypoint-reject",
+          "Step7.abnormal.entrypoint",
+          "Step7.abnormal.start-reject"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P1.08",
+        "requirement": "Phase4互換readerの静的固定",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "既存readerを変更しない",
+        "acceptance_evidence": "Phase4契約/readerコードSHA不変",
+        "original_requirement_refs": [
+          "Step1.phase4-contract-preserved"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P2.01",
+        "requirement": "OSレベル通信遮断",
+        "classification": "C",
+        "OS_dependency": "OS_BOUNDARY_WINDOWS_TARGET",
+        "Linux_alternative": "LINUX_BOUNDARY_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "socket mockはOSポリシーではない",
+        "acceptance_evidence": "VM外側NIC/共有禁止とguest内deny実証",
+        "original_requirement_refs": [
+          "Step2.01"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P2.02",
+        "requirement": "専用IPCだけを許可",
+        "classification": "C",
+        "OS_dependency": "OS_BOUNDARY_WINDOWS_TARGET",
+        "Linux_alternative": "LINUX_BOUNDARY_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "loopback/network/任意named pipeへ広げない",
+        "acceptance_evidence": "stdin/stdout第一案、handle allowlist、別endpoint拒否",
+        "original_requirement_refs": [
+          "Step2.02"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P2.03",
+        "requirement": "HTTP/DNS/API外向き接続拒否",
+        "classification": "C",
+        "OS_dependency": "OS_BOUNDARY_WINDOWS_TARGET",
+        "Linux_alternative": "LINUX_BOUNDARY_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "OS negative-controlが必要",
+        "acceptance_evidence": "承認済み合成probeがOSで失敗しtimeout/通信実数を保存",
+        "original_requirement_refs": [
+          "Step2.03"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P2.04",
+        "requirement": "遮断方式/適用範囲証拠",
+        "classification": "C",
+        "OS_dependency": "OS_BOUNDARY_WINDOWS_TARGET",
+        "Linux_alternative": "LINUX_BOUNDARY_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "設定なしや観測欠損は安全としない",
+        "acceptance_evidence": "設定SHA/guest inventory/negative receipt; 未確立ならchild0",
+        "original_requirement_refs": [
+          "Step2.04"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P2.05",
+        "requirement": "本番volume/profile非共有",
+        "classification": "C",
+        "OS_dependency": "OS_BOUNDARY_WINDOWS_TARGET",
+        "Linux_alternative": "LINUX_BOUNDARY_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "network無効だけではfile共有は残る",
+        "acceptance_evidence": "全folder/device/Tools/VMCI等を確認、不明経路STOP",
+        "original_requirement_refs": [
+          "Step2.05"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.01",
+        "requirement": "所有child限定・PID再利用対策",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "kernel handle/creation identity/image/parentを照合、PID単独不可",
+        "original_requirement_refs": [
+          "Step3.1"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.02",
+        "requirement": "起動前専用entrypoint検証",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "input/code/executable SHA、実worker fallback拒否",
+        "original_requirement_refs": [
+          "Step3.2"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.03",
+        "requirement": "Windows Job割当・nested条件",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "suspended create→assign→IsProcessInJob→resume。失敗はSTOP",
+        "original_requirement_refs": [
+          "Step3.3"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.04",
+        "requirement": "正常exit/timeout/cancel",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "実exitと期限内cleanupを親が記録",
+        "original_requirement_refs": [
+          "Step3.4",
+          "Step7.abnormal.timeout",
+          "Step7.abnormal.cancel"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.05",
+        "requirement": "Stop競合・worker crash",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "terminalの一意性、公開状態不明を保持",
+        "original_requirement_refs": [
+          "Step3.5",
+          "Step7.abnormal.stop-race",
+          "Step7.abnormal.worker-crash"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.06",
+        "requirement": "子孫の残存・breakaway検出",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "自分のJob active数/子孫identityを確認、逃走は失敗",
+        "original_requirement_refs": [
+          "Step3.6",
+          "Step7.abnormal.descendants"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.07",
+        "requirement": "他process非終了",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "negative対象はguest内の専用無関係processのみ、host GUI/taskは触らない",
+        "original_requirement_refs": [
+          "Step3.7"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P3.08",
+        "requirement": "handle解放",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_JOB_KERNEL_HANDLES",
+        "Linux_alternative": "GENERIC_PROCESS_NOT_JOB",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows process所有権と故障注入はVM内へ集約",
+        "acceptance_evidence": "所有Job/process/pipe handle解放と基準差を測定、最後のhandleを考慮",
+        "original_requirement_refs": [
+          "Step3.8",
+          "Step7.normal.handle-release"
+        ],
+        "code_references": [
+          "docs/WEEKEND_BATCH_PHASE5A.md#6"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.01",
+        "requirement": "専用合成保存領域",
+        "classification": "B",
+        "OS_dependency": "GENERIC_FILE_IO",
+        "Linux_alternative": "GENERIC_IO_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "既存本番と非共有/書込み制限が別立証ならhost候補",
+        "acceptance_evidence": "exclusive-create、固定root/allowlist、既存root拒否",
+        "original_requirement_refs": [
+          "Step4.1"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.02",
+        "requirement": "Owner SID/DACL/ACL意味",
+        "classification": "B",
+        "OS_dependency": "WINDOWS_SECURITY_DESCRIPTOR",
+        "Linux_alternative": "NO_WINDOWS_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "専用sandboxだけなら条件付きhost候補、現状は読取りのみ",
+        "acceptance_evidence": "owner/token/ACE inheritance、NULLとempty DACLを区別",
+        "original_requirement_refs": [
+          "Step4.2"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.03",
+        "requirement": "reparse/junction/symlink拒否",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_REPARSE_AND_FILE_ID",
+        "Linux_alternative": "SYMLINK_CONCEPT_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "Windows再解析とidentityの実OS試験",
+        "acceptance_evidence": "guest sandbox内だけで差替え攻撃、readback拒否",
+        "original_requirement_refs": [
+          "Step4.3"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.04",
+        "requirement": "書込み前/公開直前identity",
+        "classification": "B",
+        "OS_dependency": "WINDOWS_FILE_HANDLE_AND_NTFS",
+        "Linux_alternative": "GENERIC_CHECK_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "固定handle/path identityが必要、現在のsafe()はprecheck",
+        "acceptance_evidence": "同じfile/parent identityを再照合、TOCTOU残存は明示",
+        "original_requirement_refs": [
+          "Step4.4"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.05",
+        "requirement": "領域外への書込み拒否",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_ACCESS_TOKEN_DACL",
+        "Linux_alternative": "LINUX_DENIAL_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "同一userの専用folderだけでは本番書込拒否にならない",
+        "acceptance_evidence": "guest内の偽本番markerへのOS write拒否、実本番は触らない",
+        "original_requirement_refs": [
+          "Step4.5"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.06",
+        "requirement": "ACL変更・権限拒否negative",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_DACL",
+        "Linux_alternative": "NO_WINDOWS_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "権限故障は実OS隔離で実施",
+        "acceptance_evidence": "許可領域だけを対象、失敗receiptを保存",
+        "original_requirement_refs": [
+          "Step4.6",
+          "Step7.abnormal.acl-deny"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.07",
+        "requirement": "親directory/symlink競合差替え",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_TOCTOU",
+        "Linux_alternative": "LINUX_RACE_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "攻撃的競合をhost本番と同居させない",
+        "acceptance_evidence": "差替え検出、封印前STOP、公開0",
+        "original_requirement_refs": [
+          "Step4.7",
+          "Step7.abnormal.path-swap"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P4.08",
+        "requirement": "昇格/既存ACL変更禁止",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "禁止境界を静的に確認",
+        "acceptance_evidence": "admin/helper/既存ACL修復の呼出し0",
+        "original_requirement_refs": [
+          "Step4.8"
+        ],
+        "code_references": [
+          "src/modeling/weekend_batch.py::safe",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P5.01",
+        "requirement": "schema/request/batch/revision/mock/UTC/理由",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "純粋なreceipt内容は既存契約",
+        "acceptance_evidence": "SYNTHETIC_ONLYとsimulation表示、実OS証拠false",
+        "original_requirement_refs": [
+          "Step5.1",
+          "Step7.normal.receipt-integrity"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P5.02",
+        "requirement": "receipt新規fileと合成namespace",
+        "classification": "B",
+        "OS_dependency": "GENERIC_FILE_IO",
+        "Linux_alternative": "GENERIC_IO_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "仮領域の保存は境界立証後host候補",
+        "acceptance_evidence": "既存file非上書き、path固定、全SHA",
+        "original_requirement_refs": [
+          "Step5.2"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.03",
+        "requirement": "temp/flush/fsync/replace/readback",
+        "classification": "B",
+        "OS_dependency": "WINDOWS_STORAGE_SEMANTICS",
+        "Linux_alternative": "LOGIC_ONLY_NOT_WINDOWS_DURABILITY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "同名APIでもOS/FSの動作差がある",
+        "acceptance_evidence": "採用API、同volume、fileID/ACL、readbackの順序を実測",
+        "original_requirement_refs": [
+          "Step5.3"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.04",
+        "requirement": "receiptと保存batch対応",
+        "classification": "B",
+        "OS_dependency": "GENERIC_FILE_IO",
+        "Linux_alternative": "LOGIC_AND_GENERIC_IO",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "persisted batchとrequest/receipt結合を確認",
+        "acceptance_evidence": "input/output/manifest/SHA、全件commit一致",
+        "original_requirement_refs": [
+          "Step5.4"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.05",
+        "requirement": "二重実行・二重commit競合",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PROCESS_LOCK_AND_STORAGE",
+        "Linux_alternative": "LOGIC_ONLY_NOT_WINDOWS_LOCK",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "tuple ledgerは実process間排他ではない",
+        "acceptance_evidence": "2process競合でも公開1group、再推論0",
+        "original_requirement_refs": [
+          "Step5.5"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.06",
+        "requirement": "receipt保存前後crash",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PROCESS_STORAGE",
+        "Linux_alternative": "GENERIC_FAULT_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "process kill時の保存境界を実証",
+        "acceptance_evidence": "staging/rename/receipt前後のexitと残存を保持",
+        "original_requirement_refs": [
+          "Step5.6",
+          "Step7.abnormal.write-interrupt"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.07",
+        "requirement": "receipt欠損/改変/不完全拒否",
+        "classification": "B",
+        "OS_dependency": "GENERIC_FILE_IO",
+        "Linux_alternative": "LOGIC_AND_GENERIC_IO",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "保存byteの読戻しも必要",
+        "acceptance_evidence": "成功扱い拒否、欠損を修復しない",
+        "original_requirement_refs": [
+          "Step5.7",
+          "Step7.abnormal.receipt-missing",
+          "Step7.abnormal.receipt-tamper"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.08",
+        "requirement": "失敗後再試行/不明run非再開",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PROCESS_STORAGE",
+        "Linux_alternative": "LOGICAL_RULE_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "durable consumed intentと実子起動を結合",
+        "acceptance_evidence": "二重推論/保存0、不明runを再起動しない",
+        "original_requirement_refs": [
+          "Step5.8"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P5.09",
+        "requirement": "receipt生成失敗を黙殺しない",
+        "classification": "B",
+        "OS_dependency": "GENERIC_FILE_IO",
+        "Linux_alternative": "LOGIC_AND_GENERIC_IO",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "例外処理は保存failureを反映する",
+        "acceptance_evidence": "公開前失敗0件、公開後不明HOLD",
+        "original_requirement_refs": [
+          "Step5.9"
+        ],
+        "code_references": [
+          "src/modeling/weekend_mock_contract.py::simulated_receipt",
+          "src/modeling/weekend_batch.py::write_new"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P6.01",
+        "requirement": "Phase4予約→receipt→source→Elo→10件→reader→feed",
+        "classification": "B",
+        "OS_dependency": "GENERIC_SYNTHETIC_IO",
+        "Linux_alternative": "GENERIC_E2E_NOT_WINDOWS_OS",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "純粋mockのみだが合成file保存を伴う",
+        "acceptance_evidence": "現在のscopeを保持、新しい隔離rootのみで実行",
+        "original_requirement_refs": [
+          "Step6.1",
+          "Step7.normal.ten-batch"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P6.02",
+        "requirement": "worker出力と固定source revision",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_WORKER_TRANSPORT",
+        "Linux_alternative": "GENERIC_TRANSPORT_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "worker経由のsnapshot/bindingは未実装",
+        "acceptance_evidence": "全target同一snapshot、packet→Phase4 adapterの意味保存",
+        "original_requirement_refs": [
+          "Step6.2"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P6.03",
+        "requirement": "保存後feed再投影worker起動0",
+        "classification": "C",
+        "OS_dependency": "WINDOWS_PROCESS_COUNTERS",
+        "Linux_alternative": "GENERIC_COUNTER_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DISPOSABLE_WINDOWS_ISOLATION_PREFERRED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "実worker起動countを親receiptで検証",
+        "acceptance_evidence": "保存済みbatchだけ読取り、再表示でchild0",
+        "original_requirement_refs": [
+          "Step6.3",
+          "Step7.normal.redisplay"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P6.04",
+        "requirement": "latest更新/改日程/保存値不変",
+        "classification": "B",
+        "OS_dependency": "GENERIC_SYNTHETIC_IO",
+        "Linux_alternative": "GENERIC_E2E_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "合成registryと既保存batchの検証",
+        "acceptance_evidence": "固定revisionは不変、適用可否は別、変更はHOLD",
+        "original_requirement_refs": [
+          "Step6.4"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P6.05",
+        "requirement": "旧日別/旧v2 reader不変",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "コード/契約SHAを固定",
+        "acceptance_evidence": "読取り実装へ変更なし、旧formatを誤読しない",
+        "original_requirement_refs": [
+          "Step6.5"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P6.06",
+        "requirement": "feed失敗時batch保持・改変検出",
+        "classification": "B",
+        "OS_dependency": "GENERIC_SYNTHETIC_IO",
+        "Linux_alternative": "GENERIC_E2E_ONLY",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "DEDICATED_HOST_BOUNDARY_REQUIRED_NOT_ESTABLISHED",
+        "selected_execution_environment": "FUTURE_WINDOWS_ISOLATION",
+        "rationale": "書込みfailureとbefore_save/visibilityを検証",
+        "acceptance_evidence": "batch維持、last-good、再推論0、改変HOLD",
+        "original_requirement_refs": [
+          "Step6.6",
+          "Step7.abnormal.feed-failure",
+          "Step7.abnormal.before-after-tamper"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "P6.07",
+        "requirement": "実モデル接続をPhase5Cへ分離",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "scopeとimport経路を静的に拒否",
+        "acceptance_evidence": "実loader/Champion/collector非接続",
+        "original_requirement_refs": [
+          "Step6.7"
+        ],
+        "code_references": [
+          "src/modeling/weekend_integration.py",
+          "tests/test_weekend_integration.py"
+        ],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.01",
+        "requirement": "モデル53 payload",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.1"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.02",
+        "requirement": "既存19予測",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.2"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.03",
+        "requirement": "公式source/publication",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.3"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.04",
+        "requirement": "Phase4 branch/worktree",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.4"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.05",
+        "requirement": "Phase5A branch/worktree",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.5"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.06",
+        "requirement": "main",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.6"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.07",
+        "requirement": "全他worktree",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.7"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.08",
+        "requirement": "運用task定義/状態",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.8"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.09",
+        "requirement": "GUI/browser保護範囲",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.9"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P8.10",
+        "requirement": "新baseline/差分帰属と非修復",
+        "classification": "A",
+        "OS_dependency": "READ_ONLY_HOST_INVENTORY",
+        "Linux_alternative": "STATIC_ONLY",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "読取り監査だけで設定/状態を変更しない",
+        "acceptance_evidence": "SHA/file identity/必要metadata、既存証跡とtask query、原因不明はSTOP",
+        "original_requirement_refs": [
+          "Step8.10"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P9.01",
+        "requirement": "構成/通信schema/endpoint/隔離仕様",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "文書化は実行承認ではない",
+        "acceptance_evidence": "旧5A/5B1文書は不変、調査2文書だけを更新",
+        "original_requirement_refs": [
+          "Step9.1"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P9.02",
+        "requirement": "Job/ACL/receipt/negative-control記録",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "文書化は実行承認ではない",
+        "acceptance_evidence": "旧5A/5B1文書は不変、調査2文書だけを更新",
+        "original_requirement_refs": [
+          "Step9.2"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P9.03",
+        "requirement": "Phase4互換性/保護/未実証の区分",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "文書化は実行承認ではない",
+        "acceptance_evidence": "旧5A/5B1文書は不変、調査2文書だけを更新",
+        "original_requirement_refs": [
+          "Step9.3"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P9.04",
+        "requirement": "Phase5C承認条件と新旧実績の区別",
+        "classification": "A",
+        "OS_dependency": "NONE",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "文書化は実行承認ではない",
+        "acceptance_evidence": "旧5A/5B1文書は不変、調査2文書だけを更新",
+        "original_requirement_refs": [
+          "Step9.4"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.01",
+        "requirement": "差分精査",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.1"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.02",
+        "requirement": "diff --check",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.2"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.03",
+        "requirement": "静的検証/回帰の実績区分",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.3"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.04",
+        "requirement": "保護監査",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.4"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.05",
+        "requirement": "証拠文書化",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.5"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.06",
+        "requirement": "専用branchへ条件付きcommit",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.6"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.07",
+        "requirement": "通常push/local-origin-remote一致",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.7"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.08",
+        "requirement": "worktree clean",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.8"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "P10.09",
+        "requirement": "main/Phase4/5A/5B1非merge",
+        "classification": "A",
+        "OS_dependency": "NONE_OR_READ_ONLY_GIT",
+        "Linux_alternative": "YES",
+        "host_execution_now": "STATIC_READ_ONLY_ONLY",
+        "required_boundary": "READ_ONLY_OR_PURE_NO_IO",
+        "selected_execution_environment": "CURRENT_HOST_STATIC_ONLY",
+        "rationale": "今回の新指示は調査成果物のPARTIAL保存も明示許可",
+        "acceptance_evidence": "文書/監査PASS後だけ保存、Phase5B全体合格に読み替えない",
+        "original_requirement_refs": [
+          "Step10.9"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": false
+      },
+      {
+        "id": "D.01",
+        "requirement": "実worker接続",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Step6.separate-real-phase"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.02",
+        "requirement": "実Champion接続",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Step6.separate-real-phase"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.03",
+        "requirement": "実モデルload/推論",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Step6.separate-real-phase"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.04",
+        "requirement": "公式HTTP/robots",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Step6.separate-real-phase"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.05",
+        "requirement": "本番予測保存",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Step6.separate-real-phase"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.06",
+        "requirement": "本番feed更新",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Step6.separate-real-phase"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.07",
+        "requirement": "Windows実電源断耐性",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Phase5A.G5-G6"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      },
+      {
+        "id": "D.08",
+        "requirement": "本番runtime/task導入",
+        "classification": "D",
+        "OS_dependency": "SEPARATE_STAGE",
+        "Linux_alternative": "NOT_PHASE5B_SUBSTITUTE",
+        "host_execution_now": "NOT_AUTHORIZED",
+        "required_boundary": "OUTSIDE_PHASE5B_SEPARATE_APPROVAL",
+        "selected_execution_environment": "FUTURE_SEPARATE_STAGE",
+        "rationale": "今回およびmock検証の承認外",
+        "acceptance_evidence": "独立計画/環境/明示承認が必要",
+        "original_requirement_refs": [
+          "Phase5A.G5-G6"
+        ],
+        "code_references": [],
+        "execution_this_stage": "NOT_EXECUTED_DYNAMIC",
+        "future_approval_required": true
+      }
+    ],
+    "counts": {
+      "A": 42,
+      "C": 25,
+      "B": 11,
+      "D": 8
+    },
+    "Step7_scenario_coverage": {
+      "normal.mock-start": "P1.01",
+      "normal.ten-batch": "P6.01",
+      "normal.receipt-integrity": "P5.01",
+      "normal.redisplay": "P6.03",
+      "normal.handle-release": "P3.08",
+      "abnormal.start-reject": "P1.07",
+      "abnormal.entrypoint": "P1.07",
+      "abnormal.request-id": "P1.04",
+      "abnormal.batch-id": "P1.04",
+      "abnormal.revision": "P1.04",
+      "abnormal.schema": "P1.04",
+      "abnormal.timeout": "P3.04",
+      "abnormal.cancel": "P3.04",
+      "abnormal.stop-race": "P3.05",
+      "abnormal.worker-crash": "P3.05",
+      "abnormal.descendants": "P3.06",
+      "abnormal.acl-deny": "P4.06",
+      "abnormal.path-swap": "P4.07",
+      "abnormal.write-interrupt": "P5.06",
+      "abnormal.receipt-missing": "P5.07",
+      "abnormal.receipt-tamper": "P5.07",
+      "abnormal.duplicate-request": "P1.06",
+      "abnormal.feed-failure": "P6.06",
+      "abnormal.before-after-tamper": "P6.06"
+    },
+    "prior_observations_are_historical_not_current_measurements": true,
+    "host_B_boundary_established": false,
+    "host_B_execution_authorized": false,
+    "selected_plan": "C_WINDOWS_DYNAMIC_CONSOLIDATION",
+    "reason": "One Windows dynamic environment covers required Windows kernel/filesystem tests; pure contracts already run on host. Host boundary unproven; extra Linux VM duplicates provisioning without removing Windows gates.",
+    "VM_intrinsically_required_by_Job_API": false,
+    "Windows_required_for_Job_SID_NTFS_claims": true,
+    "environment_count": {
+      "static_host": 1,
+      "additional_dynamic_Windows": 1,
+      "additional_Linux": 0,
+      "simultaneous_guest_limit": 1
+    },
+    "alternatives": [
+      {
+        "id": "1",
+        "method": "Host pure/static and dedicated file sandbox",
+        "memory": "No guest reservation; audit load only now",
+        "preparation": "low for static; file sandbox requires independent boundary proof",
+        "Windows_coverage": "static/pure only now; actual file semantics only after separate approval",
+        "network_and_production_boundary": "NOT_ESTABLISHED",
+        "input_output": "pure bytes now; future exclusive sandbox only",
+        "rollback": "preserve reports and failed evidence; no cleanup now",
+        "cost_license": "No new guest OS for static tests; host rights unchanged",
+        "risk": "Sandbox folder and Job do not deny other host files/network",
+        "decision": "A scope adopted; B not executed"
+      },
+      {
+        "id": "2",
+        "method": "Restricted host mock process / AppContainer candidate",
+        "memory": "No guest allocation, process/resource budget unknown",
+        "preparation": "new bootstrap/token/network/file policy and independent negative controls",
+        "Windows_coverage": "potential Windows APIs, not established for current token/environment",
+        "network_and_production_boundary": "UNKNOWN; AppContainer literature is not proof for this mock",
+        "input_output": "capability-limited IPC and file allowlist would be required",
+        "rollback": "owned child only; token/profile/ACL changes need approval",
+        "cost_license": "No guest OS automatically needed; policy implementation cost unmeasured",
+        "risk": "shared host kernel, task/browser/resource effects; current no-child rule",
+        "decision": "not selected; proof effort adds a second execution boundary"
+      },
+      {
+        "id": "3",
+        "method": "Lightweight Linux VM",
+        "memory": "1-2 GiB planning candidate, not measured; one VM at a time",
+        "preparation": "hypervisor plus pinned Linux/Python offline image",
+        "Windows_coverage": "NO Job/SID/DACL/reparse/NTFS substitute",
+        "network_and_production_boundary": "can design no NIC/no shares; unproven here",
+        "input_output": "read-only synthetic ISO; bounded export still needed",
+        "rollback": "approved offline clone/backup/disposal",
+        "cost_license": "distribution license must be checked; no Windows guest-rights inference",
+        "risk": "extra guest preparation and repeated OS-specific tests still required",
+        "decision": "not selected; optional exploratory generic transport tests only"
+      },
+      {
+        "id": "4",
+        "method": "VMware 26H1 + Windows guest",
+        "memory": "6 GiB guest / 9 GiB host available planning gate; historical free 5.158 GiB below gate",
+        "preparation": "official patch/install/provisioning/rights/isolation/export approvals unresolved",
+        "Windows_coverage": "required Windows Job/ACL/NTFS/process path in exact guest build",
+        "network_and_production_boundary": "no NIC/shares/integration design, not yet proven",
+        "input_output": "previous section10 ISO/opaque backup/bounded export plan; full export unresolved",
+        "rollback": "baseline/backup then explicit disposal; no failed-run deletion",
+        "cost_license": "Workstation free categories documented; separate lawful Windows guest license needed",
+        "risk": "current Home/WHP/VBS compatibility, RAM, exact isolation controls, export unknown",
+        "decision": "conditional software preference for selected plan; not permission to build"
+      },
+      {
+        "id": "5",
+        "method": "VirtualBox + Windows guest",
+        "memory": "Windows guest 6 GiB / conservative headroom same, overhead unmeasured",
+        "preparation": "install/rights/image/isolation controls separately approved",
+        "Windows_coverage": "Windows APIs in guest only; not host guarantees",
+        "network_and_production_boundary": "no NIC/shares/clipboard/USB design; unproven",
+        "input_output": "read-only input, dedicated output; export gates same",
+        "rollback": "approved VM clone/backup/disposal",
+        "cost_license": "base/Extension Pack differ; guest Windows separate",
+        "risk": "active VBS/Hyper-V conflict/performance and version-specific behavior unresolved",
+        "decision": "not preferred; no VBS-disable workaround"
+      },
+      {
+        "id": "6",
+        "method": "Existing off-host disposable Windows VM / dedicated Windows test machine",
+        "memory": "current PC guest allocation 0; external capacity must be documented",
+        "preparation": "availability/access/guest rights/control plane/input-output approval UNKNOWN",
+        "Windows_coverage": "can cover Windows tests on its exact OS/storage only",
+        "network_and_production_boundary": "guest no NIC/no production shares; remote control plane separate from guest egress",
+        "input_output": "synthetic-only pinned input; bounded output required",
+        "rollback": "owner-approved snapshot/backup/disposal, no production access",
+        "cost_license": "provider/OS use rights and cost UNKNOWN",
+        "risk": "not yet available or validated; remote console is an explicitly scoped channel",
+        "decision": "capacity fallback for selected Windows-isolation plan, no provisioning now"
+      }
+    ],
+    "execution_order": [
+      {
+        "id": "G0",
+        "work": "Classification and static dependency/scope/document checks",
+        "environment": "CURRENT_HOST",
+        "approval": "current design only",
+        "next_condition": "static/protection pass, unresolved runtime facts remain explicit"
+      },
+      {
+        "id": "G1",
+        "work": "Implement inert mock/controller/receipt adapters and synthetic pure contracts",
+        "environment": "HOST_DEVELOPMENT_NO_CHILD_NO_PRODUCTION",
+        "approval": "separate implementation approval",
+        "next_condition": "exact entrypoint/code/dependency/hash/packet mapping and fail-closed proof; no CLI production switch"
+      },
+      {
+        "id": "G2",
+        "work": "Choose one Windows isolation environment and prepare lawful pinned image/resources/input/output",
+        "environment": "ONE_WINDOWS_ISOLATION",
+        "approval": "separate downloads/install/admin/reboot/VM or external resource approval",
+        "next_condition": "Home/WHP/VBS, license/media/OOBE, RAM, exact shares/devices/export resolved; no worker yet"
+      },
+      {
+        "id": "G3",
+        "work": "Prove network and production non-sharing before mock execution",
+        "environment": "SELECTED_WINDOWS_ONLY",
+        "approval": "specific OS negative-control and test target approval",
+        "next_condition": "deny-network/deny-write evidence; no real endpoints or production paths used as probes; unknown boundary STOP"
+      },
+      {
+        "id": "G4",
+        "work": "Test owned Job/process/ACL/receipt storage and failures",
+        "environment": "SELECTED_WINDOWS_ONLY",
+        "approval": "exact mock and failure injection plan",
+        "next_condition": "owned child/descendants/handles/timeout/cancel/Stop/receipt and cleanup pass, unknown run no retry"
+      },
+      {
+        "id": "G5",
+        "work": "Phase4 synthetic 10-match worker E2E, saved-reader/feed and no respawn",
+        "environment": "SAME_WINDOWS_ENVIRONMENT",
+        "approval": "synthetic integration plan",
+        "next_condition": "all A/B/C acceptance evidence satisfied, previous tests separate; actual OS receipts preserved"
+      },
+      {
+        "id": "G6",
+        "work": "Read-only result audit, bounded export, protection and restore/disposal plan",
+        "environment": "ISOLATION_PLUS_BOUNDED_VERIFICATION",
+        "approval": "export and later disposal separately",
+        "next_condition": "complete evidence/CRC/SHA/readback; no host/power-loss inference, no real model approval"
+      }
+    ],
+    "STOP_conditions": [
+      "host_B_boundary_unknown: no host dynamic test",
+      "unknown network or share path: no child",
+      "resource start gate not met: no local VM",
+      "unresolved guest rights/media/preparation/backend: no construction",
+      "wrong entrypoint/scope/revision/packet/SHA: reject",
+      "unowned process or cleanup unknown: no broad kill or retry",
+      "partial receipt or public state unknown: HOLD, preserve all bytes",
+      "fixed protected-file/task/other-worktree difference: STOP, no automatic repair",
+      "machine export not approved/verified: no implicit share/clipboard fallback"
+    ],
+    "known_anomalies_policy": "Existing sealed evidence only. Task exit1 and renderer cause UNKNOWN remain; no causal assertion, repair, reproduction, browser actions or task changes. Selected plan avoids shared-host dynamic child tests; any new fixed-file anomaly STOP.",
+    "new_dynamic_tests": 0,
+    "historical_tests": {
+      "Phase5B1_passed": 114,
+      "negative_bearing_cases": 104,
+      "prior_environment_static": 75,
+      "rerun": false
+    },
+    "sources": [
+      "S27",
+      "S28",
+      "S29",
+      "S30",
+      "S31",
+      "S32",
+      "S33",
+      "S34"
+    ],
+    "new_commit_authorization": "Current instruction explicitly permits docs-only PARTIAL commit/push after static and protection PASS; does not authorize Phase5B dynamic actions",
+    "execution_approval_granted": false
+  },
+  "strategy_private_evidence_SHA256": {
+    "audit.py": "6875828c5181f0d5f9877474f1750fdc181444c629a9e11030ebb8a3237c12a8",
+    "baseline-stable.json": "e6f7f6de5576d33e5f09e84f1bd43d84649cdccdae315bee1f97c329378e1931",
+    "build_strategy.py": "1c3370e82962bf19c08c63f46c9368a2b75b3acc19383ebf3f8cc1e856064e4e",
+    "classification-inventory.json": "c17ecc99d2ec04d7e2e05d6aa93f57113ebd6b74c97f4ab6ac347c06d32884d6",
+    "preservation-and-Git.json": "029a75a7c19deb650473a10be9f94bbd9f7ed6b8bc23859f19e5fd2f88e3949d",
+    "preserved/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.json": "f8d82168f1cf4b075116977e74bf4bf5ba523f61e9597c628edf3d85afe530bf",
+    "preserved/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.md": "ad7642ac7af95a7f31eccee0e46c343b105244267212bf446c7a93d21a61944a",
+    "prior-to-stable-baseline.json": "a1a3b952a4a7dad391c944e04d83f7d06149a5eed2dd4c4fe02e3196a149e32a",
+    "strategy-text.md": "19d32aa4e5263c8059eaa105496b4fe9bb0dbe112e934e86c6979c28bfde3a78",
+    "strategy_official1.json": "f552576496016b848d5a553b473076824f89222e70fad856384c6c9caafea6f6",
+    "strategy_official2.json": "322d4f5d05fffa2773945de30f2226045a248c9ff7ab78438812dea751ecf4a9",
+    "strategy_python_refs.json": "7788239a10247dbdbd2ca0c34cc67e81b789dad108f7854de0e8fc43dac2b78b",
+    "validate_strategy.py": "22ca540288ea2a286c3802eee8290be31de37f584d497705eef159836c7c55ea",
+    "protection-stable-final.json": "f0630c8c2f16a94460c8c9d5cf26bcaf64c708ba8459be70f4fe0b18aa7c01c2",
+    "validate_strategy_publication.py": "29f54869c4badc1a4fa50d81e80f6fb7735be7458ea0aac5702f39723412a0c2"
+  },
+  "strategy_validation": {
+    "UTC": "2026-10-22T23:26:42.869721+00:00",
+    "kind": "STATIC_READ_ONLY_DOCUMENT_AND_AST_VALIDATION_NOT_DYNAMIC",
+    "passed": 72,
+    "failed": 0,
+    "dynamic_tests": 0,
+    "negative_controls_executed": 0,
+    "historical_tests_rerun": false,
+    "validator_SHA256": "29f54869c4badc1a4fa50d81e80f6fb7735be7458ea0aac5702f39723412a0c2",
+    "checks": [
+      {
+        "name": "JSON parses with duplicate-key rejection",
+        "passed": true
+      },
+      {
+        "name": "Strategy gate separate from runtime readiness",
+        "passed": true
+      },
+      {
+        "name": "Headline records latest and historical sections",
+        "passed": true
+      },
+      {
+        "name": "Previous reports preserved SHA and bytes",
+        "passed": true
+      },
+      {
+        "name": "Entire previous Markdown content retained",
+        "passed": true
+      },
+      {
+        "name": "Historical 75 checks not rerun or added",
+        "passed": true
+      },
+      {
+        "name": "Historical 114/104 not represented as new tests",
+        "passed": true
+      },
+      {
+        "name": "Old observations retained and not presented current",
+        "passed": true
+      },
+      {
+        "name": "Old unknowns not erased or resolved",
+        "passed": true
+      },
+      {
+        "name": "Previous source addendum retained",
+        "passed": true
+      },
+      {
+        "name": "Current actions retain zero prohibited operations",
+        "passed": true
+      },
+      {
+        "name": "Scope remains read-only design",
+        "passed": true
+      },
+      {
+        "name": "Dedicated branch and exact start HEAD",
+        "passed": true
+      },
+      {
+        "name": "No tracked or staged modifications yet",
+        "passed": true
+      },
+      {
+        "name": "Exactly two public artifacts",
+        "passed": true
+      },
+      {
+        "name": "Inventory has unique IDs and four classes",
+        "passed": true
+      },
+      {
+        "name": "Classification definitions preserve host conditions",
+        "passed": true
+      },
+      {
+        "name": "Each inventory row has evidence/rationale/source mapping",
+        "passed": true
+      },
+      {
+        "name": "No inventory row claims dynamic execution",
+        "passed": true
+      },
+      {
+        "name": "Every B/C/D execution requires approval",
+        "passed": true
+      },
+      {
+        "name": "A read-only scope not runtime authorization",
+        "passed": true
+      },
+      {
+        "name": "Selected B/C location consistently Windows",
+        "passed": true
+      },
+      {
+        "name": "Step0 requirements covered",
+        "passed": true
+      },
+      {
+        "name": "Steps1-6 inventory complete by reviewed grouping",
+        "passed": true
+      },
+      {
+        "name": "Steps8-10 protection documentation Git covered",
+        "passed": true
+      },
+      {
+        "name": "Step7 five normal and nineteen abnormal cases",
+        "passed": true
+      },
+      {
+        "name": "Step7 cases map bidirectionally to actual rows",
+        "passed": true
+      },
+      {
+        "name": "All 86 rows rendered in Markdown once",
+        "passed": true
+      },
+      {
+        "name": "Six concrete environment alternatives recorded",
+        "passed": true
+      },
+      {
+        "name": "One selected plan without extra Linux",
+        "passed": true
+      },
+      {
+        "name": "Windows required is distinct from VM inherent requirement",
+        "passed": true
+      },
+      {
+        "name": "Host restricted process not magically isolated",
+        "passed": true
+      },
+      {
+        "name": "Linux is not a Windows Job/ACL substitute",
+        "passed": true
+      },
+      {
+        "name": "Windows Home and capacity constraints remain",
+        "passed": true
+      },
+      {
+        "name": "Seven ordered execution gates with explicit approvals",
+        "passed": true
+      },
+      {
+        "name": "OS boundary precedes owned mock execution",
+        "passed": true
+      },
+      {
+        "name": "D future boundary explicit",
+        "passed": true
+      },
+      {
+        "name": "No current execution approval",
+        "passed": true
+      },
+      {
+        "name": "STOP and preservation policies explicit",
+        "passed": true
+      },
+      {
+        "name": "Current mock/controller implementation not invented",
+        "passed": true
+      },
+      {
+        "name": "Logical receipt not durable evidence",
+        "passed": true
+      },
+      {
+        "name": "Pure module import allowlist unchanged",
+        "passed": true
+      },
+      {
+        "name": "Pure module has no executable entrypoint",
+        "passed": true
+      },
+      {
+        "name": "Pure module no network/process/model/file/clock calls",
+        "passed": true
+      },
+      {
+        "name": "SYNTHETIC_ONLY and explicit contract version constants",
+        "passed": true
+      },
+      {
+        "name": "All existing code and design pins unchanged",
+        "passed": true
+      },
+      {
+        "name": "Phase4 reader/backend original pins unchanged",
+        "passed": true
+      },
+      {
+        "name": "Phase5A original code pins unchanged",
+        "passed": true
+      },
+      {
+        "name": "Static contracts have no cross-OS false positives",
+        "passed": true
+      },
+      {
+        "name": "ReplaceFile not falsely called Python backend",
+        "passed": true
+      },
+      {
+        "name": "Original anomalies unchanged",
+        "passed": true
+      },
+      {
+        "name": "Existing anomaly evidence SHA verified",
+        "passed": true
+      },
+      {
+        "name": "No anomaly causal shortcut",
+        "passed": true
+      },
+      {
+        "name": "Source IDs unique and complete",
+        "passed": true
+      },
+      {
+        "name": "Cited primary sources are official HTTPS",
+        "passed": true
+      },
+      {
+        "name": "Document references and primary external links resolve",
+        "passed": true
+      },
+      {
+        "name": "Initial private evidence hashes unchanged",
+        "passed": true
+      },
+      {
+        "name": "Additional private evidence hashes unchanged",
+        "passed": true
+      },
+      {
+        "name": "Current strategy private evidence hashes match",
+        "passed": true
+      },
+      {
+        "name": "Inventory private mirror exact",
+        "passed": true
+      },
+      {
+        "name": "Fresh protection baseline actual count",
+        "passed": true
+      },
+      {
+        "name": "Protection SHA and identities unchanged",
+        "passed": true
+      },
+      {
+        "name": "Tasks main and old worktrees unchanged",
+        "passed": true
+      },
+      {
+        "name": "Model53 payloads independently hash verified",
+        "passed": true
+      },
+      {
+        "name": "No pre-existing audit interval change silently accepted",
+        "passed": true
+      },
+      {
+        "name": "Existing19 predictions protection inherited",
+        "passed": true
+      },
+      {
+        "name": "No personal paths or SID in public docs",
+        "passed": true
+      },
+      {
+        "name": "No unrendered template marker",
+        "passed": true
+      },
+      {
+        "name": "Git save policy revised only for docs",
+        "passed": true
+      },
+      {
+        "name": "Markdown SHA already accurate",
+        "passed": true
+      },
+      {
+        "name": "No trailing whitespace",
+        "passed": true
+      },
+      {
+        "name": "Git diff check passes before staging",
+        "passed": true
+      }
+    ],
+    "previous_attempt": {
+      "passed": 71,
+      "failed": 1,
+      "kind": "STATIC_VALIDATOR_ORDER_ASSUMPTION_ERROR",
+      "reason": "Validator initially assumed the fixed-protection STOP rule was the final list entry; corrected to locate the explicitly named rule without altering report requirements",
+      "evidence_SHA256": "7bb631312f02c18d8f2c3bb0928cf3db938e83c4d1e0046d2aac559f36ca5e27",
+      "original_validator_SHA256": "71c08c35057b690a8b3c568c74166c5f8761cc2f82faab2e055ad6cd68ae8add",
+      "report_contract_changed_for_fix": false
+    }
+  },
+  "strategy_protection": {
+    "UTC": "2026-10-22T23:23:48.677144+00:00",
+    "status": "PASS",
+    "protected_files": 45616,
+    "model_payloads": 53,
+    "model_payloads_verified": true,
+    "tasks_equal": true,
+    "task_definitions_equal": true,
+    "main_equal": true,
+    "worktrees_equal": true,
+    "hash_differences": 0,
+    "identity_metadata_differences": 0
+  },
+  "publication_text_contract": "UTF-8 LF for both reports; raw Markdown SHA equals committed blob SHA256; no Git configuration changed"
+}
