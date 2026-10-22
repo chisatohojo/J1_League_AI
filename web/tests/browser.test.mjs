@@ -447,6 +447,25 @@ test('home dashboard browser integration (synthetic data only)', {
     assert.match(await client.evaluate(`document.querySelector('#summary-matches').textContent`),/保存済みデータはありません/);
   });
 
+  await context.test('Friday through Monday saved period appears unchanged on home and next list', async () => {
+    const days = ['2030-11-01', ...Array(4).fill('2030-11-02'), ...Array(5).fill('2030-11-03'), '2030-11-04'];
+    const next = days.map((day, i) => ({...syntheticMatch(`weekend-${i}`, {home:44,draw:25,away:31}), kickoffAt:`${day}T19:00:00+09:00`}));
+    const payload = dashboardPayload([], next);
+    payload.nextRound.label = '次の開催週末 · 2030-11-01〜2030-11-04';
+    const snapshot = JSON.stringify(payload);
+    server.setPayload(payload);
+    await viewport(client, 1280);
+    await navigate(client, `${server.origin}/`, `document.querySelectorAll('#next-matches .match-card').length === 11`);
+    assert.match(await client.evaluate(`document.querySelector('#next-label').textContent`), /次の開催週末 · 2030-11-01〜2030-11-04 · 11 MATCHES/);
+    assert.equal(await client.evaluate(`document.querySelectorAll('.summary-shortcut').length`), 2);
+    await client.evaluate(`document.querySelector('.summary-shortcut').click()`);
+    await client.until(`document.querySelectorAll('#summary-matches tbody tr').length === 11`, 'all saved weekend rows');
+    assert.match(await client.evaluate(`document.querySelector('#summary-label').textContent`), /2030-11-01〜2030-11-04 · 11件/);
+    assert.match(await client.evaluate(`document.querySelector('#summary-range').textContent`), /期間（JST）[\s\S]*保存済み11試合[\s\S]*未終了試合のみ/);
+    assert.deepEqual(await client.evaluate(`Array.from(document.querySelectorAll('#summary-matches time')).map(n=>n.dateTime.slice(0,10))`), days);
+    assert.equal(JSON.stringify(payload), snapshot);
+  });
+
   await context.test('invalid API payload hard fails instead of falling back to demo', async () => {
     server.setPayload({ ...dashboardPayload(), research: { ST2: { accuracy: 0.99 } } });
     await navigate(client, `${server.origin}/?case=invalid`,

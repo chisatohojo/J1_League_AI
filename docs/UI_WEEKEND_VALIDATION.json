@@ -1,0 +1,93 @@
+{
+  "Desktop_migration_apply": 0,
+  "base_commit": "ac043ee13815e863d48f4e6960688b968a17cd27",
+  "deployment": "Implementation committed only to UI branch; operational worktree and existing feed untouched; production generation requires separate authorization",
+  "fit": 0,
+  "hash_capture_scope": "Final bytes checked after test execution; tested code was not subsequently changed",
+  "implementation_and_specification_SHA256": {
+    "docs/UI_HOME.md": "98a71ef1a6228dac478f8a5822ce8b48addca6e1882dfbc20b99b2a19e1cfb65",
+    "docs/UI_ROUND_SUMMARY.md": "c21a8f0ddc3663f537c6511a9b06affad83b8b4242ac4dbf042ceed319125e38",
+    "scripts/build_dashboard_feed.py": "aae2dc5b89c1e344c3176d10f831be42b222bbeb99c4003c5f37d839c08e8dca",
+    "tests/test_dashboard_feed.py": "272c973c4db13db9b0334d6ab2835a474adb248eea9713af2e28582cdc7346ae",
+    "web/app.js": "a172c131980ab04b84900252f2b4f2c012742d6004b9907ac5c53f7d53c93d68",
+    "web/tests/browser.test.mjs": "505b3aeb6737b5a31f62dadba45e9440cee972db3fcb475fa585e0a0536cebdf"
+  },
+  "inference": 0,
+  "model_load": 0,
+  "official_data_collection": 0,
+  "performance_evaluation": 0,
+  "prior_test_records": "Not rerun or counted in this change",
+  "production_feed_generation": 0,
+  "production_feed_replacement": 0,
+  "protection": {
+    "Desktop_shortcut_unchanged": true,
+    "model_payloads_unchanged": 53,
+    "official_sources_publication_saved_predictions_unchanged": true,
+    "other_worktrees_and_main_NN_branch_unchanged": true,
+    "tasks_XML_and_execution_status_unchanged": true,
+    "unchanged_files": 42027
+  },
+  "read_only_operational_audit": {
+    "conclusion": "Not all weekend days are saved in advance: Oct24 saved5, Oct25 unsaved5. Morning selects at most one earliest missing date within two days and requires completed earlier history; evening does not generate predictions.",
+    "configuration_SHA256": "14db2e39b55d76569bb2f88e95a5e0b6ac5ce16730565533a20acb1e6191b716",
+    "lookahead_days": 2,
+    "manifest_SHA256": "14ebc385fd3e45597895700abf8b524c6faf71f339c99cb653ebdd8c9a474184",
+    "observed_at_UTC": "2026-10-21T22:00:30.807718+00:00",
+    "revision": "d179144f38ec64a43ef6bd860ca8802a19c89399a69e29c4e20c8cde1d15dc23",
+    "selected_weekend_counts": {
+      "2026-10-23": {
+        "official_statuses": {},
+        "official_total": 0,
+        "saved_Champion": 0,
+        "unfinished": 0,
+        "unsaved": 0
+      },
+      "2026-10-24": {
+        "official_statuses": {
+          "scheduled": 5
+        },
+        "official_total": 5,
+        "saved_Champion": 5,
+        "unfinished": 5,
+        "unsaved": 0
+      },
+      "2026-10-25": {
+        "official_statuses": {
+          "scheduled": 5
+        },
+        "official_total": 5,
+        "saved_Champion": 0,
+        "unfinished": 5,
+        "unsaved": 5
+      },
+      "2026-10-26": {
+        "official_statuses": {},
+        "official_total": 0,
+        "saved_Champion": 0,
+        "unfinished": 0,
+        "unsaved": 0
+      }
+    },
+    "updater_code_SHA256": "e06284d62769ea5a0a8b5316eea4dcc3b39ba94ea003b68e368d1fd900390e75"
+  },
+  "status": "VERIFIED_SYNTHETIC_ONLY",
+  "task_execution_or_changes": 0,
+  "test_evidence_SHA256": {
+    "python-tests.xml": "6ea65195b1e2375eebc968614d476c3d8b88e31bb89958a9991ce32dac72981e",
+    "web-tests.log": "ec2f95947d7054d585d9ed68b3151ddb16c845492f552e3c6d8d43bc2c09f9dc"
+  },
+  "test_runs_this_change": {
+    "python_feed_server": {
+      "failed": 0,
+      "passed": 231,
+      "skipped": 0,
+      "warnings": "errors"
+    },
+    "web_including_real_browser_with_synthetic_data": {
+      "failed": 0,
+      "passed": 51,
+      "skipped": 0
+    }
+  },
+  "validated_at_UTC": "2026-10-22T04:54:52.448922+00:00"
+}

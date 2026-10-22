@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import csv
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import hashlib
 import io
 import json
@@ -113,6 +113,16 @@ def kickoff_at(day, kickoff):
     require(isinstance(kickoff, str) and re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", kickoff),
             "Unambiguous kickoff HH:mm required")
     return f"{day}T{kickoff}:00+09:00"
+
+
+def next_saved_period(day):
+    """Official calendar dates are JST; Monday belongs to the preceding Friday."""
+    anchor = date.fromisoformat(calendar_date(day))
+    if anchor.weekday() in (4, 5, 6, 0):
+        start = anchor - timedelta(days=(anchor.weekday() - 4) % 7)
+        end = start + timedelta(days=3)
+        return start.isoformat(), end.isoformat(), f"次の開催週末 · {start}〜{end}"
+    return day, day, f"次の開催日 · {day}"
 
 
 def csv_frame(body, *, exact=None):
@@ -420,8 +430,14 @@ def build_dashboard_feed(repository_root=ROOT):
     for previous, key, label in ((True, "previousRound", "前節"), (False, "nextRound", "次節")):
         candidates = [item for item in joined if item[1] == previous]
         selected_day = (max if previous else min)(item[0] for item in candidates) if candidates else None
-        selected = sorted((item[2] for item in candidates if item[0] == selected_day), key=lambda match: match["id"])
-        payload[key] = {"label": f"{label} · {selected_day}" if selected_day else label, "matches": selected}
+        if not previous and selected_day:
+            start, end, period_label = next_saved_period(selected_day)
+            selected = sorted((item[2] for item in candidates if start <= item[0] <= end),
+                              key=lambda match: (timestamp(match["kickoffAt"]), match["id"]))
+        else:
+            period_label = f"{label} · {selected_day}" if selected_day else label
+            selected = sorted((item[2] for item in candidates if item[0] == selected_day), key=lambda match: match["id"])
+        payload[key] = {"label": period_label, "matches": selected}
     validate_dashboard_data(payload)  # Exact recursive output schema is also the research leak firewall.
     require(all(path.read_bytes() == body for path, body in snapshots.items())
             and pointer_path.read_bytes() == pointer_body and not journal.exists() and not lock.exists(),

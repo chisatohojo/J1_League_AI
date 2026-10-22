@@ -70,7 +70,7 @@ function renderSummary(data, {demo, view}) {
   const round = data[previous ? "previousRound" : "nextRound"];
   document.querySelector("#summary-title").textContent = previous ? "前節の答え合わせ" : "次節の予想一覧";
   document.querySelector("#summary-label").textContent = `${round.label} · ${round.matches.length}件${demo ? " · DEMO" : ""}`;
-  document.querySelector("#summary-range").textContent = `表示範囲：${round.label}。公式カレンダーの対象日で選ばれた保存済み${round.matches.length}試合です。節全体を網羅する一覧ではありません。${demo ? " 架空データのDEMOです。" : ""}`;
+  document.querySelector("#summary-range").textContent = `表示範囲：${round.label}。公式カレンダーの対象日・期間（JST）で選ばれた保存済み${round.matches.length}試合です。${previous ? "" : "未終了試合のみを表示します。"}節全体を網羅する一覧ではありません。${demo ? " 架空データのDEMOです。" : ""}`;
   if (!round.matches.length) {
     host.append(element("p", "empty-state", "この表示範囲の保存済みデータはありません。新しい予想や結果を補完しません。"));
     return;

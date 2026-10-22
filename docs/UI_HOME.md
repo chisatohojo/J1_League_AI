@@ -2,8 +2,8 @@
 
 2026-10 UI改善：トップに2つの一覧入口を追加した。`/?view=next`と
 `/?view=previous`は既存schema v1の保存済み表示だけをコンパクトに表示する。
-`?demo=1&view=next`等も対応する。元の`round.label`と件数を表示し、対象日単位の
-feedを節全体と誤認しない説明を付ける。既存の縦カード表示とSEALED表示は維持する。
+`?demo=1&view=next`等も対応する。元の`round.label`と保存済み件数を表示し、対象日・期間の
+feedを公式の節全体と誤認しない説明を付ける。既存の縦カード表示とSEALED表示は維持する。
 実装・画面・Windows入口の現状は[今回の検証](UI_ROUND_SUMMARY.md)を参照。
 以下の当初実装時点で「未生成」としたfeedは、現在の環境では承認済みの明示的な
 schema-v1 JSONを指定できる。本改善でfeedを生成・変更したわけではない。
@@ -215,12 +215,34 @@ Saved date batches must be complete against their prediction-source revision's
 unfinished fixtures for that day, with one source revision/generation time per
 batch. Selection then uses **current official calendar dates**: latest completed
 date with saved predictions for previous, earliest unfinished predicted date for
-next. Every saved eligible fixture on the selected day is included. A validated
+next. For next only, a Friday/Saturday/Sunday/Monday anchor selects the Friday
+through Monday containing it (Monday belongs to the preceding Friday). Every
+saved, currently unfinished fixture within those inclusive JST calendar dates
+is included, ordered by current kickoff and fixture ID. A Tuesday/Wednesday/
+Thursday anchor retains its single date; it is never skipped for a weekend.
+The anchor is the earliest unfinished **saved** fixture, not wall-clock today or
+an unsaved official fixture. Finished Friday fixtures are excluded while the
+remaining Saturday/Sunday/Monday fixtures keep the same period. Month/year
+boundaries use calendar arithmetic. Empty next data stays empty.
+Labels are `次の開催週末 · YYYY-MM-DD〜YYYY-MM-DD` or
+`次の開催日 · YYYY-MM-DD`; top cards and the list display this range and saved
+count from schema-v1 `nextRound`. No official round number is inferred.
+Previous still includes every saved eligible fixture on the latest completed
+date, unchanged. A validated
 official reschedule may change the displayed date/kickoff, never probabilities;
 saved generation must still precede current kickoff. Unsaved fixtures are not
 predicted or added. No eligible rows means an empty array, not demo fallback.
 Date-based labels avoid guessing round numbers. `updatedAt` is the official
 publication's observed_at, never adapter execution time.
+
+Each saved date batch is still independently checked before period selection.
+An entirely unsaved date is not filled in; an incomplete saved date batch still
+stops the adapter. Existing fixture/source-revision/binding and prediction-time
+gates remain unchanged. This extension was tested with synthetic repositories
+only: production feed generation/replacement and deployment to the separate
+scheduled-task worktree require separate authorization. The existing Desktop
+shortcut and its migration plan are untouched. The read-only scheduled-saving
+audit and current missing-date counts are in [UI_ROUND_SUMMARY.md](UI_ROUND_SUMMARY.md).
 
 Output is exactly the schema v1 above, revalidated with
 `scripts.serve_dashboard.validate_dashboard_data()`. Only previous matches receive

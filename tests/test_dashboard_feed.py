@@ -232,7 +232,7 @@ def test_v1_url_only_identity_witness_accepts_exact_unfinished_publication(url_o
     assert validate_dashboard_data(payload) is payload
     assert payload["schemaVersion"] == 1
     assert payload["previousRound"]["label"] == "前節 · 2026-08-15"
-    assert payload["nextRound"]["label"] == "次節 · 2026-08-22"
+    assert payload["nextRound"]["label"] == "次の開催週末 · 2026-08-21〜2026-08-24"
     assert len(payload["previousRound"]["matches"]) == len(payload["nextRound"]["matches"]) == 2
     assert {path: path.read_bytes() for path in repo["root"].rglob("*") if path.is_file()} == before
     assert not (repo["root"] / adapter.OUTPUT_PATH).exists()
@@ -414,7 +414,7 @@ def test_end_to_end_exact_schema_firewall_selection_identity_and_no_writes(repos
     assert payload["model"] == {"name": "Champion A", "version": adapter.CHAMPION_VERSION}
     assert payload["updatedAt"] == "2026-09-01T15:00:00+00:00"
     assert payload["previousRound"]["label"] == "前節 · 2026-08-15"
-    assert payload["nextRound"]["label"] == "次節 · 2026-08-22"
+    assert payload["nextRound"]["label"] == "次の開催週末 · 2026-08-21〜2026-08-24"
     assert [match["id"] for match in payload["previousRound"]["matches"]] == sorted(
         row["fixture_key"] for row in repository["predictions"][2:4])
     assert [match["id"] for match in payload["nextRound"]["matches"]] == sorted(
@@ -568,7 +568,7 @@ def test_empty_previous_and_candidate_scores_not_official_results(repository):
     republish_current(repository)
     payload = adapter.build_dashboard_feed(repository["root"])
     assert payload["previousRound"]["matches"] == []
-    assert payload["nextRound"]["label"] == "次節 · 2026-08-08"
+    assert payload["nextRound"]["label"] == "次の開催週末 · 2026-08-07〜2026-08-10"
     assert all("result" not in match for match in payload["nextRound"]["matches"])
 
 
@@ -812,10 +812,122 @@ def test_accepted_reschedule_selects_official_date_without_changing_saved_probab
         row["match_date"], row["kickoff_time"] = "2026-08-25", "20:00"
     republish_current(repository)
     payload = adapter.build_dashboard_feed(repository["root"])
-    assert payload["nextRound"]["label"] == "次節 · 2026-08-25"
+    assert payload["nextRound"]["label"] == "次の開催日 · 2026-08-25"
     assert len(payload["nextRound"]["matches"]) == 2
     assert all(match["kickoffAt"] == "2026-08-25T20:00:00+09:00" for match in payload["nextRound"]["matches"])
     assert payload["nextRound"]["matches"][0]["prediction"]["probabilities"]["home"] == float("0.3123456789012345") * 100
+
+
+def prepare_period_repository(repo, days, *, finished=(), unsaved=()):
+    """Full official population, complete saved date batches, synthetic bytes only."""
+    template, binding_template = deepcopy(repo["predictions"][0]), deepcopy(repo["bindings"][0])
+    for row in repo["rows"]:
+        row["match_date"] = "2027-06-01"
+    repo["predictions"], repo["bindings"] = [], []
+    for index, day in enumerate(days):
+        row = repo["rows"][index]
+        row["match_date"], row["kickoff_time"] = day, "01:00"
+        if index in unsaved:
+            continue
+        prediction = {**template, **{key: row[key] for key in ("fixture_key", "match_id", "match_date")},
+                      "kickoff": row["kickoff_time"]}
+        for side in ("home", "away"):
+            prediction[f"{side}_team_id"] = f"team_{int(row[f'{side}_club'][4:]):04d}"
+            prediction[f"{side}_team_name"] = row[f"{side}_team"]
+        binding = {**binding_template, **{key: prediction[key] for key in (
+            "fixture_key", "match_date", "home_team_id", "away_team_id")}, "prediction_match_id": row["match_id"]}
+        repo["predictions"].append(prediction)
+        repo["bindings"].append(binding)
+    save_predictions(repo)
+    republish_witness(repo)
+    repo["current_rows"] = deepcopy(repo["rows"])
+    for row in repo["current_rows"]:
+        row["match_id_namespace"] = adapter.MATCH_PAGE_NAMESPACE
+    for index in finished:
+        set_completed(repo["current_rows"][index])
+    digest = publish(repo["current_dir"], repo["current_rows"], observed="2027-06-02T00:00:00+00:00", version="ongoing-v2")
+    (repo["root"] / adapter.ONGOING_PATH / "latest.json").write_text(json.dumps({
+        "revision_id": repo["current_id"], "manifest_sha256": digest}), encoding="utf8")
+
+
+def test_friday_saturday_sunday_ten_saved_predictions_together(repository):
+    days = ["2026-10-23"] + ["2026-10-24"] * 4 + ["2026-10-25"] * 5 + ["2026-10-27"]
+    prepare_period_repository(repository, days)
+    before = {p: p.read_bytes() for p in repository["root"].rglob("*") if p.is_file()}
+    payload = adapter.build_dashboard_feed(repository["root"])
+    assert validate_dashboard_data(payload) is payload
+    assert payload["nextRound"]["label"] == "次の開催週末 · 2026-10-23〜2026-10-26"
+    matches = payload["nextRound"]["matches"]
+    assert len(matches) == 10
+    assert [m["kickoffAt"][:10] for m in matches] == days[:10]
+    assert all("result" not in m for m in matches)
+    saved = {p["fixture_key"]: p for p in repository["predictions"]}
+    for match in matches:
+        row = saved[match["id"]]
+        assert match["prediction"]["generatedAt"] == row["prediction_generated_at"]
+        assert match["prediction"]["probabilities"] == {side: float(row[f"a_p_{side}"]) * 100 for side in ("home", "draw", "away")}
+    assert {p: p.read_bytes() for p in repository["root"].rglob("*") if p.is_file()} == before
+
+
+@pytest.mark.parametrize("finished", [(), (0,), (0, 1), (0, 1, 2)])
+def test_same_friday_monday_period_from_each_remaining_day(repository, finished):
+    prepare_period_repository(repository, ["2026-10-23", "2026-10-24", "2026-10-25", "2026-10-26", "2026-10-30"], finished=finished)
+    payload = adapter.build_dashboard_feed(repository["root"])
+    assert payload["nextRound"]["label"] == "次の開催週末 · 2026-10-23〜2026-10-26"
+    assert {m["id"] for m in payload["nextRound"]["matches"]} == {r["fixture_key"] for r in repository["rows"][len(finished):4]}
+    assert all("result" not in m for m in payload["nextRound"]["matches"])
+    if finished:
+        assert payload["previousRound"]["label"] == f"前節 · {repository['rows'][finished[-1]]['match_date']}"
+        assert [m["id"] for m in payload["previousRound"]["matches"]] == [repository["rows"][finished[-1]]["fixture_key"]]
+
+
+@pytest.mark.parametrize("day", ["2026-10-27", "2026-10-28", "2026-10-29"])
+def test_weekday_is_not_skipped_for_next_weekend(repository, day):
+    prepare_period_repository(repository, [day, "2026-10-30", "2026-10-31"])
+    payload = adapter.build_dashboard_feed(repository["root"])
+    assert payload["nextRound"]["label"] == f"次の開催日 · {day}"
+    assert [m["id"] for m in payload["nextRound"]["matches"]] == [repository["rows"][0]["fixture_key"]]
+
+
+@pytest.mark.parametrize("days,start,end", [
+    (["2026-10-30", "2026-10-31", "2026-11-01", "2026-11-02", "2026-11-03"], "2026-10-30", "2026-11-02"),
+    (["2027-01-01", "2027-01-02", "2027-01-03", "2027-01-04", "2027-01-05"], "2027-01-01", "2027-01-04"),
+])
+def test_period_calendar_boundaries(repository, days, start, end):
+    prepare_period_repository(repository, days)
+    payload = adapter.build_dashboard_feed(repository["root"])
+    assert payload["nextRound"]["label"] == f"次の開催週末 · {start}〜{end}"
+    assert len(payload["nextRound"]["matches"]) == 4
+
+
+@pytest.mark.parametrize("anchor", ["2027-12-31", "2028-01-01", "2028-01-02", "2028-01-03"])
+def test_period_crosses_year_without_widening_official_season_gate(anchor):
+    assert adapter.next_saved_period(anchor) == ("2027-12-31", "2028-01-03", "次の開催週末 · 2027-12-31〜2028-01-03")
+
+
+def test_weekend_never_fills_an_unsaved_day(repository):
+    prepare_period_repository(repository, ["2026-10-23", "2026-10-24", "2026-10-25", "2026-10-26"], unsaved=(1, 2))
+    payload = adapter.build_dashboard_feed(repository["root"])
+    assert [m["kickoffAt"][:10] for m in payload["nextRound"]["matches"]] == ["2026-10-23", "2026-10-26"]
+
+
+def test_period_keeps_complete_date_batch_gate(repository):
+    prepare_period_repository(repository, ["2026-10-23", "2026-10-24", "2026-10-24"], unsaved=(2,))
+    with pytest.raises(adapter.DashboardFeedError, match="Partial saved prediction date batch"):
+        adapter.build_dashboard_feed(repository["root"])
+
+
+def test_jst_midnight_and_reschedule_drive_period_not_utc_or_saved_day(repository):
+    prepare_period_repository(repository, ["2026-10-29", "2026-10-31", "2026-11-03"])
+    repository["current_rows"][0]["match_date"] = "2026-10-30"
+    digest = publish(repository["current_dir"], repository["current_rows"], observed="2027-06-02T00:00:00+00:00", version="ongoing-v2")
+    (repository["root"] / adapter.ONGOING_PATH / "latest.json").write_text(json.dumps({
+        "revision_id": repository["current_id"], "manifest_sha256": digest}), encoding="utf8")
+    payload = adapter.build_dashboard_feed(repository["root"])
+    assert payload["nextRound"]["label"] == "次の開催週末 · 2026-10-30〜2026-11-02"
+    assert len(payload["nextRound"]["matches"]) == 2
+    assert payload["nextRound"]["matches"][0]["kickoffAt"] == "2026-10-30T01:00:00+09:00"
+    assert adapter.timestamp(payload["nextRound"]["matches"][0]["kickoffAt"]).astimezone(adapter.ZoneInfo("UTC")).date().isoformat() == "2026-10-29"
 
 
 def test_extra_output_keys_are_rejected_before_any_output_write(repository, tmp_path):
