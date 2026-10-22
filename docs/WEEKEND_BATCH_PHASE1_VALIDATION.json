@@ -1,0 +1,125 @@
+{
+  "Desktop_migration_apply": 0,
+  "base_commit": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+  "branch": "feature/weekend-batch-prediction",
+  "capture_scope": "Final current source bytes; code and tests were not changed after the final execution. Documents were finalized afterward.",
+  "default_enabled": false,
+  "design_basis_SHA256": "7f18c08a077b574b47f92e9d75a8d41bf2fce8a3516bd54536376c4775cbf496",
+  "evening_applicability_review_before_feed": true,
+  "execution_scope": "Synthetic temporary publications, toy Elo history, marked mock estimator only",
+  "final_tests": {
+    "JUnit_SHA256": "d55ff5da919b60d1bd76cfffcd953441663787bf3daf17dadc4a5e4c238e6cbb",
+    "errors": 0,
+    "failures": 0,
+    "log_SHA256": "414259c7dc97a77de25ff22cdf784cedf6c8e7079883feb342ef4cecaf55f626",
+    "modules": {
+      "tests.test_champion_dashboard_update": 92,
+      "tests.test_dashboard_feed": 134,
+      "tests.test_dashboard_server": 100,
+      "tests.test_prediction_identity": 15,
+      "tests.test_weekend_batch": 61
+    },
+    "passed": 402,
+    "skipped": 0,
+    "tests": 402,
+    "warnings_as_errors": true
+  },
+  "fit": 0,
+  "intermediate_issues": "Synthetic publication UTC fixture correction; test UTF-8 read and expected HTTPError resource closure; no warning suppression or native/server implementation changes",
+  "intermediate_test_evidence": {
+    "combined-tests-first.xml": {
+      "SHA256": "b0e42f9649151ef07c319ee32be2fe977f60d874e168a1d53bcabd203d7c12b1",
+      "errors": 0,
+      "failures": 1,
+      "skipped": 0,
+      "tests": 275
+    },
+    "phase1-final-release.xml": {
+      "SHA256": "6d65f1a7869386c9e705d8c44565af57fe836b6d096d86af058421451adb2c41",
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 400
+    },
+    "phase1-final-tests.xml": {
+      "SHA256": "2ab4872b3f3451d6c6917915b8866c9d26b7633a6c29cfc2287529404eeddb48",
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 397
+    },
+    "phase1-release-tests.xml": {
+      "SHA256": "0cca576116e188561ca065d8cef1375cd9d4c5bc8bedd2cbbca4ef8cc8d401a3",
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 399
+    },
+    "phase1-tests-verified.xml": {
+      "SHA256": "7051608c0d4a39a6cf4f0d69fc4cb6263a5d43344e8d844e2df3c4797b931ecf",
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 394
+    },
+    "phase1-tests.xml": {
+      "SHA256": "898865f5a66bc85e7264c13104ad1a2ad875d5cce0747e2d442ec976bf7468ad",
+      "errors": 3,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 392
+    },
+    "weekend-tests-first.xml": {
+      "SHA256": "28a7beb051b30c35fef3691050d27f140481c0605478594d6b01111c752eaffb",
+      "errors": 0,
+      "failures": 5,
+      "skipped": 0,
+      "tests": 44
+    }
+  },
+  "normal_CLI_activation_available": false,
+  "not_claimed": [
+    "Production activation",
+    "Real HTTP or actual Windows power-loss/ACL/TOCTOU certification",
+    "Current partly saved weekend converted to common snapshot",
+    "Prediction performance equivalence"
+  ],
+  "official_GET": 0,
+  "performance_evaluation": 0,
+  "production_feed_generation": 0,
+  "production_prediction_changes": 0,
+  "protection": {
+    "Desktop_unchanged": true,
+    "main_UI_NN_operational_other_worktrees_unchanged": true,
+    "model_payloads_unchanged": 53,
+    "operational_runtime_and_current_weekend_predictions_unchanged": true,
+    "task_definitions_and_execution_status_unchanged": true,
+    "unchanged_files": 42034
+  },
+  "publication_contract": "Versioned content-addressed directory, complete CSV/bindings/snapshot/manifest; single same-filesystem rename, shared publication lock, no automatic recovery",
+  "real_collector_and_predictor_defaults_rejected_with_offline_backend": true,
+  "real_model_load": 0,
+  "real_prediction_inference": 0,
+  "recorded_at_UTC": "2026-10-22T06:42:57.300367+00:00",
+  "remaining_approvals": [
+    "Production pre-07:00 source acquisition/cutoff integration",
+    "Real frozen input/model-loader integration and separate execution authorization",
+    "Manifest reader deployment and reservation activation before daily saves",
+    "Actual model inference/production runtime changes",
+    "UI deployment/Desktop/autoreload changes; separate scope"
+  ],
+  "result": "WEEKEND_BATCH_OFFLINE_IMPLEMENTED_NOT_ACTIVATED",
+  "source_SHA256": {
+    "docs/UI_HOME.md": "1f0a3087f9c314f7ac5e4174aaf74b70658b5aca3315bc973fe07611f995bc42",
+    "docs/WEEKEND_BATCH_PHASE1.md": "de36bc154a10e531cefa323702c5b87877e5ccc4f3ab893fd52a7df9cb1aa501",
+    "scripts/build_dashboard_feed.py": "ea21fcf2ff14f81f7ef5bd07725e35fbc5e3ac987a82320c3defbf3a6b276018",
+    "scripts/update_champion_dashboard.py": "3bf07f78fc02f0d529ae7ac9154028ed5db3631a4f6fb6f0a42dce7cb8cc0f0b",
+    "src/modeling/weekend_batch.py": "248b8954566a6ddb5ce150c55879ba8c42a70394ab83c9745d77511eb5e045b6",
+    "tests/test_champion_dashboard_update.py": "de6adb3906d1272380e0589a483709975aecdb8addbf0fbed73955847695d5a8",
+    "tests/test_dashboard_feed.py": "c891ca8e126cd29dd739876ee4f7b942cb716ea7dd24288fee43d4c71d712775",
+    "tests/test_dashboard_server.py": "df5cd1bc93ddb979b80b46ca7c22d7946c9786555197e7ce103f826bafd781fd",
+    "tests/test_weekend_batch.py": "1551e2977a8fd2a7825f6664df12f329814a366108bb3ae1b2d81f906e9da992"
+  },
+  "synthetic_loopback_HTTP_used_by_server_regressions": true,
+  "task_runs_or_changes": 0
+}

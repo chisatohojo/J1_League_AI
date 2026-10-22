@@ -358,7 +358,8 @@ def test_traversal_repository_and_unlisted_files_not_exposed(running_server, rou
     base, _ = running_server
     with pytest.raises(HTTPError) as exc:
         urlopen(f"{base}{route}", timeout=2)
-    assert exc.value.code == 404
+    with exc.value as response:
+        assert response.code == 404
 
 
 @pytest.mark.parametrize("method", ["HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
@@ -366,8 +367,9 @@ def test_mutations_and_non_get_requests_rejected(running_server, method):
     base, _ = running_server
     with pytest.raises(HTTPError) as exc:
         urlopen(Request(f"{base}/api/dashboard", method=method), timeout=2)
-    assert exc.value.code == 405
-    assert exc.value.headers["Allow"] == "GET"
+    with exc.value as response:
+        assert response.code == 405
+        assert response.headers["Allow"] == "GET"
 
 
 @pytest.mark.parametrize("version", [1, 2])

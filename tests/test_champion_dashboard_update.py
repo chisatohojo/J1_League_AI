@@ -73,7 +73,7 @@ def test_update_success_idempotence_and_original_data_unchanged(operational):
     feed.validate_dashboard_data(payload)
     assert len(payload["previousRound"]["matches"]) == len(payload["nextRound"]["matches"]) == 2
     assert payload["nextRound"]["matches"][0]["prediction"]["probabilities"] == dict(home=50, draw=30, away=20)
-    assert "st2_" not in (runtime / "view/champion_home.json").read_text()
+    assert "st2_" not in (runtime / "view/champion_home.json").read_text(encoding="utf-8")
     assert len(list((runtime / "batches").iterdir())) == 2
     assert not (runtime / "diagnostics").exists()  # Completed past; later scheduled fixtures are permitted.
 

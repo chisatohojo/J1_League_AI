@@ -207,7 +207,12 @@ Saved date batches must be complete against their prediction-source revision's
 unfinished fixtures for that day, with one source revision/generation time per
 batch. Selection then uses **current official calendar dates**: latest completed
 date with saved predictions for previous, earliest unfinished predicted date for
-next. Every saved eligible fixture on the selected day is included. A validated
+next. In the isolated weekend Phase-1 branch, the next selection includes saved
+unfinished fixtures in the containing Friday–Monday JST period when the anchor
+is Friday, Saturday, Sunday or Monday; Tuesday–Thursday retain their single day.
+Previous selection is unchanged. This is synthetic-only integration, not a
+production feed update: see [WEEKEND_BATCH_PHASE1.md](WEEKEND_BATCH_PHASE1.md).
+A validated
 official reschedule may change the displayed date/kickoff, never probabilities;
 saved generation must still precede current kickoff. Unsaved fixtures are not
 predicted or added. No eligible rows means an empty array, not demo fallback.
