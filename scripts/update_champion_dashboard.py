@@ -20,6 +20,7 @@ from src.collect.teams import load_team_master
 from src.modeling.prediction_identity import BINDING_COLUMNS
 from src.modeling.champion_prediction import TARGET_COLUMNS, predict_champion
 from src.modeling import weekend_batch
+from src.modeling.weekend_integration import ReceiptBoundBackend
 
 NATIVE = feed.CHAMPION_PREDICTION_ARTIFACT
 SIDECAR = "data/processed/predictions/champion_a_fixture_bindings.csv"
@@ -201,6 +202,9 @@ def publish_batch(runtime, records, bindings):
     with weekend_batch.publication_lock(runtime):
         existing, _ = saved_batches(runtime)
         feed.require(not {r["fixture_key"] for r in records} & {r["fixture_key"] for r in existing}, "saved_prediction_overlap")
+        reservations = saved_reservations(runtime)
+        reserved = {t["fixture_key"] for r in reservations for t in r["targets"]}
+        feed.require(not reserved & {r["fixture_key"] for r in records}, "daily_reserved_fixture")
         _publish_daily_batch(runtime, records, bindings)
 
 
@@ -502,14 +506,28 @@ def seed_snapshot_history(source, runtime, prior):
     _write_new(runs / f"{snapshot_id}-{FORMAT_VERSION}.json", _json(run))
 
 
-def select_targets(current, records, now, lookahead, *, reserved_period=None):
+def saved_reservations(runtime):
+    result = []
+    for path in sorted(weekend_batch.safe(runtime / "weekend-reservations").glob("*.json")):
+        r = weekend_batch.read_json(path)
+        feed.require(set(r) == {"policy", "scope", "period", "targets", "created_at", "source_revision", "source_manifest_sha256"}
+                     and r["scope"] == weekend_batch.SCOPE and r["policy"] == weekend_batch.POLICY
+                     and r["period"] == weekend_batch.period(r["period"]["start"])
+                     and path.name == r["period"]["start"] + ".json"
+                     and feed.timestamp(r["created_at"]) < feed.timestamp(r["period"]["information_cutoff"]) - timedelta(days=2), "saved_reservation_invalid")
+        result.append(r)
+    return result
+
+
+def select_targets(current, records, now, lookahead, *, reserved_period=None, reserved_periods=()):
     saved = {r["fixture_key"] for r in records}
     today = now.astimezone(ZoneInfo("Asia/Tokyo")).date()
     end = (today + timedelta(days=lookahead)).isoformat()
     candidates = current.schedule.loc[
         current.schedule.status.eq("scheduled") & current.schedule.match_date.ge(today.isoformat())
         & current.schedule.match_date.le(end)]
-    if reserved_period is not None:
+    windows = list(reserved_periods) + ([reserved_period] if reserved_period is not None else [])
+    for reserved_period in windows:
         feed.require(reserved_period == weekend_batch.period(reserved_period["start"]), "weekend_reserved_period_schema")
         candidates = candidates.loc[~candidates.match_date.between(reserved_period["start"], reserved_period["end"])]
     missing = candidates.loc[~candidates.fixture_key.isin(saved)]
@@ -579,8 +597,10 @@ def _run_update(source_root, runtime_root, slot, config, *, collector=collect_of
     source, runtime = validate_paths(source_root, runtime_root)
     feed.require(slot in {"morning", "evening"}, "update_slot")
     weekend_policy = weekend_batch.policy(config)
+    pinned_weekend = isinstance(weekend_backend, ReceiptBoundBackend) and bool(weekend_policy)
     feed.require(not weekend_policy or isinstance(weekend_backend, weekend_batch.OfflineWeekendBackend), "weekend_offline_only")
     if weekend_policy:
+        feed.require(not pinned_weekend or "retrospective_display" not in config, "pinned_champion_display_only")
         feed.require(collector is not collect_official and predictor is not predict_champion,
                      "weekend_synthetic_callbacks_required")
         weekend_backend.bind(source, runtime, config)
@@ -598,11 +618,14 @@ def _run_update(source_root, runtime_root, slot, config, *, collector=collect_of
             with tempfile.TemporaryDirectory(prefix=".display-", dir=runtime) as temporary:
                 stage = Path(temporary)
                 prediction, sidecar = stage_inputs(stage, records, bindings)
-                collector(source, runtime, config, stage)
-                current = official(source, runtime / "official")
+                if pinned_weekend:
+                    current = weekend_backend.fixed_source(clock=clock)
+                else:
+                    collector(source, runtime, config, stage)
+                    current = official(source, runtime / "official")
                 now = timestamp_aware(clock())
                 observed = feed.timestamp(current.observed_at)
-                feed.require(observed <= now and now - observed <= timedelta(hours=config["max_source_age_hours"]),
+                feed.require(observed <= now and (pinned_weekend or now - observed <= timedelta(hours=config["max_source_age_hours"])),
                              "official_source_stale_or_future")
                 prepared = None
                 reserved = None
@@ -611,7 +634,8 @@ def _run_update(source_root, runtime_root, slot, config, *, collector=collect_of
                     reserved = weekend_backend.window
                 elif weekend_policy:
                     weekend_backend.review(current, records)  # applicability only; never infer at night
-                targets = select_targets(current, records, now, config["lookahead_days"], reserved_period=reserved) if slot == "morning" and prepared is None else None
+                targets = select_targets(current, records, now, config["lookahead_days"], reserved_period=reserved,
+                    reserved_periods=[r["period"] for r in saved_reservations(runtime)]) if slot == "morning" and prepared is None and not pinned_weekend else None
                 added, added_bindings = [], []
                 if prepared is not None:
                     master = load_team_master(source / feed.TEAM_MASTER_PATH)
@@ -628,7 +652,8 @@ def _run_update(source_root, runtime_root, slot, config, *, collector=collect_of
                 prediction.unlink()
                 sidecar.unlink()
                 prediction, sidecar = stage_inputs(stage, records + added, bindings + added_bindings)
-                legacy, rounds = build_display_feeds(source, runtime, prediction, sidecar, now)
+                if not pinned_weekend:
+                    legacy, rounds = build_display_feeds(source, runtime, prediction, sidecar, now)
             for row in added:
                 committed = timestamp_aware(clock())
                 feed.require(committed >= feed.timestamp(row["prediction_generated_at"]), "clock_moved_backwards")
@@ -638,10 +663,17 @@ def _run_update(source_root, runtime_root, slot, config, *, collector=collect_of
                 weekend_backend.commit(prepared, added, added_bindings, clock)
             else:
                 publish_batch(runtime, added, added_bindings)
+            if pinned_weekend:
+                # Render canonical, reread saved bytes only. Feed failure keeps the
+                # already committed group and the next run performs no inference.
+                records, bindings = saved_batches(runtime)
+                with tempfile.TemporaryDirectory(prefix=".saved-display-", dir=runtime) as temporary:
+                    prediction, sidecar = stage_inputs(Path(temporary), records, bindings)
+                    legacy, rounds = build_display_feeds(source, runtime, prediction, sidecar, now)
             with publish_display_feeds(runtime, legacy, rounds):
                 state.update(state="ready", finishedAt=clock().isoformat(), lastSuccessAt=clock().isoformat(), errorCode=None)
                 atomic_json(status_path, state)
-            return dict(added=len(added), total=len(records) + len(added), state="ready")
+            return dict(added=len(added), total=len(records) if pinned_weekend else len(records) + len(added), state="ready")
         except Exception:
             # Never publish exception strings/source paths or research cells to the UI.
             state.update(state="error", finishedAt=clock().isoformat(),

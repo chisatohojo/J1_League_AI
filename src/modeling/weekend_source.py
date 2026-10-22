@@ -301,6 +301,18 @@ def verify(workspace, reference, friday):
     need(w.sha(receipt_path) == hash_value(reference.receipt_sha256)
          and w.sha(seal_path) == hash_value(reference.seal_sha256), "receipt_or_seal_sha")
     receipt, seal = w.read_json(receipt_path), w.read_json(seal_path)
+    current, facts = inspect(workspace.root / "publications" / revision, revision,
+                             receipt["facts"]["publication_manifest_sha256"], friday)
+    validate_record(reference, receipt, seal, facts, friday)
+    return current, receipt
+
+
+@evidence_errors
+def validate_record(reference, receipt, seal, facts, friday):
+    """Validate an embedded receipt; raw provenance is separately checked by verify."""
+    revision = hash_value(reference.revision_id)
+    need(w.digest(receipt) == reference.receipt_sha256 and w.digest(seal) == reference.seal_sha256, "receipt_or_seal_sha")
+    need(facts["period"] == w.period(friday), "receipt_period")
     need(set(receipt) == {"format_version", "scope", "facts", "publication_started_at_utc", "publication_completed_at_utc", "receipt_created_at_utc", "clock_samples", "verification", "receipt_sha256"}, "receipt_schema")
     payload = dict(receipt); self_sha = payload.pop("receipt_sha256")
     need(w.digest(payload) == self_sha and receipt["format_version"] == FORMAT and receipt["scope"] == SCOPE, "receipt_contract")
@@ -308,10 +320,17 @@ def verify(workspace, reference, friday):
     need(set(seal) == {"format_version", "scope", "revision_id", "receipt_file_sha256", "verified_at_utc", "receipt_fsync", "receipt_readback"}
          and seal == dict(format_version=FORMAT, scope=SCOPE, revision_id=revision, receipt_file_sha256=reference.receipt_sha256,
                           verified_at_utc=seal.get("verified_at_utc"), receipt_fsync=True, receipt_readback=True), "seal_contract")
-    current, facts = inspect(workspace.root / "publications" / revision, revision,
-                             receipt["facts"]["publication_manifest_sha256"], friday)
     need(facts == receipt["facts"] and facts["revision_id"] == revision, "receipt_facts_changed")
     cutoff = w.stamp(facts["period"]["information_cutoff"])
+    need(utc(facts["source_acquired_at_utc"]) <= cutoff
+         and cutoff - utc(facts["source_acquired_at_utc"]) <= timedelta(hours=24), "source_stale_or_after_cutoff")
+    need(len(facts["requests"]) <= MAX_PAGES and sum(r["bytes"] for r in facts["requests"]) <= MAX_TOTAL, "archive_limit")
+    for r in facts["requests"]:
+        need(utc(r["request_started_at_utc"]) <= utc(r["fetched_at_utc"]) <= utc(facts["snapshot_created_at_utc"]), "source_chronology")
+        need(0 <= (utc(r["fetched_at_utc"]) - utc(r["request_started_at_utc"])).total_seconds() <= MAX_REQUEST_SECONDS, "request_timeout")
+        need(type(r["bytes"]) is int and 0 <= r["bytes"] <= MAX_BODY
+             and facts["files"][r["raw"]] == hash_value(r["raw_sha256"])
+             and facts["files"][r["metadata"]] == hash_value(r["metadata_sha256"]), "request_file_binding")
     times = [facts["snapshot_created_at_utc"], receipt["publication_started_at_utc"],
              receipt["publication_completed_at_utc"], receipt["receipt_created_at_utc"],
              seal["verified_at_utc"], reference.ready_at_utc]
@@ -328,7 +347,7 @@ def verify(workspace, reference, friday):
         need(abs(total_wall - (b["monotonic_seconds"] - samples[0]["monotonic_seconds"])) <= 2, "clock_changed")
     need(samples[-1]["monotonic_seconds"] - samples[0]["monotonic_seconds"] <= DEADLINE
          and (utc(reference.ready_at_utc) - utc(times[1])).total_seconds() <= DEADLINE + 2, "deadline")
-    return current, receipt
+    return receipt
 
 
 class Provider:

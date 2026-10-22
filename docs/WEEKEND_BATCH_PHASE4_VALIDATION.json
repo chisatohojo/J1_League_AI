@@ -1,0 +1,247 @@
+{
+  "UTC": "2026-10-22T10:20:09.104634+00:00",
+  "base_commit": "4ca8a343582099ca5f7164a16d318420ce5ed9c7",
+  "branch": "feature/weekend-e2e-integration",
+  "code_and_contract_SHA256": {
+    "docs/WEEKEND_BATCH_PHASE1.md": "de36bc154a10e531cefa323702c5b87877e5ccc4f3ab893fd52a7df9cb1aa501",
+    "docs/WEEKEND_BATCH_PHASE2.md": "58a33313b433825cc9e4d61b18125f33d1931739c334b13120b76a38049df13d",
+    "docs/WEEKEND_BATCH_PHASE3.md": "c2703f36a00c111d02858e3862f00a312fd6305c4a4bd4099d762516a70f70e8",
+    "docs/WEEKEND_BATCH_PHASE4.md": "f40ec46db168b59f600d4d4eed99aa30d501f61bd4e6dda27b3542adbab4b0ae",
+    "scripts/build_dashboard_feed.py": "ea21fcf2ff14f81f7ef5bd07725e35fbc5e3ac987a82320c3defbf3a6b276018",
+    "scripts/update_champion_dashboard.py": "49d848007b7c554236289ea15f8b967e47e55f0cca485632c68afc2142c9b0f0",
+    "src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
+    "src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
+    "src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "src/modeling/weekend_batch.py": "69671cf833ab2ab2f6f79a46e03cc5863c3bf4812b41a7314659a6e8c85dbd50",
+    "src/modeling/weekend_integration.py": "f100016efafdae00406fee632c7a1afdf9a93408d25d108e2ea6a9c2da95edcb",
+    "src/modeling/weekend_source.py": "656f096a035d4662341b499c8e53f73584e4690f56d89e08750a0b48208668d9",
+    "tests/test_champion_dashboard_update.py": "de6adb3906d1272380e0589a483709975aecdb8addbf0fbed73955847695d5a8",
+    "tests/test_dashboard_feed.py": "c891ca8e126cd29dd739876ee4f7b942cb716ea7dd24288fee43d4c71d712775",
+    "tests/test_dashboard_server.py": "df5cd1bc93ddb979b80b46ca7c22d7946c9786555197e7ce103f826bafd781fd",
+    "tests/test_jleague_ongoing_source.py": "d4f79e5c1456ad1da8d88401b54a834f2053f6c82f65632255b4d4a8f45ac59f",
+    "tests/test_jleague_ongoing_update.py": "828c3d6bdcd12cf637de6338052226d1723da883e1bfb6c746005c689554b5c0",
+    "tests/test_prediction_identity.py": "e756975f1ccdd8bf377da886b821a3fdde66353ba05c0adaaf4506fe71fa9478",
+    "tests/test_weekend_batch.py": "dd5c9f7f731af6ea9b5ab8ff9feb4198a3d094075baa61f0ac800b87ab68cfb5",
+    "tests/test_weekend_integration.py": "ae21f9497e9c8e9c42cd746fe2cedc46af2277b1b6b27e1f697f1f62a91c7edf",
+    "tests/test_weekend_preflight.py": "c3e9dd504b9de0b272294e0e1ea42f9e1ca42e8bf3968b38711b1bb23f687ce3",
+    "tests/test_weekend_source.py": "2158549c040ba3d0aeb8f0992ecbd0b91eff8955999e5ebf040982a3c102d489"
+  },
+  "final_tests": {
+    "JUnit_SHA256": "55ec74579049f315482a3a493d0a2f35b4225b7f99fdfcfc45dd7cae3d96a972",
+    "errors": 0,
+    "failures": 0,
+    "hash_capture": "Final test/code bytes unchanged after completed final run; documents and aggregate finalized separately",
+    "log_SHA256": "dad87f21344c33a846417e8e358b2b1fea71099e96bb2d18fdcd24bbb4f4bcce",
+    "modules": {
+      "tests.test_champion_dashboard_update": 92,
+      "tests.test_dashboard_feed": 134,
+      "tests.test_dashboard_server": 100,
+      "tests.test_jleague_ongoing_source": 63,
+      "tests.test_jleague_ongoing_update": 29,
+      "tests.test_prediction_identity": 15,
+      "tests.test_weekend_batch": 61,
+      "tests.test_weekend_integration": 37,
+      "tests.test_weekend_preflight": 20,
+      "tests.test_weekend_source": 63
+    },
+    "passed": 613,
+    "scope": "Synthetic official HTML and mock estimator, temporary source/prediction workspaces; existing local server regression only",
+    "skipped": 1,
+    "skipped_cases": [
+      {
+        "module": "tests.test_jleague_ongoing_source",
+        "name": "test_saved_source_bootstrap_boundaries_when_local_cache_is_available",
+        "reason": "Locally archived official research pages are not distributed as test fixtures."
+      }
+    ],
+    "suite_timestamps_as_recorded": [
+      "2026-10-22T19:07:25.644873+09:00"
+    ],
+    "tests": 614,
+    "warnings_as_errors": true
+  },
+  "integration": {
+    "adapter": "ReceiptBoundBackend",
+    "all_targets_same_snapshot": true,
+    "before_prediction_checkpoint": true,
+    "before_save_checkpoint_with_actual_generated_UTC": true,
+    "common_Elo_replays_per_new_batch": 1,
+    "default_CLI_activation": false,
+    "directory_power_loss_durability": "NOT_PROVEN",
+    "display_reprojection_inference": 0,
+    "feed_failure_keeps_predictions_and_last_good_view": true,
+    "feed_source": "REREAD_CANONICAL_SAVED_BATCH",
+    "fixed_revision": true,
+    "full_source_raw_revalidated_before_inference_save_and_visibility": true,
+    "incomplete_attempt_or_lock_auto_recovery": false,
+    "latest_role": "READ_ONLY_APPLICABILITY_NEVER_MODEL_INPUT",
+    "normal_collector_invocations_in_pinned_lane": 0,
+    "partial_saved_or_schedule_change": "HOLD",
+    "publication_boundary": "SINGLE_SAME_FILESYSTEM_DIRECTORY_RENAME",
+    "source_future_observation_rejected": true
+  },
+  "intermediate_runs": {
+    "e2e-first.xml": {
+      "JUnit_SHA256": "2444040f478cdefbb89b6f51df1a38f90e64690af30bbf922d3b936b97f52ac3",
+      "errors": 0,
+      "failures": 1,
+      "modules": {
+        "tests.test_weekend_integration": 1
+      },
+      "passed": 0,
+      "skipped": 0,
+      "skipped_cases": [],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T18:48:41.789449+09:00"
+      ],
+      "tests": 1
+    },
+    "e2e-second.xml": {
+      "JUnit_SHA256": "dbbbce68eb4cbf9dad8a39202966f560c554701078799126787a66cde1132e5d",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_weekend_integration": 13
+      },
+      "passed": 13,
+      "skipped": 0,
+      "skipped_cases": [],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T18:48:58.791363+09:00"
+      ],
+      "tests": 13
+    },
+    "phase4-acceptance.xml": {
+      "JUnit_SHA256": "22eb4707fa28f4a860af1e65f522a7963897cf708669b7d62ae794e0000e8732",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_champion_dashboard_update": 92,
+        "tests.test_dashboard_feed": 134,
+        "tests.test_dashboard_server": 100,
+        "tests.test_jleague_ongoing_source": 63,
+        "tests.test_jleague_ongoing_update": 29,
+        "tests.test_prediction_identity": 15,
+        "tests.test_weekend_batch": 61,
+        "tests.test_weekend_integration": 35,
+        "tests.test_weekend_preflight": 20,
+        "tests.test_weekend_source": 63
+      },
+      "passed": 611,
+      "skipped": 1,
+      "skipped_cases": [
+        {
+          "module": "tests.test_jleague_ongoing_source",
+          "name": "test_saved_source_bootstrap_boundaries_when_local_cache_is_available",
+          "reason": "Locally archived official research pages are not distributed as test fixtures."
+        }
+      ],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T19:02:04.704741+09:00"
+      ],
+      "tests": 612
+    },
+    "phase4-regression.xml": {
+      "JUnit_SHA256": "ab264450ec580e600198638726a7a70a537f7ad37b0768247e506286bbfbd6c9",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_champion_dashboard_update": 92,
+        "tests.test_dashboard_feed": 134,
+        "tests.test_dashboard_server": 100,
+        "tests.test_jleague_ongoing_source": 63,
+        "tests.test_jleague_ongoing_update": 29,
+        "tests.test_prediction_identity": 15,
+        "tests.test_weekend_batch": 61,
+        "tests.test_weekend_integration": 27,
+        "tests.test_weekend_preflight": 20,
+        "tests.test_weekend_source": 63
+      },
+      "passed": 603,
+      "skipped": 1,
+      "skipped_cases": [
+        {
+          "module": "tests.test_jleague_ongoing_source",
+          "name": "test_saved_source_bootstrap_boundaries_when_local_cache_is_available",
+          "reason": "Locally archived official research pages are not distributed as test fixtures."
+        }
+      ],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T18:52:20.270130+09:00"
+      ],
+      "tests": 604
+    }
+  },
+  "manifest": {
+    "base_format": "champion-weekend-v2",
+    "embedded_proof": "STORED_RECEIPT_ATTESTATION_NOT_EXTERNAL_SIGNATURE_OR_CURRENT_RAW_REVALIDATION",
+    "files": [
+      "predictions.csv",
+      "bindings.csv",
+      "snapshot.json",
+      "source-proof.json",
+      "manifest.json"
+    ],
+    "format_version": "champion-weekend-v2-source-v1",
+    "legacy_reader_new_format": "REJECT_WITHOUT_MODIFICATION",
+    "prior_daily_and_prior_v2_reader_compatible": true,
+    "scope": "SYNTHETIC_ONLY",
+    "source_proof_format": "weekend-source-binding-v1"
+  },
+  "next_gates": [
+    "Production source worker/ownership/ACL/clock/receipt and separately approved acquisition",
+    "Real Champion/scaler backend and production scope contract; no simple synthetic scope rewrite",
+    "Reader deployment, backup/rollback, concurrency and Windows power-loss durability",
+    "Explicit approval for a future wholly unsaved reservation before Wednesday 07:00",
+    "Separately approved real prediction/publication and feed/UI activation"
+  ],
+  "prior_phase3_test_evidence": {
+    "passed": 576,
+    "skipped": 1,
+    "status": "PRIOR_EVIDENCE_NOT_ADDED_TO_CURRENT_COUNTS"
+  },
+  "private_evidence_SHA256": {
+    "baseline.json": "15922aef1092c1a7b5a39b62146a2f9e0c214a461bd50b4cd9fb657f11c5b750",
+    "contract-inspection.json": "d5112ebf81e0d879461c6738a4912749c0e417429696c79e32a3eafe6ab35937",
+    "protection-before-commit-resume.json": "51bc752556f49e624ceeb19cd280f4f9f7c9fa83d4df76e6876c9d4a08cabfb8",
+    "resume-code-verification.json": "e5d97bee6afd30a3620ed60356bee40b0ff2d395e9e87d4951b15183ab917c9b",
+    "source-inspection.json": "b9db87c69ea9ef5ac296c276fa2828185da5ab30dcf3be0d2c0b7246362a35a4"
+  },
+  "production_actions": {
+    "Desktop_changed": 0,
+    "collection_run": 0,
+    "evaluation": 0,
+    "feed_updated": 0,
+    "fit": 0,
+    "inference": 0,
+    "new_communication_permit": 0,
+    "official_GET": 0,
+    "prediction_saved_or_changed": 0,
+    "real_model_load": 0,
+    "reservation_created": 0,
+    "runtime_activated": 0,
+    "tasks_run_or_changed": 0
+  },
+  "protection": {
+    "Desktop_runtime_sources_publication_models_unchanged": true,
+    "NN_model_payloads": 53,
+    "canonical_operational_saved_predictions": 19,
+    "fixed_differences": 0,
+    "main_UI_NN_Phase1_Phase2_Phase3_operational_other_worktrees_unchanged": true,
+    "protected_files": 43780,
+    "saved_2026_10_24": 5,
+    "saved_2026_10_25": 0,
+    "tasks_XML_and_execution_status_unchanged": true
+  },
+  "scope": "SYNTHETIC_ONLY",
+  "source_inspection": {
+    "archive_raw_metadata_checked": 16,
+    "manifest_SHA256": "14ebc385fd3e45597895700abf8b524c6faf71f339c99cb653ebdd8c9a474184",
+    "observed_at_utc": "2026-10-21T22:00:30.807718+00:00",
+    "original_publication_completed_at_utc": null,
+    "original_publication_receipt_backfilled": false,
+    "revision_id": "d179144f38ec64a43ef6bd860ca8802a19c89399a69e29c4e20c8cde1d15dc23",
+    "snapshot_created_at_utc": "2026-10-21T22:00:41.691273+00:00"
+  },
+  "verdict": "WEEKEND_BATCH_E2E_OFFLINE_VERIFIED"
+}

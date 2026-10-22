@@ -186,6 +186,24 @@ class Prepared:
 class OfflineWeekendBackend:
     """Explicit test capability, never constructed by the operational CLI."""
 
+    batch_format = FORMAT
+    batch_prefix = PREFIX
+
+    def verify_source(self, current):
+        return verify_publication(current, self.runtime)
+
+    def before_inference(self, current, snapshot, pins, clock):
+        pass
+
+    def before_commit(self, prepared, records, bindings, clock):
+        return {}
+
+    def manifest_extension(self, prepared):
+        return {}
+
+    def before_visibility(self, prepared, clock):
+        pass
+
     def __init__(self, workspace, artifact, special, witnesses):
         need(isinstance(workspace, SyntheticWorkspace), "workspace_required")
         need(getattr(artifact.model, "synthetic_only", False) is True
@@ -226,7 +244,7 @@ class OfflineWeekendBackend:
 
     def review(self, current, saved):
         """Read-only applicability audit; safe for evening without inference."""
-        verify_publication(current, self.runtime)
+        self.verify_source(current)
         # Natural completion/typed-namespace transition never causes a second
         # forecast. Validate applicability separately from frozen source time.
         published = []
@@ -282,7 +300,7 @@ class OfflineWeekendBackend:
         need(current.completed.match_date.lt(self.window["start"]).all(), "future_result_in_snapshot")
         for row in current.completed.itertuples():
             need(row.evidence_sha256 and stamp(row.evidence_fetched_at_utc) <= cutoff, "history_evidence_unavailable")
-        pins = verify_publication(current, self.runtime)
+        pins = self.verify_source(current)
         reservation_path = self.runtime / "weekend-reservations" / (self.window["start"] + ".json")
         pins[str(reservation_path)] = reservation_sha
         need(set(self.witnesses) == {"training", "special", "teams", "estimator"}, "input_evidence_missing")
@@ -322,10 +340,18 @@ class OfflineWeekendBackend:
             pins[str(file)] = sha(file)
         attempts = safe(self.runtime / "weekend-attempts")
         attempts.mkdir(exist_ok=True)
-        write_new(attempts / (self.window["start"] + ".json"), body(dict(snapshot_id=digest(snapshot), started_at=utc(now))))
+        snapshot_id = digest(snapshot)
+        write_new(attempts / (self.window["start"] + ".json"), body(dict(snapshot_id=snapshot_id, started_at=utc(now))))
+        self.before_inference(current, snapshot, pins, clock)
+        need(digest(snapshot) == snapshot_id, "snapshot_changed_during_preflight")
+        check_pins(pins)
+        ready = stamp(clock())
+        need(ready >= now, "clock_moved_backwards")
+        need((ready - cutoff).total_seconds() <= self.config["deadline_seconds"], "inference_deadline")
+        need(all(ready < stamp(feed.kickoff_at(r.match_date, r.kickoff_time)) for r in targets.itertuples()), "kickoff_elapsed")
         values = probability_rows(self.artifact, targets, ratings)
         generated = stamp(clock())
-        need(generated >= now, "clock_moved_backwards")
+        need(generated >= ready, "clock_moved_backwards")
         context = dict(scope=SCOPE, snapshot=snapshot, snapshot_id=digest(snapshot),
                        reservation_sha256=reservation_sha, generated_at=utc(generated))
         return Prepared(targets, values, context, pins)
@@ -338,12 +364,15 @@ class OfflineWeekendBackend:
                  for index, side in enumerate(("away", "draw", "home"))) for r in records), "output_prediction_changed")
         check_pins(prepared.pins)
         need(all(r["prediction_generated_at"] == prepared.context["generated_at"] for r in records), "generated_time")
+        extra_files = self.before_commit(prepared, records, bindings, clock)
+        need(all(all(float(r["a_p_" + side]) == float(expected[r["fixture_key"]][index])
+                     for index, side in enumerate(("away", "draw", "home"))) for r in records), "output_prediction_changed")
         directory = safe(self.runtime / (".pending-" + PREFIX + uuid.uuid4().hex))
         directory.mkdir()
         # A failed stage is retained for inspection, never silently resumed/deleted.
         csvs = {"predictions.csv": pd.DataFrame(records, columns=feed.CHAMPION_COLUMNS).to_csv(index=False, lineterminator="\n").encode(),
                 "bindings.csv": pd.DataFrame(bindings, columns=BINDING_COLUMNS).to_csv(index=False, lineterminator="\n").encode(),
-                "snapshot.json": body(prepared.context)}
+                "snapshot.json": body(prepared.context), **extra_files}
         for name, data in csvs.items():
             fault("before_" + name)
             write_new(directory / name, data)
@@ -352,7 +381,7 @@ class OfflineWeekendBackend:
         need(committed >= stamp(prepared.context["generated_at"]), "clock_moved_backwards")
         need((committed - stamp(self.window["information_cutoff"])).total_seconds() <= self.config["deadline_seconds"], "commit_deadline")
         need(all(committed < stamp(feed.kickoff_at(r["match_date"], r["kickoff"])) for r in records), "kickoff_elapsed_before_commit")
-        manifest = dict(format_version=FORMAT, scope=SCOPE, policy=POLICY, period=self.window,
+        manifest = dict(format_version=self.batch_format, scope=SCOPE, policy=POLICY, period=self.window,
                         official_revision=prepared.context["snapshot"]["official_revision"],
                         official_manifest_sha256=prepared.context["snapshot"]["official_manifest_sha256"],
                         fixture_set_sha256=digest(sorted(r["fixture_key"] for r in records)),
@@ -361,6 +390,7 @@ class OfflineWeekendBackend:
                         generated_at=prepared.context["generated_at"], committed_at=utc(committed),
                         count=len(records), completeness="PASS", commit_state="COMMITTED",
                         files={n: hashlib.sha256(data).hexdigest() for n, data in csvs.items()})
+        manifest.update(self.manifest_extension(prepared))
         fault("before_manifest")
         write_new(directory / "manifest.json", body(manifest))
         read_batch(directory, staging=True)
@@ -373,10 +403,12 @@ class OfflineWeekendBackend:
             need(not any(read_batch(p)[2]["period"] == self.window for p in batches.glob(PREFIX + "*")), "already_published")
             need(not {r["fixture_key"] for r in existing} & {r["fixture_key"] for r in records}, "concurrent_saved_overlap")
             check_pins(prepared.pins)
+            self.before_visibility(prepared, clock)
+            read_batch(directory, staging=True)
             publication_check = stamp(clock())
             need(publication_check >= committed and (publication_check - stamp(self.window["information_cutoff"])).total_seconds() <= self.config["deadline_seconds"]
                  and all(publication_check < stamp(feed.kickoff_at(r["match_date"], r["kickoff"])) for r in records), "publication_clock")
-            destination = batches / (PREFIX + hashlib.sha256(body(manifest)).hexdigest())
+            destination = batches / (self.batch_prefix + hashlib.sha256(body(manifest)).hexdigest())
             directory.rename(destination)  # single same-filesystem visibility boundary
         return destination
 
@@ -385,6 +417,9 @@ def read_batch(directory, *, staging=False):
     directory = safe(directory)
     manifest_body = safe(directory / "manifest.json").read_bytes()
     m = read_json(directory / "manifest.json")
+    if m.get("format_version") == "champion-weekend-v2-source-v1":
+        from src.modeling.weekend_integration import read_bound_batch
+        return read_bound_batch(directory, staging=staging)
     need(set(m) == {"format_version", "scope", "policy", "period", "official_revision", "official_manifest_sha256", "fixture_set_sha256", "snapshot_id", "model_identity", "input_sha256", "generated_at", "committed_at", "count", "completeness", "commit_state", "files"}, "manifest_schema")
     need(staging or directory.name == PREFIX + hashlib.sha256(manifest_body).hexdigest(), "manifest_address")
     need(m["format_version"] == FORMAT and m["scope"] == SCOPE and m["policy"] == POLICY
@@ -395,6 +430,12 @@ def read_batch(directory, *, staging=False):
     for name, h in m["files"].items():
         need(sha(safe(directory / name)) == h, "batch_sha")
     c = read_json(directory / "snapshot.json")
+    return validate_core(m, c, (directory / "predictions.csv").read_bytes(),
+                         (directory / "bindings.csv").read_bytes())
+
+
+def validate_core(m, c, predictions_body, bindings_body):
+    """Shared v2 semantics; version-specific envelopes are validated by readers."""
     need(set(c) == {"scope", "snapshot", "snapshot_id", "reservation_sha256", "generated_at"}, "context_schema")
     s = c["snapshot"]
     need(set(s) == {"policy", "scope", "period", "frozen_at", "official_revision", "official_manifest_sha256", "source_observed_at", "targets", "history_events_sha256", "history_count", "ratings", "ratings_sha256", "elo_parameters", "features", "input_sha256", "input_acquired_utc", "code_sha256", "model_identity"}, "snapshot_schema")
@@ -413,9 +454,9 @@ def read_batch(directory, *, staging=False):
          and s["official_revision"] == m["official_revision"] and s["official_manifest_sha256"] == m["official_manifest_sha256"]
          and s["input_sha256"] == m["input_sha256"] and c["generated_at"] == m["generated_at"], "context_manifest_conflict")
     need(digest(s["ratings"]) == s["ratings_sha256"], "rating_map_sha")
-    records = feed.csv_frame((directory / "predictions.csv").read_bytes(), exact=feed.CHAMPION_COLUMNS).to_dict("records")
-    bindings = feed.csv_frame((directory / "bindings.csv").read_bytes(), exact=BINDING_COLUMNS).to_dict("records")
-    frame = feed.read_champion_only_predictions((directory / "predictions.csv").read_bytes())
+    records = feed.csv_frame(predictions_body, exact=feed.CHAMPION_COLUMNS).to_dict("records")
+    bindings = feed.csv_frame(bindings_body, exact=BINDING_COLUMNS).to_dict("records")
+    frame = feed.read_champion_only_predictions(predictions_body)
     feed.validate_binding_coverage(frame, pd.DataFrame(bindings, columns=BINDING_COLUMNS), champion_only=True)
     need(type(m["count"]) is int and 1 <= m["count"] <= 40 and len(records) == len(bindings) == len(s["targets"]) == m["count"], "read_count")
     need(digest(sorted(r["fixture_key"] for r in records)) == m["fixture_set_sha256"], "read_fixture_set")

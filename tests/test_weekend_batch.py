@@ -378,7 +378,9 @@ def test_changed_schedule_after_commit_holds_without_modifying_archive(case):
 def test_concurrent_daily_append_is_rejected_before_weekend_visibility(case):
     friday(case);p=prepare(case);records,bindings=outputs(case,p)
     def fault(where):
-        if where=='before_publish':update.publish_batch(case.runtime,records[:1],bindings[:1])
+        # Simulate a non-cooperating writer. The public daily publisher now
+        # rejects reservations before it could create this competing batch.
+        if where=='before_publish':update._publish_daily_batch(case.runtime,records[:1],bindings[:1])
     with pytest.raises(ValueError,match='concurrent_saved_overlap'):
         case.backend.commit(p,records,bindings,lambda:FRIDAY,fault)
     assert not list((case.runtime/'batches').glob(w.PREFIX+'*'))
