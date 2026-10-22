@@ -1,0 +1,23 @@
+{
+  "all_frozen_dependency_pins_SHA256": "6757ac6b59be36370151c35113d518741cacff0c650ea70c51c5100568aef984",
+  "backup_code_SHA256": "cb0b404ce74730e8da49f5d0bf53d68e801df3b3eb827a94eb7eb30309e5d242",
+  "delivery_auditor_SHA256": "417336294b125ea0265d8e071ca1603ab64b9e2bf73ffb225217fbea0cad5cbb",
+  "general_classifier_connected": false,
+  "live_private_entry_points": {
+    "audit-common.py": "4db69a1a79028a025ebd548518e1652c50cb094d5bb4f37b218687df6ba87b95",
+    "dataset.py": "00b4a05fee6e0277a81a7a513fc0d623933b2a75de758ea224b480c8a129bf58",
+    "launch-once.py": "5e8f3bf078f64f8eab322fd9d946cb0fab280fd7a5990e2e3acbb7b0927089f3",
+    "live-run.py": "2196ad7a4d372e150689e979b3afa1dad2be9e9675329fd44ffbec867ed5028c"
+  },
+  "live_public_code": {
+    "collection_executor.py": "a96873ce9084c2ede36750a0b2b969843c001e2c3000f4ce4b619e9b26bff875",
+    "collection_http_integration.py": "29e383c23b850945bbe5108bae5ef7d57f6966f0841cc2bbc13f3ca9053d8779",
+    "collection_http_worker.py": "40b029e3c5bb3907a7437036f455904654381774739fc52626c62d4ce33f7eea"
+  },
+  "post_acquisition_audit_SHA256": "10ef1ce62efe96a19f9c7ec76242b9933c757ad264214bb81aafca1b8087d39d",
+  "publisher_SHA256": "36171aa5eb894273bfc67fa07db2bedc2a0d8b5d906f08a702472e56c6f68400",
+  "strict_parser_SHA256": "009236881c349d5600054bca94ab57d9f7c79001ce25af7432a2f4cabbfafcad",
+  "v5_adapter_SHA256": "6d8aede159213b3ff9ae1d7d6e41794b6b3c0f66c0793a6fdbc3796fa9d4b354",
+  "v6_in_live_code_dependencies": false,
+  "v6_offline_only_adapter_SHA256": "3e1204b10bcb362bdfcc949bb15c177c07de3c866665706c2e17262980d5cdfa"
+}

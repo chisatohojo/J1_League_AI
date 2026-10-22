@@ -1,0 +1,38 @@
+{
+  "historical_four_HOLD_and_quarantine_reproduced": true,
+  "native179_worker_audit_SHA256": "b72b43c2dcb7e416ac64c2543ba727bddff4cdcc22ab801eab0ab82f15ddaddd",
+  "new_JUnit_SHA256": "efc2b505e77078222ed7a77dabdf5855b19b2dee06ac16a054bc21bd6c6a828f",
+  "new_saved179_native_replay_v5_HOLD": 3,
+  "new_saved179_native_replay_v5_PASS": 176,
+  "new_test_source_SHA256": "8ec1a35ae656f1b590620c5958918fc1a74a7589be34fe5c325a9a415a571d2d",
+  "new_test_timestamp": "2026-10-22T09:34:47.100168+09:00",
+  "new_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 81
+  },
+  "new_v6_independent_offline_PASS": 179,
+  "old54_reused_not_rerun": {
+    "JUnit_SHA256": "b52c50901db655273030df663ab5d89a7a0f811986369223292d049a902bb6c6",
+    "original_timestamp": "2026-10-22T07:49:28.614470+09:00",
+    "tests": 54
+  },
+  "old935_and9_reused": [
+    {
+      "JUnit_SHA256": "8ce397d3be03b8bda9de40e43a018401352ca2e957b834395ff465b70de42715",
+      "original_timestamp": "2026-10-21T22:19:34.700009+09:00",
+      "reexecuted_this_phase": false,
+      "tests": 935
+    },
+    {
+      "JUnit_SHA256": "4cfc5cc4c4b8b35f01a4343a1e6074c724171b5d36a175de783a48300bcf1f5a",
+      "original_timestamp": "2026-10-22T07:11:47.945376+09:00",
+      "reexecuted_this_phase": false,
+      "tests": 9
+    }
+  ],
+  "status": "PASS",
+  "tests_use_no_live_GET": true,
+  "warnings_as_errors": true
+}

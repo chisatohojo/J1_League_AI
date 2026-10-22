@@ -1,0 +1,272 @@
+{
+  "B_C_D": "HOLD",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Stage_A_sealed": 109,
+  "all_saved_boundary_ledgers_match_final_prefixes": true,
+  "at_UTC": "2026-10-22T00:51:58.352927+00:00",
+  "audit_error_count": 0,
+  "batch_states": [
+    {
+      "batch": 1,
+      "receipt": {
+        "SHA256": "d7a2cfdddabb81c9daadbf1fb86f31937fb3559b8f04a34ff5094e3d4b248b7d",
+        "batch": 1,
+        "receipt": "batch-01-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 2,
+      "receipt": {
+        "SHA256": "7e1f3bbf52d7058357eab1bcdfc264671fb8c26572ce9e9d4ede079cbebb9a72",
+        "batch": 2,
+        "receipt": "batch-02-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 3,
+      "receipt": {
+        "SHA256": "2331f5d9a5687613208b292a3d994707ff7abd05b371118cf5cfa646f890b486",
+        "batch": 3,
+        "receipt": "batch-03-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 4,
+      "receipt": {
+        "SHA256": "bdb0c68b966ea5d89f09585c6d37ec7697e0032f6fda9b3a1af8f9e629f56eeb",
+        "batch": 4,
+        "receipt": "batch-04-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 5,
+      "receipt": {
+        "SHA256": "3ad32e87f4c3db93266e905a6e8e2a9bffa891d0f28a36767970e05c62d11693",
+        "batch": 5,
+        "receipt": "batch-05-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 6,
+      "receipt": {
+        "SHA256": "fe4d11044e6d32dbc547d966d94ec2110376259a43086f38fca9e2b56a16bbd3",
+        "batch": 6,
+        "receipt": "batch-06-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 7,
+      "receipt": {
+        "SHA256": "8c1bdad1096f577120b51789884770b61c65dd36db14e641422459457b25ded2",
+        "batch": 7,
+        "receipt": "batch-07-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 8,
+      "receipt": {
+        "SHA256": "95886ecdef1095ffcb6514cdfe789a5c6a78b075add86fc15f931f0e0fcc2a9e",
+        "batch": 8,
+        "receipt": "batch-08-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 9,
+      "receipt": {
+        "SHA256": "87249003d4d4d3f29b5247abd48c912ae0e468adaae32f4b899b584fd68f6fa6",
+        "batch": 9,
+        "receipt": "batch-09-receipt.json"
+      },
+      "started_URLs": 12,
+      "status": "COMPLETED"
+    },
+    {
+      "batch": 10,
+      "receipt": {
+        "SHA256": "6388ad7d6dd3a4ac2ffb7f8d58e3d6c1a0d4248c508cadc5d7a542f25a299951",
+        "batch": 10,
+        "receipt": "batch-10-receipt.json"
+      },
+      "started_URLs": 1,
+      "status": "COMPLETED"
+    }
+  ],
+  "batches": [
+    {
+      "GET": 12,
+      "HOLD": 2,
+      "PASS": 10,
+      "batch": 1,
+      "boundary_receipt_SHA256": "d7a2cfdddabb81c9daadbf1fb86f31937fb3559b8f04a34ff5094e3d4b248b7d",
+      "cumulative_committed": 12,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "92588ae24e4bd3b292785e9d0a0da9770f0468d5effd93cd88f8c7e2eee09f48",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 0,
+      "PASS": 12,
+      "batch": 2,
+      "boundary_receipt_SHA256": "7e1f3bbf52d7058357eab1bcdfc264671fb8c26572ce9e9d4ede079cbebb9a72",
+      "cumulative_committed": 24,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "d43f9cdffdfc4f964292265a5b58fa59b0cb0817a226a6c094ebd4a2c8952a4c",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 1,
+      "PASS": 11,
+      "batch": 3,
+      "boundary_receipt_SHA256": "2331f5d9a5687613208b292a3d994707ff7abd05b371118cf5cfa646f890b486",
+      "cumulative_committed": 36,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "ff82f184340cbc2a9151966ebff590915b9f1e6e9d19628a8ccb7ad15e7026f1",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 0,
+      "PASS": 12,
+      "batch": 4,
+      "boundary_receipt_SHA256": "bdb0c68b966ea5d89f09585c6d37ec7697e0032f6fda9b3a1af8f9e629f56eeb",
+      "cumulative_committed": 48,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "a64e9e17359b63afebf3b0e8bef1e2baa2e2303202e2dfbc33ee3b1205843bbf",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 1,
+      "PASS": 11,
+      "batch": 5,
+      "boundary_receipt_SHA256": "3ad32e87f4c3db93266e905a6e8e2a9bffa891d0f28a36767970e05c62d11693",
+      "cumulative_committed": 60,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "bc27be8cf3e91b02bee0a06ff795c90243eaad546593d0f6d50f6aa62b57756d",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 0,
+      "PASS": 12,
+      "batch": 6,
+      "boundary_receipt_SHA256": "fe4d11044e6d32dbc547d966d94ec2110376259a43086f38fca9e2b56a16bbd3",
+      "cumulative_committed": 72,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "bc949d0cbf358f1b7e58545a3fb8a8583bf1551b9570a079d548ec6d2e769557",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 0,
+      "PASS": 12,
+      "batch": 7,
+      "boundary_receipt_SHA256": "8c1bdad1096f577120b51789884770b61c65dd36db14e641422459457b25ded2",
+      "cumulative_committed": 84,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "f449621a10faec16a0d6924e13b1f5028e938e27c30b54409fc94cdf37ea739e",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 1,
+      "PASS": 11,
+      "batch": 8,
+      "boundary_receipt_SHA256": "95886ecdef1095ffcb6514cdfe789a5c6a78b075add86fc15f931f0e0fcc2a9e",
+      "cumulative_committed": 96,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "0bee8b4928d2cb6e179c7b8d4f2305567931bb82562266545704b29a7fd88fec",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 12,
+      "HOLD": 1,
+      "PASS": 11,
+      "batch": 9,
+      "boundary_receipt_SHA256": "87249003d4d4d3f29b5247abd48c912ae0e468adaae32f4b899b584fd68f6fa6",
+      "cumulative_committed": 108,
+      "prefix_matches_final": true,
+      "source_sealed": 12,
+      "transport_ledger_SHA256": "7845d672445be40225d2ef5be4db7f6bf95364f7c1db6aab55c52b97171f637e",
+      "unconfirmed": 0
+    },
+    {
+      "GET": 1,
+      "HOLD": 0,
+      "PASS": 1,
+      "batch": 10,
+      "boundary_receipt_SHA256": "6388ad7d6dd3a4ac2ffb7f8d58e3d6c1a0d4248c508cadc5d7a542f25a299951",
+      "cumulative_committed": 109,
+      "prefix_matches_final": true,
+      "source_sealed": 1,
+      "transport_ledger_SHA256": "73c1098cfd3daf19f5b3d7feac6cb936d858dc4c92f1c643f22e76da9452c6af",
+      "unconfirmed": 0
+    }
+  ],
+  "body_bytes": 13343782,
+  "collection_status": "DETAIL_EVIDENCE_COLLECTION_COMPLETE_RESEARCH_ONLY",
+  "communication_ledger_SHA256": "f4a34f645b6fe42119a6c0e4f9bef1b1cb7cfd5198cc40b981319fa582e43f0a",
+  "cumulative_sources": 288,
+  "current_acquisition_processes": 0,
+  "current_collection_v5_cumulative_HOLD": 9,
+  "current_collection_v5_cumulative_PASS": 279,
+  "detail_GET_upper_bound": 109,
+  "history_admission": false,
+  "minimum_interval_seconds": 5.200099,
+  "model53_and_protection": "PASS",
+  "new_quarantines_committed": 6,
+  "new_v5_PASS": 103,
+  "new_v5_quarantine_HOLD": 6,
+  "operational_new_changes": 0,
+  "original935_and_later9_and54_reused_not_rerun": true,
+  "outer_exit": 0,
+  "private_audit_errors_SHA256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "protected_files": 36143,
+  "quarantine_followed_by_different_completed_GET": 6,
+  "quarantine_registry_SHA256": "af0e9282236eb5fceb9c016b8b06726a47f5247d2bdc278bc81e5983af0564ff",
+  "raw_HTTP200_responses": 109,
+  "research_model_load_fit_inference_save": 0,
+  "reviewed_existing_plus_new_v5_PASS": 282,
+  "robots_new_GET": 0,
+  "status": "PASS",
+  "test_counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 81
+  },
+  "unacquired": 0,
+  "unresolved_new_quarantines": 6,
+  "v5_original_existing_HOLD": 3,
+  "v5_original_existing_PASS": 176,
+  "v6_connected_to_live_path": false,
+  "v6_independent_existing_HOLD": 0,
+  "v6_independent_existing_PASS": 179
+}

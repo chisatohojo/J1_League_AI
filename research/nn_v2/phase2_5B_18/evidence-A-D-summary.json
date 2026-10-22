@@ -1,0 +1,11 @@
+{
+  "A_detail_PASS": 103,
+  "A_final_source_facts_verified": 109,
+  "A_unresolved_quarantine_HOLD": 6,
+  "B_event_timeline": "HOLD",
+  "C_original_schedule_change_notice": "HOLD",
+  "D_prediction_cutoff_acquisition": "HOLD",
+  "history_admitted": 0,
+  "private_registry_SHA256": "f6ba7fe10216193fbd1fd38d01ce3abdd99ac24462e501561167aeb0ca8a2149",
+  "real_acquisition_UTC_not_backdated": true
+}

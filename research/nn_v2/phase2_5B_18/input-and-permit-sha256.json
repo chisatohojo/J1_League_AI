@@ -1,0 +1,19 @@
+{
+  "all_input_pins_SHA256": "a04f6165cbadc8c1d8f234ff2ca9d97e541db8ea1c690cc7ea1dfef82936bb59",
+  "detail_permit_SHA256": "68c1b0867862d9ef547e135be4da715f05eea9bc1d4d52926fa78b19155cd802",
+  "frozen_research_ordinary_completed_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "model_payloads_verified": 53,
+  "model_seal_SHA256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "new_detail_GET_cap": 109,
+  "new_frozen_preflight_SHA256": "549caf98bc18c2428fa307e52cbf374833d0697951a3252d267679f753deedff",
+  "new_robots_GET_cap_separate": 0,
+  "original109_ledger_SHA256": "2a40d5048f519caa02685f8380002a593b107192ade8c8408f32d20dfade8843",
+  "original109_plan_SHA256": "6a0e767364b34418197687e82b692e6a9ccbd1ed1d0b3d07d0f67faf371ad2bc",
+  "permit_consumed": true,
+  "protection_baseline_SHA256": "2ae3d816c896b999e343021cc006bf013c6c8a70ade3f583b19845f391dcfc18",
+  "robots_permit_SHA256": null,
+  "selection109_SHA256": "2a40d5048f519caa02685f8380002a593b107192ade8c8408f32d20dfade8843",
+  "start_HEAD": "c642d57c1d88c792ef37756515ac34c9b4f4d9cc",
+  "study": "nn_v2_residual_20261020_01",
+  "ten_batch_plan_SHA256": "6412d436c6b0d9b0c9610cdd154d45a29e3006252192ffa875593c9c2ae75318"
+}

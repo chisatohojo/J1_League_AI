@@ -1,0 +1,14 @@
+{
+  "baseline_files": 36143,
+  "existing179_sources_unchanged": true,
+  "fixed_protection_changes": 0,
+  "historical11_unattributed_differences_retained": true,
+  "main_and_other_worktrees_unchanged": true,
+  "model_seal_and53_payloads_verified": true,
+  "new_operational_changes": 0,
+  "old_v5_v6_and_review_rules_and_formal_records_preserved": true,
+  "prior22_failure_and_prior07_success_separate": true,
+  "research_model_load_fit_inference_save": 0,
+  "status": "PASS",
+  "tasks_not_modified_stopped_rerun": true
+}

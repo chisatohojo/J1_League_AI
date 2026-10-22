@@ -1,0 +1,16 @@
+{
+  "contains_unclassified_timing_notes": 0,
+  "followed_by_different_completed_GET": 6,
+  "history_admitted": 0,
+  "individual_notes_identity_names_paths_published": false,
+  "new_live_quarantines": 6,
+  "new_live_v5_HOLD": 6,
+  "new_unknown_rules_added": 0,
+  "normal_reclassification_performed": false,
+  "observation_status": "REAL_HTTP_QUARANTINE_OBSERVED_AND_VERIFIED",
+  "old3_independent_offline_review_remains_separate": true,
+  "old_phase16_quarantine_packets_retained": 3,
+  "private_registry_SHA256": "af0e9282236eb5fceb9c016b8b06726a47f5247d2bdc278bc81e5983af0564ff",
+  "raw_metadata_request_seals_retained": true,
+  "receipt_committed": 6
+}

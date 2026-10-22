@@ -1,0 +1,19 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_actual_HTTP_raw_metadata_request_receipts_quarantines_included": true,
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "f109db6e4328ecb807242b375df508e21dd932f9e1a83b37f3c87690b7fe6507",
+  "archive_bytes": 37533374,
+  "archive_name": "phase2_5B_18-evidence.zip",
+  "at_UTC": "2026-10-22T00:54:06.503861+00:00",
+  "independent_extraction_SHA": "PASS",
+  "independent_readback": "PASS",
+  "mismatches": 0,
+  "payload_bytes": 126395560,
+  "payload_files": 5320,
+  "payload_manifest_SHA256": "3dbb2dc89315570804b57de2e34584e044cba0411639bff42fa86a12b22ca83f",
+  "reproducible_synthetic_scratch_excluded_and_preserved_locally": true,
+  "separate_drive": true,
+  "status": "PASS",
+  "test_source_JUnit_native179_and_historical4_evidence_included": true
+}

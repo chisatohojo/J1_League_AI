@@ -1,0 +1,24 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_18/.gitattributes": "5c0ccd4346d40a9a257042b8a485544d843749688aee93ed1bcf52679a9a2441",
+    "research/nn_v2/phase2_5B_18/RESULTS.md": "93c76ea43cc5927db9c07b9e270a22eb143660543faa585b2fd733a14bbf24a9",
+    "research/nn_v2/phase2_5B_18/SPEC.md": "6bd3367b846d17d36a94008f2f7bf598f3a646f049a7f16530acbbff092357c5",
+    "research/nn_v2/phase2_5B_18/backup-verification.json": "b70285a2d67f3d19b5914ae245adc724e71255e5eaa8f49023277b69a0805079",
+    "research/nn_v2/phase2_5B_18/batch-summary.json": "8d91fa1f39b217f91164c12304b60eddd18815ac6d4d96496115807ca2e2c978",
+    "research/nn_v2/phase2_5B_18/collection-summary.json": "3d19f4969fd0ce80bdb096ad2044b4e499a028c8d44100645ccb0265225e98fe",
+    "research/nn_v2/phase2_5B_18/collection_executor.py": "a96873ce9084c2ede36750a0b2b969843c001e2c3000f4ce4b619e9b26bff875",
+    "research/nn_v2/phase2_5B_18/collection_http_integration.py": "29e383c23b850945bbe5108bae5ef7d57f6966f0841cc2bbc13f3ca9053d8779",
+    "research/nn_v2/phase2_5B_18/collection_http_worker.py": "40b029e3c5bb3907a7437036f455904654381774739fc52626c62d4ce33f7eea",
+    "research/nn_v2/phase2_5B_18/evidence-A-D-summary.json": "f50efa2d5e1b049884a5fe728820a05a9fa9cc874fdfe6a25444d6c6c57ed5ff",
+    "research/nn_v2/phase2_5B_18/implementation-sha256.json": "ea16c864dab7c0f612aae58efb2c1de1533b19b77a9cf62f3cdb202bd4aeac68",
+    "research/nn_v2/phase2_5B_18/input-and-permit-sha256.json": "c50cf34066e625b485849376b0edff6dfeb10e736fda8c55145c13370f9901a4",
+    "research/nn_v2/phase2_5B_18/next-stage.json": "78482306ce4c0a48fcc5bc9bb9d164977ee0d6b90377714378c790c301079b60",
+    "research/nn_v2/phase2_5B_18/protection-summary.json": "01c977e29afee793b2b836ea7b40db7ad3ca45ee3c8467ddca588ba9c3dcc78c",
+    "research/nn_v2/phase2_5B_18/quarantine-summary.json": "1c7cd59db25914e4d1249d1f1e38169de4b8906b2294e24716d82182686990e4",
+    "research/nn_v2/phase2_5B_18/readiness.json": "6af72f22b2814f83a8ff52ac179c7f5b2caf6d99aba21f20446f03685028c75e",
+    "research/nn_v2/phase2_5B_18/test-results.json": "cdbea66c2286534b3913e05e52ead7e4a217c015d7e40e52d1337f15f3264c3c",
+    "tests/test_nn_two_stage_collection109.py": "8ec1a35ae656f1b590620c5958918fc1a74a7589be34fe5c325a9a415a571d2d"
+  },
+  "self_excluded": true
+}

@@ -1,0 +1,16 @@
+{
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "history_admission": false,
+  "new_executor_or_permit_authorized": false,
+  "new_unresolved_quarantines": 6,
+  "next_plan_SHA256": "a4f2dc3202101ea8e0487aaaf55ea261111661265d45f34d748c489dfbb8e36c",
+  "remaining_ledger_SHA256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "run_resume_authorized": false,
+  "status": "INDEPENDENT_OFFLINE_QUARANTINE_AND_B_C_D_REVIEW_REQUIRED",
+  "unacquired": 0,
+  "unknown_remark_rule_change_authorized": false,
+  "v6_live_integration_requires_separate_contract_regression_and_approval": true
+}
