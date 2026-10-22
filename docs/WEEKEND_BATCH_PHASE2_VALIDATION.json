@@ -1,0 +1,189 @@
+{
+  "Champion_input_status": "STATIC_PINS_AND_MOCK_INPUT_CONSISTENT_REAL_ESTIMATOR_NOT_LOADED",
+  "UTC": "2026-10-22T08:23:13.365448+00:00",
+  "base_commit": "33b2108e2b618e603f94e280746763af0f1ff56a",
+  "branch": "feature/weekend-batch-preflight",
+  "code_SHA256": {
+    "scripts/update_champion_dashboard.py": "16d981964485272d94a042d01a9e524ce7d2898380261a8c4fe427eb57f95ee4",
+    "src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
+    "src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
+    "src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "src/modeling/weekend_batch.py": "6dd82d8814d997332fbeccf1a7ce5c2358fc43156171b898597a32a69e3c6397",
+    "tests/_legacy_batch_reader_5ac9052.py": "1856c932e305d0d30a00faa8540e742f10abac4973ad2d2d53baab04246f67a3",
+    "tests/test_champion_dashboard_update.py": "de6adb3906d1272380e0589a483709975aecdb8addbf0fbed73955847695d5a8",
+    "tests/test_dashboard_feed.py": "c891ca8e126cd29dd739876ee4f7b942cb716ea7dd24288fee43d4c71d712775",
+    "tests/test_dashboard_server.py": "df5cd1bc93ddb979b80b46ca7c22d7946c9786555197e7ce103f826bafd781fd",
+    "tests/test_prediction_identity.py": "e756975f1ccdd8bf377da886b821a3fdde66353ba05c0adaaf4506fe71fa9478",
+    "tests/test_weekend_batch.py": "1551e2977a8fd2a7825f6664df12f329814a366108bb3ae1b2d81f906e9da992",
+    "tests/test_weekend_preflight.py": "c3e9dd504b9de0b272294e0e1ea42f9e1ca42e8bf3968b38711b1bb23f687ce3"
+  },
+  "deployment": false,
+  "final_tests": {
+    "JUnit_SHA256": "446fadde8848c6cb17f1ff00ecddca6a19bdf89eeab83a6cbcdaf8e26df9d665",
+    "code_hash_capture": "After completed final test run; source/test bytes not changed afterward, documentation finalized separately",
+    "errors": 0,
+    "execution_scope": "Synthetic fixtures, temporary storage, mock scaler/model; existing local HTTP server regression uses loopback only",
+    "failures": 0,
+    "log_SHA256": "a1f1db2c30c7a80081d93efdb8c89f3c0a2ede4496b30eb2cbcddf65c093055f",
+    "modules": {
+      "tests.test_champion_dashboard_update": 92,
+      "tests.test_dashboard_feed": 134,
+      "tests.test_dashboard_server": 100,
+      "tests.test_prediction_identity": 15,
+      "tests.test_weekend_batch": 61,
+      "tests.test_weekend_preflight": 20
+    },
+    "passed": 422,
+    "skipped": 0,
+    "suite_timestamps_as_recorded": [
+      "2026-10-22T17:17:01.568973+09:00"
+    ],
+    "tests": 422,
+    "warnings_as_errors": true
+  },
+  "input_SHA256": {
+    "data/master/teams.csv": "ec255eb65e9fa2c310e3fbcfeecf7a7d201ca4f458a15bb0d129fa0ca9e1b89f",
+    "data/processed/jleague/2015_matches_probe.csv": "ea0ab9e1788373702d9ce425f83c74bae21a7afd35752d9c24481f4bc9400353",
+    "data/processed/jleague/2016_matches_probe.csv": "4a3bcd4f0beaa20192abc60071e5153c846c1ca132b1876d174a2e46a5dde45f",
+    "data/processed/jleague/2017_matches_probe.csv": "d2f8ae9959762d172c4afb209e1916afd2dfadbcb0955a99b281aab2fb07f59b",
+    "data/processed/jleague/2018_matches_probe.csv": "f6d90f5dec3461fca230ca487233c63273fb69156970af3940d32b1455672681",
+    "data/processed/jleague/2019_matches_probe.csv": "3b2090ec38e064457ec4ae0f9981ae457350af268f75886150b6f05d95d6fe2f",
+    "data/processed/jleague/2020_matches_probe.csv": "fd295aca0097ee0041659cdbe42ec9375227969e9b0c51efa8993753cccbfe17",
+    "data/processed/jleague/2021_matches_probe.csv": "298c3d4c4eb66fa6d6d00748e19382e5f304899355297acdbf42f251e11114b6",
+    "data/processed/jleague/2022_matches_probe.csv": "d4861930524d5e171b3c93f18361af7b17c6055ae27d9055a6e9a9ab266ba2c2",
+    "data/processed/jleague/2023_matches_probe.csv": "6a1e002dd7e9d0187d014e517057ad3d79430eece66fcb6b5239e9db590085c9",
+    "data/processed/jleague/2024_matches_probe.csv": "4b2fa48f762e04316c7ded093d3919642d62d3c2b5edc92a55e012cf6ce410d1",
+    "data/processed/jleague/2025_matches_probe.csv": "c94411ed299ff90d86c3b55a3b17bd3e0dfc127d58c060109658d235bb24d18d",
+    "data/processed/jleague/2026_hyakunen/matches.csv": "9f871594e5216c1c89e69fcef835c641f3a4b5dbefce8d138e79881494c71f8c"
+  },
+  "intermediate_test_runs": {
+    "phase2-regression.xml": {
+      "JUnit_SHA256": "2cd12c4b47932f1686e461f9ea5d69d84330221edd7565f434ea96fb451a2752",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_champion_dashboard_update": 92,
+        "tests.test_dashboard_feed": 134,
+        "tests.test_dashboard_server": 100,
+        "tests.test_prediction_identity": 15,
+        "tests.test_weekend_batch": 61,
+        "tests.test_weekend_preflight": 14
+      },
+      "passed": 416,
+      "skipped": 0,
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T17:14:17.606564+09:00"
+      ],
+      "tests": 416
+    },
+    "reader-before-fix.xml": {
+      "JUnit_SHA256": "5d4c8513d3919ff87bcb403a82c1b2a0841b41a4f58f897d433a1f6e0b2fcd4b",
+      "errors": 0,
+      "failures": 5,
+      "modules": {
+        "tests.test_weekend_preflight": 14
+      },
+      "passed": 9,
+      "skipped": 0,
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T17:13:46.722376+09:00"
+      ],
+      "tests": 14
+    },
+    "reader-boundary-before-fix.xml": {
+      "JUnit_SHA256": "cc63e193e022109930288537d4fdc352175e47d695ea9646f03ff516339c246c",
+      "errors": 0,
+      "failures": 3,
+      "modules": {
+        "tests.test_weekend_preflight": 20
+      },
+      "passed": 17,
+      "skipped": 0,
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T17:16:26.672500+09:00"
+      ],
+      "tests": 20
+    }
+  },
+  "model_files_SHA256": {
+    "checksums.sha256": "2d2e50dbfc4d71ec2cdaf5fe1a6e48953c160c388f1740cfe538f29f593646d1",
+    "metadata.json": "bd1eb92c25bdb56a836ef7bfe3fcb13b0137a2ece01b6095e7d100e1f5afdd19",
+    "model.joblib": "60636e4652bce98b76c394310947b1b8923a8bf18a640d9e7976497989ed54be",
+    "scaler.joblib": "a8a5f176944049c6825071b580c5fe40f5a5fb28f504f8880d028deaf2494750",
+    "training_manifest.csv": "eea7498fabac6acc79a9c297468b470702288b61736b63d90214d741ab8fb32a"
+  },
+  "prior_phase1_tests": {
+    "JUnit_SHA256": "d55ff5da919b60d1bd76cfffcd953441663787bf3daf17dadc4a5e4c238e6cbb",
+    "passed": 402,
+    "status": "PRIOR_RECEIPT_ONLY_SEPARATE_FROM_THIS_RUN"
+  },
+  "private_evidence_SHA256": {
+    "baseline.json": "feb57a37ed411d665b2c62349f45e7e7ad746e7c787eff2e1d5981112011c673",
+    "contract-inspection.json": "c3aa634141c57982beae985b183cd888c347cb120c2592b988956575e77e3c92",
+    "protection-before-commit.json": "d38ee19549848a4b9f28acfc908439870745c78139d4279b705c5342ea115502",
+    "source-inspection.json": "42bfaf96d285f1917961d1075b28573513cbd1a78d2b023976a0b9975ea2d8ff"
+  },
+  "production_actions": {
+    "Desktop_apply": 0,
+    "collection_run": 0,
+    "feed_generation": 0,
+    "feed_overwrite": 0,
+    "fit": 0,
+    "inference": 0,
+    "model_load": 0,
+    "official_GET": 0,
+    "performance_evaluation": 0,
+    "prediction_changes": 0,
+    "task_change": 0,
+    "task_execution": 0,
+    "weekend_activation": 0
+  },
+  "protection": {
+    "Desktop_runtime_sources_publication_unchanged": true,
+    "NN_model_payloads": 53,
+    "canonical_prediction_records": 19,
+    "fixed_differences": 0,
+    "main_UI_NN_Phase1_operational_other_worktrees_unchanged": true,
+    "protected_files": 42612,
+    "tasks_XML_and_execution_status_unchanged": true
+  },
+  "reader_status": "PASS_SYNTHETIC_ONLY_NOT_DEPLOYED",
+  "real_Champion_parity_inference_performed": false,
+  "remaining_gates": [
+    "Pre-cutoff acquisition/publication receipt and immutable source provider",
+    "Production backend and versioned context distinguishable from synthetic scope",
+    "Compatible reader deployment and reservation before Wednesday 07:00",
+    "Windows publish/receipt crash, ACL, competing writers and recovery validation",
+    "Separate execution, feed and UI activation approval"
+  ],
+  "reservation_created_in_production": false,
+  "source_cutoff_status": "HOLD_PRE_0700_PUBLISHED_SNAPSHOT_NOT_ESTABLISHED",
+  "source_evidence": {
+    "completed_count": 110,
+    "first_official_result_available_utc": "NOT_ESTABLISHED_BY_FINAL_PAGE_FETCH",
+    "manifest_SHA256": "14ebc385fd3e45597895700abf8b524c6faf71f339c99cb653ebdd8c9a474184",
+    "pre_friday_history": {
+      "2026-10-23": {
+        "count": 110,
+        "incomplete": 0
+      },
+      "2026-10-30": {
+        "count": 120,
+        "incomplete": 10
+      }
+    },
+    "previous_accepted_revision": {
+      "manifest_SHA256": "08770c038308f3da29b76bf9d5b2a4dc01fb8f91c352de5636c153d6789ba932",
+      "observed_at_utc": "2026-10-20T22:00:20.030675+00:00",
+      "pre_2026_10_23_incomplete": 10,
+      "revision": "4d5e1052a2e8a7205f4e570037091eec19ede1fa69e241f58184d6854dc46fc6"
+    },
+    "publication_exact_completed_utc": null,
+    "revision_id": "d179144f38ec64a43ef6bd860ca8802a19c89399a69e29c4e20c8cde1d15dc23",
+    "snapshot_SHA256": "12dafa20bcc517e814d2ddf9278ac9c75c0d4012c69fc671def8eea597022336",
+    "snapshot_created_at_utc": "2026-10-21T22:00:41.691273+00:00",
+    "snapshot_sources_verified": 16,
+    "source_observed_at_utc": "2026-10-21T22:00:30.807718+00:00"
+  },
+  "verdict": "HOLD_WEEKEND_BATCH_PRODUCTION_PREFLIGHT"
+}

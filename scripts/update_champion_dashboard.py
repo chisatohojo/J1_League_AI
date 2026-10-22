@@ -224,25 +224,36 @@ def _publish_daily_batch(runtime, records, bindings):
 
 def saved_batches(runtime):
     records, bindings = [], []
-    for directory in sorted((runtime / "batches").glob("*")):
+    archive = weekend_batch.safe(runtime / "batches")
+    for directory in sorted(archive.glob("*")):
+        weekend_batch.safe(directory)
         if directory.name.startswith(weekend_batch.PREFIX):
             batch_records, batch_bindings, _, _ = weekend_batch.read_batch(directory)
             records.extend(batch_records)
             bindings.extend(batch_bindings)
             continue
         feed.require(directory.is_dir() and feed.HEX64.fullmatch(directory.name), "invalid_batch_directory")
-        manifest = json.loads((directory / "manifest.json").read_bytes())
+        manifest = weekend_batch.read_json(directory / "manifest.json")
         feed.require(set(manifest) == {"predictions.csv", "bindings.csv"}, "batch_manifest")
+        # Do not silently downgrade a v2 batch by ignoring its context file.
+        feed.require({p.name for p in directory.iterdir()} == set(manifest) | {"manifest.json"},
+                     "batch_files")
         for name, digest in manifest.items():
+            weekend_batch.safe(directory / name)
             feed.require(hashlib.sha256((directory / name).read_bytes()).hexdigest() == digest,
                          "saved_prediction_modified")
         rows = feed.csv_frame((directory / "predictions.csv").read_bytes(), exact=feed.CHAMPION_COLUMNS)
         sidecar = feed.csv_frame((directory / "bindings.csv").read_bytes(), exact=BINDING_COLUMNS)
-        feed.read_champion_only_predictions((directory / "predictions.csv").read_bytes())
+        feed.require(len(sidecar) == len(rows) and sidecar.prediction_artifact.eq(NATIVE).all(),
+                     "saved_binding_artifact_or_count")
+        projected = feed.read_champion_only_predictions((directory / "predictions.csv").read_bytes())
+        feed.validate_binding_coverage(projected, sidecar, champion_only=True)
         records.extend(rows.to_dict("records"))
         bindings.extend(sidecar.to_dict("records"))
     keys = [r["fixture_key"] for r in records]
     feed.require(len(keys) == len(set(keys)), "duplicate_saved_fixture")
+    ids = [r["match_id"] for r in records]
+    feed.require(len(ids) == len(set(ids)), "duplicate_saved_prediction_id")
     return records, bindings
 
 

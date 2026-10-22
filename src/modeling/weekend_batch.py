@@ -403,6 +403,11 @@ def read_batch(directory, *, staging=False):
     need(set(s["input_sha256"]) == set(s["input_acquired_utc"]) == {"training","special","teams","estimator"}, "snapshot_inputs")
     need(stamp(s["source_observed_at"]) <= stamp(s["period"]["information_cutoff"])
          and all(stamp(t) <= stamp(s["period"]["information_cutoff"]) for t in s["input_acquired_utc"].values()), "read_availability")
+    cutoff = stamp(s["period"]["information_cutoff"])
+    need(cutoff - stamp(s["source_observed_at"]) <= timedelta(hours=24), "read_source_stale")
+    # Every permitted writer deadline is at most 900 seconds. A rehashed
+    # manifest must not turn a later run into a valid Friday 07:00 batch.
+    need(stamp(m["committed_at"]) <= cutoff + timedelta(seconds=900), "read_commit_deadline")
     need(c["scope"] == SCOPE and digest(s) == c["snapshot_id"] == m["snapshot_id"], "snapshot_sha")
     need(s["period"] == m["period"] and s["model_identity"] == m["model_identity"]
          and s["official_revision"] == m["official_revision"] and s["official_manifest_sha256"] == m["official_manifest_sha256"]
