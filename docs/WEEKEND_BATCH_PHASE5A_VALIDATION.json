@@ -1,0 +1,585 @@
+{
+  "Phase5B_recommendation": "EXPLICIT_APPROVAL_FOR_G0_TO_G2_ONLY_SYNTHETIC_IMPLEMENTATION_AND_OFFLINE_WINDOWS_PROCESS_ISOLATION",
+  "UTC": "2026-10-22T11:18:23.280797+00:00",
+  "base_commit": "af776d2c7569d491200ab96509047e7d8ea178fc",
+  "branch": "feature/weekend-phase5a-design",
+  "changed_files": [
+    "docs/WEEKEND_BATCH_PHASE5A.md",
+    "docs/WEEKEND_BATCH_PHASE5A_VALIDATION.json"
+  ],
+  "code_SHA256": {
+    "scripts/build_dashboard_feed.py": "ea21fcf2ff14f81f7ef5bd07725e35fbc5e3ac987a82320c3defbf3a6b276018",
+    "scripts/launch_dashboard.py": "a70a2267028289c021b43b483d21dd403f19521203a8ecebb44ec1c674d3d987",
+    "scripts/register_champion_update_tasks.ps1": "047ed654ec99b685bc078bd399a2121dbef2747eab2682271aadee4e9bab8378",
+    "scripts/serve_dashboard.py": "c0fa68bd784c1b1210ec1490c01c76d6deb6853b6fddba83d3f9e51b1f286016",
+    "scripts/update_champion_dashboard.py": "49d848007b7c554236289ea15f8b967e47e55f0cca485632c68afc2142c9b0f0",
+    "scripts/update_jleague_ongoing.py": "89c1335e216ac9fa37c15fcae2d7e2332fa9ffd04df8407d0ca7c84ab1330a95",
+    "src/collect/jleague_ongoing.py": "5e91025142d583d09f2417724f9cbaeed50339275390d46000d3a73179cbe956",
+    "src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
+    "src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
+    "src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "src/modeling/prediction_identity.py": "0ceef3f74643ef96731eb7a292758f3ff47d904808c5027b79d1f9deb339fa80",
+    "src/modeling/weekend_batch.py": "69671cf833ab2ab2f6f79a46e03cc5863c3bf4812b41a7314659a6e8c85dbd50",
+    "src/modeling/weekend_integration.py": "f100016efafdae00406fee632c7a1afdf9a93408d25d108e2ea6a9c2da95edcb",
+    "src/modeling/weekend_source.py": "656f096a035d4662341b499c8e53f73584e4690f56d89e08750a0b48208668d9"
+  },
+  "development_verification": {
+    "failed_invocations_retained": 3,
+    "first_capture_stderr_handling_interrupted_trace": true,
+    "intermediate_counts_not_added_to_final": true,
+    "pre_final_document_static_passed": 69,
+    "production_code_changes": 0,
+    "reasons": [
+      "AST literal evaluation initially encountered a named constant in FILE_PINS; corrected by inspecting dictionary keys without eval/import.",
+      "An unsupported minimum reference count in the private checker was replaced with resolution of every actual symbol reference."
+    ]
+  },
+  "documentation_SHA256": "b387b40aebda1731bbc335383f9f92d95fcd9633cb81989ae6cfa6284b717385",
+  "findings": {
+    "model": {
+      "bundle_SHA256": "2d2e50dbfc4d71ec2cdaf5fe1a6e48953c160c388f1740cfe538f29f593646d1",
+      "dist_info_versions": {
+        "joblib": "1.6.0",
+        "numpy": "2.5.3",
+        "pandas": "3.0.5",
+        "scikit_learn": "1.9.1",
+        "scipy": "1.18.1"
+      },
+      "feature_order": [
+        "elo_diff"
+      ],
+      "file_SHA256": {
+        "checksums.sha256": "2d2e50dbfc4d71ec2cdaf5fe1a6e48953c160c388f1740cfe538f29f593646d1",
+        "metadata.json": "bd1eb92c25bdb56a836ef7bfe3fcb13b0137a2ece01b6095e7d100e1f5afdd19",
+        "model.joblib": "60636e4652bce98b76c394310947b1b8923a8bf18a640d9e7976497989ed54be",
+        "scaler.joblib": "a8a5f176944049c6825071b580c5fe40f5a5fb28f504f8880d028deaf2494750",
+        "training_manifest.csv": "eea7498fabac6acc79a9c297468b470702288b61736b63d90214d741ab8fb32a"
+      },
+      "metadata_environment": {
+        "joblib": "1.6.0",
+        "numpy": "2.5.3",
+        "pandas": "3.0.5",
+        "python": "3.12.14",
+        "scikit_learn": "1.9.1"
+      },
+      "model_shape": "N_BY_1_FLOAT",
+      "operational_entry_accepts_one_match_day": true,
+      "output_classes": [
+        "Away",
+        "Draw",
+        "Home"
+      ],
+      "real_load_attributes_ABI_numerical_behavior": "NOT_TESTED",
+      "target_columns": 7,
+      "version": "operational_champion_20260922_v1"
+    },
+    "normal_runtime": {
+      "lookahead_days": 2,
+      "max_acquisition_seconds": 600,
+      "max_evidence_pages": 20,
+      "source_freshness_hours": 24,
+      "weekend_activated": false
+    },
+    "operational_fetch": {
+      "body_cap_bytes": 8388608,
+      "raw_fsync_and_readback": "NOT_EXPLICITLY_IMPLEMENTED_IN_FETCH",
+      "redirect_prevention": "NOT_IMPLEMENTED_AT_TRANSPORT_FINAL_URL_ONLY_CHECKED_AFTERWARDS",
+      "separate_request_file": false,
+      "socket_seconds": 30,
+      "stream_seconds": 30,
+      "wait_seconds": 1
+    },
+    "operational_worker": "SYNCHRONOUS_URLLIB_IN_UPDATER_NOT_AN_OWNED_JOB",
+    "operational_worktree_commit": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+    "pre_cutoff_source": "EXISTING_OPERATIONAL_OBSERVATION_AFTER_0700_NO_ORIGINAL_PUBLICATION_COMPLETED_UTC",
+    "production_backend_or_activation_added": false,
+    "research_worker_comparison_only": {
+      "body_cap_bytes": 2097152,
+      "code_SHA256": {
+        "research/nn_v2/phase2_5B_18/collection_executor.py": "a96873ce9084c2ede36750a0b2b969843c001e2c3000f4ce4b619e9b26bff875",
+        "research/nn_v2/phase2_5B_18/collection_http_integration.py": "29e383c23b850945bbe5108bae5ef7d57f6966f0841cc2bbc13f3ca9053d8779",
+        "research/nn_v2/phase2_5B_18/collection_http_worker.py": "40b029e3c5bb3907a7437036f455904654381774739fc52626c62d4ce33f7eea"
+      },
+      "commit": "42bd4050df5fef09f5e3887785056d0e69cec7c6",
+      "host": "data.j-league.or.jp",
+      "metadata_UTC_field": "response_completed_at_utc",
+      "minimum_interval_seconds": 5,
+      "old_executor_and_permit_reuse": false,
+      "parent_seconds": 12,
+      "socket_wall_seconds": 10
+    },
+    "synthetic_scope_preserved": true
+  },
+  "previous_Phase4_evidence": {
+    "JUnit_SHA256": "55ec74579049f315482a3a493d0a2f35b4225b7f99fdfcfc45dd7cae3d96a972",
+    "passed": 613,
+    "reexecuted_in_Phase5A": false,
+    "skip_reason": "Locally archived official research pages are not distributed as test fixtures.",
+    "skipped": 1,
+    "warnings_as_errors_in_prior_run": true
+  },
+  "production_actions": {
+    "Desktop_changed": 0,
+    "communication_permit": 0,
+    "evaluation": 0,
+    "feed_generated_or_updated": 0,
+    "fit": 0,
+    "inference": 0,
+    "model_load": 0,
+    "official_GET": 0,
+    "prediction_saved_or_changed": 0,
+    "preexisting_data_deleted_or_overwritten": 0,
+    "real_worker_launch": 0,
+    "reservation_created": 0,
+    "task_run_or_changed": 0
+  },
+  "protection": {
+    "Desktop_GUI_runtime_sources_models_unchanged": true,
+    "NN_sealed_payloads": 53,
+    "Phase4_original_protected_files": 43780,
+    "Phase4_worktree_tracked_files_added": 590,
+    "audit_SHA256": "a0f7e5fc78de8d6069e77969153c3559122e21fe54c1f113460b3511a9468ee6",
+    "fixed_differences": 0,
+    "old_worktrees_branches_main_UI_NN_Phase1_to_Phase4_unchanged": true,
+    "operational_batches": 4,
+    "operational_saved_predictions": 19,
+    "protected_files": 44370,
+    "saved_2026_10_24": 5,
+    "saved_2026_10_25": 0,
+    "status": "PASS",
+    "tasks_definitions_and_execution_status_unchanged": true
+  },
+  "scope": "DESIGN_AND_STATIC_VERIFICATION_ONLY",
+  "static_verification": {
+    "checker_SHA256": "0b8fa30c83b1c6dcec3d8fef0d153fb062e8331762611af1711ae97ca2a94f3f",
+    "checks": [
+      {
+        "evidence": "Dedicated branch from fixed Phase 4 commit",
+        "id": "BASE01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Original Phase 4 branch/local-origin clean and fixed",
+        "id": "BASE02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "All pinned Phase 4 code/contracts unchanged",
+        "id": "BASE03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "All eight Phase 4 changed files equal original worktree",
+        "id": "BASE04",
+        "status": "PASS"
+      },
+      {
+        "evidence": "613 PASS / 1 skip is prior evidence, not rerun in Phase 5A",
+        "id": "PRIOR01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "13 entry/dependency modules parsed as AST without import",
+        "id": "AST01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Operational fetch: default urlopen, 30-second socket and 8 MiB cap",
+        "id": "WORKER01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Redirect prohibition is absent at transport and checked only after fetch",
+        "id": "WORKER02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Operational collector is synchronous/in-process with one-second wait; no owned process wrapper",
+        "id": "WORKER03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Collector has real filesystem/publication side effects and cannot be used as a dry-run",
+        "id": "WORKER04",
+        "status": "PASS"
+      },
+      {
+        "evidence": "CLI exit contracts captured; neither entry point is executed",
+        "id": "WORKER05",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Five pinned artifact files and exact seven-column target schema",
+        "id": "MODEL01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Joblib deserialization follows frozen data/hash checks; not executed",
+        "id": "MODEL02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Loader declares strict estimator/type/shape/class/finite checks; actual object attributes unverified",
+        "id": "MODEL03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Existing real predictor is single-date and loads real artifact on invocation",
+        "id": "MODEL04",
+        "status": "PASS"
+      },
+      {
+        "evidence": "One float feature, transform-only, finite three-class probability contract",
+        "id": "MODEL05",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit fit/update call in the inspected prediction API",
+        "id": "MODEL06",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Frozen Elo parameters; feature excludes a second HA addition",
+        "id": "MODEL07",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Existing operational ID30700 resumption semantics retained, not replaced by NN research policy",
+        "id": "MODEL08",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Normal CLI is fail-closed before mutable update lock/status",
+        "id": "JOIN01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Pinned path bypasses collector while normal daily path retains it",
+        "id": "JOIN02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Evening takes review path, not prepare/predict branch",
+        "id": "JOIN03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Both synthetic source and mock artifact capabilities required",
+        "id": "JOIN04",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Actual generated UTC is passed into before_save checkpoint",
+        "id": "JOIN05",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Exactly one replay call site and generation-clock recheck",
+        "id": "JOIN06",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Later schedule applicability is explicit, separate from fixed source",
+        "id": "JOIN07",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Integration module has no operational fetch/model-loader call",
+        "id": "JOIN08",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Future observations rejected and full source reverified at visibility boundary",
+        "id": "JOIN09",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Existing Provider deadline/reservation/identity gates remain",
+        "id": "JOIN10",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Embedded receipt clock/source/request gates preserved",
+        "id": "JOIN11",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Daily public writer refuses reserved and duplicate fixtures under shared lock",
+        "id": "JOIN12",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Staging validation repeated inside visibility lock before single directory rename",
+        "id": "STORE01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Committed rerun has no inference; incomplete attempt rejects restart",
+        "id": "STORE02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Pinned feed projection is after commit and canonical reread",
+        "id": "STORE03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Explicit formats and unchanged synthetic scope",
+        "id": "STORE04",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Mixed reader preserves old daily plus versioned batches and rejects overlaps",
+        "id": "STORE05",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Receipt-bound reader performs proof and shared semantic validation",
+        "id": "STORE06",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Acquisition and later publication persistence guarantees are explicitly different",
+        "id": "STORE07",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Source completed UTC is after reread and power-loss durability remains unproven",
+        "id": "STORE08",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Display uses per-file replace and handled rollback, not multi-file crash transaction",
+        "id": "STORE09",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Task XML is read-only evidence for operational worktree/15m/IgnoreNew/StartWhenAvailable",
+        "id": "TASK_J1AI-Champion-Morning",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Task XML is read-only evidence for operational worktree/15m/IgnoreNew/StartWhenAvailable",
+        "id": "TASK_J1AI-Champion-Evening",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Actual runtime worktree is old operational implementation, not Phase 4 deployment",
+        "id": "OPS01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Champion and Elo source bytes equal operation; no model loading",
+        "id": "OPS02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Three actual research worker/integration/executor code hashes match sealed registry",
+        "id": "RESEARCH01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Research branch unchanged; research code is comparison only",
+        "id": "RESEARCH02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Research host, metadata, 12-second parent and consumed old permit type differ from operational source",
+        "id": "RESEARCH03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_update_champion_dashboard",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_champion_prediction",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_weekend_batch",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_weekend_source",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_weekend_integration",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_update_jleague_ongoing",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_build_dashboard_feed",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No explicit top-level worker/model/network/task call; not a transitive import sandbox certification",
+        "id": "IMPORT_jleague_ongoing",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Every path::symbol reference resolves to an AST definition in fixed baseline",
+        "id": "DOC01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Phase 1-4 links exist; only self-generated validation target pending until finalization",
+        "id": "DOC02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "All ten requested design sections present in order",
+        "id": "DOC03",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Scope, staged approvals and unproven power-loss/model gates explicit",
+        "id": "DOC04",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No individual absolute paths or personal profile data in public design",
+        "id": "DOC05",
+        "status": "PASS"
+      },
+      {
+        "evidence": "No runtime/worker/model/test implementation changed in Phase 5A",
+        "id": "DOC06",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Read/hash-only artifact/source contract inspection; runtime remains disabled for weekend",
+        "id": "EVIDENCE01",
+        "status": "PASS"
+      },
+      {
+        "evidence": "19 saved predictions retained; no past publication UTC invented",
+        "id": "EVIDENCE02",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Exactly one recorded installed dist-info, read without package import",
+        "id": "ENV_numpy",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Exactly one recorded installed dist-info, read without package import",
+        "id": "ENV_pandas",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Exactly one recorded installed dist-info, read without package import",
+        "id": "ENV_scikit_learn",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Exactly one recorded installed dist-info, read without package import",
+        "id": "ENV_joblib",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Exactly one recorded installed dist-info, read without package import",
+        "id": "ENV_scipy",
+        "status": "PASS"
+      },
+      {
+        "evidence": "Recorded environment and installed labels agree; native ABI and deserialization remain untested",
+        "id": "ENV_METADATA",
+        "status": "PASS"
+      }
+    ],
+    "dynamic_tests_executed": 0,
+    "failed": 0,
+    "kind": "AST_TEXT_JSON_XML_SHA_AND_READ_ONLY_QUERIES_NOT_A_WORKER_MODEL_OR_OS_RUNTIME_TEST",
+    "log_SHA256": "6c0126aa36bdca1680d6df1f1cc39f34adf8ac99bb98fd8b66e34d8f98acbf2a",
+    "passed": 69,
+    "report_SHA256": "cd1c5dc79772ea347591fbb971310f8ca731918adf8dc883038634228388ff15",
+    "repository_modules_imported": 0,
+    "resolved_symbol_references": [
+      {
+        "line": 521,
+        "path": "scripts/build_dashboard_feed.py",
+        "symbol": "write_dashboard_feed"
+      },
+      {
+        "line": 50,
+        "path": "scripts/update_champion_dashboard.py",
+        "symbol": "build_display_feeds"
+      },
+      {
+        "line": 343,
+        "path": "scripts/update_champion_dashboard.py",
+        "symbol": "collect_official"
+      },
+      {
+        "line": 721,
+        "path": "scripts/update_champion_dashboard.py",
+        "symbol": "main"
+      },
+      {
+        "line": 199,
+        "path": "scripts/update_champion_dashboard.py",
+        "symbol": "publish_batch"
+      },
+      {
+        "line": 33,
+        "path": "scripts/update_jleague_ongoing.py",
+        "symbol": "_fetch"
+      },
+      {
+        "line": 66,
+        "path": "scripts/update_jleague_ongoing.py",
+        "symbol": "main"
+      },
+      {
+        "line": 55,
+        "path": "src/modeling/champion_prediction.py",
+        "symbol": "load_champion"
+      },
+      {
+        "line": 141,
+        "path": "src/modeling/champion_prediction.py",
+        "symbol": "predict_champion"
+      },
+      {
+        "line": 127,
+        "path": "src/modeling/champion_prediction.py",
+        "symbol": "probability_rows"
+      },
+      {
+        "line": 95,
+        "path": "src/modeling/champion_prediction.py",
+        "symbol": "replay_ratings"
+      },
+      {
+        "line": 359,
+        "path": "src/modeling/weekend_batch.py",
+        "symbol": "OfflineWeekendBackend.commit"
+      },
+      {
+        "line": 31,
+        "path": "src/modeling/weekend_integration.py",
+        "symbol": "ReceiptBoundBackend"
+      }
+    ]
+  },
+  "unverified_gates": [
+    "G2 Windows ownership/ACL/deny-network/deny-write/deadlines/cancel/receipt in new isolated purpose",
+    "G3 Separately approved fixed real model load and synthetic-input inference; dependency ABI and numerical comparison plan",
+    "G4 New purpose-specific source worker, exact URLs and HTTP permission, metadata projection and pre-cutoff publication receipt",
+    "G5 Separate process-kill, VM/OS-stop and physical power-loss persistence evidence, post-commit receipt and compatible-reader recovery",
+    "G6 Production scope/backend/reader deployment, future all-unsaved reservation, actual prediction and feed/UI activation"
+  ],
+  "verdict": "PHASE5A_DESIGN_READY"
+}
