@@ -1,5 +1,11 @@
 # Windows J1 AI Predict launcher
 
+**新しい正式入口の準備**：[J1AIへの一本化](UI_ROUND_SUMMARY.md)を参照。
+新しい`python -m scripts.unify_dashboard_shortcut plan`は既定でdry-runであり、
+専用アイコン・明示的な保存済みChampion JSON・通常ブラウザ起動を設定する。
+実Desktopへのapplyはユーザー確認後に限る。以下の`install_dashboard_shortcut.ps1`
+は従来app-mode用の入口として保持しており、今回の一本化には使用しない。
+
 ## Scope
 
 Windows専用、Python標準ライブラリのみのランチャーです。既存の `web/` と

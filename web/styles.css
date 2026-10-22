@@ -15,6 +15,52 @@ a { color: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a:focus-visible { outline: 3px solid #336ac4; outline-offset: 5px; border-radius: 3px; }
 [hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.home-shortcuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: -10px 0 32px; }
+.summary-shortcut { display: flex; align-items: center; gap: 16px; padding: 22px; border: 1px solid #cbd7e5; border-radius: 10px; background: white; text-decoration: none; box-shadow: 0 3px 12px #101c2c05; }
+.summary-shortcut:hover { border-color: #356fa7; background: #f6fbff; }
+.summary-shortcut > span:nth-child(2) { flex: 1; min-width: 0; }
+.summary-shortcut strong { display: block; font-size: 17px; }
+.summary-shortcut small { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.shortcut-icon { background: #eaf3fa; color: #265a83; padding: 10px 14px; border-radius: 8px; font-size: 25px; }
+.summary-home { display: inline-block; margin-bottom: 18px; font-size: 13px; }
+.summary-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; color: var(--muted); font-size: 11px; margin-bottom: 16px; }
+.summary-meta span { margin-left: auto; }
+.summary-table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: fixed; }
+.summary-table th { background: #e7edf4; color: #45566c; text-align: left; font-size: 10px; letter-spacing: .3px; padding: 12px 10px; }
+.summary-table td { padding: 12px 10px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; line-height: 1.6; }
+.summary-table th:first-child { width: 17%; }
+.summary-table th:last-child { width: 28%; }
+.summary-table .summary-pick { font-weight: 700; }
+.summary-table .probability-bar { height: 8px; border-radius: 3px; }
+.summary-table .segment-value { display: none; }
+.summary-table .probability-segment .segment-value { display: none !important; }
+body[data-view="next"] .page, body[data-view="previous"] .page { padding-top: 24px; }
+body[data-view="next"] .page-heading h1, body[data-view="previous"] .page-heading h1 { font-size: 24px; }
+body[data-view="next"] .page-heading .intro, body[data-view="previous"] .page-heading .intro,
+body[data-view="next"] .page-heading .eyebrow, body[data-view="previous"] .page-heading .eyebrow { display: none; }
+body[data-view="next"] .data-notice, body[data-view="previous"] .data-notice { margin: 18px 0 22px; }
+body:is([data-view="next"], [data-view="previous"]) .champion-status { padding: 8px 12px; }
+body:is([data-view="next"], [data-view="previous"]) .data-notice { padding: 8px 16px; margin: 14px 0 18px; }
+body:is([data-view="next"], [data-view="previous"]) .summary-home { margin-bottom: 12px; }
+body:is([data-view="next"], [data-view="previous"]) #summary-range { margin: 8px 0 12px; }
+body:is([data-view="next"], [data-view="previous"]) .summary-meta { margin-bottom: 10px; }
+@media (min-width: 761px) { .summary-table td { padding: 7px 10px; } }
+.summary-table .probability-labels { margin-top: 5px; }
+.summary-table .probability-label { flex-wrap: wrap; gap: 1px 4px; font-size: 10px; }
+.summary-table .outcome-badge { display: inline-block; font-size: 11px; }
+@media (max-width: 760px) {
+  .home-shortcuts { grid-template-columns: minmax(0, 1fr); }
+  .summary-shortcut { padding: 16px; gap: 12px; }
+  .summary-meta span { margin-left: 0; }
+  .summary-table, .summary-table tbody { display: block; }
+  .summary-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .summary-table .summary-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; border-bottom: 1px solid var(--line); gap: 7px 12px; }
+  .summary-table td { display: block; border: 0; padding: 0; min-width: 0; }
+  .summary-table td::before { content: attr(data-label); display: block; font-size: 9px; color: var(--muted); font-weight: normal; }
+  .summary-table .summary-time, .summary-table .summary-pick, .summary-table .summary-probabilities, .summary-table .summary-verdict { grid-column: 1 / -1; }
+  .summary-table .probability-label { font-size: 11px; }
+}
 .skip-link { position: absolute; top: -70px; left: 16px; z-index: 5; padding: 12px; background: white; }
 .skip-link:focus { top: 12px; }
 .site-header { background: white; border-bottom: 1px solid var(--line); }

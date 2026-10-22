@@ -42,6 +42,7 @@ MESSAGES = {
     "invalid_url": "The server did not provide a valid loopback dashboard URL.",
     "invalid_response": "The dashboard response is not the expected operational Champion schema.",
     "browser_spawn_failed": "Cannot start the browser in app mode. No tab fallback was attempted.",
+    "default_browser_failed": "Windows could not open the local dashboard in the default browser.",
     "cleanup_failed": "The owned server could not be stopped. See the safe cleanup instructions.",
     "unexpected_failure": "Launcher setup failed. Check local permissions, venv and browser availability.",
 }
@@ -375,7 +376,17 @@ def stop_owned_server(process) -> None:
         process.stdout.close()
 
 
-def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False) -> int:
+def start_default_browser(url: str) -> None:
+    """Open only our validated URL; never manipulate browser profiles or tabs."""
+    validate_url(url)
+    try:
+        os.startfile(url)
+    except OSError:
+        raise LauncherError("default_browser_failed") from None
+
+
+def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False,
+                 python: Path | None = None, browser_mode: str = "app") -> int:
     require_windows()
     controls = WindowsInstance(root)
     server = None
@@ -391,12 +402,20 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
             show_message("J1 AI Predict is already running. No new server or window was opened.\n"
                          "If the app window is closed, run the documented --stop command before restarting.")
             return 0
-        python = find_python(root)
-        browser = find_browser()
-        profile = local_directory(root) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
+        python = find_python(root) if python is None else python.resolve()
+        if not python.is_file() or python.name.lower() != "python.exe":
+            raise LauncherError("venv_missing")
+        if browser_mode not in {"app", "default"}:
+            raise LauncherError("browser_missing")
+        if browser_mode == "app":
+            browser = find_browser()
+            profile = local_directory(root) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
         server = start_server(python, root, data)
         url = wait_for_ready(server, timeout)
-        start_browser(browser, url, profile, root)
+        if browser_mode == "default":
+            start_default_browser(url)
+        else:
+            start_browser(browser, url, profile, root)
         record_event(root, "started")
         # No browser poll()/wait(), window manipulation, taskkill, or profile
         # deletion. Chromium's startup PID is not a window-lifetime witness.
@@ -429,10 +448,14 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--data", type=Path, help="Explicit prepared Champion-only JSON; never generated or searched for")
     group.add_argument("--stop", action="store_true", help="Signal the owning launcher to stop its server; do not close browsers")
     parser.add_argument("--startup-timeout", type=positive_timeout, default=20.0, help="Bounded server readiness wait in seconds (default: 20)")
+    parser.add_argument("--python", type=Path, help="Explicit existing python.exe, for a worktree without its own venv")
+    parser.add_argument("--browser-mode", choices=("app", "default"), default="app", help="default opens the Windows default browser without managing its profile")
     args = parser.parse_args(argv)
     root = repository_root()
     try:
-        return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop)
+        return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop,
+                            **({"python": args.python} if args.python else {}),
+                            **({"browser_mode": args.browser_mode} if args.browser_mode != "app" else {}))
     except (Exception, KeyboardInterrupt) as exc:
         code = exc.code if isinstance(exc, LauncherError) else "unexpected_failure"
         # No exception string, traceback, server output or response body is logged.

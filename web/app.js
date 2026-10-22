@@ -13,6 +13,81 @@ function outcomeLabel(outcome, match) {
   return outcome === "draw" ? "Draw · 引き分け" : outcome === "home" ? match.homeTeam.name : match.awayTeam.name;
 }
 
+/** One compact row; picks and ties always use the original saved precision. */
+export function SummaryRow(match, { previous, demo }) {
+  const row = element("tr", "summary-row");
+  row.dataset.matchId = match.id;
+  const cell = (label, content, className = "") => {
+    const td = element("td", className);
+    td.dataset.label = label;
+    td.append(typeof content === "string" ? document.createTextNode(content) : content);
+    row.append(td);
+    return td;
+  };
+  const time = element("time", "", `${formatKickoff(match.kickoffAt)} JST`);
+  time.dateTime = match.kickoffAt;
+  cell("日時（JST）", time, "summary-time");
+  cell("HOME", match.homeTeam.name, "summary-home-team");
+  cell("AWAY", match.awayTeam.name, "summary-away-team");
+  const picks = highestProbabilityOutcomes(match.prediction.probabilities);
+  cell("AI PICK", `${demo ? "DEMO · " : ""}${picks.map(p => outcomeLabel(p, match)).join(" / ")}${picks.length > 1 ? "（同率最高）" : ""}`, "summary-pick");
+  if (previous) {
+    const actual = actualOutcome(match.result);
+    cell("スコア", `${match.result.homeScore} − ${match.result.awayScore}`);
+    cell("実結果", actual.toUpperCase());
+    const badge = element("span", `outcome-badge ${picks.length > 1 ? "tied" : picks[0] === actual ? "hit" : "miss"}`,
+      picks.length > 1 ? "— 判定対象外（同率最高）" : picks[0] === actual ? "✓ HIT" : "× MISS");
+    cell("判定", badge, "summary-verdict");
+  } else {
+    const p = match.prediction.probabilities;
+    const bar = PredictionProbabilityBar({homeProbability:p.home, drawProbability:p.draw, awayProbability:p.away,
+      homeColor:teamColor(match.homeTeam.id), awayColor:teamColor(match.awayTeam.id), homeLabel:match.homeTeam.name, awayLabel:match.awayTeam.name});
+    cell("HOME / DRAW / AWAY", bar, "summary-probabilities");
+  }
+  return row;
+}
+
+function renderSummary(data, {demo, view}) {
+  const active = ["previous", "next"].includes(view);
+  document.body.dataset.view = active ? view : "home";
+  document.title = `${demo ? "DEMO / " : ""}J1AI — ${active ? view === "previous" ? "前節の答え合わせ" : "次節の予想一覧" : "Matchday"}`;
+  document.querySelector("#round-summary").hidden = !active;
+  document.querySelector("#home-dashboard").hidden = active;
+  document.querySelector("#home-shortcuts").hidden = active;
+  const home = demo ? "/?demo=1" : "/";
+  document.querySelector("#summary-home").href = home;
+  document.querySelector(".brand").href = home;
+  for (const [i, name] of ["next", "previous"].entries()) {
+    document.querySelectorAll(".summary-shortcut")[i].href = `/?${demo ? "demo=1&" : ""}view=${name}`;
+  }
+  for (const [i, name] of ["previous", "next"].entries()) {
+    document.querySelectorAll("header nav a")[i].href = active ? `/?${demo ? "demo=1&" : ""}view=${name}` : `#${name}-round`;
+  }
+  const host = document.querySelector("#summary-matches");
+  host.replaceChildren();
+  if (!active) return;
+  const previous = view === "previous";
+  const round = data[previous ? "previousRound" : "nextRound"];
+  document.querySelector("#summary-title").textContent = previous ? "前節の答え合わせ" : "次節の予想一覧";
+  document.querySelector("#summary-label").textContent = `${round.label} · ${round.matches.length}件${demo ? " · DEMO" : ""}`;
+  document.querySelector("#summary-range").textContent = `表示範囲：${round.label}。公式カレンダーの対象日で選ばれた保存済み${round.matches.length}試合です。節全体を網羅する一覧ではありません。${demo ? " 架空データのDEMOです。" : ""}`;
+  if (!round.matches.length) {
+    host.append(element("p", "empty-state", "この表示範囲の保存済みデータはありません。新しい予想や結果を補完しません。"));
+    return;
+  }
+  const table = element("table", "summary-table");
+  const caption = element("caption", "sr-only", `${round.label} / ${previous ? "予想と実結果" : "保存済み予想"}${demo ? " / DEMO" : ""}`);
+  const head = element("thead", "");
+  const headings = element("tr", "");
+  for (const label of ["日時（JST）", "HOME", "AWAY", "AI PICK", ...(previous ? ["スコア", "実結果", "判定"] : ["勝利確率 HOME / DRAW / AWAY"])]) {
+    const th = element("th", "", label); th.scope = "col"; headings.append(th);
+  }
+  head.append(headings);
+  const body = element("tbody", "");
+  body.append(...round.matches.map(match => SummaryRow(match, {previous, demo})));
+  table.append(caption, head, body); host.append(table);
+}
+
 export function MatchCard(match, { previous, demo }) {
   const card = element("article", "match-card");
   card.dataset.matchId = match.id;
@@ -67,7 +142,7 @@ export function MatchCard(match, { previous, demo }) {
   return card;
 }
 
-export function renderDashboard(data, { demo = false } = {}) {
+export function renderDashboard(data, { demo = false, view = new URLSearchParams(location.search).get("view") } = {}) {
   validateDashboard(data, { demo });
   const empty = data.previousRound.matches.length + data.nextRound.matches.length === 0;
   const notice = document.querySelector("#data-status");
@@ -94,6 +169,8 @@ export function renderDashboard(data, { demo = false } = {}) {
     } else container.replaceChildren(...cards);
   }
   notice.dataset.state = demo ? "demo" : empty ? "empty" : "operational";
+  document.querySelector("#preview-link").href = demo ? `/${view === "next" || view === "previous" ? `?view=${view}` : ""}` : `/?demo=1${view === "next" || view === "previous" ? `&view=${view}` : ""}`;
+  renderSummary(data, {demo, view});
 }
 
 async function start() {
@@ -115,7 +192,7 @@ async function start() {
     const notice = document.querySelector("#dashboard-error");
     notice.hidden = false;
     notice.textContent = error.message;
-    for (const id of ["previous-matches", "next-matches"]) document.getElementById(id).replaceChildren();
+    for (const id of ["previous-matches", "next-matches", "summary-matches"]) document.getElementById(id).replaceChildren();
   }
 }
 

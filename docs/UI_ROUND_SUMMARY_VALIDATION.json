@@ -1,0 +1,84 @@
+{
+  "Desktop_migration_executed": false,
+  "HISTORY": "HOLD",
+  "NN_research_branch_unchanged": true,
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "Python_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 333
+  },
+  "browser_scope": "Only temporary headless profiles and owned synthetic servers used in prior tests; no personal-profile or existing-server stop operation",
+  "browser_tests": {
+    "FAIL": 0,
+    "PASS": 50,
+    "SKIP": 0
+  },
+  "changed_fixed_files": 0,
+  "existing_desktop_links_unchanged": 3,
+  "main_and_other_worktree_heads_unchanged": true,
+  "model_load_fit_evaluation_probability_generation": 0,
+  "model_payloads": 53,
+  "native_final": {
+    "FAIL": 0,
+    "PASS": 191
+  },
+  "native_intermediate_handle_test_failure": {
+    "after_handles": 403,
+    "before_handles": 398,
+    "cause": "NOT_ESTABLISHED",
+    "native_source_or_threshold_changed": false,
+    "observed": true
+  },
+  "other_worktrees_clean": true,
+  "private_plan_SHA256": "d22d7041d688bbc018bc63ea23176d91a5b655ab7c246e7e9892c98f6d6fd385",
+  "protected_files": 41486,
+  "resumed_audit_UTC": "2026-10-22T03:57:17.373025+00:00",
+  "retained_test_evidence_SHA_verified": true,
+  "screenshot_metadata_private_text_chunks": 0,
+  "source_SHA256_captured_during_finalization": {
+    "scripts/build_dashboard_icon.py": "8396ab6656e5453ea54b43bf1ad90d715e69c48fc0df32ddf0bd48a0b5ee8eb6",
+    "scripts/launch_dashboard.py": "8703ba15edf2b7ac6978c1748b831dff90a0922369f9ea27c3ef09e96e1f30ec",
+    "scripts/serve_dashboard.py": "ec651ff0fcb8621b687e74187bedda20d4fc35c2699d0350fc292aca34c32e67",
+    "scripts/unify_dashboard_shortcut.py": "6deb895a7d33ee178b98b0dbf60e8f25e06abdc8a886614708b330014b296084",
+    "tests/test_dashboard_feed.py": "92f216b576c0e677aae072ac14b60a5bd63764878c033215921c05310d6b5544",
+    "tests/test_dashboard_launcher.py": "e6813110680a003c7843f26cd46e1a7b8f19c7fc3c0a7d0b219b689d0b0bcdb4",
+    "tests/test_dashboard_server.py": "cdf3919491e77b082aa90c9faf7916a276721acff9cf36aa07cacb28bca7ad06",
+    "tests/test_dashboard_shortcut_migration.py": "9a3ebe78df8aba2cde0c52be9fe02c061c70cfb8f64cc4c915938e8f5043c64e",
+    "web/app.js": "d92ac617fbf7aa359b48cc63edb3129b579793deca7d8493535e3472501331a6",
+    "web/assets/j1ai.ico": "f50e57837ea13248ad90a609a8b59e1c11e4e518ff8651eb821023075673e4bb",
+    "web/assets/j1ai.svg": "37cb5b3d19e4d3d7de526d041ac3adbeb93539f1160d605b424e42fc9833b464",
+    "web/dashboard-data.js": "54ffae3d3d42a1b07d7768c69641923b5fe0f88a859e0fffdb03b87deaf88892",
+    "web/index.html": "f5c54146b14cee350ac28a70126cd2d425fee57904f259489e485374e910c92f",
+    "web/styles.css": "13edcd49c0dd94e0063f497d823bb9fc224bab3149a5fbfa51b94dcb4a44c93a",
+    "web/tests/browser.test.mjs": "46e59ebd4fccdcd6f314bbe6ea8ecc6ebc9869c81cf5c459b470701d95a0ecf4",
+    "web/tests/dashboard.test.mjs": "ee56140e6d16d437ce4cfb96a9ac6a7c86d02ce584da2ba2ecd6e79c2ae10689",
+    "web/tests/probability-bar.test.mjs": "3a72909412c98a51e64bca590ab582f8a5e357e3cc3fd2bd663c23ca409725b4"
+  },
+  "source_capture_scope": "Current bytes and receipt mtime checked; execution-time pins only where retained in dry-run plan; no retrospective source seal invented",
+  "source_model_or_prediction_generation": 0,
+  "status": "PASS",
+  "synthetic_screenshot_SHA256": {
+    "docs/ui-round-summary/home.png": "b796a01fa3a3de6acaef4c0df1b2e485210c97e5009b134e9b2d3a1c19c49fc8",
+    "docs/ui-round-summary/next-320.png": "402201bbc96fa669c4056173a67a7e6cd52d5d73436f2c46640a2fadcf94b898",
+    "docs/ui-round-summary/next.png": "5ad322458a9a0a8fc7a0961257337092a267f10e798264e53972001ad82a0e15",
+    "docs/ui-round-summary/previous-375.png": "6c5ab72a85551fa348af8522c4d7acfbfb258b90d37ddb1c73775e118dc048a8",
+    "docs/ui-round-summary/previous.png": "2bec16fc50fe369f76e26dd4347b098e53e76df890670f3e43dd3a5478804126"
+  },
+  "tasks_XML_unchanged": true,
+  "test_proof_SHA256": {
+    "browser-tests-confirmed.log": "9c5f8b3024425079c5b389207f869773db0547328083970541cc76c3ea2d6c5f",
+    "browser-tests-final.log": "687d40ad00202189d5a25cb042aeef0f0b9b633c0e9f5cbc380fbf691f7a65d9",
+    "browser-tests-release.log": "00e753d5f1ca2aa6fad487d80954f3b465734720ac2a550d01e13aea5cac5a7b",
+    "native-tests-confirmed.log": "7c897fc5b1df2f9da37417a08195c3498eb04cb5b1d5a6d2b7f65969eecdc336",
+    "native-tests-final.log": "c13bebe64924172deb0ad3abc4edee3e1b02eecc8e92f29a0ed59ba94ccd84d5",
+    "native-tests-isolated.log": "dda0d983a98c3a55f7dbc5cd28d0a218965b239f31c7d11866a8bca8ed43d0cf",
+    "python-tests-confirmed.xml": "33c6f67551591e3112ac0eefde3855c0c95c8a202e6f3e3aeda9ba887b440080",
+    "python-tests-final.xml": "df47dafd9984c3eec7ca7624beb25be60211ebf441a20ca9beca78beea7c3d6f",
+    "python-tests-initial.xml": "d4c3d7ec281400529e94c79ca3248dd56b186dd2177245f99c8c221cbf0180c4"
+  },
+  "tests_executed_during_resume": 0
+}

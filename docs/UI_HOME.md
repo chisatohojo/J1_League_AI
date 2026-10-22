@@ -1,5 +1,13 @@
 # J1AI home dashboard
 
+2026-10 UI改善：トップに2つの一覧入口を追加した。`/?view=next`と
+`/?view=previous`は既存schema v1の保存済み表示だけをコンパクトに表示する。
+`?demo=1&view=next`等も対応する。元の`round.label`と件数を表示し、対象日単位の
+feedを節全体と誤認しない説明を付ける。既存の縦カード表示とSEALED表示は維持する。
+実装・画面・Windows入口の現状は[今回の検証](UI_ROUND_SUMMARY.md)を参照。
+以下の当初実装時点で「未生成」としたfeedは、現在の環境では承認済みの明示的な
+schema-v1 JSONを指定できる。本改善でfeedを生成・変更したわけではない。
+
 ## Scope and source boundary
 
 The repository had no frontend or design system. `web/` adds dependency-free

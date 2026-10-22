@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>J1AI — Matchday</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23101c2c'/%3E%3Ctext x='5' y='23' font-family='sans-serif' font-weight='700' font-size='20' fill='%23ffffff'%3EJ1%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="/assets/j1ai.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/assets/j1ai.ico">
   <link rel="stylesheet" href="/styles.css">
   <script type="module" src="/app.js"></script>
 </head>
@@ -27,7 +28,18 @@
     </div>
     <aside id="data-status" class="data-notice" aria-live="polite" data-state="loading">表示データを確認しています…</aside>
     <div id="dashboard-error" class="error-notice" role="alert" hidden></div>
-    <div class="dashboard-layout">
+    <div id="home-shortcuts" class="home-shortcuts" aria-label="試合一覧へのショートカット">
+      <a class="summary-shortcut" href="/?view=next"><span class="shortcut-icon" aria-hidden="true">▦</span><span><strong>次節の予想一覧</strong><small>全試合の予想と確率をまとめて見る</small></span><span aria-hidden="true">↗</span></a>
+      <a class="summary-shortcut" href="/?view=previous"><span class="shortcut-icon" aria-hidden="true">✓</span><span><strong>前節の答え合わせ</strong><small>予想・実結果・的中判定をまとめて見る</small></span><span aria-hidden="true">↗</span></a>
+    </div>
+    <section id="round-summary" aria-labelledby="summary-title" hidden>
+      <a id="summary-home" class="summary-home" href="/">← トップへ戻る</a>
+      <div class="section-heading"><h2 id="summary-title" tabindex="-1"></h2><span id="summary-label" class="round-label"></span></div>
+      <p id="summary-range" class="section-note"></p>
+      <p class="summary-meta">Champion A · 保存済み表示のみ <span>Research Models / ST2 🔒 SEALED</span></p>
+      <div id="summary-matches" aria-live="polite"></div>
+    </section>
+    <div id="home-dashboard" class="dashboard-layout">
       <div class="rounds">
         <section id="previous-round" class="round-section" aria-labelledby="previous-title">
           <div class="section-heading"><div><p class="eyebrow">01 / REVIEW</p><h2 id="previous-title">前節の予想結果</h2></div><span id="previous-label" class="round-label">前節</span></div>

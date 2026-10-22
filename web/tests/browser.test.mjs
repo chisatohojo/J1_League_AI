@@ -391,6 +391,62 @@ test('home dashboard browser integration (synthetic data only)', {
     }
   });
 
+  await context.test('compact dedicated lists, real navigation, full-precision verdicts and mobile layouts', async () => {
+    const probabilities = [{home:10,draw:20,away:70},{home:60,draw:20,away:20},
+      {home:45,draw:10,away:45},{home:40.00000001,draw:39.99999999,away:20}];
+    const previous = Array.from({length:10}, (_, i) => syntheticMatch(`review-${i}`, probabilities[i%4], true));
+    const next = Array.from({length:10}, (_, i) => syntheticMatch(`preview-${i}`, probabilities[i%4]));
+    const payload = dashboardPayload(previous, next);
+    payload.previousRound.label = '対象日 2030-10-02（合成テスト）'; payload.nextRound.label = '対象日 2030-10-09（合成テスト）';
+    const snapshot = JSON.stringify(payload);
+    server.setPayload(payload);
+    await viewport(client, 1280);
+    await navigate(client, `${server.origin}/`, `document.querySelector('#data-status').dataset.state === 'operational'`);
+    assert.equal(await client.evaluate(`document.querySelectorAll('.summary-shortcut').length`), 2);
+    await captureScreenshot(client, 'j1ai-shortcuts-home.png');
+    await client.evaluate(`document.querySelector('.summary-shortcut').focus()`);
+    await client.send('Input.dispatchKeyEvent', {type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+    await client.send('Input.dispatchKeyEvent', {type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+    await client.until(`location.search === '?view=next' && document.querySelectorAll('#summary-matches tbody tr').length === 10`, 'keyboard list navigation');
+    assert.match(await client.evaluate(`document.querySelector('#summary-range').textContent`), /2030-10-09[\s\S]*10[\s\S]*節全体を網羅/);
+    assert.equal(await client.evaluate(`document.querySelector('#home-dashboard').hidden`), true);
+    assert.equal(await client.evaluate(`document.querySelector('#summary-matches').querySelectorAll('.probability-bar').length`),10);
+    const ax = await client.send('Accessibility.getFullAXTree');
+    assert.ok(ax.nodes.some(n=>n.role?.value==='table') && ax.nodes.some(n=>n.role?.value==='columnheader'), 'native table/header accessibility roles');
+    await client.send('Emulation.setDeviceMetricsOverride', {width:1280,height:900,deviceScaleFactor:1,mobile:false});
+    await captureScreenshot(client, 'j1ai-next-desktop.png');
+    assert.ok(await client.evaluate(`document.querySelector('#summary-matches').getBoundingClientRect().bottom <= innerHeight`), 'ten compact rows fit 900px desktop height');
+    await client.evaluate(`history.back()`);
+    await client.until(`!location.search && !document.querySelector('#home-shortcuts').hidden`, 'browser back home');
+    await client.evaluate(`history.forward()`);
+    await client.until(`location.search === '?view=next' && !document.querySelector('#round-summary').hidden`, 'browser forward list');
+    await navigate(client, `${server.origin}/?view=previous`, `document.querySelectorAll('#summary-matches tbody tr').length === 10`);
+    const verdicts = await client.evaluate(`Array.from(document.querySelectorAll('.summary-verdict')).map(n=>n.textContent)`);
+    assert.match(verdicts[0], /✓ HIT/); assert.match(verdicts[1], /× MISS/); assert.match(verdicts[2], /判定対象外/);
+    assert.match(await client.evaluate(`document.querySelectorAll('.summary-pick')[3].textContent`), /FC東京/);
+    assert.doesNotMatch(await client.evaluate(`document.querySelectorAll('.summary-pick')[3].textContent`), /同率|引き分け/);
+    await captureScreenshot(client, 'j1ai-previous-desktop.png');
+    for (const view of ['previous','next']) {
+      await navigate(client, `${server.origin}/?view=${view}`, `!document.querySelector('#round-summary').hidden && document.querySelector('#data-status').dataset.state==='operational'`);
+      for (const width of [320,375]) {
+        await viewport(client,width);
+        assert.ok(await client.evaluate(`document.documentElement.scrollWidth <= innerWidth`), `${view} ${width}px no overflow`);
+        assert.ok(await client.evaluate(`Array.from(document.querySelectorAll('.summary-table td')).every(n=>n.getBoundingClientRect().width>0 && n.getBoundingClientRect().right<=innerWidth)`));
+        await captureScreenshot(client, `j1ai-${view}-${width}.png`);
+      }
+    }
+    await navigate(client, `${server.origin}/?demo=1&view=next`, `document.querySelector('#data-status').dataset.state==='demo' && !document.querySelector('#round-summary').hidden`);
+    assert.match(await client.evaluate(`document.querySelector('#summary-matches').textContent`), /DEMO/);
+    assert.equal(await client.evaluate(`document.querySelector('#summary-home').getAttribute('href')`),'/?demo=1');
+    await client.evaluate(`document.querySelector('#summary-home').click()`);
+    await client.until(`location.search==='?demo=1' && document.querySelector('#data-status')?.dataset.state==='demo' && !document.querySelector('#home-shortcuts').hidden`, 'demo back home');
+    assert.equal(await client.evaluate(`document.querySelector('.summary-shortcut').getAttribute('href')`),'/?demo=1&view=next');
+    assert.equal(JSON.stringify(payload),snapshot,'saved input unchanged');
+    server.setPayload(dashboardPayload());
+    await navigate(client, `${server.origin}/?view=next`, `document.querySelector('#data-status').dataset.state==='empty'`);
+    assert.match(await client.evaluate(`document.querySelector('#summary-matches').textContent`),/保存済みデータはありません/);
+  });
+
   await context.test('invalid API payload hard fails instead of falling back to demo', async () => {
     server.setPayload({ ...dashboardPayload(), research: { ST2: { accuracy: 0.99 } } });
     await navigate(client, `${server.origin}/?case=invalid`,
@@ -399,6 +455,8 @@ test('home dashboard browser integration (synthetic data only)', {
     assert.equal(await client.evaluate(`document.querySelectorAll('.match-card').length`), 0);
     assert.doesNotMatch(await client.evaluate(`document.querySelector('#data-status').textContent`), /デモ/);
     assert.doesNotMatch(await client.evaluate(`document.body.textContent`), /0\.99|99%/);
+    await navigate(client, `${server.origin}/?view=next`, `document.querySelector('#data-status').dataset.state==='error'`);
+    assert.equal(await client.evaluate(`document.querySelectorAll('#summary-matches tr').length`),0);
   });
 
   await context.test('API transport failure does not expose demo as operational output', async () => {

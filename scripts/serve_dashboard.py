@@ -36,6 +36,8 @@ STATIC_ROUTES = {
     "/dashboard-data.js": ("dashboard-data.js", "text/javascript"),
     "/team-colors.js": ("team-colors.js", "text/javascript"),
     "/demo-data.js": ("demo-data.js", "text/javascript"),
+    "/assets/j1ai.svg": ("assets/j1ai.svg", "image/svg+xml"),
+    "/assets/j1ai.ico": ("assets/j1ai.ico", "image/x-icon"),
 }
 TEAM_ID = re.compile(r"team_[0-9]{4}\Z")
 MAX_TEXT_LENGTH = 200
@@ -217,7 +219,7 @@ def create_server(
     class DashboardHandler(BaseHTTPRequestHandler):
         def _send(self, content: bytes, content_type: str) -> None:
             self.send_response(200)
-            self.send_header("Content-Type", f"{content_type}; charset=utf-8")
+            self.send_header("Content-Type", content_type if content_type.startswith("image/") else f"{content_type}; charset=utf-8")
             self.send_header("Content-Length", str(len(content)))
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
