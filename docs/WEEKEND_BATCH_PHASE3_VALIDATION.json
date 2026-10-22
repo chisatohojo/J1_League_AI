@@ -1,0 +1,226 @@
+{
+  "UTC": "2026-10-22T09:14:41.867933+00:00",
+  "automatic_revision_fallback": false,
+  "base_commit": "a3833d75e97970912d99a815eb76dd056b0e4a96",
+  "branch": "feature/weekend-source-receipt",
+  "code_and_contract_SHA256": {
+    "docs/WEEKEND_BATCH_PHASE1.md": "de36bc154a10e531cefa323702c5b87877e5ccc4f3ab893fd52a7df9cb1aa501",
+    "docs/WEEKEND_BATCH_PHASE2.md": "58a33313b433825cc9e4d61b18125f33d1931739c334b13120b76a38049df13d",
+    "scripts/update_champion_dashboard.py": "16d981964485272d94a042d01a9e524ce7d2898380261a8c4fe427eb57f95ee4",
+    "src/collect/jleague_ongoing.py": "5e91025142d583d09f2417724f9cbaeed50339275390d46000d3a73179cbe956",
+    "src/collect/jleague_ongoing_source.py": "7032b8679b10d4055e8b6aa4201cf8a690f6270b388539ca3d5c999d63def408",
+    "src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "src/modeling/weekend_batch.py": "6dd82d8814d997332fbeccf1a7ce5c2358fc43156171b898597a32a69e3c6397",
+    "src/modeling/weekend_source.py": "20144fa4127703ad079d18b79d6832970f491dabfa35f19d7b45725e319e6f1d",
+    "tests/test_weekend_source.py": "2158549c040ba3d0aeb8f0992ecbd0b91eff8955999e5ebf040982a3c102d489"
+  },
+  "command_not_started": {
+    "count": 1,
+    "reason": "Output redirection destination typo; pytest was not started and no PASS claimed. Corrected execution has separate artifacts."
+  },
+  "final_tests": {
+    "JUnit_SHA256": "ac6d78b0494044217b9bdcaaacb31eb16bfcdd4a1cea50cd59b9a6e016351a67",
+    "errors": 0,
+    "execution_scope": "Synthetic HTML, mock HTTP provenance/UTC, temporary publication filesystem and thread ownership; existing server regression loopback only",
+    "failures": 0,
+    "hash_capture": "Final completed test source bytes; unchanged afterward. Documents and public aggregates finalized separately.",
+    "log_SHA256": "478046ae282e555f801ea2123d6d6e7e70a00bc0ff6cce021d83cd7f127216bb",
+    "modules": {
+      "tests.test_champion_dashboard_update": 92,
+      "tests.test_dashboard_feed": 134,
+      "tests.test_dashboard_server": 100,
+      "tests.test_jleague_ongoing_source": 63,
+      "tests.test_jleague_ongoing_update": 29,
+      "tests.test_prediction_identity": 15,
+      "tests.test_weekend_batch": 61,
+      "tests.test_weekend_preflight": 20,
+      "tests.test_weekend_source": 63
+    },
+    "passed": 576,
+    "skipped": 1,
+    "skipped_cases": [
+      {
+        "module": "tests.test_jleague_ongoing_source",
+        "name": "test_saved_source_bootstrap_boundaries_when_local_cache_is_available",
+        "reason": "Locally archived official research pages are not distributed as test fixtures."
+      }
+    ],
+    "suite_timestamps_as_recorded": [
+      "2026-10-22T18:09:20.380821+09:00"
+    ],
+    "tests": 577,
+    "warnings_as_errors": true
+  },
+  "intermediate_test_runs": {
+    "phase3-final-r1.xml": {
+      "JUnit_SHA256": "064a53387688fcfe8e899978b97f32f3ee72c90f8f9af7f77b3bcc6074af5837",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_champion_dashboard_update": 92,
+        "tests.test_dashboard_feed": 134,
+        "tests.test_dashboard_server": 100,
+        "tests.test_jleague_ongoing_source": 63,
+        "tests.test_jleague_ongoing_update": 29,
+        "tests.test_prediction_identity": 15,
+        "tests.test_weekend_batch": 61,
+        "tests.test_weekend_preflight": 20,
+        "tests.test_weekend_source": 59
+      },
+      "passed": 572,
+      "skipped": 1,
+      "skipped_cases": [
+        {
+          "module": "tests.test_jleague_ongoing_source",
+          "name": "test_saved_source_bootstrap_boundaries_when_local_cache_is_available",
+          "reason": "Locally archived official research pages are not distributed as test fixtures."
+        }
+      ],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T18:04:52.503569+09:00"
+      ],
+      "tests": 573
+    },
+    "phase3-regression.xml": {
+      "JUnit_SHA256": "e0a80939a0be85cb355376daecb7cad2deaaf85a18833b59cb00b4668e0f6e43",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_champion_dashboard_update": 92,
+        "tests.test_dashboard_feed": 134,
+        "tests.test_dashboard_server": 100,
+        "tests.test_jleague_ongoing_source": 63,
+        "tests.test_jleague_ongoing_update": 29,
+        "tests.test_prediction_identity": 15,
+        "tests.test_weekend_batch": 61,
+        "tests.test_weekend_preflight": 20,
+        "tests.test_weekend_source": 56
+      },
+      "passed": 569,
+      "skipped": 1,
+      "skipped_cases": [
+        {
+          "module": "tests.test_jleague_ongoing_source",
+          "name": "test_saved_source_bootstrap_boundaries_when_local_cache_is_available",
+          "reason": "Locally archived official research pages are not distributed as test fixtures."
+        }
+      ],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T17:59:59.538440+09:00"
+      ],
+      "tests": 570
+    },
+    "source-expanded.xml": {
+      "JUnit_SHA256": "ae81674cd3706bd73a25838adf5b749d5628ad41ee773aa785b66ef8ceac9806",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_weekend_source": 50
+      },
+      "passed": 50,
+      "skipped": 0,
+      "skipped_cases": [],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T17:58:01.766536+09:00"
+      ],
+      "tests": 50
+    },
+    "source-first.xml": {
+      "JUnit_SHA256": "edda8d315abf5324008bd943f00a315fd059512005ba31aa3a4bfacde710c360",
+      "errors": 0,
+      "failures": 0,
+      "modules": {
+        "tests.test_weekend_source": 33
+      },
+      "passed": 33,
+      "skipped": 0,
+      "skipped_cases": [],
+      "suite_timestamps_as_recorded": [
+        "2026-10-22T17:55:50.832334+09:00"
+      ],
+      "tests": 33
+    }
+  },
+  "limits": {
+    "archived_responses": 512,
+    "body_bytes": 2097152,
+    "max_weekend_commit_check_seconds": 900,
+    "metadata_bytes": 65536,
+    "publication_and_session_monotonic_deadline_seconds": 600,
+    "real_HTTP_permission": 0,
+    "saved_request_seconds": 30,
+    "source_freshness_hours": 24,
+    "total_body_bytes": 67108864,
+    "wall_monotonic_tolerance_seconds": 2
+  },
+  "preferred_strategy": "A_IF_ALL_GATES_AND_RECEIPT_PASS_ELSE_B_REQUIRES_EXPLICIT_SELECTION_AND_APPROVAL",
+  "prior_phase2_tests": {
+    "passed": 422,
+    "status": "PRIOR_EVIDENCE_SEPARATE_FROM_CURRENT_REEXECUTION"
+  },
+  "private_evidence_SHA256": {
+    "baseline.json": "e35feb096ea08834e015924507802dc32c7b9cda4b5a0158de5181ca73a355fc",
+    "contract-inspection.json": "d73cb9afa1c02a6e7d3a80466597e3ced8e444ca1c0f3b7ea4d208bef172ffba",
+    "protection-before-commit.json": "d00fd2eb8498a41086661a2df2e22473a9ca0cf264c90642f5a14000536377fc",
+    "source-inspection.json": "9a48c0aa29e90b8d3426ac8293047d6aa97e3e341dcda6a82e1ec44a71cfcc58"
+  },
+  "production_actions": {
+    "Desktop_change": 0,
+    "activation_switch_added": 0,
+    "collection_run": 0,
+    "evaluation": 0,
+    "feed_updated": 0,
+    "fit": 0,
+    "inference": 0,
+    "model_load": 0,
+    "new_communication_permit": 0,
+    "official_GET": 0,
+    "prediction_saved_or_changed": 0,
+    "production_publication_or_receipt_created": 0,
+    "reservation_created": 0,
+    "task_run_or_change": 0
+  },
+  "protection": {
+    "Desktop_runtime_sources_publication_models_unchanged": true,
+    "NN_model_payloads": 53,
+    "canonical_saved_predictions": 19,
+    "fixed_differences": 0,
+    "main_UI_NN_Phase1_Phase2_operational_other_worktrees_unchanged": true,
+    "protected_files": 43194,
+    "tasks_XML_and_execution_status_unchanged": true
+  },
+  "receipt_SHA_semantics": "Canonical payload self SHA excludes receipt_sha256 field; Reference also pins complete receipt and seal bytes. Reference records post-seal readback UTC and is itself persisted/read back.",
+  "receipt_format": "weekend-source-publication-receipt-v1",
+  "receipt_time_semantics": "Dedicated isolated publication completed after rename and complete readback; no claim about original candidate publication time, file mtime, or absolute clock authentication",
+  "saved_operational_source": {
+    "manifest_SHA256": "14ebc385fd3e45597895700abf8b524c6faf71f339c99cb653ebdd8c9a474184",
+    "observed_at_utc": "2026-10-21T22:00:30.807718+00:00",
+    "original_publication_completed_at_utc": null,
+    "original_publication_receipt_backfilled": false,
+    "revision_id": "d179144f38ec64a43ef6bd860ca8802a19c89399a69e29c4e20c8cde1d15dc23",
+    "snapshot_created_at_utc": "2026-10-21T22:00:41.691273+00:00",
+    "snapshot_raw_metadata_verified": 16
+  },
+  "scope": "SYNTHETIC_ONLY",
+  "source_provider": {
+    "acquisition_publication_and_seal_cutoff_inclusive": true,
+    "all_inputs_and_raw_provenance_revalidated": true,
+    "explicit_revision_required": true,
+    "failed_session_resume": false,
+    "generation_UTC_required_at_before_save": true,
+    "history_cutoff": "Friday 00:00 JST",
+    "information_cutoff": "Friday 07:00 JST",
+    "inherited_result_snapshots_required": true,
+    "latest_pointer_read": false,
+    "microsecond_after_cutoff_rejected": true,
+    "rechecks_clock_after_validation": true
+  },
+  "unproven": [
+    "Actual pre-cutoff production acquisition/publication and clock trust",
+    "Production worker ownership/ACL/TOCTOU/power-loss/crash recovery",
+    "Production backend integration and v2 manifest receipt binding",
+    "Real model/scaler load and inference",
+    "Deployment, reservation activation, task/feed/UI changes"
+  ],
+  "verdict": "WEEKEND_PRE_CUTOFF_SOURCE_OFFLINE_READY"
+}
