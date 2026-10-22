@@ -1,0 +1,16 @@
+{
+  "B": "HOLD",
+  "C": "HOLD",
+  "D": "HOLD",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "detail_A_status": "DETAIL_EVIDENCE_A_REVIEW_COMPLETE_RESEARCH_ONLY",
+  "history_admission": false,
+  "new_acquisition_or_permit_authorized": false,
+  "next_scope": "Independent audit of saved event timing, schedule/change provenance and as-of acquisition evidence; separate authorization for any new evidence retrieval",
+  "old_runs_resume_authorized": false,
+  "unacquired": 0,
+  "unresolved_detail_quarantines": 0
+}

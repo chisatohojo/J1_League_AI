@@ -1,0 +1,40 @@
+{
+  "combined_v6_review_and_new_acquisition_totals": {
+    "HOLD": 6,
+    "PASS": 282
+  },
+  "new_v7_independent_totals": {
+    "HOLD": 0,
+    "PASS": 288
+  },
+  "old_B16_official": {
+    "HOLD": 3,
+    "PASS": 45
+  },
+  "old_B16_packets": 3,
+  "old_B18_official": {
+    "HOLD": 6,
+    "PASS": 103
+  },
+  "old_B18_packets": 6,
+  "old_packets": 9,
+  "old_v5_acquisition_totals": {
+    "HOLD": 9,
+    "PASS": 279
+  },
+  "original_HOLD_records_preserved": true,
+  "original_raw_metadata_request_and_receipts_unchanged": true,
+  "packet_SHA256": [
+    "31966ee99c971c90488a95a13bbe3a0b27293a58ab97f6f327f24f98bad98da9",
+    "65ca758e180edce0e03b2593da9e57a869e87074ab9e3836f9f086983fe0b581",
+    "31028eab6915f3d6c433dbe6750dc34a493ed8188e6c23f982d6d66cfa56eca0",
+    "157917afe7e79cc2ddbb58fc7f170d2d10893363d63dc6d9179b3b47260351ca",
+    "7beab6c13059a062cd542a0914e3ab3470d6f83506ea9ff52b883f65b9c95c23",
+    "440ffdc1d49a4f4f87e3c832cd72d7b2503197e219a17f09a5eb636254763a06",
+    "3165d34a4c701c92275f98e91f3e798182fa5c774b956de1118778f1c0de7d6b",
+    "da84baf2d30cd53f899c6323f17ffb1ff4743840862427b9f05a3a9c9cf0b841",
+    "923132f203b7b1ae5e4ed3adc352550509f52fa5436cd6ac64bafc5db604132c"
+  ],
+  "private_verification_SHA256": "4c0db715ef2fe6171e262cc32001c43584069a938b108394eb9c6e04b903d2a2",
+  "status": "PASS"
+}

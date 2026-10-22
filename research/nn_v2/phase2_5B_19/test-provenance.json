@@ -1,0 +1,88 @@
+{
+  "final_test_source_SHA256": "7b8f635489df65939d538304ba0453a828a535d43935d66f3303dcc6bc921de3",
+  "initial_and_final_are_separate_runs_not_added_as_unique_tests": true,
+  "new_final_run": {
+    "JUnit_SHA256": "1a9faf26b62e0377a0774808747eea3d97bfdc0d686429f9a9f9879043202468",
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 62
+    },
+    "original_timestamps": [
+      "2026-10-22T10:51:09.812459+09:00"
+    ]
+  },
+  "new_initial_run": {
+    "JUnit_SHA256": "025e97609b9cf9afaa10ac5fe5f5fe14fc6f1994ed261470f9e295aae704fd72",
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 59
+    },
+    "original_timestamps": [
+      "2026-10-22T10:42:14.243840+09:00"
+    ]
+  },
+  "offline_network_denial": true,
+  "prior282_full_reports_unchanged": 282,
+  "privacy_only_refactor_all288_analysis_unchanged": true,
+  "reused_not_rerun": [
+    {
+      "JUnit_SHA256": "8ce397d3be03b8bda9de40e43a018401352ca2e957b834395ff465b70de42715",
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 935
+      },
+      "label": "prior precommunication935",
+      "original_timestamps": [
+        "2026-10-21T22:19:34.700009+09:00"
+      ]
+    },
+    {
+      "JUnit_SHA256": "4cfc5cc4c4b8b35f01a4343a1e6074c724171b5d36a175de783a48300bcf1f5a",
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 9
+      },
+      "label": "prior postprocess9",
+      "original_timestamps": [
+        "2026-10-22T07:11:47.945376+09:00"
+      ]
+    },
+    {
+      "JUnit_SHA256": "b52c50901db655273030df663ab5d89a7a0f811986369223292d049a902bb6c6",
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 54
+      },
+      "label": "prior v6 offline54",
+      "original_timestamps": [
+        "2026-10-22T07:49:28.614470+09:00"
+      ]
+    },
+    {
+      "JUnit_SHA256": "efc2b505e77078222ed7a77dabdf5855b19b2dee06ac16a054bc21bd6c6a828f",
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 81
+      },
+      "label": "prior B18 precommunication81",
+      "original_timestamps": [
+        "2026-10-22T09:34:47.100168+09:00"
+      ]
+    }
+  ],
+  "saved_real_288_reanalysis": "New offline replay, no worker or model",
+  "status": "PASS",
+  "warnings_as_errors": true
+}

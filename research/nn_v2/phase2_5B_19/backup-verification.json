@@ -1,0 +1,18 @@
+{
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA": "PASS",
+  "archive_SHA256": "811c4e6bbd1e13f6b2a1a85978d749ed5f7686a58937b925e63ca9023a341172",
+  "archive_bytes": 14871001,
+  "archive_name": "phase2_5B_19-evidence.zip",
+  "at_UTC": "2026-10-22T01:56:39.590427+00:00",
+  "entries": 2210,
+  "independent_extraction_SHA": "PASS",
+  "initial_and_final_audits_and_tests_retained": true,
+  "mismatches": 0,
+  "payload_bytes": 57783704,
+  "payload_manifest_SHA256": "c0b5bc67b6b48465933c9b41b89677db04824d789cd79d3f7f26b3ff007f32a6",
+  "raw_metadata_request_288_and_old9_quarantines_included": true,
+  "readback": "PASS",
+  "separate_drive": true,
+  "status": "PASS"
+}

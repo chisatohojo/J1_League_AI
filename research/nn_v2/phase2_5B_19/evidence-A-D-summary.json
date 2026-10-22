@@ -1,0 +1,20 @@
+{
+  "A": {
+    "detail_HOLD": 0,
+    "detail_PASS": 288,
+    "final_source_integrity": 288
+  },
+  "B": "HOLD_EVENT_TIMELINE_REQUIRES_SEPARATE_AUDIT",
+  "C": "HOLD_ORIGINAL_SCHEDULE_CHANGE_NOTICE_PROVENANCE",
+  "D": "HOLD_ASOF_ACQUISITION_PROOF",
+  "actual_source_acquisition_UTC_preserved": true,
+  "all_288_history_admission": false,
+  "historical_times_imputed": false,
+  "new_evidence_fetch_or_admission_rule_authorized": false,
+  "private_per_fixture_registry_SHA256": "85bc42031f089797d45e7437a4371c12c4604dca8ada44efa94dbabaf1050e31",
+  "required_next_evidence": [
+    "Review saved timing exceptions and actual result availability independently",
+    "Establish initial schedules and official change/suspension/resumption notices per fixture",
+    "Specify prediction cutoff and prove contemporaneous acquisition; late final pages do not supply that proof"
+  ]
+}

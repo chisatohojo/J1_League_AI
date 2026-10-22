@@ -1,0 +1,22 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "research/nn_v2/phase2_5B_19/.gitattributes": "1cf122ef7b6d91c8e184e0de20445943d18fb4f693586c395b32b231cb3f01ab",
+    "research/nn_v2/phase2_5B_19/REMARK_CONTRACT.md": "3c9ae301eb757bfff34dee08895c0363e804210e3d6d7ae6aa5a4fe9e4cef3a0",
+    "research/nn_v2/phase2_5B_19/RESULTS.md": "5cb5e425ce994e318b1ca239b4fc99e8406a506ed30272e4120a16ee3e3b42a8",
+    "research/nn_v2/phase2_5B_19/backup-verification.json": "7bf7afee61dfcc2cdf5ec6d764926bb925e4f2d7e52b58a091919efaace7c29c",
+    "research/nn_v2/phase2_5B_19/evidence-A-D-summary.json": "48709eeb0c527557c12b108c2d3c6528d0618fb389cd04a354d5db250a88915e",
+    "research/nn_v2/phase2_5B_19/exact_detail_review_v7.py": "b8b3136cb3286b64a2325bd0ecba71b41c6f3a497629d25283b08f87165f730d",
+    "research/nn_v2/phase2_5B_19/implementation-sha256.json": "c63217fc74ab077f053bfae725c47b39d0506948159725572b4626b61b67cca1",
+    "research/nn_v2/phase2_5B_19/input-sha256.json": "05ab400a97aab91364de9eecc70c9c6e7a43be7ba74cae2204ccb3dd15dfd525",
+    "research/nn_v2/phase2_5B_19/next-stage.json": "43542e2935ee30a2719b55c2f4fdd9cceb53f8d9e4ef0f5db8fb7fa8eaf5e5d5",
+    "research/nn_v2/phase2_5B_19/old-record-preservation.json": "3dee4309ab27d3098049ca9b3a9b977cc9d8475e01cbeb7d263c7ab1a467803b",
+    "research/nn_v2/phase2_5B_19/protection-summary.json": "44efb6b22ea94a102baa5c9ae1e32d46f61d4e81e7a92e47204a50ef062d26ce",
+    "research/nn_v2/phase2_5B_19/readiness.json": "59e111f66d26d08e946612c117af1d392c6db8365db5710f179080a45cb8135e",
+    "research/nn_v2/phase2_5B_19/regression-summary.json": "af8f3697c397d4e0fb689ab1efd40192937d6833031e4c2c584ccfd29f364c34",
+    "research/nn_v2/phase2_5B_19/review-summary.json": "356e209b882cff367665960211d8bffc8a6bca88c239a14000bcc1dfc2fead97",
+    "research/nn_v2/phase2_5B_19/test-provenance.json": "9cbe16f373d9a6335c586e44ade28ed7a3bf33da7de2afac97a646804791085a",
+    "tests/test_nn_quarantine_review_v7.py": "7b8f635489df65939d538304ba0453a828a535d43935d66f3303dcc6bc921de3"
+  },
+  "self_excluded": true
+}

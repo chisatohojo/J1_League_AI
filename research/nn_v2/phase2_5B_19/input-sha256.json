@@ -1,0 +1,14 @@
+{
+  "baseline282_PASS6_HOLD_SHA256": "67a050b82b8fd1ed4f6dc1a1913e90984b21d1d22a6c83e4fdac2d4252b3420f",
+  "frozen_ordinary_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "model_payload_SHA_verified": 53,
+  "model_seal_SHA256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "model_status": "TRAINED_AND_SEALED_RESEARCH_ONLY",
+  "old_B18_private_quarantine_registry_SHA256": "af0e9282236eb5fceb9c016b8b06726a47f5247d2bdc278bc81e5983af0564ff",
+  "packet_index_288_SHA256": "d17d77f0bf3a8fdbaf010a0cb44b032922d5e6fab1c1a25b3f8f07d4ac33ce07",
+  "private_unacquired_ledger_SHA256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "start_HEAD": "75dc7c79a2414b4e4914c7da11ce387b5d6d52a6",
+  "start_protection_baseline_SHA256": "54540b8ba3e6f59b1b73b6a83943e528e57b2dbdf64cc6e6a1b21e807a4a8d81",
+  "study": "nn_v2_residual_20261020_01",
+  "unacquired_count": 0
+}
