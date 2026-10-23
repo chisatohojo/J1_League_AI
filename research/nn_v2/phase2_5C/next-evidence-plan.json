@@ -1,0 +1,52 @@
+{
+  "R_start": null,
+  "STOP": [
+    "403/429/access restriction/TLS/unknown response/timeout",
+    "SHA/identity/result contradiction",
+    "missing write/readback/seal/receipt",
+    "unapproved URL/host/redirect/count/size/deadline"
+  ],
+  "T0": null,
+  "allowlisted_new_fetch_URLs": [],
+  "execution_authorized": false,
+  "fixture_groups": {
+    "B_event_chronology": 288,
+    "C_original_and_change_chain": 288,
+    "C_pre_start_observations_and_notation_differences": 20,
+    "D_cutoff_and_complete_trace": 288
+  },
+  "fixture_registration": 0,
+  "forecast_or_metrics_authorized": false,
+  "historical_D_retroactive_creation_possible": false,
+  "history_admission_authorized": false,
+  "local_notice_inventory_status": "No fixture-bound notice chain established in the reviewed corpus; wider existence UNKNOWN",
+  "new_GET_cap": 0,
+  "new_permit_created": false,
+  "prerequisites": [
+    "Offline identify literal official links and their fixture relationship",
+    "Freeze exact URL set/purpose/host/count/bytes/output and access conditions",
+    "Request independent bounded acquisition authorization, not a resume of old permits"
+  ],
+  "private_target_registry_SHA256": "8852fb4c1429f5e4c8222137b1c8f5f1ac0cda6038afbfcc294ac84a7a4be661",
+  "proposed_transport_constraints": {
+    "TLS_verification": true,
+    "after_completion_interval_seconds": 5,
+    "body_cap_bytes": 2097152,
+    "parallel": 0,
+    "per_URL_GET": 1,
+    "redirect": 0,
+    "retry": 0,
+    "timeout_seconds": 10,
+    "total_request_and_body_cap": "Must be fixed from independently approved exact URL set; currently zero"
+  },
+  "prospective_evidence_format": [
+    "actual request/response UTC",
+    "raw/metadata/request SHA",
+    "revision and manifest",
+    "fixture identity",
+    "source notice relationship",
+    "fsync/readback/seal/receipt"
+  ],
+  "remaining_detail_pages": 0,
+  "status": "PLAN_ONLY_NO_PERMIT"
+}

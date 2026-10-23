@@ -1,0 +1,19 @@
+{
+  "absence_of_undocumented_interruptions_proven": false,
+  "admissions": 0,
+  "auditor_SHA256": "8b94a2e1afa89a2ef5dba8468a3af09a35fac5d03c2106bbcd77c7495dbc3c76",
+  "confirmed_actual_interruption_events_from_these_contexts": 0,
+  "independent_readback_status": "PASS",
+  "no_old_acquisition_module_imported": true,
+  "notation_difference_cases_reconciled_with_fixed_revisions": 20,
+  "old_visible_contexts_SHA_recomputed": 11,
+  "original_context_review_SHA256": "5c7fa4b6744ca9ff9f1c912e3f7d25e7d5853b5e50ce2f59e40c53ec78b73fd4",
+  "original_registry_SHA256": "f1ce9c57d21283d72d183795725f7c092a3bccbc7466cd6c99698c8afcc67647",
+  "post_save_console_encoding_failure_retained": true,
+  "prior_review": "LEAGUE_BREAK_EDITORIAL_CONTEXT_NOT_MATCH_INTERRUPTION",
+  "private_context_audit_SHA256": "bc18e0443aef1499675dc52aa51592c8350010bd990fb492f59200fe184a96d4",
+  "readback_receipt_SHA256": "bc16f3fbc1d0950eefc70fd8f820c47c9bf0173c2ff897426f210eac8aa97f0e",
+  "source_cases": 31,
+  "status": "PASS",
+  "visible_contexts_in_fixed288": 11
+}

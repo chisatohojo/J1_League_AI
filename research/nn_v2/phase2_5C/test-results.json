@@ -1,0 +1,45 @@
+{
+  "JUnit_SHA256": "8bf571285a4a74075245e3c4c2796ac97b8ac78345a30f37b00caad5bb9db12b",
+  "errors": 0,
+  "execution_guard_SHA256": "8a89e17d9bf0f7a21191d6be1416c570098d919e0a2b7fda18eaf1d1310f39f6",
+  "failures": 0,
+  "final_harness_attempt": {
+    "explicit_log_in_new_test_temp": true,
+    "status": "PASS"
+  },
+  "first_harness_attempt": {
+    "log_SHA256": "3ab00ab6c2cef21e5dfe65e2b58592f9cc4d45b4dea56a1b7d31c62c282774da",
+    "reason": "Application write guard rejected pytest default log destination; retained, not counted as a passing test run",
+    "status": "CONFIGURATION_ABORT_BEFORE_COLLECTION"
+  },
+  "historical_B19_tests": {
+    "part_of_regression169": true,
+    "pass_count": 62,
+    "reexecuted_in_this_run": true
+  },
+  "historical_acquisition_tests_reexecuted": false,
+  "new_synthetic_pass": 55,
+  "real_model_load_fit_inference": 0,
+  "regression_pass": 169,
+  "skips": 0,
+  "suites": {
+    "tests.test_nn_future_history": 48,
+    "tests.test_nn_quarantine_review_v7": 62,
+    "tests.test_nn_research_timing": 19,
+    "tests.test_nn_v2_bcd_evidence": 55,
+    "tests.test_nn_v2_completion_binding": 40
+  },
+  "synthetic_NoFitPipeline_test_not_real_fit": true,
+  "synthetic_negative_controls": [
+    "packet raw/metadata/request SHA tampering",
+    "identity/URL/namespace/status/clock contradictions",
+    "unknown B/C/D never inferred",
+    "target/duplicate history trace rejected",
+    "late result/acquisition and naive clock",
+    "regulation vs PK/ET",
+    "admission always refused",
+    "missing ID/kickoff never registered"
+  ],
+  "total_pass": 224,
+  "warnings_as_errors": true
+}

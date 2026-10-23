@@ -1,0 +1,27 @@
+{
+  "hash_differences": 0,
+  "identity_metadata_differences": 0,
+  "known_prior_task_failures_and_unattributed_changes_not_reclassified": true,
+  "main_equal": true,
+  "model_payloads": 53,
+  "model_payloads_verified": true,
+  "other_worktrees_equal": true,
+  "preexisting_interval_changes": 0,
+  "private_final_audit_SHA256": "180587e130ae995762382b3b954e36394025ce4859337cc54fddc9cc33765eb1",
+  "protected_files": 48429,
+  "protected_operations_executed": 0,
+  "protected_scope": [
+    "NN sealed model/scaler/offset/seal",
+    "Champion model and saved predictions",
+    "288 originals and 9 old quarantines",
+    "source/publication/runtime",
+    "parser/adapters/rules/old execution records",
+    "main and all existing worktrees",
+    "07:00/22:00 task definitions and states",
+    "Desktop/feed"
+  ],
+  "protection_baseline_SHA256": "a3172c964f2f170e14d34f6d47a46c8cacf77605f6c2549613679f5f7aa664bf",
+  "status": "PASS",
+  "task_definitions_equal": true,
+  "tasks_equal": true
+}

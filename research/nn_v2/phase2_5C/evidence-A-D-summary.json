@@ -1,0 +1,89 @@
+{
+  "A": {
+    "HOLD": 0,
+    "PASS": 288,
+    "strict_semantics_unchanged": 288
+  },
+  "B": {
+    "HOLD": 288,
+    "PASS": 0,
+    "absolute_event_chains_established": 0,
+    "earlier_game_over_witnesses_independently_verified": 99,
+    "final_result_acquisition_upper_bounds_verified": 288
+  },
+  "C": {
+    "HOLD": 288,
+    "PASS": 0,
+    "acquired_change_notices_for_fixed288_found": 0,
+    "fixtures_with_pre_start_observations": 20,
+    "fixtures_with_saved_notation_differences": 20,
+    "original_schedule_chains_established": 0,
+    "source_observation_rows_verified": 1188
+  },
+  "D": {
+    "HOLD": 288,
+    "PASS": 0,
+    "actual_NN_prediction_cutoffs_registered": 0,
+    "complete_asof_history_traces": 0,
+    "target_final_score_not_used_as_own_feature": true
+  },
+  "PK_result_pages_separated": 50,
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "T0": 0,
+  "acquired": 288,
+  "acquisition_run_reexecution": 0,
+  "algorithm": "INDEPENDENT_PINNED_BYTES_AND_STRICT_SEMANTICS_AUDIT",
+  "at_UTC": "2026-10-23T05:16:43.076927+00:00",
+  "audit_gate": "NN_V2_BCD_EVIDENCE_AUDIT_COMPLETE",
+  "completion_binding_references_verified": 4,
+  "extra_time_pages_in_fixed288": 0,
+  "history": "HOLD",
+  "history_admitted": 0,
+  "identity_conflicts": 0,
+  "input_pins": {
+    "binding": "6e1309539a5fc5ab58a82d36035e5d96a6da462701d5253e3b83dd332b8181f0",
+    "frozen_manifest": "b8eee29d3b5ff286e50c2a171a56cff7da9afaab5ee3bc0ca64447f1b50a8e87",
+    "model_seal": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+    "packet_index": "d17d77f0bf3a8fdbaf010a0cb44b032922d5e6fab1c1a25b3f8f07d4ac33ce07",
+    "v7_results": "9c85e6d1b7ec3f426fd95267bbeed9222a2e325aea7a010e62f00f08ece4d1ae"
+  },
+  "legacy_30700": {
+    "historical_publication_asof_proven": false,
+    "outside_288": true,
+    "policy_unchanged": true,
+    "result_boundary_not_final_whistle": true,
+    "three_original_bodies_SHA_verified": true
+  },
+  "model_load_fit_inference": 0,
+  "new_GET": 0,
+  "new_permit": 0,
+  "original_quarantine_packets_unchanged": 9,
+  "prediction": "HOLD",
+  "private_old_quarantine_verification_SHA256": "d2d613c68aa269ca6b45f216b889cd468bc4896469cf5709e418df1e9dc710d2",
+  "private_per_fixture_registry_SHA256": "8852fb4c1429f5e4c8222137b1c8f5f1ac0cda6038afbfcc294ac84a7a4be661",
+  "private_source_corpus_SHA256": "d9697c92470eed7a9497f091d3b63f4207bf923cca1ef448cac50ac40b63b8d3",
+  "probability_or_metrics": 0,
+  "scope_warning": "Fixed288 is the former missing-detail set;12 previously held pages lie outside this audit;full2026 history has300 results in the frozen source.",
+  "series": {
+    "hyakunen": 189,
+    "ongoing": 99
+  },
+  "source_HTML_files": 198,
+  "source_corpus_files": 420,
+  "source_corpus_formats": {
+    "ongoing-v1": 8,
+    "ongoing-v2": 16
+  },
+  "source_corpus_scope": "Explicit saved snapshots/raw roots only; not a universal notice search",
+  "source_manifest_files": 24,
+  "source_metadata_files": 198,
+  "source_snapshot_manifests": 24,
+  "specific_article_hrefs_pending_context_review": 0,
+  "target_registration": 0,
+  "total": 288,
+  "unacquired": 0,
+  "unique_URLs": 288,
+  "unique_official_IDs": 288,
+  "verified_old_fixed_source_files": 421
+}

@@ -1,0 +1,25 @@
+{
+  "A": "PASS",
+  "B": "HOLD",
+  "C": "HOLD",
+  "D": "HOLD",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "T0": null,
+  "acquisition_authorized": false,
+  "audit": "NN_V2_BCD_EVIDENCE_AUDIT_COMPLETE",
+  "enrolled_fixtures": 0,
+  "model_execution_authorized": false,
+  "old_runs_resume_authorized": false,
+  "original_results_and_quarantines_unchanged": true,
+  "required": [
+    "Independent B/C event/schedule proof",
+    "D real cutoff and complete prior result trace",
+    "Full-history coverage including 12 pages outside this audit",
+    "Separate history admission and adapter real-history audit",
+    "Separate T0/official20-round population/bindings approval",
+    "Separate paired pre-match collection authorization"
+  ]
+}

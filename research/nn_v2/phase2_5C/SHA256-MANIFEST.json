@@ -1,0 +1,21 @@
+{
+  "files": {
+    "research/nn_v2/phase2_5C/.gitattributes": "1cf122ef7b6d91c8e184e0de20445943d18fb4f693586c395b32b231cb3f01ab",
+    "research/nn_v2/phase2_5C/CONTRACT.md": "793e1fc6711e86e20d6c1fa312589d4c24aea77fba67cd68924155e7215856b2",
+    "research/nn_v2/phase2_5C/EVIDENCE_GAPS.md": "6944ea63a846fa7cea63fc080a4a5c5fa114dd1240accb19106a91bfc57ef07c",
+    "research/nn_v2/phase2_5C/RESULTS.md": "ea5b206eb0457745d1e45c416eca53d37b2e4b3dce8f2f99287151abeaa9de21",
+    "research/nn_v2/phase2_5C/evidence-A-D-summary.json": "79d815700bf0c134e8ab6f9c6314b1c052df8e0fe99e5445289b51290b189ab6",
+    "research/nn_v2/phase2_5C/evidence_contract.py": "034fa94179532acceed46c5ec26764caa14f40c627e30ad0bc35e43c6d175d46",
+    "research/nn_v2/phase2_5C/future-evaluation-feasibility.json": "1098fb83b2d537ad00d574bf5092103644b8c5de91231af11f135ea4b3c019a2",
+    "research/nn_v2/phase2_5C/input-output-sha256.json": "9bb8f1010cf0df64f7fd6161e72673aa05aca9cd31ce305bea45227b1113527c",
+    "research/nn_v2/phase2_5C/next-evidence-plan.json": "d2ea01ea925ffaf790d4fe2d3319220a9f194c5232bcbbb04dfbb179bf05e3be",
+    "research/nn_v2/phase2_5C/next-stage.json": "56043f8fbbd5b37eeef19079122f864df3be31693860df9213bc1d778a97fa45",
+    "research/nn_v2/phase2_5C/protection-summary.json": "332c155b5d8811ac1a1c7c5d44d6be7a365a965b91c9b42c89e08aab135bc023",
+    "research/nn_v2/phase2_5C/readiness.json": "935f89ebcac64f82e8cd3cc2f7b351dc3d1e895d66405b4ab4f0b13a18a92cc6",
+    "research/nn_v2/phase2_5C/test-results.json": "5efd89fb4ec9037f4d8ec86d95099f70190f585393b58877005433d0042d42a7",
+    "research/nn_v2/phase2_5C/timing-registry-audit.json": "5eec53a5ec7c2fa5f5107ed7a2ded4194eaace59f74aa7edc3044f8a4b472853",
+    "research/nn_v2/phase2_5C/validation.json": "91d31ed4fea678eb4db92106b09900f6d2fde8e7789c493ce0f3c2acfeffb0f2",
+    "tests/test_nn_v2_bcd_evidence.py": "08efc179966dee1e6f09b5ebe2655d28c13298156e6f9c3a921ab98814cc7ae0"
+  },
+  "self_excluded": true
+}
