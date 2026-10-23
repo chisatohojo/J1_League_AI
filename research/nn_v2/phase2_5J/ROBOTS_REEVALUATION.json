@@ -1,0 +1,267 @@
+{
+  "kind": "NNV2_J_SEALED_A1_THREE_LAYER_REPLAY_V3",
+  "audit_UTC": "2026-10-23T14:09:00.158059+00:00",
+  "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+  "source_acquired_UTC": "2026-10-23T09:46:47.645062+00:00",
+  "results": [
+    {
+      "URL": "https://www.jleague.jp/robots.txt",
+      "HTTP_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "declared_product_token": null,
+      "old_I_decision": "UNKNOWN",
+      "parser_version": "nn_v2_robots_offline_layers_v3",
+      "layer1": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "RFC_2_2_2_IMPLICIT_ROBOTS_URI_INDEPENDENT_OF_TOKEN",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_OFFLINE_V1",
+        "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "www.jleague.jp",
+        "target_URL": "https://www.jleague.jp/robots.txt",
+        "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [
+          {
+            "directive": "sitemap",
+            "value": "https://www.jleague.jp/sitemap.xml",
+            "line": 25,
+            "resource_fetched": false
+          }
+        ],
+        "unresolved_syntax": [],
+        "source_references": [
+          "S1#section-2.2.2"
+        ]
+      },
+      "J1AI_evidence_policy": {
+        "decision": "UNKNOWN",
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED"
+      },
+      "layer2": {
+        "decision": "UNAPPROVED",
+        "reason": "NO_PERMIT_ISSUED",
+        "real_permit_issued": false,
+        "execution_authorized": false
+      },
+      "layer3": {
+        "robots_decision": "ALLOW",
+        "permit_decision": "UNAPPROVED",
+        "evidence_policy_decision": "UNKNOWN",
+        "site_access_conditions_verified": false,
+        "communication_candidate": false,
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      }
+    },
+    {
+      "URL": "https://www.jleague.jp/general/kiyaku/",
+      "HTTP_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "declared_product_token": null,
+      "old_I_decision": "UNKNOWN",
+      "parser_version": "nn_v2_robots_offline_layers_v3",
+      "layer1": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_OFFLINE_V1",
+        "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "www.jleague.jp",
+        "target_URL": "https://www.jleague.jp/general/kiyaku/",
+        "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [
+          {
+            "directive": "sitemap",
+            "value": "https://www.jleague.jp/sitemap.xml",
+            "line": 25,
+            "resource_fetched": false
+          }
+        ],
+        "unresolved_syntax": [],
+        "source_references": [
+          "S1#section-2.2.1",
+          "S1#section-2.2.2"
+        ]
+      },
+      "J1AI_evidence_policy": {
+        "decision": "UNKNOWN",
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED"
+      },
+      "layer2": {
+        "decision": "UNAPPROVED",
+        "reason": "NO_PERMIT_ISSUED",
+        "real_permit_issued": false,
+        "execution_authorized": false
+      },
+      "layer3": {
+        "robots_decision": "UNKNOWN",
+        "permit_decision": "UNAPPROVED",
+        "evidence_policy_decision": "UNKNOWN",
+        "site_access_conditions_verified": false,
+        "communication_candidate": false,
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      }
+    },
+    {
+      "URL": "https://www.jleague.jp/general/copyright/",
+      "HTTP_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "declared_product_token": null,
+      "old_I_decision": "UNKNOWN",
+      "parser_version": "nn_v2_robots_offline_layers_v3",
+      "layer1": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_OFFLINE_V1",
+        "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "www.jleague.jp",
+        "target_URL": "https://www.jleague.jp/general/copyright/",
+        "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [
+          {
+            "directive": "sitemap",
+            "value": "https://www.jleague.jp/sitemap.xml",
+            "line": 25,
+            "resource_fetched": false
+          }
+        ],
+        "unresolved_syntax": [],
+        "source_references": [
+          "S1#section-2.2.1",
+          "S1#section-2.2.2"
+        ]
+      },
+      "J1AI_evidence_policy": {
+        "decision": "UNKNOWN",
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED"
+      },
+      "layer2": {
+        "decision": "UNAPPROVED",
+        "reason": "NO_PERMIT_ISSUED",
+        "real_permit_issued": false,
+        "execution_authorized": false
+      },
+      "layer3": {
+        "robots_decision": "UNKNOWN",
+        "permit_decision": "UNAPPROVED",
+        "evidence_policy_decision": "UNKNOWN",
+        "site_access_conditions_verified": false,
+        "communication_candidate": false,
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      }
+    },
+    {
+      "URL": "https://www.jleague.jp/j1/news/",
+      "HTTP_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "declared_product_token": null,
+      "old_I_decision": "UNKNOWN",
+      "parser_version": "nn_v2_robots_offline_layers_v3",
+      "layer1": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_OFFLINE_V1",
+        "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "www.jleague.jp",
+        "target_URL": "https://www.jleague.jp/j1/news/",
+        "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [
+          {
+            "directive": "sitemap",
+            "value": "https://www.jleague.jp/sitemap.xml",
+            "line": 25,
+            "resource_fetched": false
+          }
+        ],
+        "unresolved_syntax": [],
+        "source_references": [
+          "S1#section-2.2.1",
+          "S1#section-2.2.2"
+        ]
+      },
+      "J1AI_evidence_policy": {
+        "decision": "UNKNOWN",
+        "reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED"
+      },
+      "layer2": {
+        "decision": "UNAPPROVED",
+        "reason": "NO_PERMIT_ISSUED",
+        "real_permit_issued": false,
+        "execution_authorized": false
+      },
+      "layer3": {
+        "robots_decision": "UNKNOWN",
+        "permit_decision": "UNAPPROVED",
+        "evidence_policy_decision": "UNKNOWN",
+        "site_access_conditions_verified": false,
+        "communication_candidate": false,
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      }
+    }
+  ],
+  "aboutj": {
+    "layer1": "UNKNOWN",
+    "reason": "NO_HOST_SPECIFIC_ROBOTS_ORIGINAL",
+    "communication_candidate": false
+  },
+  "old_I_result_SHA256": "64f4f4d78061ef8ce4d89212b2729a7fdb1ad104120c4f3b059e803cdcf50752",
+  "old_I_record_unchanged": true,
+  "implicit_robots_change_basis": "S1#section-2.2.2; source SHA and raw integrity verified; no product-token is silently selected",
+  "A2_A4_GET": 0,
+  "B_GET": 0,
+  "new_permit": 0,
+  "expired_budgets_revived": false,
+  "site_access_conditions": "UNCONFIRMED",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "B": "HOLD",
+  "C": "HOLD",
+  "D": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED"
+}

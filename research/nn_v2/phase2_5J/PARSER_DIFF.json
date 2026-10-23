@@ -1,0 +1,4781 @@
+{
+  "kind": "NNV2_J_OFFLINE_SYNTHETIC_DIFFERENTIAL_V1",
+  "cases": [
+    {
+      "id": "agent_case",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "7176319467c285090ab617a0c2c536a94722781c4cd2591314132cdca6d653f7",
+        "bytes": 34,
+        "raw_UTF8": "User-agent: examplebot\nDisallow: /",
+        "fixture_recipe": "differential_cases.cases:agent_case",
+        "URL": "https://synthetic.invalid/x",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.1",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "DENY",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "7176319467c285090ab617a0c2c536a94722781c4cd2591314132cdca6d653f7",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "examplebot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 1
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "LOCAL_LEGACY_APPLICABILITY_LONGEST_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 1
+      },
+      "I_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "7176319467c285090ab617a0c2c536a94722781c4cd2591314132cdca6d653f7",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "examplebot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 1,
+            "google_pattern_length": 1
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+        "google_comparison_candidate": "DENY",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 1
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "7176319467c285090ab617a0c2c536a94722781c4cd2591314132cdca6d653f7",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "examplebot"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 1,
+              "google_pattern_length": 1
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 1,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "7176319467c285090ab617a0c2c536a94722781c4cd2591314132cdca6d653f7",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "examplebot"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 1,
+              "google_pattern_length": 1
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 1
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "agent_substring",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "f291ef853eec101e53144a34fb7ec211474a58c316adea076ba2283651f3256b",
+        "bytes": 50,
+        "raw_UTF8": "User-agent: Bot\nDisallow: /\nUser-agent: *\nAllow: /",
+        "fixture_recipe": "differential_cases.cases:agent_substring",
+        "URL": "https://synthetic.invalid/x",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.1",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "f291ef853eec101e53144a34fb7ec211474a58c316adea076ba2283651f3256b",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "Bot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 1
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "LOCAL_LEGACY_APPLICABILITY_LONGEST_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 1
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "f291ef853eec101e53144a34fb7ec211474a58c316adea076ba2283651f3256b",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 2,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/",
+            "line": 4,
+            "group": 2,
+            "specificity_octets": 1,
+            "google_pattern_length": 1
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "ALLOW",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 1
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "f291ef853eec101e53144a34fb7ec211474a58c316adea076ba2283651f3256b",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 2,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/",
+              "line": 4,
+              "group": 2,
+              "specificity_octets": 1,
+              "google_pattern_length": 1
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 1,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "f291ef853eec101e53144a34fb7ec211474a58c316adea076ba2283651f3256b",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 2,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/",
+              "line": 4,
+              "group": 2,
+              "specificity_octets": 1,
+              "google_pattern_length": 1
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 1
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "group_merge",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "ea6536eed42f9da0216340826e446d7cd0e0d1ff40aeac45d69b6648dde8823a",
+        "bytes": 68,
+        "raw_UTF8": "User-agent: ExampleBot\nDisallow: /a\nUser-agent: ExampleBot\nAllow: /a",
+        "fixture_recipe": "differential_cases.cases:group_merge",
+        "URL": "https://synthetic.invalid/a",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.1",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "ea6536eed42f9da0216340826e446d7cd0e0d1ff40aeac45d69b6648dde8823a",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "ExampleBot"
+            ]
+          },
+          {
+            "group": 2,
+            "agents": [
+              "ExampleBot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/a",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 2
+          },
+          {
+            "directive": "allow",
+            "pattern": "/a",
+            "line": 4,
+            "group": 2,
+            "specificity_octets": 2
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "LOCAL_LEGACY_APPLICABILITY_LONGEST_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 4
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "ea6536eed42f9da0216340826e446d7cd0e0d1ff40aeac45d69b6648dde8823a",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "ExampleBot"
+            ]
+          },
+          {
+            "group": 2,
+            "agents": [
+              "ExampleBot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/a",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 2,
+            "google_pattern_length": 2
+          },
+          {
+            "directive": "allow",
+            "pattern": "/a",
+            "line": 4,
+            "group": 2,
+            "specificity_octets": 2,
+            "google_pattern_length": 2
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+        "google_comparison_candidate": "ALLOW",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 4
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "ea6536eed42f9da0216340826e446d7cd0e0d1ff40aeac45d69b6648dde8823a",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "ExampleBot"
+              ]
+            },
+            {
+              "group": 2,
+              "agents": [
+                "ExampleBot"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/a",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            },
+            {
+              "directive": "allow",
+              "pattern": "/a",
+              "line": 4,
+              "group": 2,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 4,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "ea6536eed42f9da0216340826e446d7cd0e0d1ff40aeac45d69b6648dde8823a",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "ExampleBot"
+              ]
+            },
+            {
+              "group": 2,
+              "agents": [
+                "ExampleBot"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/a",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            },
+            {
+              "directive": "allow",
+              "pattern": "/a",
+              "line": 4,
+              "group": 2,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 4
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "named_not_wildcard",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "45acbc142773a4842e908a243a7bd9966714af8e1f5569710004590d75146e34",
+        "bytes": 57,
+        "raw_UTF8": "User-agent: *\nDisallow: /\nUser-agent: ExampleBot\nAllow: /",
+        "fixture_recipe": "differential_cases.cases:named_not_wildcard",
+        "URL": "https://synthetic.invalid/a",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.1",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "45acbc142773a4842e908a243a7bd9966714af8e1f5569710004590d75146e34",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 2,
+            "agents": [
+              "ExampleBot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/",
+            "line": 4,
+            "group": 2,
+            "specificity_octets": 1
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "LOCAL_LEGACY_APPLICABILITY_LONGEST_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 1
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "45acbc142773a4842e908a243a7bd9966714af8e1f5569710004590d75146e34",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 2,
+            "agents": [
+              "ExampleBot"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/",
+            "line": 4,
+            "group": 2,
+            "specificity_octets": 1,
+            "google_pattern_length": 1
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+        "google_comparison_candidate": "ALLOW",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 1
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "45acbc142773a4842e908a243a7bd9966714af8e1f5569710004590d75146e34",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 2,
+              "agents": [
+                "ExampleBot"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/",
+              "line": 4,
+              "group": 2,
+              "specificity_octets": 1,
+              "google_pattern_length": 1
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 1,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "45acbc142773a4842e908a243a7bd9966714af8e1f5569710004590d75146e34",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 2,
+              "agents": [
+                "ExampleBot"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/",
+              "line": 4,
+              "group": 2,
+              "specificity_octets": 1,
+              "google_pattern_length": 1
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "DECLARED_EXACT_CASE_INSENSITIVE_GROUPS",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 1
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "wildcard",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "c5913cd972c14f0d972cd29119bf09e3eef37a2cf4a831f10dbd44aa4748399a",
+        "bytes": 28,
+        "raw_UTF8": "User-agent: *\nDisallow: /a*b",
+        "fixture_recipe": "differential_cases.cases:wildcard",
+        "URL": "https://synthetic.invalid/axb",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.3",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "DENY",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "c5913cd972c14f0d972cd29119bf09e3eef37a2cf4a831f10dbd44aa4748399a",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/a*b",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 3
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/axb",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 6
+      },
+      "I_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "c5913cd972c14f0d972cd29119bf09e3eef37a2cf4a831f10dbd44aa4748399a",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/a*b",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 3,
+            "google_pattern_length": 4
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/axb",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "DENY",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 6
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "c5913cd972c14f0d972cd29119bf09e3eef37a2cf4a831f10dbd44aa4748399a",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/a*b",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 3,
+              "google_pattern_length": 4
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/axb",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 6,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "c5913cd972c14f0d972cd29119bf09e3eef37a2cf4a831f10dbd44aa4748399a",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/a*b",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 3,
+              "google_pattern_length": 4
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/axb",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 6
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "anchor",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "0b8c9c1c3adb2522d2c424793eb8d38f9c7d872a1d3bd2f076a3e7e1183f70ed",
+        "bytes": 27,
+        "raw_UTF8": "User-agent: *\nDisallow: /x$",
+        "fixture_recipe": "differential_cases.cases:anchor",
+        "URL": "https://synthetic.invalid/xx",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.3",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "0b8c9c1c3adb2522d2c424793eb8d38f9c7d872a1d3bd2f076a3e7e1183f70ed",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/xx",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+        "work_units": 2
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "0b8c9c1c3adb2522d2c424793eb8d38f9c7d872a1d3bd2f076a3e7e1183f70ed",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/xx",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+        "work_units": 2
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "0b8c9c1c3adb2522d2c424793eb8d38f9c7d872a1d3bd2f076a3e7e1183f70ed",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/xx",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+          "work_units": 2,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "0b8c9c1c3adb2522d2c424793eb8d38f9c7d872a1d3bd2f076a3e7e1183f70ed",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/xx",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+          "work_units": 2
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "longest",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "7bdc68bebca54ac8c2ce665ec924d08935c8a56123277039c5a2b6bf6cd663b7",
+        "bytes": 43,
+        "raw_UTF8": "User-agent: *\nDisallow: /x\nAllow: /x/public",
+        "fixture_recipe": "differential_cases.cases:longest",
+        "URL": "https://synthetic.invalid/x/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "7bdc68bebca54ac8c2ce665ec924d08935c8a56123277039c5a2b6bf6cd663b7",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/x",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 2
+          },
+          {
+            "directive": "allow",
+            "pattern": "/x/public",
+            "line": 3,
+            "group": 1,
+            "specificity_octets": 9
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 11
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "7bdc68bebca54ac8c2ce665ec924d08935c8a56123277039c5a2b6bf6cd663b7",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/x",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 2,
+            "google_pattern_length": 2
+          },
+          {
+            "directive": "allow",
+            "pattern": "/x/public",
+            "line": 3,
+            "group": 1,
+            "specificity_octets": 9,
+            "google_pattern_length": 9
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "ALLOW",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 11
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "7bdc68bebca54ac8c2ce665ec924d08935c8a56123277039c5a2b6bf6cd663b7",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/x",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            },
+            {
+              "directive": "allow",
+              "pattern": "/x/public",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 9,
+              "google_pattern_length": 9
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 11,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "7bdc68bebca54ac8c2ce665ec924d08935c8a56123277039c5a2b6bf6cd663b7",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/x",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            },
+            {
+              "directive": "allow",
+              "pattern": "/x/public",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 9,
+              "google_pattern_length": 9
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 11
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "google_marker_rank",
+      "category": "SPEC_UNCLEAR_HOLD",
+      "input": {
+        "raw_SHA256": "e98f532640b59acb57813419274831387e3215a0185a293cfd9e6d91a65d992f",
+        "bytes": 43,
+        "raw_UTF8": "User-agent: *\nAllow: /page\nDisallow: /*.htm",
+        "fixture_recipe": "differential_cases.cases:google_marker_rank",
+        "URL": "https://synthetic.invalid/page.htm",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "order-of-precedence-for-rules",
+      "expected_decisions": [
+        "ALLOW",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "e98f532640b59acb57813419274831387e3215a0185a293cfd9e6d91a65d992f",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/page",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 5
+          },
+          {
+            "directive": "disallow",
+            "pattern": "/*.htm",
+            "line": 3,
+            "group": 1,
+            "specificity_octets": 5
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/page.htm",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 19
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "RFC_GOOGLE_MARKER_RANKING_REQUIRES_REVIEW",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "e98f532640b59acb57813419274831387e3215a0185a293cfd9e6d91a65d992f",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/page",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 5,
+            "google_pattern_length": 5
+          },
+          {
+            "directive": "disallow",
+            "pattern": "/*.htm",
+            "line": 3,
+            "group": 1,
+            "specificity_octets": 5,
+            "google_pattern_length": 6
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/page.htm",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "DENY"
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "RFC_GOOGLE_MARKER_RANKING_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "e98f532640b59acb57813419274831387e3215a0185a293cfd9e6d91a65d992f",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/page",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 5,
+              "google_pattern_length": 5
+            },
+            {
+              "directive": "disallow",
+              "pattern": "/*.htm",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 5,
+              "google_pattern_length": 6
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/page.htm",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "RFC_GOOGLE_MARKER_RANKING_REQUIRES_REVIEW"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "RFC_GOOGLE_MARKER_RANKING_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "e98f532640b59acb57813419274831387e3215a0185a293cfd9e6d91a65d992f",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/page",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 5,
+              "google_pattern_length": 5
+            },
+            {
+              "directive": "disallow",
+              "pattern": "/*.htm",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 5,
+              "google_pattern_length": 6
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/page.htm",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY"
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "allow_tie",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "f10f9b2e2869b1e74259fd650c123bf89eac4793f0673d877b1e646b5a482403",
+        "bytes": 36,
+        "raw_UTF8": "User-agent: *\nAllow: /x\nDisallow: /x",
+        "fixture_recipe": "differential_cases.cases:allow_tie",
+        "URL": "https://synthetic.invalid/x",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "f10f9b2e2869b1e74259fd650c123bf89eac4793f0673d877b1e646b5a482403",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/x",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 2
+          },
+          {
+            "directive": "disallow",
+            "pattern": "/x",
+            "line": 3,
+            "group": 1,
+            "specificity_octets": 2
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 4
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "f10f9b2e2869b1e74259fd650c123bf89eac4793f0673d877b1e646b5a482403",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "allow",
+            "pattern": "/x",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 2,
+            "google_pattern_length": 2
+          },
+          {
+            "directive": "disallow",
+            "pattern": "/x",
+            "line": 3,
+            "group": 1,
+            "specificity_octets": 2,
+            "google_pattern_length": 2
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/x",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "ALLOW",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 4
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "f10f9b2e2869b1e74259fd650c123bf89eac4793f0673d877b1e646b5a482403",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/x",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            },
+            {
+              "directive": "disallow",
+              "pattern": "/x",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 4,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "f10f9b2e2869b1e74259fd650c123bf89eac4793f0673d877b1e646b5a482403",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "allow",
+              "pattern": "/x",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            },
+            {
+              "directive": "disallow",
+              "pattern": "/x",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 2,
+              "google_pattern_length": 2
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/x",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "ALLOW",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 4
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "literal_star",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "e4446b8f43123ad0a46887ecaa774b723b5005c4ad349407179c0d429708ae60",
+        "bytes": 38,
+        "raw_UTF8": "User-agent: *\nDisallow: /file-%2A.html",
+        "fixture_recipe": "differential_cases.cases:literal_star",
+        "URL": "https://synthetic.invalid/file-*.html",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.3",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "DENY",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "e4446b8f43123ad0a46887ecaa774b723b5005c4ad349407179c0d429708ae60",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/file-*.html",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+        "work_units": 7
+      },
+      "I_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "e4446b8f43123ad0a46887ecaa774b723b5005c4ad349407179c0d429708ae60",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/file-%2A.html",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 12,
+            "google_pattern_length": 12
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/file-*.html",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "DENY",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 12
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "e4446b8f43123ad0a46887ecaa774b723b5005c4ad349407179c0d429708ae60",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/file-%2A.html",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 12,
+              "google_pattern_length": 12
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/file-*.html",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 12,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "e4446b8f43123ad0a46887ecaa774b723b5005c4ad349407179c0d429708ae60",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/file-%2A.html",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 12,
+              "google_pattern_length": 12
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/file-*.html",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 12
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "literal_dollar",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "ac2d1ee52c48411b7c00bde24e4f844cd00379c63f2ee588c7f3bc54c026f3ee",
+        "bytes": 33,
+        "raw_UTF8": "User-agent: *\nDisallow: /file-%24",
+        "fixture_recipe": "differential_cases.cases:literal_dollar",
+        "URL": "https://synthetic.invalid/file-$",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.3",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "DENY",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "ac2d1ee52c48411b7c00bde24e4f844cd00379c63f2ee588c7f3bc54c026f3ee",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/file-$",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+        "work_units": 7
+      },
+      "I_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "ac2d1ee52c48411b7c00bde24e4f844cd00379c63f2ee588c7f3bc54c026f3ee",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/file-%24",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 7,
+            "google_pattern_length": 7
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/file-$",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "DENY",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 7
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "ac2d1ee52c48411b7c00bde24e4f844cd00379c63f2ee588c7f3bc54c026f3ee",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/file-%24",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 7,
+              "google_pattern_length": 7
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/file-$",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 7,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "ac2d1ee52c48411b7c00bde24e4f844cd00379c63f2ee588c7f3bc54c026f3ee",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/file-%24",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 7,
+              "google_pattern_length": 7
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/file-$",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 7
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "unreserved",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "fd8690da90fce5c8c37e51488c9d01d68cdf50e25680dc13aa3247d432771f06",
+        "bytes": 30,
+        "raw_UTF8": "User-agent: *\nDisallow: /~user",
+        "fixture_recipe": "differential_cases.cases:unreserved",
+        "URL": "https://synthetic.invalid/%7Euser",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "DENY",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "fd8690da90fce5c8c37e51488c9d01d68cdf50e25680dc13aa3247d432771f06",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/~user",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 6
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/%7Euser",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 6
+      },
+      "I_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "fd8690da90fce5c8c37e51488c9d01d68cdf50e25680dc13aa3247d432771f06",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/~user",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 6,
+            "google_pattern_length": 6
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/%7Euser",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "DENY",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 6
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "fd8690da90fce5c8c37e51488c9d01d68cdf50e25680dc13aa3247d432771f06",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/~user",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 6,
+              "google_pattern_length": 6
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/%7Euser",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 6,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "fd8690da90fce5c8c37e51488c9d01d68cdf50e25680dc13aa3247d432771f06",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/~user",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 6,
+              "google_pattern_length": 6
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/%7Euser",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 6
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "UTF8",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "ba0196823327b845b40715b1138f1d5c6043a5254eaed9e5e2066d0957493bda",
+        "bytes": 34,
+        "raw_UTF8": "User-agent: *\nDisallow: /%E3%83%84",
+        "fixture_recipe": "differential_cases.cases:UTF8",
+        "URL": "https://synthetic.invalid/%E3%83%84",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "DENY",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "ba0196823327b845b40715b1138f1d5c6043a5254eaed9e5e2066d0957493bda",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/%E3%83%84",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 4
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/%E3%83%84",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 4
+      },
+      "I_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "ba0196823327b845b40715b1138f1d5c6043a5254eaed9e5e2066d0957493bda",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/%E3%83%84",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 4,
+            "google_pattern_length": 4
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/%E3%83%84",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "google_comparison_candidate": "DENY",
+        "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+        "work_units": 4
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "ba0196823327b845b40715b1138f1d5c6043a5254eaed9e5e2066d0957493bda",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/%E3%83%84",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 4,
+              "google_pattern_length": 4
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/%E3%83%84",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 4,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "DENY",
+          "candidate_decision": "DENY",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "ba0196823327b845b40715b1138f1d5c6043a5254eaed9e5e2066d0957493bda",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/%E3%83%84",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 4,
+              "google_pattern_length": 4
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/%E3%83%84",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "google_comparison_candidate": "DENY",
+          "candidate_basis": "RFC_LITERAL_OCTETS_WITH_GOOGLE_RANK_CROSSCHECK",
+          "work_units": 4
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "encoded_slash",
+      "category": "SPEC_UNCLEAR_HOLD",
+      "input": {
+        "raw_SHA256": "445e1c6c8c9fbb1637c4b41396dc74e1d77b44f2364a073b639651b9da95ad69",
+        "bytes": 32,
+        "raw_UTF8": "User-agent: *\nDisallow: /foo/bar",
+        "fixture_recipe": "differential_cases.cases:encoded_slash",
+        "URL": "https://synthetic.invalid/foo%2Fbar",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "ALLOW",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "445e1c6c8c9fbb1637c4b41396dc74e1d77b44f2364a073b639651b9da95ad69",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/foo%2Fbar",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+        "work_units": 5
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "RESERVED_ESCAPE_REQUIRES_REVIEW",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "445e1c6c8c9fbb1637c4b41396dc74e1d77b44f2364a073b639651b9da95ad69",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/foo%2Fbar",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "RESERVED_ESCAPE_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "445e1c6c8c9fbb1637c4b41396dc74e1d77b44f2364a073b639651b9da95ad69",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/foo%2Fbar",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "RESERVED_ESCAPE_REQUIRES_REVIEW"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "RESERVED_ESCAPE_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "445e1c6c8c9fbb1637c4b41396dc74e1d77b44f2364a073b639651b9da95ad69",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/foo%2Fbar",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "query_ascii_pair",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "0cc38ad4b6dce5270e51d27a5eaea518652ad23ae7e9c8935f412adbaef9cac7",
+        "bytes": 37,
+        "raw_UTF8": "User-agent: *\nDisallow: /search?q=foo",
+        "fixture_recipe": "differential_cases.cases:query_ascii_pair",
+        "URL": "https://synthetic.invalid/search?q=foo",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "UNKNOWN",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "0cc38ad4b6dce5270e51d27a5eaea518652ad23ae7e9c8935f412adbaef9cac7",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/search?q=foo",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 13
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/search?q=foo",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 13
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "0cc38ad4b6dce5270e51d27a5eaea518652ad23ae7e9c8935f412adbaef9cac7",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/search?q=foo",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": null,
+          "reason": "RFC_2_2_2_FIGURE4_ASCII_QUERY_PAIR",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "0cc38ad4b6dce5270e51d27a5eaea518652ad23ae7e9c8935f412adbaef9cac7",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/search?q=foo",
+              "line": 2,
+              "group": 1,
+              "specificity_octets": 13,
+              "google_pattern_length": 13
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/search?q=foo",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.2",
+            "S2#url-matching-based-on-path-values"
+          ],
+          "ignored_other_records": [],
+          "annotations": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK"
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "0cc38ad4b6dce5270e51d27a5eaea518652ad23ae7e9c8935f412adbaef9cac7",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/search?q=foo",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "query_reserved_data",
+      "category": "SPEC_UNCLEAR_HOLD",
+      "input": {
+        "raw_SHA256": "6ad1438e1779fda300ec103c00b88a95d1ed953f60657590e53099a96bb0eaf2",
+        "bytes": 49,
+        "raw_UTF8": "User-agent: *\nDisallow: /search?q=https://foo.bar",
+        "fixture_recipe": "differential_cases.cases:query_reserved_data",
+        "URL": "https://synthetic.invalid/search?q=https://foo.bar",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "DENY",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "DENY",
+        "candidate_decision": "DENY",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "6ad1438e1779fda300ec103c00b88a95d1ed953f60657590e53099a96bb0eaf2",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [
+          {
+            "directive": "disallow",
+            "pattern": "/search?q=https://foo.bar",
+            "line": 2,
+            "group": 1,
+            "specificity_octets": 25
+          }
+        ],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/search?q=https://foo.bar",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "LONGEST_CANONICAL_OCTETS_ALLOW_TIE_DRAFT",
+        "work_units": 25
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "6ad1438e1779fda300ec103c00b88a95d1ed953f60657590e53099a96bb0eaf2",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/search?q=https://foo.bar",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "6ad1438e1779fda300ec103c00b88a95d1ed953f60657590e53099a96bb0eaf2",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/search?q=https://foo.bar",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "COMPLEX_RESERVED_QUERY_REQUIRES_REVIEW",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "6ad1438e1779fda300ec103c00b88a95d1ed953f60657590e53099a96bb0eaf2",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/search?q=https://foo.bar",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "unknown_record",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "714b169e233778e9395b765eead03b891ceacb3dc40e619ebfb28f4b99b72730",
+        "bytes": 49,
+        "raw_UTF8": "User-agent: *\nX-review: retain\nDisallow: /private",
+        "fixture_recipe": "differential_cases.cases:unknown_record",
+        "URL": "https://synthetic.invalid/private",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.4",
+      "Google_anchor": "syntax",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "DENY"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "714b169e233778e9395b765eead03b891ceacb3dc40e619ebfb28f4b99b72730",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/private",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "UNKNOWN_DIRECTIVE",
+            "directive": "x-review"
+          }
+        ]
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "714b169e233778e9395b765eead03b891ceacb3dc40e619ebfb28f4b99b72730",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/private",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "UNKNOWN_DIRECTIVE",
+            "directive": "x-review"
+          }
+        ]
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "DENY",
+          "candidate_decision": null,
+          "reason": "RFC_2_2_4_OTHER_RECORDS_DO_NOT_CHANGE_RULES",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "714b169e233778e9395b765eead03b891ceacb3dc40e619ebfb28f4b99b72730",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [
+            {
+              "directive": "disallow",
+              "pattern": "/private",
+              "line": 3,
+              "group": 1,
+              "specificity_octets": 8,
+              "google_pattern_length": 8
+            }
+          ],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/private",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "UNKNOWN_DIRECTIVE",
+              "directive": "x-review"
+            }
+          ],
+          "source_references": [
+            "S1#section-2.2.4",
+            "S2#syntax",
+            "S2#grouping-of-lines-and-rules"
+          ],
+          "ignored_other_records": [
+            {
+              "line": 2,
+              "reason": "UNKNOWN_DIRECTIVE",
+              "directive": "x-review"
+            }
+          ],
+          "agent_selection_basis": "WILDCARD_FALLBACK"
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "714b169e233778e9395b765eead03b891ceacb3dc40e619ebfb28f4b99b72730",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/private",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "UNKNOWN_DIRECTIVE",
+              "directive": "x-review"
+            }
+          ]
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "unknown_record_allow",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "bcd91369d4f904cd3c85dc59989eab678f2268c6e4a346590e49f555627da5da",
+        "bytes": 47,
+        "raw_UTF8": "User-agent: *\nCrawl-delay: 9\nDisallow: /private",
+        "fixture_recipe": "differential_cases.cases:unknown_record_allow",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.4",
+      "Google_anchor": "syntax",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "bcd91369d4f904cd3c85dc59989eab678f2268c6e4a346590e49f555627da5da",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "UNKNOWN_DIRECTIVE",
+            "directive": "crawl-delay"
+          }
+        ]
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "bcd91369d4f904cd3c85dc59989eab678f2268c6e4a346590e49f555627da5da",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "UNKNOWN_DIRECTIVE",
+            "directive": "crawl-delay"
+          }
+        ]
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": null,
+          "reason": "RFC_2_2_4_OTHER_RECORDS_DO_NOT_CHANGE_RULES",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "bcd91369d4f904cd3c85dc59989eab678f2268c6e4a346590e49f555627da5da",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "UNKNOWN_DIRECTIVE",
+              "directive": "crawl-delay"
+            }
+          ],
+          "source_references": [
+            "S1#section-2.2.4",
+            "S2#syntax",
+            "S2#grouping-of-lines-and-rules"
+          ],
+          "ignored_other_records": [
+            {
+              "line": 2,
+              "reason": "UNKNOWN_DIRECTIVE",
+              "directive": "crawl-delay"
+            }
+          ],
+          "agent_selection_basis": "WILDCARD_FALLBACK"
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "bcd91369d4f904cd3c85dc59989eab678f2268c6e4a346590e49f555627da5da",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "UNKNOWN_DIRECTIVE",
+              "directive": "crawl-delay"
+            }
+          ]
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "empty",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "raw_UTF8": "",
+        "fixture_recipe": "differential_cases.cases:empty",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.1",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "RFC_2_2_1_NO_GROUPS_NO_RULES",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "comment_only",
+      "category": "CORRECTED_NEW",
+      "input": {
+        "raw_SHA256": "23240b5bd2963b543b6dc1618a2303715bf5b1ed7b68c874759add0c6a136862",
+        "bytes": 17,
+        "raw_UTF8": "# saved comment\n\n",
+        "fixture_recipe": "differential_cases.cases:comment_only",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.1",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "NO_AGENT_GROUP",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "23240b5bd2963b543b6dc1618a2303715bf5b1ed7b68c874759add0c6a136862",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "NO_AGENT_GROUP",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "23240b5bd2963b543b6dc1618a2303715bf5b1ed7b68c874759add0c6a136862",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "RFC_2_2_1_NO_GROUPS_NO_RULES",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "23240b5bd2963b543b6dc1618a2303715bf5b1ed7b68c874759add0c6a136862",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "NO_AGENT_GROUP"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "NO_AGENT_GROUP",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "23240b5bd2963b543b6dc1618a2303715bf5b1ed7b68c874759add0c6a136862",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "invalid_defined_rule",
+      "category": "SPEC_UNCLEAR_HOLD",
+      "input": {
+        "raw_SHA256": "9c0c2f5ad84218f1cc9f88559d1661757fdba988fcd1b98a6ae40044d2321478",
+        "bytes": 30,
+        "raw_UTF8": "User-agent: *\nDisallow: *.gif$",
+        "fixture_recipe": "differential_cases.cases:invalid_defined_rule",
+        "URL": "https://synthetic.invalid/a.gif",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "9c0c2f5ad84218f1cc9f88559d1661757fdba988fcd1b98a6ae40044d2321478",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a.gif",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "PATTERN_MUST_START_SLASH"
+          }
+        ]
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "9c0c2f5ad84218f1cc9f88559d1661757fdba988fcd1b98a6ae40044d2321478",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a.gif",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "PATTERN_MUST_START_SLASH"
+          }
+        ]
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "NOT_SOLELY_OTHER_RECORDS",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "9c0c2f5ad84218f1cc9f88559d1661757fdba988fcd1b98a6ae40044d2321478",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a.gif",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "PATTERN_MUST_START_SLASH"
+            }
+          ],
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "9c0c2f5ad84218f1cc9f88559d1661757fdba988fcd1b98a6ae40044d2321478",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a.gif",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "PATTERN_MUST_START_SLASH"
+            }
+          ]
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "invalid_UTF8",
+      "category": "INTENTIONAL_J1AI_REFUSAL",
+      "input": {
+        "raw_SHA256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+        "bytes": 1,
+        "raw_UTF8": null,
+        "fixture_recipe": "differential_cases.cases:invalid_UTF8",
+        "URL": "https://synthetic.invalid/a",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.3.1.5",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/a",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/a",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "malformed",
+      "category": "INTENTIONAL_J1AI_REFUSAL",
+      "input": {
+        "raw_SHA256": "3996bdf48162dfa804ab4ec9352ad7528ce57d6ed498cf37206c6bf23f9b0a95",
+        "bytes": 31,
+        "raw_UTF8": "User-agent: *\nDisallow /private",
+        "fixture_recipe": "differential_cases.cases:malformed",
+        "URL": "https://synthetic.invalid/private",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.3.1.5",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "3996bdf48162dfa804ab4ec9352ad7528ce57d6ed498cf37206c6bf23f9b0a95",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/private",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "MALFORMED_DIRECTIVE"
+          }
+        ]
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "3996bdf48162dfa804ab4ec9352ad7528ce57d6ed498cf37206c6bf23f9b0a95",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/private",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [
+          {
+            "line": 2,
+            "reason": "MALFORMED_DIRECTIVE"
+          }
+        ]
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "NOT_SOLELY_OTHER_RECORDS",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "3996bdf48162dfa804ab4ec9352ad7528ce57d6ed498cf37206c6bf23f9b0a95",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/private",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "MALFORMED_DIRECTIVE"
+            }
+          ],
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "UNRESOLVED_DIRECTIVES_OR_PATTERNS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "3996bdf48162dfa804ab4ec9352ad7528ce57d6ed498cf37206c6bf23f9b0a95",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/private",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [
+            {
+              "line": 2,
+              "reason": "MALFORMED_DIRECTIVE"
+            }
+          ]
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "malformed_percent",
+      "category": "INTENTIONAL_J1AI_REFUSAL",
+      "input": {
+        "raw_SHA256": "cfa30ec6be7f62d0bab8a6065c9686cbf1e5bb78e9edc1bb6e49ec2b8e30f807",
+        "bytes": 32,
+        "raw_UTF8": "User-agent: *\nDisallow: /private",
+        "fixture_recipe": "differential_cases.cases:malformed_percent",
+        "URL": "https://synthetic.invalid/%ZZ",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.2.2",
+      "Google_anchor": "url-matching-based-on-path-values",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "INVALID_PERCENT_ENCODING",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "cfa30ec6be7f62d0bab8a6065c9686cbf1e5bb78e9edc1bb6e49ec2b8e30f807",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/%ZZ",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "INVALID_PERCENT_ENCODING",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "cfa30ec6be7f62d0bab8a6065c9686cbf1e5bb78e9edc1bb6e49ec2b8e30f807",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/%ZZ",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "INVALID_PERCENT_ENCODING",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "cfa30ec6be7f62d0bab8a6065c9686cbf1e5bb78e9edc1bb6e49ec2b8e30f807",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/%ZZ",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "INVALID_PERCENT_ENCODING"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "INVALID_PERCENT_ENCODING",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "cfa30ec6be7f62d0bab8a6065c9686cbf1e5bb78e9edc1bb6e49ec2b8e30f807",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/%ZZ",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "size_65535",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "f87821ccd680b93231f1bd3bf22b252009bf973187949dafac2d20cd5a07ccb3",
+        "bytes": 65535,
+        "raw_UTF8": null,
+        "fixture_recipe": "differential_cases.cases:size_65535",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.5",
+      "Google_anchor": "file-format",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "f87821ccd680b93231f1bd3bf22b252009bf973187949dafac2d20cd5a07ccb3",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+        "work_units": 3
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "f87821ccd680b93231f1bd3bf22b252009bf973187949dafac2d20cd5a07ccb3",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+        "work_units": 3
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "f87821ccd680b93231f1bd3bf22b252009bf973187949dafac2d20cd5a07ccb3",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+          "work_units": 3,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "f87821ccd680b93231f1bd3bf22b252009bf973187949dafac2d20cd5a07ccb3",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+          "work_units": 3
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "size_65536",
+      "category": "OLD_AND_NEW_AGREE",
+      "input": {
+        "raw_SHA256": "1e2bd63eda4e5be493192a54921378dce6bbed15b6fc1936ade5dc3fb3654001",
+        "bytes": 65536,
+        "raw_UTF8": null,
+        "fixture_recipe": "differential_cases.cases:size_65536",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.5",
+      "Google_anchor": "file-format",
+      "expected_decisions": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "H_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SYNTHETIC_DRAFT_SEMANTICS_ONLY",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "1e2bd63eda4e5be493192a54921378dce6bbed15b6fc1936ade5dc3fb3654001",
+        "specification_snapshots_verified": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+        "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+        "work_units": 3
+      },
+      "I_synthetic": {
+        "decision": "ALLOW",
+        "candidate_decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "1e2bd63eda4e5be493192a54921378dce6bbed15b6fc1936ade5dc3fb3654001",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ]
+          }
+        ],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false,
+        "annotations": [],
+        "unresolved_syntax": [],
+        "agent_selection_basis": "WILDCARD_FALLBACK",
+        "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+        "work_units": 3
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "1e2bd63eda4e5be493192a54921378dce6bbed15b6fc1936ade5dc3fb3654001",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+          "work_units": 3,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "ALLOW",
+          "reason": "UNCHANGED_STRICT_I_EVIDENCE_GATES"
+        },
+        "legacy_I_result": {
+          "decision": "ALLOW",
+          "candidate_decision": "ALLOW",
+          "reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "1e2bd63eda4e5be493192a54921378dce6bbed15b6fc1936ade5dc3fb3654001",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ]
+            }
+          ],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "annotations": [],
+          "unresolved_syntax": [],
+          "agent_selection_basis": "WILDCARD_FALLBACK",
+          "candidate_basis": "NO_MATCHED_RULE_RFC_2_2_2",
+          "work_units": 3
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "size_65537",
+      "category": "INTENTIONAL_J1AI_REFUSAL",
+      "input": {
+        "raw_SHA256": "83ba30e053f57c07db58c329c592efb3cdc51983b8dec69f766269ee849d8404",
+        "bytes": 65537,
+        "raw_UTF8": null,
+        "fixture_recipe": "differential_cases.cases:size_65537",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.5",
+      "Google_anchor": "file-format",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "83ba30e053f57c07db58c329c592efb3cdc51983b8dec69f766269ee849d8404",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "83ba30e053f57c07db58c329c592efb3cdc51983b8dec69f766269ee849d8404",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "83ba30e053f57c07db58c329c592efb3cdc51983b8dec69f766269ee849d8404",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "83ba30e053f57c07db58c329c592efb3cdc51983b8dec69f766269ee849d8404",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    },
+    {
+      "id": "size_512000",
+      "category": "INTENTIONAL_J1AI_REFUSAL",
+      "input": {
+        "raw_SHA256": "a76cd0832242793195788f98832026677b0ff54dcc216813353ef11f40e458de",
+        "bytes": 512000,
+        "raw_UTF8": null,
+        "fixture_recipe": "differential_cases.cases:size_512000",
+        "URL": "https://synthetic.invalid/public",
+        "User_Agent": "ExampleBot/1.0",
+        "product_token": "ExampleBot"
+      },
+      "RFC_anchor": "section-2.5",
+      "Google_anchor": "file-format",
+      "expected_decisions": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "H_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+        "parser_version": "nn_v2_robots_offline_draft_v1",
+        "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+        "profile": "J1AI_SYNTHETIC_PATTERN_EXPERIMENT_V1",
+        "raw_SHA256": "a76cd0832242793195788f98832026677b0ff54dcc216813353ef11f40e458de",
+        "specification_snapshots_verified": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "I_synthetic": {
+        "decision": "UNKNOWN",
+        "candidate_decision": null,
+        "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+        "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+        "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+        "raw_SHA256": "a76cd0832242793195788f98832026677b0ff54dcc216813353ef11f40e458de",
+        "specification_snapshots_verified": true,
+        "full_RFC_conformance": false,
+        "applied_groups": [],
+        "matched_rules": [],
+        "source_host": "synthetic.invalid",
+        "target_URL": "https://synthetic.invalid/public",
+        "user_agent": "ExampleBot/1.0",
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false,
+        "safety_stop": false
+      },
+      "J_layers": {
+        "schema": "NNV2_ROBOTS_OFFLINE_LAYERS_V3",
+        "parser_version": "nn_v2_robots_offline_layers_v3",
+        "layer1": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+          "parser_version": "nn_v2_robots_offline_layers_v3",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "a76cd0832242793195788f98832026677b0ff54dcc216813353ef11f40e458de",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false,
+          "source_references": [
+            "S1#section-2.2.1",
+            "S1#section-2.2.2"
+          ]
+        },
+        "j1ai_evidence_policy": {
+          "decision": "UNKNOWN",
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS"
+        },
+        "legacy_I_result": {
+          "decision": "UNKNOWN",
+          "candidate_decision": null,
+          "reason": "EMPTY_OR_OVERSIZE_ROBOTS",
+          "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "requested_parser_version": "nn_v2_robots_spec_bound_subset_v2",
+          "profile": "J1AI_SPEC_BOUND_SYNTHETIC_V1",
+          "raw_SHA256": "a76cd0832242793195788f98832026677b0ff54dcc216813353ef11f40e458de",
+          "specification_snapshots_verified": true,
+          "full_RFC_conformance": false,
+          "applied_groups": [],
+          "matched_rules": [],
+          "source_host": "synthetic.invalid",
+          "target_URL": "https://synthetic.invalid/public",
+          "user_agent": "ExampleBot/1.0",
+          "execution_authorized": false,
+          "B_authorized": false,
+          "history_admission": false,
+          "safety_stop": false
+        },
+        "execution_authorized": false,
+        "B_authorized": false,
+        "history_admission": false
+      },
+      "old_official_evidence_rewritten": false
+    }
+  ],
+  "counts": {
+    "OLD_AND_NEW_AGREE": 11,
+    "CORRECTED_NEW": 8,
+    "SPEC_UNCLEAR_HOLD": 4,
+    "INTENTIONAL_J1AI_REFUSAL": 5
+  },
+  "H_version": "nn_v2_robots_offline_draft_v1",
+  "I_version": "nn_v2_robots_spec_bound_subset_v2",
+  "J_version": "nn_v2_robots_offline_layers_v3",
+  "category_meanings": {
+    "OLD_AND_NEW_AGREE": "旧版と一致",
+    "CORRECTED_NEW": "新版で根拠付き修正、または仕様層とJ1AI制約の分離",
+    "NEW_INCONSISTENCY": "新版に不整合",
+    "SPEC_UNCLEAR_HOLD": "仕様解釈または実装が未完了のため保留",
+    "INTENTIONAL_J1AI_REFUSAL": "J1AI独自制約による意図的拒否"
+  },
+  "new_inconsistency_count": 0,
+  "observed_new_false_ALLOW_count": 0,
+  "universal_false_ALLOW_absence_proven": false,
+  "retrieval_failure_comparison": "H/I bare parsers do not take an HTTP status; old G non-200 STOP remains. J rejects non-200 before parsing. Tested separately with mocks, not a real request.",
+  "formal_old_results_modified": false,
+  "scope": "SYNTHETIC_BYTES_ONLY; not historical HTTP authorization"
+}

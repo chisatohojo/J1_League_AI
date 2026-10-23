@@ -1,0 +1,24 @@
+{
+  "kind": "NNV2_J_PROTECTION_SUMMARY_V1",
+  "baseline_files": 56756,
+  "baseline_SHA256": "b08f6afa6092318d93880e094fa57bfc08e16aae038521bde1c5e20c6ce2a28b",
+  "final_audit_SHA256": "98f8a2098f716af6b3c2f6365c42ab2dfd880aa9ccb719ce32353309fe5e7546",
+  "hash_differences": 0,
+  "identity_metadata_differences": 0,
+  "task_definitions_equal": true,
+  "task_state_equal": true,
+  "main_and_other_worktrees_equal": true,
+  "model_payloads_verified": 53,
+  "old_G_I_communication_originals_unchanged": true,
+  "S1_S2_A1_unchanged": true,
+  "old_H_I_parsers_unchanged": true,
+  "prior_interval": {
+    "hash_changes": 10,
+    "exactly_matches_I_2200_independently_audited_outputs": true,
+    "new_J_changes": false,
+    "prior_comparison_SHA256": "e91d3c50b0ef9bc546c3765aca571ba17370a1d29fbae4835e963c6be5a29f0e"
+  },
+  "unexplained_difference_count": 0,
+  "operations_tasks_executed_changed_repaired": 0,
+  "existing_unattributed_or_morning_failure_records_resolved": false
+}

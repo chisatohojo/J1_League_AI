@@ -1,0 +1,31 @@
+{
+  "A1_reference_packet_included": true,
+  "Owner_DACL_verified": true,
+  "UTC": "2026-10-23T14:16:17.360190+00:00",
+  "ZIP_CRC": "PASS",
+  "all_entry_SHA256": "PASS",
+  "all_entry_ledger_SHA256": "5e43746399195b9db16e7161819dc957e54481c0ff9aa8eef105492918dabf5e",
+  "archive_SHA256": "ebf99e5767ed386d087c3e20452ddc1b7fa98ef6d67341202ff2a01f4cb19136",
+  "archive_bytes": 3948422,
+  "backup_deletion_or_cleanup": 0,
+  "exclusive_create": true,
+  "independent_extraction_SHA256": "PASS",
+  "kind": "NNV2_J_SEPARATE_DRIVE_BACKUP_READBACK_V1",
+  "later_receipts_not_in_this_archive": [
+    "BACKUP_VERIFICATION.json",
+    "SHA256-MANIFEST.json",
+    "post-backup/post-Git receipts"
+  ],
+  "new_acquisitions": 0,
+  "payload_file_count": 69,
+  "public_paths_or_raw": false,
+  "readback": "PASS",
+  "reparse_free_parent_chain": true,
+  "restored_entry_ledger_SHA256": "5e43746399195b9db16e7161819dc957e54481c0ff9aa8eef105492918dabf5e",
+  "sealed_I_evidence_files_included": 28,
+  "separate_drive": true,
+  "source_files_unchanged": true,
+  "storage": "PRIVATE_SEPARATE_DRIVE_EXCLUSIVE_DIRECTORY",
+  "trained_models_included": 0,
+  "zip_entry_count": 70
+}
