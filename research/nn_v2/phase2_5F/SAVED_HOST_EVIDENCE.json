@@ -1,0 +1,57 @@
+{
+  "aboutj_current_response": "NOT_OBSERVED",
+  "aboutj_literal_reference_URLs": [
+    "https://aboutj.jleague.jp/corporate/",
+    "https://aboutj.jleague.jp/corporate/activities/academy/",
+    "https://aboutj.jleague.jp/corporate/activities/sustainability/#c_6",
+    "https://aboutj.jleague.jp/corporate/donation/",
+    "https://aboutj.jleague.jp/corporate/pressrelease/",
+    "https://aboutj.jleague.jp/corporate/services/",
+    "https://aboutj.jleague.jp/seasonreview2026/"
+  ],
+  "aboutj_operator": "UNKNOWN",
+  "aboutj_original_documents": 0,
+  "aboutj_reference_occurrences": 2464,
+  "aboutj_terms_applicability": "UNKNOWN",
+  "all_reference_URLs_excluded_from_A": true,
+  "application_audit_rejected_effect_attempts": [],
+  "automated_access_permission": "UNKNOWN",
+  "initial_review_assertion": "Initial script assumed one aboutj reference URL from filtered D candidate rows. Full saved-HTML scan found seven; assumption removed in a separate v2 audit, originals unchanged.",
+  "known_policy_links": [
+    {
+      "content_acquired": false,
+      "raw_SHA256": "6e7444a5c85082cadea5a12b73fe4e9b619cda08c671db1c0da8fac9af72c1c9",
+      "tag_SHA256": "5794f8a2244149b8ce21bfae2490e0a9f3e331c7f0255f5a4a886b4a3814e63b",
+      "url": "https://auth.jleague.jp/contents/privacypolicy.html"
+    },
+    {
+      "content_acquired": false,
+      "raw_SHA256": "6e7444a5c85082cadea5a12b73fe4e9b619cda08c671db1c0da8fac9af72c1c9",
+      "tag_SHA256": "235481af5191ec39c29b398801455aab089ce2c5b62718980625c955a4d5a594",
+      "url": "https://www.jleague.jp/general/copyright/"
+    },
+    {
+      "content_acquired": false,
+      "raw_SHA256": "6e7444a5c85082cadea5a12b73fe4e9b619cda08c671db1c0da8fac9af72c1c9",
+      "tag_SHA256": "a2217275826bc9ab06bf8acbc94f35f4603119aafc4c4d409486a2525ccb67ae",
+      "url": "https://www.jleague.jp/general/kiyaku/"
+    }
+  ],
+  "missing_evidence": [
+    "aboutj explicit operator declaration",
+    "current per-host applicable terms and automation conditions",
+    "robots content/status on each exact origin"
+  ],
+  "no_network": true,
+  "old_data_site_robots_not_applicable": true,
+  "originals_verified": 502,
+  "privacy_host_excluded": "auth.jleague.jp",
+  "private_review_SHA256": "aba837691832330265d0c4fc09ed7bec78fc8ac359a7a65839e49f5d133fb89e",
+  "review_UTC": "2026-10-23T09:24:46.363059+00:00",
+  "source": "SAVED_ORIGINALS_ONLY",
+  "source_host_counts": {
+    "data.j-league.or.jp": 326,
+    "www.jleague.jp": 176
+  },
+  "www_terms_current_scope": "UNKNOWN"
+}

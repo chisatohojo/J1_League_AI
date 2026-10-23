@@ -1,0 +1,17 @@
+{
+  "baseline_SHA256": "5f134733e3c2269192803090d249f8c1f2e5d2e9cb7a5269e3d48c3198642965",
+  "hash_differences": 0,
+  "identity_metadata_differences": 0,
+  "main_equal": true,
+  "model_payloads": 53,
+  "model_payloads_verified": true,
+  "old_raw_metadata_requests_packets_receipts_and_models_not_modified": true,
+  "old_task_incidents_not_repaired_or_reclassified": true,
+  "other_worktrees_equal": true,
+  "prior_interval_file_differences": 0,
+  "private_final_audit_SHA256": "72219479d7ec9d7a8588262b3df3dfd2fa2e77d73dbed9cb8b697ac9348737f2",
+  "protected_files": 51890,
+  "status": "PASS",
+  "task_definitions_equal": true,
+  "tasks_equal": true
+}

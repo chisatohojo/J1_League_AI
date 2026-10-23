@@ -1,0 +1,15 @@
+{
+  "E_access_conditions_SHA256": "2510822cc1dd6594afd214b1862bc3e7363ebc7c0ca22361291cffeaa74a4a2a",
+  "E_candidate_design_SHA256": "e991132d16b900b081d0ea011d9fa4dda92d27f703b5d3ffdb48947f10f8c42c",
+  "E_manifest_SHA256": "108713ee06f614e5a5eb60b59ad1515bc8c9bd26dc1c3918a6fa32f0ce014aec",
+  "E_saved_access_survey_SHA256": "ee331f3a5fbea74b17db2f575d9aa58c02785fd056ed34e11f2d64e780443c69",
+  "base_commit": "05789d0c422a6bdbbb2aee1a4fdbd1648d729539",
+  "new_offline_review_SHA256": "aba837691832330265d0c4fc09ed7bec78fc8ac359a7a65839e49f5d133fb89e",
+  "new_offline_review_code_SHA256": "96c57326270f6fe645f8791d2b084ff5f1f0df5de57502f6862a8aff373f859c",
+  "new_robots_URL_basis": "USER_AUTHORIZED_STATIC_SELECTION_NOT_RESPONSE_EVIDENCE",
+  "old_288_and_9_quarantine_packets_unchanged_required": true,
+  "real_worker_or_permit_created": false,
+  "saved_material_inventory_SHA256": "2b1dc1a4394f6fb42c02220c41ed2c80bbc00798d212154f469335bb9dc27e8b",
+  "saved_source_candidates_SHA256": "5ad3e907aea10474bed1b422dc7ff6854c58ba86ba6e4c4d3c0637c6b7b80ff0",
+  "storage_design_SHA256": "92e9f8609a2e8d490d4f1584607911a8f16a5799eada06b8bb4da015bbe73575"
+}
