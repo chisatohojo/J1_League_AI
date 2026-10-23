@@ -1,0 +1,14 @@
+{
+  "files": {
+    "research/nn_v2/phase2_5E/.gitattributes": "1cf122ef7b6d91c8e184e0de20445943d18fb4f693586c395b32b231cb3f01ab",
+    "research/nn_v2/phase2_5E/ACCESS_CONDITIONS.json": "2510822cc1dd6594afd214b1862bc3e7363ebc7c0ca22361291cffeaa74a4a2a",
+    "research/nn_v2/phase2_5E/INPUT_PROVENANCE.json": "fba51e86010ad3ba90a1cd30b319b025cf1572fa1fe92b4f7c16c29a42e6921f",
+    "research/nn_v2/phase2_5E/PERMIT_CANDIDATES.json": "e991132d16b900b081d0ea011d9fa4dda92d27f703b5d3ffdb48947f10f8c42c",
+    "research/nn_v2/phase2_5E/PERMIT_DESIGN.md": "97fe4fe41467803ee477fd42063ce88af2921b12864d2fa1e82221560e9e45d7",
+    "research/nn_v2/phase2_5E/PROTECTION.json": "df65b14c39fb906d2c09cf155dd4989c73ab77499b827693534a89a49cc52a76",
+    "research/nn_v2/phase2_5E/VALIDATION.json": "285c4ac215d63e884dd25629c3afb4b430bc42cfc0363cb13c9768e9a0cb1f4c",
+    "research/nn_v2/phase2_5E/design_contract.py": "5d93a6266bb27abd3d8b581fe889d7635b94fa4b24ea6d5552e177482dede4e9",
+    "tests/test_nn_v2_permit_design.py": "d93b7d4dfd447b6705e17ecb01d3009e3e713354f7762574fc88146642d25906"
+  },
+  "self_excluded": true
+}

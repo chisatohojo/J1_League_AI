@@ -1,0 +1,16 @@
+{
+  "D_preservation_commit": "fb1ddb05eb4af9fe28c22252e8a2e7b64900f62a",
+  "baseline_SHA256": "4097354f3972acda8cff419dde28a0a5faa3bd47e40c7e5c076f8e25ceb08571",
+  "hash_differences": 0,
+  "identity_metadata_differences": 0,
+  "main_equal": true,
+  "model_payloads": 53,
+  "model_payloads_verified": true,
+  "other_worktrees_equal": true,
+  "prior_task_failures_not_repaired_or_reclassified": true,
+  "private_final_audit_SHA256": "1cf7ccc782d54eba06706ee9162db8fff3721a13a88f289545b62e5cc0f09f04",
+  "protected_files": 50716,
+  "status": "PASS",
+  "task_definitions_equal": true,
+  "tasks_equal": true
+}
