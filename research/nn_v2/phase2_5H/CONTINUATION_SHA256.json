@@ -1,0 +1,18 @@
+{
+  "files": {
+    "research/nn_v2/phase2_5H/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5H/CONTINUATION_POLICY.json": "b884298b49f7636e83f3180fbe50f76f38d2b8f9057e81834af72b7976610ecc",
+    "research/nn_v2/phase2_5H/CONTINUATION_REVIEW.md": "88a9d02a9217ce2e22b615cfb660f8cb9cc3a7a2fa84c26904ed5709a0ff2397",
+    "research/nn_v2/phase2_5H/CONTINUATION_VALIDATION.json": "48e61974acbb78597ad28a366c0b6b394f463ef055079866cc5dde92442c5d71",
+    "research/nn_v2/phase2_5H/PROTECTION.json": "9b926042981c8ebd8431696bc9d9401581100bea6f1799910b3e8fc7b9e1b72a",
+    "research/nn_v2/phase2_5H/ROBOTS_EVALUATION.json": "294dc8d855776bf160d569ed8b1cc2367e77576de20aa507af744e8b32469f59",
+    "research/nn_v2/phase2_5H/ROBOTS_PARSER_REVIEW.md": "e47b99bb8f3aaea2c1a506d5ecf9b729f9b51ca4715794053fe9794a3ccea70f",
+    "research/nn_v2/phase2_5H/SHA256-MANIFEST.json": "acfdeed26ea7be3e4194a12b241ba1c73d1b3b601eaa7fba71c9757cb914e640",
+    "research/nn_v2/phase2_5H/SPECIFICATION_STATUS.json": "09d5712a582e94a453bf04507cb3b1f85f19d723d5a8540c321a118cbbf4350a",
+    "research/nn_v2/phase2_5H/VALIDATION.json": "21130e22223ff870ac5cd44fc174bc703a298ff27003e0484ea1e6f02c3d9395",
+    "research/nn_v2/phase2_5H/robots_offline.py": "5d34127ab300eaaa170c2622cdf5c71ecf00ac24bd2cfca8ccbb6f9b2ffa9f0d",
+    "tests/test_nn_v2_robots_offline.py": "81b29a15134f825f470fd965df525a9720e7aa350f7c1c4372f33d2ca99cd545"
+  },
+  "original_manifest_retained": true,
+  "self_excluded": true
+}

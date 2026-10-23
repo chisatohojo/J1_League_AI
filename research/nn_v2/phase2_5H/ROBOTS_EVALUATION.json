@@ -1,0 +1,211 @@
+{
+  "A1_SHA_verified": true,
+  "A1_bytes": 646,
+  "A1_raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+  "ALLOW": 0,
+  "B_HOLD": 288,
+  "B_permit_issued": false,
+  "C_HOLD": 288,
+  "DENY": 0,
+  "DNS_probe": 0,
+  "D_HOLD": 288,
+  "G_acquisition_counts": {
+    "A1": 1,
+    "A2": 0,
+    "A3": 0,
+    "A4": 0,
+    "B": 0
+  },
+  "HEAD": 0,
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "UNKNOWN": 4,
+  "aboutj": {
+    "decision": "UNKNOWN",
+    "operator": "UNKNOWN",
+    "robots_source": "NOT_ACQUIRED",
+    "terms": "UNKNOWN",
+    "www_not_reused": true
+  },
+  "current_terms_and_copyright": "UNKNOWN_NOT_ACQUIRED",
+  "evaluation_UTC": "2026-10-23T11:38:24.591254+00:00",
+  "evaluations": [
+    {
+      "B_authorized": false,
+      "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+      "annotations": [
+        {
+          "directive": "sitemap",
+          "line": 25,
+          "resource_fetched": false,
+          "value": "https://www.jleague.jp/sitemap.xml"
+        }
+      ],
+      "applied_groups": [
+        {
+          "agents": [
+            "*"
+          ],
+          "group": 1
+        }
+      ],
+      "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+      "candidate_decision": "ALLOW",
+      "decision": "UNKNOWN",
+      "execution_authorized": false,
+      "history_admission": false,
+      "matched_rules": [],
+      "parser_version": "nn_v2_robots_offline_draft_v1",
+      "profile": "J1AI_EVIDENCE_FAIL_CLOSED_DRAFT_V1",
+      "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE",
+      "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+      "safety_stop": false,
+      "source_host": "www.jleague.jp",
+      "specification_snapshots_verified": false,
+      "target_URL": "https://www.jleague.jp/robots.txt",
+      "unresolved_syntax": [],
+      "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+      "work_units": 39
+    },
+    {
+      "B_authorized": false,
+      "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+      "annotations": [
+        {
+          "directive": "sitemap",
+          "line": 25,
+          "resource_fetched": false,
+          "value": "https://www.jleague.jp/sitemap.xml"
+        }
+      ],
+      "applied_groups": [
+        {
+          "agents": [
+            "*"
+          ],
+          "group": 1
+        }
+      ],
+      "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+      "candidate_decision": "ALLOW",
+      "decision": "UNKNOWN",
+      "execution_authorized": false,
+      "history_admission": false,
+      "matched_rules": [],
+      "parser_version": "nn_v2_robots_offline_draft_v1",
+      "profile": "J1AI_EVIDENCE_FAIL_CLOSED_DRAFT_V1",
+      "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE",
+      "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+      "safety_stop": false,
+      "source_host": "www.jleague.jp",
+      "specification_snapshots_verified": false,
+      "target_URL": "https://www.jleague.jp/general/kiyaku/",
+      "unresolved_syntax": [],
+      "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+      "work_units": 38
+    },
+    {
+      "B_authorized": false,
+      "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+      "annotations": [
+        {
+          "directive": "sitemap",
+          "line": 25,
+          "resource_fetched": false,
+          "value": "https://www.jleague.jp/sitemap.xml"
+        }
+      ],
+      "applied_groups": [
+        {
+          "agents": [
+            "*"
+          ],
+          "group": 1
+        }
+      ],
+      "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+      "candidate_decision": "ALLOW",
+      "decision": "UNKNOWN",
+      "execution_authorized": false,
+      "history_admission": false,
+      "matched_rules": [],
+      "parser_version": "nn_v2_robots_offline_draft_v1",
+      "profile": "J1AI_EVIDENCE_FAIL_CLOSED_DRAFT_V1",
+      "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE",
+      "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+      "safety_stop": false,
+      "source_host": "www.jleague.jp",
+      "specification_snapshots_verified": false,
+      "target_URL": "https://www.jleague.jp/general/copyright/",
+      "unresolved_syntax": [],
+      "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+      "work_units": 38
+    },
+    {
+      "B_authorized": false,
+      "agent_selection_basis": "WILDCARD_GROUP_DRAFT",
+      "annotations": [
+        {
+          "directive": "sitemap",
+          "line": 25,
+          "resource_fetched": false,
+          "value": "https://www.jleague.jp/sitemap.xml"
+        }
+      ],
+      "applied_groups": [
+        {
+          "agents": [
+            "*"
+          ],
+          "group": 1
+        }
+      ],
+      "candidate_basis": "NO_MATCHED_RULE_DRAFT",
+      "candidate_decision": "ALLOW",
+      "decision": "UNKNOWN",
+      "execution_authorized": false,
+      "history_admission": false,
+      "matched_rules": [],
+      "parser_version": "nn_v2_robots_offline_draft_v1",
+      "profile": "J1AI_EVIDENCE_FAIL_CLOSED_DRAFT_V1",
+      "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE",
+      "requested_parser_version": "nn_v2_robots_offline_draft_v1",
+      "safety_stop": false,
+      "source_host": "www.jleague.jp",
+      "specification_snapshots_verified": false,
+      "target_URL": "https://www.jleague.jp/j1/news/",
+      "unresolved_syntax": [],
+      "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+      "work_units": 40
+    }
+  ],
+  "gate": "NN_V2_ROBOTS_PARSER_PARTIAL",
+  "historical_A1_GET_status": "HTTP200_SEALED_UNCHANGED",
+  "historical_G_policy_STOP": "REVIEW_STOP_UNCHANGED",
+  "history_admission": false,
+  "new_GET": 0,
+  "new_permit": 0,
+  "no_standard_source_substituted_by_memory_or_local_CPython": true,
+  "parser_version": "nn_v2_robots_offline_draft_v1",
+  "permit_activation": 0,
+  "profile": "J1AI_EVIDENCE_FAIL_CLOSED_DRAFT_V1",
+  "source_host": "www.jleague.jp",
+  "source_integrity": "PASS",
+  "source_request_UTC": "2026-10-23T09:46:47.361661+00:00",
+  "source_response_completed_UTC": "2026-10-23T09:46:47.645062+00:00",
+  "source_snapshot_saved_UTC": "2026-10-23T09:46:47.663444+00:00",
+  "synthetic_candidate_diagnostics_not_formal_ALLOW": true,
+  "unresolved": [
+    "Authoritative saved RFC9309 text for normative section-level verification",
+    "Saved Google documentation only if needed for a compatibility profile",
+    "Normative User-Agent applicability/product-token grammar and rule specificity verification",
+    "Full RFC/Google distinction and sourced standard-example tests"
+  ],
+  "unused_G_budget_revival": false
+}

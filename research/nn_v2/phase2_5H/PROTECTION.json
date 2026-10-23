@@ -1,0 +1,15 @@
+{
+  "A1_and_G_sealed_evidence_included": true,
+  "baseline_SHA256": "4c04aa64b4753a175e4fd18ba0d3fc28e238abd4a92ad4374d1a47d0cf8a37d1",
+  "final_protection_SHA256": "ac04394f83695d93bbc4010663cabcccfca952498eedcfeb7be4e5ed29a005dc",
+  "hash_differences": 0,
+  "identity_metadata_differences": 0,
+  "main_equal": true,
+  "model_payloads": 53,
+  "model_payloads_verified": true,
+  "other_worktrees_equal": true,
+  "protected_files": 54231,
+  "status": "PASS",
+  "task_definitions_equal": true,
+  "tasks_equal": true
+}

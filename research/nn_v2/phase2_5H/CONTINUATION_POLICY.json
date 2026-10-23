@@ -1,0 +1,81 @@
+{
+  "A1_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+  "A1_bytes": 646,
+  "A1_integrity": "PASS",
+  "ALLOW": 0,
+  "B_HOLD": 288,
+  "C_HOLD": 288,
+  "DENY": 0,
+  "DNS_probe": 0,
+  "D_HOLD": 288,
+  "Google_original_text": "UNCONFIRMED_NOT_ADOPTED",
+  "HEAD": 0,
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "RFC9309_original_text": "UNCONFIRMED",
+  "UNKNOWN": 4,
+  "aboutj": "UNKNOWN_NO_ORIGINAL",
+  "budget_revival": false,
+  "candidate_diagnostics_not_authority": true,
+  "commit": false,
+  "earlier_assumption_without_reply": "HISTORICAL_ONLY_SUPERSEDED_BY_THIS_EXPLICIT_REPLY",
+  "earlier_manifest_SHA256": "acfdeed26ea7be3e4194a12b241ba1c73d1b3b601eaa7fba71c9757cb914e640",
+  "earlier_nine_files_unchanged": true,
+  "gate": "NN_V2_ROBOTS_PARSER_PARTIAL",
+  "history_admission": false,
+  "legacy_code_and_synthetic_tests_not_RFC_proof": true,
+  "new_GET": 0,
+  "new_permit": 0,
+  "no_machinewide_absence_claim": true,
+  "normative_verification": "INCOMPLETE",
+  "old641_test_proof": "SHA_MATCHED_REUSED_NOT_RERUN",
+  "old_G_counts": {
+    "A1": 1,
+    "A2": 0,
+    "A3": 0,
+    "A4": 0,
+    "B": 0
+  },
+  "old_run_reexecution": 0,
+  "parser_SHA256": "5d34127ab300eaaa170c2622cdf5c71ecf00ac24bd2cfca8ccbb6f9b2ffa9f0d",
+  "parser_version": "nn_v2_robots_offline_draft_v1",
+  "permit_activation": 0,
+  "policy": [
+    "No new Web access",
+    "Use existing repository/tests/dependencies only within supported evidence",
+    "Unsupported normative rules remain UNKNOWN; no guessed ALLOW",
+    "Do not claim unverified RFC9309 conformance",
+    "Continue sealed-A1 SHA/offline checks",
+    "Record normative original-text comparison as incomplete",
+    "Possible false ALLOW becomes UNKNOWN; no acquisition restart",
+    "Preserve protection and all-gates-PASS Git condition"
+  ],
+  "profile": "J1AI_EVIDENCE_FAIL_CLOSED_DRAFT_V1",
+  "push": false,
+  "real_evaluation_results": [
+    {
+      "URL": "https://www.jleague.jp/robots.txt",
+      "decision": "UNKNOWN",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE"
+    },
+    {
+      "URL": "https://www.jleague.jp/general/kiyaku/",
+      "decision": "UNKNOWN",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE"
+    },
+    {
+      "URL": "https://www.jleague.jp/general/copyright/",
+      "decision": "UNKNOWN",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE"
+    },
+    {
+      "URL": "https://www.jleague.jp/j1/news/",
+      "decision": "UNKNOWN",
+      "reason": "AUTHORITATIVE_SPECIFICATION_SNAPSHOTS_UNAVAILABLE"
+    }
+  ],
+  "recorded_UTC": "2026-10-23T12:14:36.536804+00:00",
+  "trigger": "EXPLICIT_USER_REPLY_NO_KNOWN_SAVED_SPECIFICATION_PATHS"
+}

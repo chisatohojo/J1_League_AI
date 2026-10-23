@@ -1,0 +1,28 @@
+{
+  "Google": {
+    "comparison": "NOT_COMPLETED_NOT_ADOPTED",
+    "content_SHA256": null,
+    "saved_original": false
+  },
+  "RFC9309": {
+    "comparison": "NOT_COMPLETED",
+    "content_SHA256": null,
+    "saved_original": false
+  },
+  "assumption_without_reply": "Continue offline; keep real-source verdict UNKNOWN and gate PARTIAL.",
+  "coverage": "Accessible repository/research evidence, Documents/Downloads filenames, installed Python sources/tests. Not a whole-machine absence claim.",
+  "external_specifications_contacted": false,
+  "inaccessible_material": "Some ProgramData directory enumeration was denied; no elevation or ACL change.",
+  "local_CPython": {
+    "Google_conformance_proof": false,
+    "RFC9309_conformance_proof": false,
+    "declared_reference": "http://www.robotstxt.org/norobots-rfc.txt",
+    "module_SHA256": "644cc6d2b09948e8782cb1e7dea3bb39a2d83932c67e7a8eae65a711318c002c",
+    "usage": "Existing Entry.applies_to is reused only as a legacy synthetic experiment oracle; not accepted as the final normative UA contract.",
+    "version": "3.12.14"
+  },
+  "local_review_SHA256": "d10a9082356327ee315d2cf2095c39c2fb282c4d979caf1b26c867dbb7961767",
+  "new_source_provenance_required_before_verified": true,
+  "requested_user_saved_material": true,
+  "status": "AUTHORITATIVE_TEXT_NOT_FOUND_IN_REVIEWED_LOCAL_MATERIAL"
+}

@@ -1,0 +1,214 @@
+{
+  "Google_profile_adopted": false,
+  "RFC9309_verified": false,
+  "acceptance": "Local synthetic test PASS is separate from sourced normative conformance; any unresolved ambiguity stays UNKNOWN",
+  "items": [
+    {
+      "id": "agent_grammar",
+      "normative_expected_result": null,
+      "objective": "Confirm product-token and supported HTTP User-Agent grammar, including the fixed J1AI agent",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "agent_matching",
+      "normative_expected_result": null,
+      "objective": "Case handling and normative applicability; replace or validate the legacy helper without inventing substring rules",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "agent_precedence",
+      "normative_expected_result": null,
+      "objective": "Specific named groups versus wildcard and unmatched agent",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "group_merge",
+      "normative_expected_result": null,
+      "objective": "Multiple UA lines/groups, identical applicability, empty rule/group boundary",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "rule_grammar",
+      "normative_expected_result": null,
+      "objective": "Allow/Disallow syntax, empty paths, comments, blank lines, BOM and line endings",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "longest_rule",
+      "normative_expected_result": null,
+      "objective": "Normative specificity in octets, wildcard contribution and competing matches",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "allow_tie",
+      "normative_expected_result": null,
+      "objective": "Equivalent specificity and Allow/Disallow conflict",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "wildcard",
+      "normative_expected_result": null,
+      "objective": "Zero/multiple characters, repeated wildcards and anchored start",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "terminal_anchor",
+      "normative_expected_result": null,
+      "objective": "Terminal dollar versus encoded/literal special characters",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "percent_encoding",
+      "normative_expected_result": null,
+      "objective": "Malformed escapes, unreserved escapes and hex-case equivalence",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "reserved_octets",
+      "normative_expected_result": null,
+      "objective": "Encoded reserved octets versus raw URI delimiters, no unquote-all",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "unicode",
+      "normative_expected_result": null,
+      "objective": "UTF8/nonASCII, invalid bytes, normalization differences, percent-encoded UTF8",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "query",
+      "normative_expected_result": null,
+      "objective": "Path plus query, empty query, separators and fragment rejection",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "unknown_directives",
+      "normative_expected_result": null,
+      "objective": "Normative unknown-field behavior versus stricter J1AI UNKNOWN; sitemap is not a fetch target",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "encoding_errors",
+      "normative_expected_result": null,
+      "objective": "MIME/content encoding, invalid UTF8, BOM and safe failure",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "empty_body",
+      "normative_expected_result": null,
+      "objective": "Empty, comment-only and missing applicable groups; do not infer permission from HTTP alone",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "host_scope",
+      "normative_expected_result": null,
+      "objective": "Origin/scheme/port scope; no www-to-aboutj or synthetic-to-real evidence substitution",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "HTTP_errors",
+      "normative_expected_result": null,
+      "objective": "RFC retrieval guidance versus stricter J1AI HTTP error STOP; do not relax existing permits",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "retrieval_redirect",
+      "normative_expected_result": null,
+      "objective": "Normative redirect guidance versus J1AI redirect follow zero",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "parse_limits",
+      "normative_expected_result": null,
+      "objective": "Normative document/line limits versus current 64KiB and finite matching work cap",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "safety_priority",
+      "normative_expected_result": null,
+      "objective": "UNKNOWN fail-closed, raw SHA/version/profile binding and no network/admission authority",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "Google_differences",
+      "normative_expected_result": null,
+      "objective": "Source-bound RFC/Google difference matrix; Google compatibility adopted only by an explicit profile",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "standard_examples",
+      "normative_expected_result": null,
+      "objective": "Transcribe attributable standard examples with exact source SHA/section and independent expected results",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    },
+    {
+      "id": "sealed_A1_replay",
+      "normative_expected_result": null,
+      "objective": "Re-evaluate four www targets after conformance review; preserve old G STOP and aboutj UNKNOWN",
+      "required_before_offline_verified": true,
+      "section_anchor": null,
+      "status": "PENDING_AUTHORITATIVE_SOURCE"
+    }
+  ],
+  "kind": "FUTURE_SOURCE_BOUND_NORMATIVE_REVIEW_CHECKLIST_V1",
+  "normative_cases_executed": 0,
+  "priority": [
+    "Existing J1AI permit/safety contract",
+    "RFC9309 source after verification",
+    "Google compatibility only where explicitly adopted"
+  ],
+  "required_source_provenance": [
+    "Exact requested/final URL and GET UTC",
+    "raw/metadata/request/receipt SHA256",
+    "Document title/language/version observed in the raw original",
+    "Offline section/paragraph byte or anchor references",
+    "No external CSS/JS/images/linked RFC or translated page fetch"
+  ],
+  "source_requirement": "SEALED_ORIGINAL_BYTES_REQUEST_METADATA_RECEIPT_SHA_AND_SECTION_ANCHORS"
+}
