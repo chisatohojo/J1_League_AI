@@ -1,0 +1,87 @@
+{
+  "P0": "Read-only additional saved-corpus review if provided; no network",
+  "P1": {
+    "GET_per_URL": 1,
+    "URL_count": 2,
+    "URLs": [
+      "https://www.jleague.jp/j1/news/",
+      "https://aboutj.jleague.jp/corporate/pressrelease/"
+    ],
+    "condition_requests": {
+      "GET_cap": "UNKNOWN_NOT_AUTHORIZED",
+      "data_site_robots_not_valid_for_other_hosts": true,
+      "exact_URLs": [],
+      "must_be_fixed_before_execution": true,
+      "must_not_charge_to_index_cap": true,
+      "separate_permit_required": true
+    },
+    "current_existence": "UNKNOWN",
+    "execution_authorized": false,
+    "expected_content": "HTML index only; identity/notice links require subsequent offline review",
+    "fixtures_enrolled": 0,
+    "host_approval": {
+      "additional_host": "aboutj.jleague.jp",
+      "additional_operator_and_access_review": "UNKNOWN_NOT_COMPLETED",
+      "known_saved_source_host": "www.jleague.jp"
+    },
+    "method": "GET",
+    "no_pagination_API_or_link_following": true,
+    "output": "New exclusive research directory fixed in future preflight; no existing snapshot/publication writes",
+    "proposed_max_index_GET": 2,
+    "status": "PROPOSAL_REQUIRES_INDEPENDENT_APPROVAL",
+    "transport": {
+      "HTTPS": true,
+      "TLS_hostname_verification": true,
+      "body_cap_bytes": 2097152,
+      "cleanup_deadline_seconds": 2,
+      "parallel": 0,
+      "parent_deadline_seconds": 12,
+      "process_deadline_seconds": 90,
+      "redirect": 0,
+      "retry": 0,
+      "seconds_after_completion": 5,
+      "socket_timeout_seconds": 10,
+      "total_index_body_cap_bytes": 4194304
+    }
+  },
+  "P2": "Offline inspect new index bytes if independently authorized; freeze literal fixture-bound notice URLs, not automatically fetch",
+  "P3": {
+    "GET_cap": 0,
+    "exact_notice_URLs": [],
+    "fixture_scope": "UNKNOWN_PENDING_OFFLINE_BINDING",
+    "independent_permit_and_approval_required": true
+  },
+  "STOP": [
+    "Access conditions/operator/host unknown or denied",
+    "403/429/redirect/TLS/timeout/unknown completion",
+    "Unapproved URL/GET/bytes/deadline or unknown HTML",
+    "SHA/identity/result/revision contradiction",
+    "Unsafe output/ownership/reparse/write/readback/seal/receipt failure"
+  ],
+  "authorized_GET_now": 0,
+  "exact_fetch_allowlist_now": [],
+  "existing_B18_permit": {
+    "authorized_GET_now": 0,
+    "consumed_receipt_SHA256": "e0cf216b403bc361216cc93e1079e9252e9fdf2bf973914275c6af5d084b1a36",
+    "evidence_of_consumption": true,
+    "new_permit_created": false,
+    "old_B18_permit_SHA256": "68c1b0867862d9ef547e135be4da715f05eea9bc1d4d52926fa78b19155cd802",
+    "old_scope": "Fixed109 SFMS02 details only; not notices/indexes or Phase2.5D",
+    "reused": false
+  },
+  "issued": false,
+  "no_T0_or_registration": true,
+  "no_admission": true,
+  "no_model": true,
+  "no_retroactive_D": true,
+  "old_permit_reuse": false,
+  "other_old_permits_authority": "NOT_ASSUMED_OR_USED_FOR_NEW_SCOPE",
+  "save_fields": [
+    "Actual request/response/save/audit UTC and precision",
+    "Exact URL/method/status/content type/bytes",
+    "Raw/metadata/request SHA",
+    "Source revision and expected fixture relation",
+    "Code/input SHA, seal, fsync/readback and receipt"
+  ],
+  "status": "UNEXECUTABLE_PARTIAL_PLAN_NOT_A_PERMIT"
+}

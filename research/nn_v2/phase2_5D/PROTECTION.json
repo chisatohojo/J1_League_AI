@@ -1,0 +1,18 @@
+{
+  "SHA_differences": 0,
+  "baseline_SHA256": "fcd3d40ac02e7bddb70f5a58e500a3e0fc8ca0033aea4777528c977066f9aeda",
+  "final_audit_SHA256": "30595c5617d7b25bfbbce8ca44fb72d8dd255d193d8ddf280b88c802dc074760",
+  "identity_metadata_differences": 0,
+  "main_equal": true,
+  "model_payloads": 53,
+  "model_payloads_verified": true,
+  "old_witnesses_quarantines_policy_preserved": true,
+  "other_worktrees_equal": true,
+  "prior_operational_failures_not_repaired_or_reclassified": true,
+  "prior_to_baseline_changes": 0,
+  "protected_files": 49570,
+  "protected_operations_executed": 0,
+  "status": "PASS",
+  "task_definitions_equal": true,
+  "tasks_equal": true
+}

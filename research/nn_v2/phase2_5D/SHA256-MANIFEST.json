@@ -1,0 +1,15 @@
+{
+  "files": {
+    "research/nn_v2/phase2_5D/.gitattributes": "1cf122ef7b6d91c8e184e0de20445943d18fb4f693586c395b32b231cb3f01ab",
+    "research/nn_v2/phase2_5D/EVIDENCE_SOURCE_DISCOVERY.md": "8a6404b9d101e70b7296c23fff752e82b17193c040068bb86687e8202ae28614",
+    "research/nn_v2/phase2_5D/INPUT_OUTPUT_SHA256.json": "0c38c6053c075f5215f0921784c837c03e115f008e51b2ec19bd6d9f9b9634bf",
+    "research/nn_v2/phase2_5D/PERMIT_PLAN.json": "d301ae7819034bc54cbb62d47d2f3f4636aa349e20f6b1b89c6962464f5964c6",
+    "research/nn_v2/phase2_5D/PROTECTION.json": "f18ed0b933d19244337ea082ceec74de7192eb410855b10968fadda1ee805f78",
+    "research/nn_v2/phase2_5D/SAMPLE_CASES.json": "04ab3aa551152bf181091ee603a40a2ef37f5c5be78e514ffdd0bf4ae2daa65e",
+    "research/nn_v2/phase2_5D/SOURCE_CANDIDATES.json": "19fcc43b5b60b3f4a8436f71a8a82a3feb00e87bb2d5ed5f3b1e4e15ecbc8730",
+    "research/nn_v2/phase2_5D/VALIDATION.json": "353c2049b5159e740fdfcb2cd4e3b7089a8828381034e7ecbea8ee7e5499cbf5",
+    "research/nn_v2/phase2_5D/discovery_contract.py": "cfe393c982ca67f4db08c30754c7cb642efa5aca3991311b943c93ac21cfb852",
+    "tests/test_nn_v2_source_discovery.py": "6ffd015058f874962c946c244456ed31139ecd31094478f708c7a44944bb282a"
+  },
+  "self_excluded": true
+}

@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "baseline-stable.json": "fcd3d40ac02e7bddb70f5a58e500a3e0fc8ca0033aea4777528c977066f9aeda",
+    "discover_local.py": "e7c6336197823b6ac2c6702e242e7ad3f94a589db5ed8c8cbfeec4f0e96d3c3a",
+    "discover_local_final.py": "641e52da2768af877027a098213a7f753ee88cb73f9f90fdbce612074a015378",
+    "discovery-and-regression.xml": "aca1698f250bfb404fcb746824e1727a39cf54f9237ae597a9ce3c944d534626",
+    "discovery-contract-fixed.py": "cfe393c982ca67f4db08c30754c7cb642efa5aca3991311b943c93ac21cfb852",
+    "discovery.log": "260fd0e5378a5b34db9d7c9c05ca8dd9bdbd3bfaf15ad30e3756a63442a66598",
+    "final-boundary-receipt.json": "11c24df3bce4b473a25b0e150264932f2e6d33b533485353063b106cfb5d978d",
+    "final-discovery-summary.json": "62d2ec5c5adee5ee22b02e76496f79cd0c91e20db0926a0c0f915c2622a6d310",
+    "final-discovery.log": "8cd1b52417442e802cd3f231a95da6fe02c7f013416665374c04a2de53b79dfd",
+    "final-material-inventory-private.json": "2b1dc1a4394f6fb42c02220c41ed2c80bbc00798d212154f469335bb9dc27e8b",
+    "final-sample-cases-private.json": "c41af357b6c3a97b750c0d037af3f3c989b2efee3fe9a5b9fbb6db8d60414a25",
+    "final-source-candidates-private.json": "5ad3e907aea10474bed1b422dc7ff6854c58ba86ba6e4c4d3c0637c6b7b80ff0",
+    "guarded_tests.py": "07143b7927b1214d0d14e4ca89883395479058985f13ebb39ca1cd16d63fdcf1",
+    "protection-stable-final.json": "30595c5617d7b25bfbbce8ca44fb72d8dd255d193d8ddf280b88c802dc074760",
+    "protection.py": "b540f56f942888909f64093811453da2646beaf74f97d34a6fb7b5fc2054b38b",
+    "publication-provenance.json": "17be0ab73d26ded6090907ecc773b00b7844a3c01969e666653df2ebe1957d54",
+    "publish_preparation.py": "5104e9af3a42eb1d7e42d4fd01f2d956708440ddea3c8e6a7936acfe642e6dc0",
+    "test-boundary-receipt.json": "8a89e17d9bf0f7a21191d6be1416c570098d919e0a2b7fda18eaf1d1310f39f6",
+    "tests.log": "4ce40549c828c8ad7fee08051aa3528e89d47283dcbe0b9c78b15ec80c2e7d1d"
+  },
+  "frozen_research_revision": "f2a2fdeb171367d422b520cea7d492d99edb4a25c9b713ce0fb72a8f38f285c7",
+  "model_payloads": 53,
+  "model_seal_SHA256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "models_deserialized": 0,
+  "publication_timestamp_not_substituted": true,
+  "scope288_not_extended": true,
+  "start_HEAD": "2d2c051a76bf2b17cfac3f5f331667e9b2c14c78",
+  "study": "nn_v2_residual_20261020_01"
+}
