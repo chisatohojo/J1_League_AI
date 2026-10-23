@@ -1,0 +1,16 @@
+{
+  "files": {
+    "research/nn_v2/phase2_5G/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5G/ACCESS_CONDITIONS_REVIEW.json": "787705ba7b074590e5299bb09302a7d4b61680b6c3bff94951384bf376b1eaf2",
+    "research/nn_v2/phase2_5G/ACCESS_FETCH_LEDGER.json": "ade7bb42492eb01f989826aaa31d21628d04b5fa7159ed51a748b49dbcf29710",
+    "research/nn_v2/phase2_5G/ACCESS_FETCH_RESULTS.md": "b0e12f957fe15b5e57be75a4c7f242f13ff5ad85d6c3abcc00e23118aca52328",
+    "research/nn_v2/phase2_5G/IMPLEMENTATION_SHA256.json": "2a30f838255fb132fc076e1dcd28fcf1ddc2a0ef9e91a92399e458655de488dd",
+    "research/nn_v2/phase2_5G/PROTECTION.json": "f7cf266ce4c829423104e106e5ace7749cb5df480e5079be7982ed7492f15987",
+    "research/nn_v2/phase2_5G/VALIDATION.json": "e24070c179cb7c629f6ac71e1dbbab1d9c4cfe73dd25a31ea223a7ff47427e30",
+    "research/nn_v2/phase2_5G/access_contract.py": "b57d33316a4072b33ae33bf298cf4fab4ea93daf627be36e3f14d298da06c67c",
+    "research/nn_v2/phase2_5G/access_parent.py": "1ff9ff9c35f119717cb566b9d348ed603c3185da1e38c6a3bf842c76a066d370",
+    "research/nn_v2/phase2_5G/access_worker.py": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8",
+    "tests/test_nn_v2_access_fetch.py": "a8291d461b68479e4d8bf4cce31f56cfc5ef0c9dffb2b54f335f195473dab4f0"
+  },
+  "self_excluded": true
+}

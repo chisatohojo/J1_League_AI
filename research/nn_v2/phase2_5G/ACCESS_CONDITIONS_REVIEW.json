@@ -1,0 +1,284 @@
+{
+  "B_HOLD": 288,
+  "B_entrypoint_assessment": [
+    {
+      "GET": 0,
+      "URL": "https://www.jleague.jp/j1/news/",
+      "activated": false,
+      "decision": "ADDITIONAL_CONDITIONS_REVIEW_REQUIRED",
+      "permit_issued": false
+    },
+    {
+      "GET": 0,
+      "URL": "https://aboutj.jleague.jp/corporate/pressrelease/",
+      "activated": false,
+      "decision": "UNKNOWN",
+      "permit_issued": false
+    }
+  ],
+  "C_HOLD": 288,
+  "D_HOLD": 288,
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "aboutj": {
+    "automated_access_permission": "UNKNOWN",
+    "operator": "UNKNOWN",
+    "robots_GET": "NOT_STARTED_AFTER_GLOBAL_STOP",
+    "terms_applicability": "UNKNOWN"
+  },
+  "gate": "NN_V2_ACCESS_CONDITIONS_PARTIAL",
+  "next_steps": [
+    "Offline wildcard/user-agent semantics verification in a separate immutable parser version",
+    "Separate explicit approval and a new bounded plan before any further GET; this run is terminal",
+    "Current per-host terms, aboutj operator/applicability, copyright and automation conditions still require evidence"
+  ],
+  "no_sitemap_or_B_or_article_request": true,
+  "www": {
+    "applicable_agent": "J1AI-Research-Timing-Pilot/1.0",
+    "applied_path_decision": "UNKNOWN_BY_FIXED_CONSERVATIVE_PARSER",
+    "automated_access_permission": "UNKNOWN",
+    "disallow_patterns_observed": [
+      "/en/photo/",
+      "/sp/en/photo/",
+      "/jtk/",
+      "/underConstruction.html",
+      "/match/*/201*",
+      "/sp/match/*/201*",
+      "/en/match/*/201*",
+      "/sp/en/match/*/201*",
+      "/jheader/",
+      "/application/",
+      "/tv/search/*/201*",
+      "/sp/tv/search/*/201*",
+      "/radio/*/201*",
+      "/sp/radio/*/201*",
+      "/photogallery/*/special/article/*",
+      "/sp/photogallery/*/special/article/*",
+      "/photogallery/special/article/*",
+      "/form/support/*",
+      "/img/aboutj/regulation/20.pdf",
+      "/"
+    ],
+    "observed_directives": [
+      {
+        "name": "user-agent",
+        "value": "*"
+      },
+      {
+        "name": "disallow",
+        "value": "/en/photo/"
+      },
+      {
+        "name": "disallow",
+        "value": "/sp/en/photo/"
+      },
+      {
+        "name": "disallow",
+        "value": "/jtk/"
+      },
+      {
+        "name": "disallow",
+        "value": "/underConstruction.html"
+      },
+      {
+        "name": "disallow",
+        "value": "/match/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/sp/match/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/en/match/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/sp/en/match/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/jheader/"
+      },
+      {
+        "name": "disallow",
+        "value": "/application/"
+      },
+      {
+        "name": "disallow",
+        "value": "/tv/search/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/sp/tv/search/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/radio/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/sp/radio/*/201*"
+      },
+      {
+        "name": "disallow",
+        "value": "/photogallery/*/special/article/*"
+      },
+      {
+        "name": "disallow",
+        "value": "/sp/photogallery/*/special/article/*"
+      },
+      {
+        "name": "disallow",
+        "value": "/photogallery/special/article/*"
+      },
+      {
+        "name": "disallow",
+        "value": "/form/support/*"
+      },
+      {
+        "name": "disallow",
+        "value": "/img/aboutj/regulation/20.pdf"
+      },
+      {
+        "name": "user-agent",
+        "value": "spider"
+      },
+      {
+        "name": "disallow",
+        "value": "/"
+      },
+      {
+        "name": "sitemap",
+        "value": "https://www.jleague.jp/sitemap.xml"
+      }
+    ],
+    "observed_user_agents": [
+      "*",
+      "spider"
+    ],
+    "operator_terms_declaration": "NOT_ACQUIRED",
+    "parser_review": {
+      "content_permission": "UNKNOWN",
+      "directives": [
+        {
+          "name": "user-agent",
+          "value": "*"
+        },
+        {
+          "name": "disallow",
+          "value": "/en/photo/"
+        },
+        {
+          "name": "disallow",
+          "value": "/sp/en/photo/"
+        },
+        {
+          "name": "disallow",
+          "value": "/jtk/"
+        },
+        {
+          "name": "disallow",
+          "value": "/underConstruction.html"
+        },
+        {
+          "name": "disallow",
+          "value": "/match/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/sp/match/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/en/match/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/sp/en/match/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/jheader/"
+        },
+        {
+          "name": "disallow",
+          "value": "/application/"
+        },
+        {
+          "name": "disallow",
+          "value": "/tv/search/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/sp/tv/search/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/radio/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/sp/radio/*/201*"
+        },
+        {
+          "name": "disallow",
+          "value": "/photogallery/*/special/article/*"
+        },
+        {
+          "name": "disallow",
+          "value": "/sp/photogallery/*/special/article/*"
+        },
+        {
+          "name": "disallow",
+          "value": "/photogallery/special/article/*"
+        },
+        {
+          "name": "disallow",
+          "value": "/form/support/*"
+        },
+        {
+          "name": "disallow",
+          "value": "/img/aboutj/regulation/20.pdf"
+        },
+        {
+          "name": "user-agent",
+          "value": "spider"
+        },
+        {
+          "name": "disallow",
+          "value": "/"
+        },
+        {
+          "name": "sitemap",
+          "value": "https://www.jleague.jp/sitemap.xml"
+        }
+      ],
+      "reason": "UNKNOWN_OR_UNSUPPORTED_ROBOTS_DIRECTIVE",
+      "status": "HOLD",
+      "unknown": [
+        "UNVERIFIED_PATTERN:Disallow: /match/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /sp/match/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /en/match/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /sp/en/match/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /tv/search/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /sp/tv/search/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /radio/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /sp/radio/*/201*",
+        "UNVERIFIED_PATTERN:Disallow: /photogallery/*/special/article/*",
+        "UNVERIFIED_PATTERN:Disallow: /sp/photogallery/*/special/article/*",
+        "UNVERIFIED_PATTERN:Disallow: /photogallery/special/article/*",
+        "UNVERIFIED_PATTERN:Disallow: /form/support/*"
+      ]
+    },
+    "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+    "robots_GET": "HTTP200_SEALED",
+    "site_wide_denial_proven": false,
+    "storage_quote_reuse_permission": "UNKNOWN",
+    "terms_applicability": "UNKNOWN",
+    "terms_fetched": false,
+    "wildcard_rules": "OBSERVED_BUT_UNSUPPORTED_BY_PRE_FIXED_PARSER"
+  }
+}

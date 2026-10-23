@@ -1,0 +1,19 @@
+{
+  "approval_SHA256": "d3e5b8547d6bd76eef848dea63b799b637c1c2de0e8a8caca61c933416fb6ce5",
+  "auditor_SHA256": "2e22bb4f9e76cfec31b94ad8356933a8028d4872c5c0834df5b589fbe3f0901d",
+  "executed_code_equals_current": true,
+  "files": {
+    "research/nn_v2/phase2_5B_13/windows_local.py": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1",
+    "research/nn_v2/phase2_5G/access_contract.py": "b57d33316a4072b33ae33bf298cf4fab4ea93daf627be36e3f14d298da06c67c",
+    "research/nn_v2/phase2_5G/access_parent.py": "1ff9ff9c35f119717cb566b9d348ed603c3185da1e38c6a3bf842c76a066d370",
+    "research/nn_v2/phase2_5G/access_worker.py": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8"
+  },
+  "launch_envelope_SHA256": "7fcbb6f8b2838447749fc3e39934aa43aedacaadc6212d5b8738dad9d1217e3b",
+  "launcher_SHA256": "43411b2da9d58f00ebd016493a3e52ee69c8b670e6746b78e6b86b89a8900919",
+  "outer_exit_SHA256": "9581b83db46b4a735408d0db5bfc849d550caba448e2ca9ff18d287e57bcc48b",
+  "permit_SHA256": "8c12fecec3222effb5b554c3f9a6c734bc3c003cfc6b55ae0a98be2d2caaf46e",
+  "preflight_SHA256": "2679946a2b9214c20a62ee3cf9550f03b41445ad8363c83751cba18c7feea149",
+  "preflight_code_SHA256": "34e7070e71c0ae195bc230b04b2954e1711f8c9dba627e04f1a17e8b31f02130",
+  "process_end_audit_SHA256": "3b9f1d6f5fc7f766368621fc0c668d78e1055921baeeabff9abf5bc620dafeb1",
+  "storage_preflight_SHA256": "3a39e83cb407099450ce26a807872c91f3a74943b1e8fdffa409a16f25a7b56c"
+}
