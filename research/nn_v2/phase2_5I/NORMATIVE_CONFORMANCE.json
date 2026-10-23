@@ -1,0 +1,965 @@
+{
+  "kind": "NNV2_I_24_AXIS_SOURCE_REVIEW_V1",
+  "review_UTC": "2026-10-23T13:07:35.985456+00:00",
+  "original_checklist_SHA256": "f388b5a38c220253d0d5501c91ac0123580c094c2b983e0f49f70101fe6e4d44",
+  "axes_preserved": true,
+  "items": [
+    {
+      "id": "agent_grammar",
+      "RFC_section": "2.2.1",
+      "Google_section": "user-agent",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "user-agent",
+          "anchor_attribute_byte_offset": 53151,
+          "tag_byte_range": [
+            53124,
+            53181
+          ],
+          "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+        }
+      ],
+      "normative_expected_behavior": "RFC product-token uses ASCII letters, underscore and hyphen; it is distinct from the HTTP header. Google suffix handling is a separate profile.",
+      "old_parser_behavior": "H accepts digit-bearing agent identifiers and derives applicability using the CPython legacy helper.",
+      "new_parser_difference": "New parser requires an explicit valid product-token bound to the supplied header. No token is silently selected for J1AI; the HTTP header is unchanged.",
+      "tests": [
+        "test_agent_grammar_valid_explicit_product_token",
+        "test_agent_grammar_no_implicit_or_unsupported_identity"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "Explicit crawler identity/product-token binding for the existing digit-bearing HTTP product remains undeclared.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "agent_matching",
+      "RFC_section": "2.2.1",
+      "Google_section": "matching-of-user-agent-fields",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "matching-of-user-agent-fields",
+          "anchor_attribute_byte_offset": 60252,
+          "tag_byte_range": [
+            60194,
+            60301
+          ],
+          "tag_SHA256": "af23027aa0b79f94d83c774f7faac697a2d3c1b20a324c6fa2c297e1bab38a72"
+        }
+      ],
+      "normative_expected_behavior": "RFC group names match the declared crawler product-token case-insensitively. Google crawler-specific suffix compatibility is not an RFC requirement.",
+      "old_parser_behavior": "CPython legacy applicability accepts substrings of the HTTP product; the synthetic result is not normative proof.",
+      "new_parser_difference": "Exact case-insensitive declared product-token comparison replaces the legacy helper only in the new separate version.",
+      "tests": [
+        "test_agent_matching_exact_not_legacy_substring"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "agent_precedence",
+      "RFC_section": "2.2.1",
+      "Google_section": "order-of-precedence-for-user-agents",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "order-of-precedence-for-user-agents",
+          "anchor_attribute_byte_offset": 58876,
+          "tag_byte_range": [
+            58813,
+            58931
+          ],
+          "tag_SHA256": "567ab1b8ea6f25c5ed573de4d2001e4cd4b94ecef6131b2b5f2017666f1c7dc1"
+        }
+      ],
+      "normative_expected_behavior": "Matching named groups apply; wildcard groups are fallback when there is no matching name. With no applicable group RFC supplies no rules.",
+      "old_parser_behavior": "H selects the longest matching legacy substring and otherwise wildcard groups.",
+      "new_parser_difference": "New subset selects only exact declared-token groups, or wildcard fallback; never merges wildcard with a matching named group.",
+      "tests": [
+        "test_agent_precedence_named_not_wildcard_and_no_group"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "group_merge",
+      "RFC_section": "2.2.1",
+      "Google_section": "grouping-of-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "grouping-of-rules",
+          "anchor_attribute_byte_offset": 62489,
+          "tag_byte_range": [
+            62445,
+            62526
+          ],
+          "tag_SHA256": "95a61acb13fddb97cd452260dfb3ba8088dcb33bb99bb6c9a4a5a88f4f5931c1"
+        }
+      ],
+      "normative_expected_behavior": "Multiple applicable groups merge; multiple UA lines before rules share a group. Sitemap must not terminate a group (also RFC2.2.4).",
+      "old_parser_behavior": "H merges groups with the same selected legacy score and retains Sitemap as an annotation.",
+      "new_parser_difference": "Exact matching groups merge. Sitemap remains unfetched metadata and does not reset the group.",
+      "tests": [
+        "test_group_merge_s1_figures_2_3_and_sitemap_boundary"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "rule_grammar",
+      "RFC_section": "2.2",
+      "Google_section": "syntax",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2",
+          "anchor_attribute_byte_offset": 40949,
+          "tag_byte_range": [
+            40940,
+            40966
+          ],
+          "tag_SHA256": "64fd9b6bf7af9761e1a1d23bfbf2aab8f6a44d59121ab2f850b500439aa07cab"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "syntax",
+          "anchor_attribute_byte_offset": 50375,
+          "tag_byte_range": [
+            50352,
+            50401
+          ],
+          "tag_SHA256": "c30fdfbcbce7250a69a8330e4ec1a7b29a61dbe36a13ed41061a773d81861f60"
+        }
+      ],
+      "normative_expected_behavior": "ABNF path-pattern starts with slash; field parsing supports comments, whitespace and line endings. Google documents BOM and ignoring invalid lines.",
+      "old_parser_behavior": "H requires slash paths, handles BOM/newlines/comments/empty rule values, and blocks malformed or ungrouped rules.",
+      "new_parser_difference": "New subset retains strict parsing and marks malformed records UNKNOWN. The slash-less RFC5.1 example is not silently repaired.",
+      "tests": [
+        "test_rule_grammar_bom_comments_line_endings_empty_values",
+        "test_malformed_encoding_empty_and_ambiguous_s1_example_stay_unknown"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "S1 section5.1 contains a slash-less wildcard path that conflicts with the section2.2 ABNF; tolerant recovery is not adopted.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "longest_rule",
+      "RFC_section": "2.2.2",
+      "Google_section": "order-of-precedence-for-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "order-of-precedence-for-rules",
+          "anchor_attribute_byte_offset": 73028,
+          "tag_byte_range": [
+            72987,
+            73077
+          ],
+          "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+        }
+      ],
+      "normative_expected_behavior": "RFC most-specific matching rule is longest in octets. Google examples distinguish wildcard-inclusive pattern length from literal-only length.",
+      "old_parser_behavior": "H specificity excludes wildcard/anchor markers; its synthetic /page.htm example can yield ALLOW where the Google example denies.",
+      "new_parser_difference": "New parser cross-checks literal-octet ranking against Google marker-inclusive ranking; disagreement returns UNKNOWN, never that old candidate ALLOW.",
+      "tests": [
+        "test_longest_rule_literal_octets_and_allow_tie",
+        "test_longest_rule_google_marker_examples_no_false_allow"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "Marker contribution to RFC specificity and ranking of multiple escaped patterns are not asserted fully settled by this subset.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "allow_tie",
+      "RFC_section": "2.2.2",
+      "Google_section": "order-of-precedence-for-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "order-of-precedence-for-rules",
+          "anchor_attribute_byte_offset": 73028,
+          "tag_byte_range": [
+            72987,
+            73077
+          ],
+          "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+        }
+      ],
+      "normative_expected_behavior": "RFC SHOULD prefer Allow for equivalent rules; Google also chooses the less restrictive rule in a tie.",
+      "old_parser_behavior": "H chooses Allow among maximal literal-specificity rules.",
+      "new_parser_difference": "New subset preserves literal equivalent-rule Allow ties; ambiguous cross-profile rankings stop before any final ALLOW.",
+      "tests": [
+        "test_longest_rule_literal_octets_and_allow_tie",
+        "test_longest_rule_google_marker_examples_no_false_allow"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "wildcard",
+      "RFC_section": "2.2.3",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.3",
+          "anchor_attribute_byte_offset": 53887,
+          "tag_byte_range": [
+            53878,
+            53906
+          ],
+          "tag_SHA256": "020c831e407e354cee082df196a64df0e0e32d55f629cbfd0a5ac8b420d5b7a2"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "normative_expected_behavior": "A literal pattern star represents zero or more characters; matching starts at the beginning of the path.",
+      "old_parser_behavior": "H finite matcher implements zero/multiple characters and anchored start.",
+      "new_parser_difference": "New subset retains the bounded non-regex-fallback matcher; encoded star remains literal data.",
+      "tests": [
+        "test_wildcard_zero_many_and_start_anchoring",
+        "test_percent_special_s1_figure6_literal_star_dollar"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "terminal_anchor",
+      "RFC_section": "2.2.3",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.3",
+          "anchor_attribute_byte_offset": 53887,
+          "tag_byte_range": [
+            53878,
+            53906
+          ],
+          "tag_SHA256": "020c831e407e354cee082df196a64df0e0e32d55f629cbfd0a5ac8b420d5b7a2"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "normative_expected_behavior": "A terminal dollar asserts the end; RFC Figure6 distinguishes literal encoded dollar from an anchor.",
+      "old_parser_behavior": "H anchors a terminal literal dollar but did not equate an encoded literal dollar with the corresponding URI character.",
+      "new_parser_difference": "New URI tokenizer treats raw URI dollar/star as encoded literal data, while pattern markers retain their special meaning.",
+      "tests": [
+        "test_terminal_anchor",
+        "test_percent_special_s1_figure6_literal_star_dollar"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "percent_encoding",
+      "RFC_section": "2.2.2",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "normative_expected_behavior": "Unreserved ASCII escapes compare decoded; non-ASCII bytes use UTF8 percent representation. RFC Figure6 specifies literal star/dollar escapes.",
+      "old_parser_behavior": "H recognizes escapes but its raw URI star/dollar comparison differs from RFC Figure6.",
+      "new_parser_difference": "New subset fixes those literal cases, validates escapes, and keeps unsupported reserved escapes UNKNOWN rather than unquote-all.",
+      "tests": [
+        "test_percent_encoding_unreserved_and_utf8_s1_figure4",
+        "test_percent_special_s1_figure6_literal_star_dollar",
+        "test_reserved_octets_and_malformed_escapes_no_unquote_all"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "reserved_octets",
+      "RFC_section": "2.2.2",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "normative_expected_behavior": "RFC reserved/non-ASCII octets require the prescribed comparison encoding; encoded reserved bytes must not be indiscriminately decoded.",
+      "old_parser_behavior": "H preserves encoded reserved tokens distinct from raw delimiters without an authoritative normalization proof.",
+      "new_parser_difference": "New subset accepts the verified encoded special data examples but returns UNKNOWN for other reserved escapes and ambiguous multi-escaped-rule ranking.",
+      "tests": [
+        "test_reserved_octets_and_malformed_escapes_no_unquote_all"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "A complete reserved-delimiter and encoded-octet precedence implementation remains outside the verified subset.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "unicode",
+      "RFC_section": "2.2.2",
+      "Google_section": "file-format",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-format",
+          "anchor_attribute_byte_offset": 48694,
+          "tag_byte_range": [
+            48659,
+            48725
+          ],
+          "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+        }
+      ],
+      "normative_expected_behavior": "UTF8 paths and their UTF8 percent form compare consistently; neither document establishes a universal Unicode normalization rewrite.",
+      "old_parser_behavior": "H tokenizes UTF8 and does not Unicode-normalize; invalid UTF8 blocks.",
+      "new_parser_difference": "New subset preserves those properties and tests raw/encoded UTF8 equivalence and distinct composed/decomposed paths.",
+      "tests": [
+        "test_percent_encoding_unreserved_and_utf8_s1_figure4",
+        "test_unicode_no_normalization_fallback",
+        "test_percent_encoded_invalid_utf8_no_allow"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "query",
+      "RFC_section": "2.2.2",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "normative_expected_behavior": "Path and query participate in matching (RFC Figure4). Reserved delimiters in query data require careful interpretation; fragments are not fetched.",
+      "old_parser_behavior": "H appends the query and permits more reserved combinations without a source-backed complete comparison proof.",
+      "new_parser_difference": "Simple and empty query suffixes are tested; complex reserved query strings and unsafe URLs remain UNKNOWN.",
+      "tests": [
+        "test_query_simple_and_empty_but_complex_query_unknown",
+        "test_host_scope_and_invalid_url_fail_closed",
+        "test_encoded_dot_segments_not_silently_rewritten"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "Complete reserved-query normalization is not implemented or inferred from translated examples.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "unknown_directives",
+      "RFC_section": "2.2.4",
+      "Google_section": "sitemap",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.4",
+          "anchor_attribute_byte_offset": 56866,
+          "tag_byte_range": [
+            56857,
+            56885
+          ],
+          "tag_SHA256": "8084126e4d127af9b57d6ebbd47f2a5ad7830b125f2d1363d14098204afe469e"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "sitemap",
+          "anchor_attribute_byte_offset": 55780,
+          "tag_byte_range": [
+            55756,
+            55807
+          ],
+          "tag_SHA256": "5d0159c7df085979f9fb8821c5adbf919f03ef7cca46aeb22ef0e6bde20f1272"
+        }
+      ],
+      "normative_expected_behavior": "Other records may be interpreted but must not interfere with defined records; Sitemap must not terminate a group. Google ignores unsupported fields.",
+      "old_parser_behavior": "H treats Sitemap as annotation and other unknown directives as unresolved, including Crawl-delay.",
+      "new_parser_difference": "New subset preserves this stronger J1AI stop policy. It does not fetch Sitemap or silently ignore potentially stricter access conditions.",
+      "tests": [
+        "test_unknown_directives_stricter_than_optional_standard_ignore",
+        "test_group_merge_s1_figures_2_3_and_sitemap_boundary"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "Strict all-document UNKNOWN differs from tolerant standard parsing; full conformance is not asserted.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "encoding_errors",
+      "RFC_section": "2.3.1.5",
+      "Google_section": "file-format",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.3.1.5",
+          "anchor_attribute_byte_offset": 63595,
+          "tag_byte_range": [
+            63586,
+            63616
+          ],
+          "tag_SHA256": "26810cf65bdfacedf0b5ada7664af3e2be29b3305bc1ad15bec2a761302ec8d8"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-format",
+          "anchor_attribute_byte_offset": 48694,
+          "tag_byte_range": [
+            48659,
+            48725
+          ],
+          "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+        }
+      ],
+      "normative_expected_behavior": "RFC requires line-by-line parsing and use of parseable rules. Google tolerates BOM and some invalid/non-text input instead of treating it as permission.",
+      "old_parser_behavior": "H accepts UTF8 BOM but returns UNKNOWN for malformed/invalid/HTML input.",
+      "new_parser_difference": "New subset retains strict UNKNOWN while separately documenting standard recovery behavior; no HTTP MIME/status is converted into permission.",
+      "tests": [
+        "test_rule_grammar_bom_comments_line_endings_empty_values",
+        "test_malformed_encoding_empty_and_ambiguous_s1_example_stay_unknown"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "No tolerant partial-line or HTML extraction profile is implemented; stricter UNKNOWN is intentional.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "empty_body",
+      "RFC_section": "2.2.2",
+      "Google_section": "grouping-of-lines-and-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "grouping-of-lines-and-rules",
+          "anchor_attribute_byte_offset": 57645,
+          "tag_byte_range": [
+            57595,
+            57692
+          ],
+          "tag_SHA256": "3858e315178243a6ad11690368aa6dde46cc776b7159c17782ba52efc15bfaa4"
+        }
+      ],
+      "normative_expected_behavior": "Under RFC no applicable rules permits access; an empty successful robots file is not itself an access-control authorization.",
+      "old_parser_behavior": "H blocks empty/comment-only/no-agent inputs, while an applicable empty group produces an ALLOW candidate.",
+      "new_parser_difference": "New subset keeps empty/comment-only UNKNOWN as a J1AI evidence safety gate; a valid applicable empty rule set can return offline ALLOW.",
+      "tests": [
+        "test_malformed_encoding_empty_and_ambiguous_s1_example_stay_unknown",
+        "test_agent_precedence_named_not_wildcard_and_no_group"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "Intentional stricter treatment of empty evidence is not claimed as full RFC parser behavior.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "host_scope",
+      "RFC_section": "2.3",
+      "Google_section": "file-location-and-range-of-validity",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.3",
+          "anchor_attribute_byte_offset": 58035,
+          "tag_byte_range": [
+            58026,
+            58052
+          ],
+          "tag_SHA256": "b39b2381e313ef71d1e716261b4da5e23eb99924ffeccaa5743a9a434f96c7d9"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-location-and-range-of-validity",
+          "anchor_attribute_byte_offset": 35791,
+          "tag_byte_range": [
+            35738,
+            35846
+          ],
+          "tag_SHA256": "dcc6a1bca153ec5d106cc9a79ffdfd13947cdca3a1698b2b912f74e98fefbdde"
+        }
+      ],
+      "normative_expected_behavior": "Robots scope is the scheme/authority origin. Google describes standard-port equivalence; robots is not a site-wide authorization mechanism (also RFC3).",
+      "old_parser_behavior": "H requires exact HTTPS origin and rejects explicit ports, host aliases, credentials and fragments.",
+      "new_parser_difference": "New subset retains exact-origin and profile boundaries; refusing aliases/default-port spellings is a stricter approved-target safety constraint.",
+      "tests": [
+        "test_host_scope_and_invalid_url_fail_closed"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "HTTP_errors",
+      "RFC_section": "2.3.1.3",
+      "Google_section": "http-status-codes",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.3.1.3",
+          "anchor_attribute_byte_offset": 61474,
+          "tag_byte_range": [
+            61465,
+            61495
+          ],
+          "tag_SHA256": "f62d1d401f32359d41bef8247b1a7e1bd28da0239a2f8af098407be15c186679"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "http-status-codes",
+          "anchor_attribute_byte_offset": 43046,
+          "tag_byte_range": [
+            42977,
+            43083
+          ],
+          "tag_SHA256": "536d1e1a78b0f1d62adf378f092f3a37320df302ac49f7c1c881cd1c19fc5cdd"
+        }
+      ],
+      "normative_expected_behavior": "RFC4xx unavailable permits a policy choice; server/network unreachable means complete disallow (2.3.1.4). Google429/cache/server timing is crawler-specific.",
+      "old_parser_behavior": "G/H retrieval policy stops on any non-200; no old404 is treated as blanket permission.",
+      "new_parser_difference": "The existing stricter HTTP STOP contract is retained. Synthetic non-200 responses perform one request and never retry or follow redirects.",
+      "tests": [
+        "test_response_error_never_follows_or_retries"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "retrieval_redirect",
+      "RFC_section": "2.3.1.2",
+      "Google_section": "http-status-codes",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.3.1.2",
+          "anchor_attribute_byte_offset": 60195,
+          "tag_byte_range": [
+            60186,
+            60216
+          ],
+          "tag_SHA256": "96b449b2ab12e2db6f78681d439145dff49e90b7d1350c29e75975100bb3d9ac"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "http-status-codes",
+          "anchor_attribute_byte_offset": 43046,
+          "tag_byte_range": [
+            42977,
+            43083
+          ],
+          "tag_SHA256": "536d1e1a78b0f1d62adf378f092f3a37320df302ac49f7c1c881cd1c19fc5cdd"
+        }
+      ],
+      "normative_expected_behavior": "RFC recommends following at least five redirects; Google documents its own handling. This does not override the J1AI exact-URL redirect-zero approval.",
+      "old_parser_behavior": "Existing worker follows zero redirects and stops at3xx.",
+      "new_parser_difference": "No retrieval-policy relaxation or redirect target GET is introduced; this is an explicit safety-profile deviation from the RFC recommendation.",
+      "tests": [
+        "test_response_error_never_follows_or_retries",
+        "test_no_Jleague_or_query_change_or_text_fallback"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "parse_limits",
+      "RFC_section": "2.5",
+      "Google_section": "file-format",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.5",
+          "anchor_attribute_byte_offset": 64887,
+          "tag_byte_range": [
+            64878,
+            64904
+          ],
+          "tag_SHA256": "45659a1dd1c62dd471bbb5e9d079aece2acb12af1d1468a97e069636257be1bd"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-format",
+          "anchor_attribute_byte_offset": 48694,
+          "tag_byte_range": [
+            48659,
+            48725
+          ],
+          "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+        }
+      ],
+      "normative_expected_behavior": "RFC parser limit must be at least500KiB; Google documents500KiB and ignoring data beyond that limit.",
+      "old_parser_behavior": "H uses64KiB,4096lines,1000rules and finite matching work limits.",
+      "new_parser_difference": "New subset keeps current safety/resource caps. The2MiB specification acquisition cap is unrelated to the64KiB robots parser cap.",
+      "tests": [
+        "test_parse_limits_not_full_500kib_conformance"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "The64KiB parser cannot claim RFC2.5 full conformance. Changing existing fetch/parser resource approvals is not implicit in this work.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "safety_priority",
+      "RFC_section": "3",
+      "Google_section": "file-location-and-range-of-validity",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-3",
+          "anchor_attribute_byte_offset": 65506,
+          "tag_byte_range": [
+            65497,
+            65521
+          ],
+          "tag_SHA256": "2180969c9e7545c685c78084ad52914d57db0f416174166cd01d57a5f949f203"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-location-and-range-of-validity",
+          "anchor_attribute_byte_offset": 35791,
+          "tag_byte_range": [
+            35738,
+            35846
+          ],
+          "tag_SHA256": "dcc6a1bca153ec5d106cc9a79ffdfd13947cdca3a1698b2b912f74e98fefbdde"
+        }
+      ],
+      "normative_expected_behavior": "Robots rules are not access authorization. J1AI permit, raw integrity, origin, and no-admission gates stay independent of parser decisions.",
+      "old_parser_behavior": "H exposes no live execution/B/admission authority and evidence results remain UNKNOWN.",
+      "new_parser_difference": "New version pins the two specification SHA values, exact parser/profile/raw identity and always keeps execution, B and history authority false.",
+      "tests": [
+        "test_safety_priority_sha_version_scope_and_no_execution",
+        "test_offline_no_network_model_permit_or_executor_import",
+        "test_new_parent_single_use_scope_and_finite_deadlines"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "Google_differences",
+      "RFC_section": "2.2.1",
+      "Google_section": "matching-of-user-agent-fields",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "matching-of-user-agent-fields",
+          "anchor_attribute_byte_offset": 60252,
+          "tag_byte_range": [
+            60194,
+            60301
+          ],
+          "tag_SHA256": "af23027aa0b79f94d83c774f7faac697a2d3c1b20a324c6fa2c297e1bab38a72"
+        }
+      ],
+      "normative_expected_behavior": "Google suffix normalization, most-specific crawler identity, error/cache handling, tolerant parsing and length examples are documented separately from RFC normative requirements.",
+      "old_parser_behavior": "H explicitly did not adopt a Google profile; legacy helper semantics were provisional.",
+      "new_parser_difference": "New subset does not implement Googlebot suffix normalization or cache/retry algorithms. Google ranking is a comparison check that can restrict to UNKNOWN, not an RFC MUST claim.",
+      "tests": [
+        "test_google_differences_version_suffix_not_rfc_agent_grammar",
+        "test_longest_rule_google_marker_examples_no_false_allow"
+      ],
+      "status": "PASS",
+      "unresolved": null,
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "standard_examples",
+      "RFC_section": "5.2",
+      "Google_section": "order-of-precedence-for-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-5.2",
+          "anchor_attribute_byte_offset": 71917,
+          "tag_byte_range": [
+            71908,
+            71934
+          ],
+          "tag_SHA256": "32421bea244f7841736b694b58cb1bce91ce75f98f468b7b15ef181ef7a5c4dd"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "order-of-precedence-for-rules",
+          "anchor_attribute_byte_offset": 73028,
+          "tag_byte_range": [
+            72987,
+            73077
+          ],
+          "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+        }
+      ],
+      "normative_expected_behavior": "Source examples must remain byte/anchor attributable; contradictions must not be silently corrected. RFC Figures2,3,4,6 contain separately usable cases.",
+      "old_parser_behavior": "H tests were synthetic and had no acquired normative source.",
+      "new_parser_difference": "New tests use identified figure cases and Google/page examples, and retain original RFC5.1/5.2 inconsistencies as unresolved; synthetic variations are labeled.",
+      "tests": [
+        "test_group_merge_s1_figures_2_3_and_sitemap_boundary",
+        "test_percent_encoding_unreserved_and_utf8_s1_figure4",
+        "test_percent_special_s1_figure6_literal_star_dollar",
+        "test_longest_rule_google_marker_examples_no_false_allow"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "S1 section5.1 slash-less wildcard versus ABNF; section5.2 disallowed.gif rule versus disallow.gif target. No external errata or linked sources were fetched.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    },
+    {
+      "id": "sealed_A1_replay",
+      "RFC_section": "2.2.1",
+      "Google_section": "user-agent",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "user-agent",
+          "anchor_attribute_byte_offset": 53151,
+          "tag_byte_range": [
+            53124,
+            53181
+          ],
+          "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+        }
+      ],
+      "normative_expected_behavior": "Re-evaluation must bind the actual fixed HTTP header, explicit crawler product-token, host-specific sealed original and reviewed spec; robots alone cannot authorize further GETs.",
+      "old_parser_behavior": "H formally returned UNKNOWN for all four www URLs; G正式STOP and aboutjUNKNOWN remain immutable.",
+      "new_parser_difference": "Private raw A1 SHA is reverified and all four are independently replayed; missing declared product-token keeps them UNKNOWN. Aboutj has no host-specific source.",
+      "tests": [
+        "test_sealed_A1_replay_fixed_http_agent_not_implicitly_rfc_token"
+      ],
+      "status": "UNKNOWN",
+      "unresolved": "Explicit product-token and full subset limitations remain unresolved; site terms/access conditions and aboutj evidence are still unconfirmed.",
+      "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+    }
+  ],
+  "counts": {
+    "PASS": 13,
+    "FAIL": 0,
+    "UNKNOWN": 11
+  },
+  "full_RFC9309_conformance": false,
+  "full_Google_conformance": false,
+  "parser_version": "nn_v2_robots_spec_bound_subset_v2",
+  "old_H_parser_modified": false,
+  "old_G_fetcher_modified": false,
+  "normative_originals_acquired": 2,
+  "other_normative_references_fetched": 0,
+  "Google_specific_behavior_is_RFC_MUST": false,
+  "decision": "NN_V2_ROBOTS_SPEC_CONFORMANCE_PARTIAL",
+  "execution_authorized": false,
+  "B_authorized": false,
+  "history_admission": false,
+  "resolution_plan": [
+    "Declare and review the product-token/header binding without silently changing HTTP identity",
+    "Offline design/review for RFC specificity, reserved octets/query, recovery and500KiB parser limit; no existing limit automatically relaxed",
+    "If needed, propose separate exact-URL errata/clarification acquisition for approval; no such GET is approved here",
+    "A2-A4 and B exploration require separate approval and unresolved site access conditions; consumed G/I permits cannot be reused"
+  ]
+}

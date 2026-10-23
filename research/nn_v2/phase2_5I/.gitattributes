@@ -1,0 +1,4 @@
+* text eol=lf
+# Preserve the generated Windows report bytes and the executed contract's EOF.
+PROTECTION_SUMMARY.json -text whitespace=cr-at-eol
+spec_contract.py whitespace=-blank-at-eof

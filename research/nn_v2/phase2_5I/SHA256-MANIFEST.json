@@ -1,0 +1,30 @@
+{
+  "kind": "NNV2_I_PUBLIC_ARTIFACT_SHA256_V1",
+  "files": {
+    "research/nn_v2/phase2_5I/.gitattributes": "f5c45214c0d27623faf60776662fcad71c79ad909cc1aedb1a5a5fcde17de77c",
+    "research/nn_v2/phase2_5I/BACKUP_VERIFICATION.json": "30deda312e5bcfcb9a12ed654bbdabb4c7ea94004155beb163f18b5544abc50d",
+    "research/nn_v2/phase2_5I/NORMATIVE_CONFORMANCE.json": "dfebcb82712553eb5a8f57ce749eabc813e0e60b44b4a62374d185bd8986dccc",
+    "research/nn_v2/phase2_5I/PROTECTION_SUMMARY.json": "0f6432d52f5152e5464d23afbc6efa81120765939e2658b7dff663ff4df0fec3",
+    "research/nn_v2/phase2_5I/robots_normative.py": "42fbcd54c7c65387133ebca4adbbd3efa9ccada24b0f5114412df76554fde26b",
+    "research/nn_v2/phase2_5I/ROBOTS_REEVALUATION.json": "64f4f4d78061ef8ce4d89212b2729a7fdb1ad104120c4f3b059e803cdcf50752",
+    "research/nn_v2/phase2_5I/SOURCE_SECTIONS.json": "b6eb1fa20cb89d47228c6a7d4256008a627bf719526d09c5c449b4e5b2d7f299",
+    "research/nn_v2/phase2_5I/spec_contract.py": "b8965f7a4da797afd49165eabefd5b0d331e012187955279b2861f5e9336aa55",
+    "research/nn_v2/phase2_5I/SPEC_FETCH_LEDGER.json": "50071de39d2bf0b373aba0d5cc02a0f117d29b911fb5312f8ad2013eea081080",
+    "research/nn_v2/phase2_5I/SPEC_FETCH_RESULTS.md": "fe158ab64f0b52147fbabe8193bcf57b2eed7e436f14ae6f3d6bbddb6fea3fbf",
+    "research/nn_v2/phase2_5I/spec_parent.py": "73cf046a99dc75121733930e582dd708ca13555fd23f68608e76977ad17b7236",
+    "research/nn_v2/phase2_5I/spec_worker.py": "e770792738bc7d2860e33dbc1c63239a5d48961dc3f5563536f7c31315feabc8",
+    "research/nn_v2/phase2_5I/VALIDATION.json": "dc79bc5b3c28771157c160a92f65c1eae226c90255bd06e509b0970241ff602b",
+    "tests/test_nn_v2_robots_normative.py": "c191080d66c41c42da8cab62c8a6298727c957df9b1a01b80823f3c95a33d640",
+    "tests/test_nn_v2_spec_fetch.py": "748f44ab8ef60101a511bcd8b9cb29c56481508b154fd04df53aafde507847cd"
+  },
+  "self_excluded": true,
+  "private_audit_code_SHA256": {
+    "audit_saved_specs.py": "d92b28758b24d06ae8a77897d4d6e63146c727526943a47b828040ecd4ec9155",
+    "audit_background_event.py": "7969d193ea258258388265dacae29cf3891b439c79c2f51c3e7267f2468efca9",
+    "finalize_validation.py": "bc2de89701f247ad0baaefc4f37f3d23021b659d18d677b4630ad61e1768ce66",
+    "backup_verified.py": "f8e94fa5eb5753e1576a456b582fc944659502d471a95d7584effc1f9d43c152",
+    "guarded_final_tests.py": "a6edc7c3dddf1777dd894c99b30656c024d44ffb2f748c84aa9664d868c68f4a"
+  },
+  "private_original_ledger_SHA256": "a62385b9a5cc5c2e89fb97df8d70e2883e336b3c9cfdeecb332d0e534f5351ba",
+  "archival_byte_policy": "Per-file attributes preserve generated Windows report CRLF and executed contract final blank; no executed code or original is reformatted"
+}
