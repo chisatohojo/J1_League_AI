@@ -1,0 +1,300 @@
+{
+  "format_version": "weekend-production-staging-validation-v2",
+  "gate": "WEEKEND_PRODUCTION_STAGING_READY",
+  "scope": "STAGING_MOCK_ONLY",
+  "production_enabled": false,
+  "base_commit": "af776d2c7569d491200ab96509047e7d8ea178fc",
+  "branch": "feature/weekend-production-staging",
+  "audited_at_utc": "2026-10-23T04:20:11.098628+00:00",
+  "implementation_sha256": {
+    "src/modeling/weekend_production_staging.py": "365487831719ddc1a342c1b735cc02111fa1d17e36a56f53705fd6d21a5acbe9",
+    "src/modeling/weekend_staging_publication.py": "b15ef11c8963210b686e1f6bbf5ba1ffce44190e2bd7c270bf0724ecb89fe7d8",
+    "src/modeling/weekend_staging_windows.py": "ea72b5d44688a555f8f18454ef73b7323eae45eff19c341909729f4fbe74df32",
+    "tests/test_weekend_production_staging.py": "4a8f72821732dd3312cddd4df9def7e7ff59c72ab204cc7cd0626c62513d131d",
+    "tests/test_weekend_staging_processes.py": "d5554ed9f33ef644c742782973432d187a9cdf9b1d17d083907ebacf00f27c73",
+    "tests/weekend_staging_process_helper.py": "de17bcdc3cd79e2d46e3f260e0dd4ef9272c711deb784fc347400b169a7cede0",
+    "docs/WEEKEND_BATCH_PHASE5_STAGING.md": "012a0bbe38022126d52820fdc14480bd3228472d81a8247e9f5590b6bb94ee69"
+  },
+  "unchanged_contract_sha256": {
+    "docs/WEEKEND_BATCH_PHASE1.md": "de36bc154a10e531cefa323702c5b87877e5ccc4f3ab893fd52a7df9cb1aa501",
+    "docs/WEEKEND_BATCH_PHASE2.md": "58a33313b433825cc9e4d61b18125f33d1931739c334b13120b76a38049df13d",
+    "docs/WEEKEND_BATCH_PHASE3.md": "c2703f36a00c111d02858e3862f00a312fd6305c4a4bd4099d762516a70f70e8",
+    "docs/WEEKEND_BATCH_PHASE4.md": "f40ec46db168b59f600d4d4eed99aa30d501f61bd4e6dda27b3542adbab4b0ae",
+    "src/modeling/weekend_batch.py": "69671cf833ab2ab2f6f79a46e03cc5863c3bf4812b41a7314659a6e8c85dbd50",
+    "src/modeling/weekend_source.py": "656f096a035d4662341b499c8e53f73584e4690f56d89e08750a0b48208668d9",
+    "src/modeling/weekend_integration.py": "f100016efafdae00406fee632c7a1afdf9a93408d25d108e2ea6a9c2da95edcb",
+    "src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "scripts/update_champion_dashboard.py": "49d848007b7c554236289ea15f8b967e47e55f0cca485632c68afc2142c9b0f0",
+    "scripts/build_dashboard_feed.py": "ea21fcf2ff14f81f7ef5bd07725e35fbc5e3ac987a82320c3defbf3a6b276018"
+  },
+  "previous_candidate_preserved_sha256": "cc3541072699cf00d2cb8ecd1e937e9a90908377b09005ba69f398293d6d45ed",
+  "tests": {
+    "final_passed": 345,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "warnings_as_errors": true,
+    "new_real_process_tests": 13,
+    "previous_staging_tests_rerun": 59,
+    "related_regression_tests_rerun": 273,
+    "per_module": {
+      "tests.test_weekend_production_staging": 59,
+      "tests.test_weekend_staging_processes": 13,
+      "tests.test_weekend_integration": 37,
+      "tests.test_weekend_source": 63,
+      "tests.test_weekend_batch": 61,
+      "tests.test_weekend_preflight": 20,
+      "tests.test_champion_dashboard_update": 92
+    },
+    "junit_sha256": "c39739473d84563efec009e6fc2099638a32bb07c02e514f31359801cc83b1f4",
+    "previous_Phase5_332": {
+      "tests": 332,
+      "passed": 332,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "ad3264cc225d7d655e257ac6a3fc471acb9264d661c214c6fcfae0aa68c4443c"
+    },
+    "historical_Phase4": {
+      "passed": 613,
+      "skipped": 1,
+      "rerun_as_full_suite": false,
+      "skip_reason": "Prior optional test requires private real originals; not rerun or counted this phase."
+    },
+    "intermediate_runs_not_added": [
+      {
+        "file": "process-fifth.xml",
+        "sha256": "da51736b2b8f1f4f010e0f6f20f89b1445f9995b75a5232e838864fcca5e0ad4",
+        "counts": [
+          {
+            "tests": 6,
+            "failures": 1,
+            "errors": 1,
+            "skipped": 0
+          }
+        ],
+        "added_to_final_total": false
+      },
+      {
+        "file": "process-first.xml",
+        "sha256": "558b97835b72580298c0fa76429729b529d20c15a9bbcc93fd71717c1719b916",
+        "counts": [
+          {
+            "tests": 2,
+            "failures": 1,
+            "errors": 1,
+            "skipped": 0
+          }
+        ],
+        "added_to_final_total": false
+      },
+      {
+        "file": "process-fourth.xml",
+        "sha256": "e8ad61d356bd8893156aba42ae407769d8126c0b0d602599a2ca8ab42e980f04",
+        "counts": [
+          {
+            "tests": 4,
+            "failures": 1,
+            "errors": 1,
+            "skipped": 0
+          }
+        ],
+        "added_to_final_total": false
+      },
+      {
+        "file": "process-second.xml",
+        "sha256": "9438346313f5535a247c59695c426332e3bb92f8553bd296ad06686df0be9530",
+        "counts": [
+          {
+            "tests": 2,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          }
+        ],
+        "added_to_final_total": false
+      },
+      {
+        "file": "process-sixth.xml",
+        "sha256": "bbfd92cc1783b0208e00f67afc2bca76e940f3050600d265047237e1a457e811",
+        "counts": [
+          {
+            "tests": 13,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          }
+        ],
+        "added_to_final_total": false
+      },
+      {
+        "file": "process-third.xml",
+        "sha256": "41e58469f48630c2d2032a69e059de1507fe1b531772d14546a1152fe4884021",
+        "counts": [
+          {
+            "tests": 2,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          }
+        ],
+        "added_to_final_total": false
+      }
+    ]
+  },
+  "process_proof": {
+    "new_jobs": 13,
+    "new_children": 23,
+    "resumed_children": 22,
+    "assignment_refusal_injection_not_resumed": 1,
+    "actual_Job_forced_exits": 5,
+    "expected_rejections_exit_3": 8,
+    "normal_exits": 9,
+    "all_identity_and_kernel_command_line_verified": true,
+    "all_explicit_job_memberships_verified_before_resume": true,
+    "all_job_active_after_zero": true,
+    "all_process_and_job_handles_closed": true,
+    "parent_handle_count_returned_to_baseline": true,
+    "normal_exit_followed_by_later_claim_verified": true,
+    "writer_competition_verified": true,
+    "overlapping_publish_requests_double_publications": 0,
+    "duplicate_fixture_rejected": true,
+    "real_reader_accepted_counts": [
+      10
+    ],
+    "partial_reader_acceptances": 0,
+    "crash_points": [
+      "after_predictions.csv",
+      "before_rename",
+      "after_rename",
+      "before_receipt",
+      "after_seal"
+    ],
+    "published_payloads_unchanged_after_stop": true,
+    "stale_lock_and_attempt_retained": true,
+    "automatic_reinference": 0,
+    "owner_confirmed_recovery_read_only": true,
+    "manual_owner_mismatch_refused": true,
+    "Job_assignment_failure_test": "Injected refusal; suspended owned child terminated before ResumeThread",
+    "process_creation_flags": "CREATE_SUSPENDED | DETACHED_PROCESS",
+    "kill_on_job_close_configured": true,
+    "actual_parent_crash_or_power_loss_tested": false,
+    "job_audit_sha256": [
+      "ae26bfa277fe74a5a9b4189e5f20a3bb0a741f7a1797cdc00ec56b55e3e5207a",
+      "bc455cf6e6a307acd535c33b31a186dd4ebf2adad7e79f32740c5af109c4f9b6",
+      "a25c74839053a8abbca69ebb02a7e0af69249330ad6eaedf4c7455ca87e8d474",
+      "8d5c0eccdeac0977def16cecb1b6ac684056452939f830356b1c3fb8cb3322e9",
+      "4ef150a78c44cea94c442fc6500ba7f244321f93d3db82ceaf8d6cfb6ae7ecba",
+      "a5e89a98cfb655a4a6203127c6618072862272e34112b270bbe0992d02ccd68e",
+      "4019e38d9cedcda2bc6743ffddbf10186b42066bec708bbc37a07dbb3e135a5f",
+      "25486529c902c75285dddc6ac318a51d14472bffaa934fe5aaa3387de11181bc",
+      "4a55c27ae91a5390a3e24e4340c5c5e7869559fdd8f88c4fc6dea6680cb31bfa",
+      "35c28613232223b4ac39378b0293fa781ac9eb8a17bc7607890d8826d9fb9f0d",
+      "250e7fea2f2a71d96a1850be773e662cada4eb62a45cdffa91c6aa9044fb8f4f",
+      "927cc9e67696951df288c723393ec0c80990952acdcf80d78aebb0ee528932f2",
+      "ac937e33e2baba34c4e4ad110c154be1e0b802fdd299bf1461d42f7608b9d425"
+    ]
+  },
+  "storage_proof": {
+    "root": "exclusive new temp NTFS arenas",
+    "handle_access": "GENERIC_READ | READ_CONTROL",
+    "share": "READ | WRITE, no DELETE",
+    "directory_rename_delete_and_file_replace_denied_while_held_then_allowed": true,
+    "directory_replace": "Windows rejects replacing an existing directory even after handle release; not counted as a sharing proof",
+    "lock_share_zero_maintained": true,
+    "lock_sha_recorded_from_owned_token_then_verified_after_stop": true,
+    "Owner_DACL_reparse_junction_fsync_readback_receipt_and_payload_tamper_tests_passed": true,
+    "full_Phase4_semantic_reader_preserved": true,
+    "child_only_parent_verified_byte_packet": true,
+    "original_receipt_format_and_process_crash_flag_unchanged": true,
+    "source_and_model_code_still_synthetic_only": true,
+    "staging_envelope_rejected_by_operational_reader": true
+  },
+  "initial_findings_preserved": [
+    "Original READ_CONTROL-only rename negative-control failed; GENERIC_READ fix retained and retested.",
+    "Exited-process image query failed; retained kernel handle plus GetProcessTimes is now used after exit.",
+    "Existing-directory replacement is unsupported independently of held handles; file replacement positive control added.",
+    "Wide child import hit the network/process guard; child now imports only stdlib storage, not updater/numpy/pandas.",
+    "CREATE_NO_WINDOW allocated conhost in a dedicated test Job; reproduced by read-only image query, changed to DETACHED_PROCESS.",
+    "Live share-zero lock could not be hashed by path; owned token SHA is compared after process stop without weakening sharing."
+  ],
+  "protection": {
+    "protected_files": 45618,
+    "SHA_differences": 0,
+    "identity_metadata_differences": 0,
+    "model_payloads": 53,
+    "model_payloads_verified": true,
+    "Champion_bundle_payloads": 5,
+    "existing_predictions": 19,
+    "tasks_definitions_and_queried_status_equal": true,
+    "other_worktrees_and_main_equal": true,
+    "old_evidence": {
+      "status": "PASS",
+      "old_log_files_sha_verified": 6,
+      "old_marked_arenas_verified": 70,
+      "old_locks_still_present": 11,
+      "cleanup_performed": false
+    },
+    "audit_sha256": "c634b5bb42e169d61b574284034faa4334a1840e0599e59f66c35cea05e902da"
+  },
+  "prohibited_production_actions": {
+    "official_GET": 0,
+    "real_model_load": 0,
+    "real_scaler_load": 0,
+    "fit": 0,
+    "real_inference": 0,
+    "performance_evaluation": 0,
+    "production_prediction_write": 0,
+    "production_feed_write": 0,
+    "production_reservation": 0,
+    "task_change_or_run": 0,
+    "Desktop_change": 0,
+    "production_activation": 0
+  },
+  "execution_guard": {
+    "exit": 0,
+    "rejected_effect_attempts": [],
+    "application_guard_only": true,
+    "OS_network_isolation_proven": false,
+    "native_API_scope": "Reviewed detached suspended test-only Python children, explicit new Job, kernel identity pinned, stdlib storage I/O confined to owned new arenas; no real worker or model. Not an OS sandbox.",
+    "existing_Phase4_tests_not_reimplemented": true
+  },
+  "not_proven_or_not_authorized": [
+    "Power-loss durability",
+    "All TOCTOU interleavings or privileged/same-user attacker defense",
+    "Parent OS/process sudden-death cleanup",
+    "OS network sandbox isolation",
+    "Real source worker/TLS/publication producer",
+    "Real model/scaler load or inference",
+    "Production reader deployment/prediction/feed/reservation/tasks activation"
+  ],
+  "deployment_approvals_required": [
+    "Fix real worker ownership/limits and read-only source capability; separately approve official acquisition.",
+    "Separately approve fixed model/scaler private staging validation without fit.",
+    "Deploy compatible reader first after existing batch backup/SHA review.",
+    "Choose a future wholly unsaved weekend and approve reservation before Wednesday 07:00 JST; exclude 2026-10-23..26.",
+    "Authorize predictions, source acquisition, feed/UI projection and task changes individually.",
+    "Preserve locks/attempts and saved batches on unknown state; owner-confirmed manual review only, no forced cleanup."
+  ],
+  "evidence_sha256": {
+    "preservation.json": "f5a6173ef78abdf3d9edfd1053fb8509b14001a9901d0cd32b581b22517f599e",
+    "baseline-stable.json": "2e1b12daf0f8d626a08e6d50b810015ea11365ba6091db61576749ec6293907f",
+    "final-code-pins.json": "2413d2c74dd52910954bac2f4eb63b94b32eee6bd89af4c18057d555774f4b7d",
+    "process-final.xml": "c39739473d84563efec009e6fc2099638a32bb07c02e514f31359801cc83b1f4",
+    "process-final.log": "f924b3f75b4f3c560aef6df3c05f710ba6907919c22ce75c0fe87718a17382da",
+    "process-final-guard.json": "0642428deb7a84c8f13752d5f5625f20c2416576ef24d8f0e53f3ff474244c43",
+    "guarded_process_final.py": "5dc0d203a2a4b85b839570c46c5956899113f61946516c08488a12f2511b7d45",
+    "protection-stable-final.json": "c634b5bb42e169d61b574284034faa4334a1840e0599e59f66c35cea05e902da",
+    "old-evidence-preserved.json": "6f6f626b6a220b2839672f42891cb9982a4b32a92f597b61e431565b0590f502",
+    "console-membership-observation.json": "22fa23c6ad1531dfe8ce98ea9c39ca5824daf816127f7ec76dd17b960cd49bbd",
+    "test-environment.json": "de9c57e2aa9b2e397b089766c89bfe63c133d7c1cdf4220be44fb9b56065dff4"
+  },
+  "git": {
+    "stage": "PRE_COMMIT_GATE",
+    "dedicated_branch": "feature/weekend-production-staging",
+    "parent_HEAD": "af776d2c7569d491200ab96509047e7d8ea178fc",
+    "commit_authorized_by_passed_staging_gates": true,
+    "normal_push_requested": true,
+    "final_commit_and_remote_match_reported_after_commit": true
+  }
+}
