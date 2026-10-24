@@ -9,6 +9,7 @@ import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { createHash } from 'node:crypto';
 
 const webRoot = fileURLToPath(new URL('../', import.meta.url));
 const browserPath = [
@@ -141,6 +142,8 @@ async function startBrowser() {
 async function startServer(initialPayload) {
   let payload = initialPayload;
   let apiStatus = 200;
+  let weekend = null;
+  let weekendStatus = 200;
   const server = http.createServer(async (request, response) => {
     try {
       const pathname = new URL(request.url, 'http://127.0.0.1').pathname;
@@ -148,6 +151,10 @@ async function startServer(initialPayload) {
         response.writeHead(apiStatus, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(payload));
         return;
+      }
+      if (pathname === '/api/weekend') {
+        response.writeHead(weekend === null ? 404 : weekendStatus, {'Content-Type':'application/json'});
+        response.end(JSON.stringify(weekend)); return;
       }
       const relative = pathname === '/' ? 'index.html' : decodeURIComponent(pathname.slice(1));
       const target = path.resolve(webRoot, relative);
@@ -174,6 +181,7 @@ async function startServer(initialPayload) {
   return {
     origin: `http://127.0.0.1:${server.address().port}`,
     setPayload(next, status = 200) { payload = next; apiStatus = status; },
+    setWeekend(next, status = 200) { weekend = next; weekendStatus = status; },
     stop: () => new Promise((resolve, reject) => server.close((error) => {
       if (error) reject(error);
       else resolve();
@@ -464,6 +472,37 @@ test('home dashboard browser integration (synthetic data only)', {
     assert.match(await client.evaluate(`document.querySelector('#summary-range').textContent`), /期間（JST）[\s\S]*保存済み11試合[\s\S]*未終了試合のみ/);
     assert.deepEqual(await client.evaluate(`Array.from(document.querySelectorAll('#summary-matches time')).map(n=>n.dateTime.slice(0,10))`), days);
     assert.equal(JSON.stringify(payload), snapshot);
+  });
+
+  await context.test('Saturday saved and Sunday unsaved both appear without inferred probabilities', async () => {
+    const next = Array.from({length:5}, (_, i) => ({...syntheticMatch(`sat-${i}`, {home:44,draw:25,away:31}), kickoffAt:`2030-11-02T${14+i}:00:00+09:00`}));
+    const payload = dashboardPayload([], next);
+    const canonical = value => {
+      if (typeof value === 'number') { const b=Buffer.alloc(8);b.writeDoubleBE(value);return {$f64:b.toString('hex')}; }
+      if (Array.isArray(value)) return value.map(canonical);
+      if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])]));
+      return value;
+    };
+    const rows = next.map(m=>({...m,fixtureStatus:'scheduled',predictionStatus:'saved',warning:null}));
+    rows.push(...Array.from({length:5},(_,i)=>({...syntheticMatch(`sun-${i}`,{home:44,draw:25,away:31}),kickoffAt:`2030-11-03T${14+i}:00:00+09:00`,fixtureStatus:'scheduled',predictionStatus:'not_saved',prediction:null,warning:null})));
+    const weekend={formatVersion:'champion-weekend-display-v1',model:payload.model,updatedAt:payload.updatedAt,sourceRevision:'a'.repeat(64),baseFeedSha256:createHash('sha256').update(JSON.stringify(canonical(payload))).digest('hex'),period:['2030-11-02','2030-11-03'],matches:rows,excludedSavedFixtureIds:[]};
+    const before=JSON.stringify({payload,weekend});server.setPayload(payload);server.setWeekend(weekend);
+    await navigate(client, `${server.origin}/?view=next`, `document.querySelectorAll('#summary-matches .summary-row').length===10`);
+    assert.equal(await client.evaluate(`document.querySelector('#summary-title').textContent`),'週末の予想');
+    assert.equal(await client.evaluate(`document.querySelectorAll('#summary-matches .summary-day').length`),2);
+    assert.equal(await client.evaluate(`document.querySelectorAll('#summary-matches .probability-bar').length`),5);
+    assert.equal(await client.evaluate(`Array.from(document.querySelectorAll('#summary-matches .summary-pick')).filter(n=>n.textContent==='予測未作成').length`),5);
+    assert.match(await client.evaluate(`document.querySelector('#summary-range').textContent`),/公式対象10試合 \/ 保存済み5件 \/ 未保存・保留5件/);
+    for (const width of [320,375]) {
+      await viewport(client,width);
+      assert.equal(await client.evaluate(`document.querySelectorAll('#summary-matches .summary-row').length`),10);
+      assert.equal(await client.evaluate(`document.documentElement.scrollWidth <= innerWidth`),true);
+    }
+    assert.equal(JSON.stringify({payload,weekend}),before);
+    weekend.matches[9].prediction={source:'regenerated'};server.setWeekend(weekend);
+    await navigate(client,`${server.origin}/?view=next&invalid=1`,`document.querySelector('#data-status').dataset.state==='error'`);
+    assert.equal(await client.evaluate(`document.querySelectorAll('#summary-matches .summary-row').length`),0);
+    server.setWeekend(null);await viewport(client,1280);
   });
 
   await context.test('invalid API payload hard fails instead of falling back to demo', async () => {

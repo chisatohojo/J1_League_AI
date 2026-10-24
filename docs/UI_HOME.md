@@ -1,5 +1,8 @@
 # J1AI home dashboard
 
+土日の日程・保存済み確率・未保存状態を同じ一覧に表示するオフライン候補は
+[週末の予想](UI_WEEKEND_PREDICTIONS.md)を参照。既存API v1と前節を維持し、運用GUIは変更していない。
+
 2026-10 UI改善：トップに2つの一覧入口を追加した。`/?view=next`と
 `/?view=previous`は既存schema v1の保存済み表示だけをコンパクトに表示する。
 `?demo=1&view=next`等も対応する。元の`round.label`と保存済み件数を表示し、対象日・期間の

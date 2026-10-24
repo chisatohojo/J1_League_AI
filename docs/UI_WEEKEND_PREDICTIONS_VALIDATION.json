@@ -1,0 +1,165 @@
+{
+  "schema": "j1ai-weekend-gui-validation-v1",
+  "gate": "J1AI_WEEKEND_GUI_OFFLINE_VERIFIED",
+  "generated_at": "2026-10-24T03:14:49.649174+00:00",
+  "base_commit": "b57454857e779bd4b4a16d620decc9a125423cce",
+  "branch": "feature/ui-weekend-prediction-list",
+  "deployment": "NOT_APPLIED",
+  "tests": {
+    "python": {
+      "passed": 395,
+      "failed": 0,
+      "skipped": 0,
+      "junit_sha256": "84a8fd58551c56b650906ab45fd93f64520dcb8c0545f67f1c6fae0aaccd7a4d"
+    },
+    "node_and_browser": {
+      "passed": 70,
+      "failed": 0,
+      "skipped": 0,
+      "junit_sha256": "a1a5cd622766d1461fa37845b08d64ff6b9e9549157eee0d67ef01895685b94e"
+    }
+  },
+  "total_independent_testcases": 465,
+  "new_testcases": 64,
+  "regression_testcases": 401,
+  "warnings_as_errors": true,
+  "browser_scope": "synthetic fixtures, dedicated temporary profile and loopback test server only",
+  "intermediate_failure": {
+    "type": "900px density regression",
+    "resolution": "shortened explanatory text; release regression passed"
+  },
+  "official_read_audit": {
+    "audited_at": "2026-10-24T03:01:16.835566+00:00",
+    "revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+    "manifest_sha256": "5e6d370c0eaeee8d0bca676c7d8dc3b75fabb12cf7c03c7372a34ddff9f37f3e",
+    "observed_at": "2026-10-23T22:00:22.614190+00:00",
+    "period": [
+      "2026-10-24",
+      "2026-10-25"
+    ],
+    "stored_count_all": 19,
+    "days": {
+      "2026-10-24": {
+        "official": 5,
+        "saved": 5,
+        "not_saved": 0,
+        "held": 0
+      },
+      "2026-10-25": {
+        "official": 5,
+        "saved": 0,
+        "not_saved": 5,
+        "held": 0
+      }
+    },
+    "legacy_selected_count": 5
+  },
+  "protection": {
+    "checked_at": "2026-10-24T03:13:45.071490+00:00",
+    "files_checked": 60515,
+    "file_differences": [],
+    "models_checked": 53,
+    "model_differences": [],
+    "task_definitions_and_states_unchanged": true,
+    "existing_process_identities_unchanged": true,
+    "existing_worktrees_checked": 25,
+    "worktree_differences": [],
+    "main_unchanged": true,
+    "source": "fresh task-start baseline",
+    "passed": true
+  },
+  "static_checks": [
+    {
+      "name": "dedicated_branch",
+      "passed": true
+    },
+    {
+      "name": "base_UI_commit",
+      "passed": true
+    },
+    {
+      "name": "allowed_change_directories",
+      "passed": true
+    },
+    {
+      "name": "display_adapter_has_no_mutation_inference_or_network_calls",
+      "passed": true
+    },
+    {
+      "name": "no_weekend_backend_or_research_import",
+      "passed": true
+    },
+    {
+      "name": "python_syntax",
+      "passed": true
+    },
+    {
+      "name": "new_public_files_no_personal_paths",
+      "passed": true
+    },
+    {
+      "name": "git_diff_check",
+      "passed": true
+    },
+    {
+      "name": "python_all_pass",
+      "passed": true
+    },
+    {
+      "name": "node_and_browser_all_pass",
+      "passed": true
+    },
+    {
+      "name": "protection_audit",
+      "passed": true
+    },
+    {
+      "name": "live_read_only_counts",
+      "passed": true
+    }
+  ],
+  "implementation_sha256": {
+    "docs/UI_HOME.md": "25bef6739cdf8644da9ba82135eed8e21ac6b50797a701d0f7cf9c53568be4ed",
+    "docs/UI_ROUND_SUMMARY.md": "94f6378e4afb88bc088aa65a251300e3f98588a1663b33ca92566b26aa67f850",
+    "docs/UI_WEEKEND_PREDICTIONS.md": "689ed174c54ad01ae4b8c91a2ff39d446fe391dfbc1663f21f1fb7a104abd227",
+    "scripts/build_dashboard_feed.py": "273091ddaf1a16cfcc4a62aa90b87bec2bed7ad7f7f5f12f6ca95211d9f32eb6",
+    "scripts/serve_dashboard.py": "c40be7c362f42ef623cec691f7b51da817ab699907f4edb1d93ed01bc916ad82",
+    "scripts/weekend_display.py": "e2a5bff11c8da4153521412e847d5354e2dd6e649c7aec9eaa6902a8426cd765",
+    "tests/test_weekend_display.py": "2227a7389b5a48a4cf5baf4a78de376b8e78f179455315c455afec8c0fb3d6a3",
+    "web/app.js": "44cbc28553403e759c08744ab272976df335669bbe8bffd1145c5fe146defc48",
+    "web/index.html": "fec01d0fa05880e1c1a06e14c266090f10568f5bba7a37b2403946ee16a9cadc",
+    "web/package.json": "fe563237ef79df4b4c481b65205b389cfe2af7e7b3937bbcab4a07330d037654",
+    "web/tests/browser.test.mjs": "e1833b4d4563fa9f64e89951193b8470b23d0bef4cc9ec59dec41ec69ba0b154",
+    "web/tests/weekend.test.mjs": "5422f00058a233c4c8f500fa4f6c874b63c5694d2e0fffc9116f30f726ab6ad6",
+    "web/weekend-data.js": "d4cae5e6a8068dec669a5259b6a13786c7db4f22667f977d12b4511361148bf2"
+  },
+  "private_evidence_sha256": {
+    "baseline.json": "a5f374d090f4f4aa12b08a2c4a7a65bf3a9b561af4fe34c963c3fe410d7c8374",
+    "protection-final.json": "5d6822bf0640c563a52436ca3517d65b35fd6cc87ccd9d086ecd906f2cb0a26f",
+    "live-read-audit.json": "ccf64d450ce71302ffa74aa9c45d50b1372917886e71e7d412bf95f0e9c1dae5",
+    "python-verified.xml": "84a8fd58551c56b650906ab45fd93f64520dcb8c0545f67f1c6fae0aaccd7a4d",
+    "node-verified.xml": "a1a5cd622766d1461fa37845b08d64ff6b9e9549157eee0d67ef01895685b94e"
+  },
+  "prohibited_operations": {
+    "official_GET": 0,
+    "real_model_load_fit_inference": 0,
+    "prediction_writes": 0,
+    "production_feed_writes": 0,
+    "task_runs_or_changes": 0,
+    "live_GUI_server_stop_restart": 0,
+    "desktop_changes": 0,
+    "weekend_batch_execution": 0,
+    "NN_research_connection": 0
+  },
+  "remaining_approvals": [
+    "candidate deployment and rollback",
+    "paired display-only feed preparation and publication",
+    "owner-verified server stop/start and any shortcut argument changes"
+  ],
+  "not_claimed": [
+    "Sunday predictions created",
+    "Weekend Batch format activated",
+    "production GUI updated",
+    "power-loss or hostile TOCTOU assurance"
+  ]
+}

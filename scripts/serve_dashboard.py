@@ -34,6 +34,7 @@ STATIC_ROUTES = {
         "text/javascript",
     ),
     "/dashboard-data.js": ("dashboard-data.js", "text/javascript"),
+    "/weekend-data.js": ("weekend-data.js", "text/javascript"),
     "/team-colors.js": ("team-colors.js", "text/javascript"),
     "/demo-data.js": ("demo-data.js", "text/javascript"),
     "/assets/j1ai.svg": ("assets/j1ai.svg", "image/svg+xml"),
@@ -210,10 +211,16 @@ def create_server(
     *,
     port: int = 8765,
     static_root: Path | None = None,
+    weekend: dict | None = None,
 ) -> ThreadingHTTPServer:
     """Create a loopback-only, GET-only server using an immutable JSON snapshot."""
     approved = validate_dashboard_data(empty_dashboard() if payload is None else payload)
     api_bytes = json.dumps(approved, ensure_ascii=False, allow_nan=False).encode("utf-8")
+    weekend_bytes = None
+    if weekend is not None:
+        from scripts.weekend_display import validate_weekend
+        validate_weekend(weekend, base=approved)
+        weekend_bytes = json.dumps(weekend, ensure_ascii=False, allow_nan=False).encode("utf-8")
     root = (WEB_ROOT if static_root is None else static_root).resolve()
 
     class DashboardHandler(BaseHTTPRequestHandler):
@@ -230,6 +237,9 @@ def create_server(
             route = unquote(urlsplit(self.path).path)
             if route == "/api/dashboard":
                 self._send(api_bytes, "application/json")
+                return
+            if route == "/api/weekend" and weekend_bytes is not None:
+                self._send(weekend_bytes, "application/json")
                 return
             asset = STATIC_ROUTES.get(route)
             if asset is None:
@@ -271,13 +281,19 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8765, help="Loopback port (default: 8765)")
     parser.add_argument("--data", type=Path, help="Explicit prepared Champion A-only JSON (read-only)")
+    parser.add_argument("--weekend-data", type=Path, help="Optional prepared weekend display sidecar; requires --data; never creates predictions")
     args = parser.parse_args(argv)
     if not 0 <= args.port <= 65535:
         parser.error("--port must be between 0 and 65535")
+    if args.weekend_data is not None and args.data is None:
+        parser.error("--weekend-data requires the explicitly paired --data")
     try:
         payload = load_dashboard_data(args.data)
-        server = create_server(payload, port=args.port)
-    except (DashboardDataError, OSError) as exc:
+        options = {}
+        if args.weekend_data is not None:
+            options["weekend"] = json.loads(args.weekend_data.read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
+        server = create_server(payload, port=args.port, **options)
+    except (ValueError, OSError) as exc:
         print(f"Dashboard startup rejected: {exc}", file=sys.stderr)
         return 2
     address, port = server.server_address

@@ -1,6 +1,7 @@
 import { PredictionProbabilityBar } from "./components/prediction-probability-bar.js";
 import { validateDashboard, highestProbabilityOutcomes, actualOutcome, formatKickoff } from "./dashboard-data.js";
 import { teamColor } from "./team-colors.js";
+import { validateWeekend, verifyWeekendBinding } from "./weekend-data.js";
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -29,6 +30,11 @@ export function SummaryRow(match, { previous, demo }) {
   cell("日時（JST）", time, "summary-time");
   cell("HOME", match.homeTeam.name, "summary-home-team");
   cell("AWAY", match.awayTeam.name, "summary-away-team");
+  if (!previous && !match.prediction) {
+    cell("AI PICK", match.warning || "予測未作成", "summary-pick");
+    cell("HOME / DRAW / AWAY", "— 確率未保存", "summary-probabilities");
+    return row;
+  }
   const picks = highestProbabilityOutcomes(match.prediction.probabilities);
   cell("AI PICK", `${demo ? "DEMO · " : ""}${picks.map(p => outcomeLabel(p, match)).join(" / ")}${picks.length > 1 ? "（同率最高）" : ""}`, "summary-pick");
   if (previous) {
@@ -43,14 +49,15 @@ export function SummaryRow(match, { previous, demo }) {
     const bar = PredictionProbabilityBar({homeProbability:p.home, drawProbability:p.draw, awayProbability:p.away,
       homeColor:teamColor(match.homeTeam.id), awayColor:teamColor(match.awayTeam.id), homeLabel:match.homeTeam.name, awayLabel:match.awayTeam.name});
     cell("HOME / DRAW / AWAY", bar, "summary-probabilities");
+    row.title = `Champion A · 予想保存: ${formatKickoff(match.prediction.generatedAt)} JST${match.fixtureStatus === "completed" ? " · 試合終了" : ""}`;
   }
   return row;
 }
 
-function renderSummary(data, {demo, view}) {
+function renderSummary(data, {demo, view, weekend}) {
   const active = ["previous", "next"].includes(view);
   document.body.dataset.view = active ? view : "home";
-  document.title = `${demo ? "DEMO / " : ""}J1AI — ${active ? view === "previous" ? "前節の答え合わせ" : "次節の予想一覧" : "Matchday"}`;
+  document.title = `${demo ? "DEMO / " : ""}J1AI — ${active ? view === "previous" ? "前節の答え合わせ" : "週末の予想" : "Matchday"}`;
   document.querySelector("#round-summary").hidden = !active;
   document.querySelector("#home-dashboard").hidden = active;
   document.querySelector("#home-shortcuts").hidden = active;
@@ -67,12 +74,19 @@ function renderSummary(data, {demo, view}) {
   host.replaceChildren();
   if (!active) return;
   const previous = view === "previous";
-  const round = data[previous ? "previousRound" : "nextRound"];
-  document.querySelector("#summary-title").textContent = previous ? "前節の答え合わせ" : "次節の予想一覧";
+  const round = !previous && weekend ? {label:weekend.period ? `週末の予想 · ${weekend.period.join("〜")}` : "日程未確認", matches:weekend.matches} : data[previous ? "previousRound" : "nextRound"];
+  document.querySelector("#summary-title").textContent = previous ? "前節の答え合わせ" : "週末の予想";
   document.querySelector("#summary-label").textContent = `${round.label} · ${round.matches.length}件${demo ? " · DEMO" : ""}`;
   document.querySelector("#summary-range").textContent = `表示範囲：${round.label}。公式カレンダーの対象日・期間（JST）で選ばれた保存済み${round.matches.length}試合です。${previous ? "" : "未終了試合のみを表示します。"}節全体を網羅する一覧ではありません。${demo ? " 架空データのDEMOです。" : ""}`;
+  if (!previous) {
+    const saved = round.matches.filter(m => m.prediction).length;
+    document.querySelector("#summary-range").textContent = weekend
+      ? `表示範囲：${round.label}（JST）。公式対象${round.matches.length}試合 / 保存済み${saved}件 / 未保存・保留${round.matches.length-saved}件。${weekend.period ? "土日両日を表示。金曜・月曜の試合は追加しません。" : "確認可能な対象日程がありません。"} 表示用データ更新: ${formatKickoff(weekend.updatedAt)} JST`
+      : `${round.label}。期間（JST）の保存済み${round.matches.length}試合・未終了試合のみ。節全体を網羅しません。${demo ? "DEMO · 架空データ。" : "日程未確認（週末sidecar未接続）。"}未保存予想は補完しません。`;
+    if (weekend?.excludedSavedFixtureIds.length) document.querySelector("#summary-range").textContent += ` 警告：改日程により週末対象外の保存済み予測${weekend.excludedSavedFixtureIds.length}件。保存値は変更していません。`;
+  }
   if (!round.matches.length) {
-    host.append(element("p", "empty-state", "この表示範囲の保存済みデータはありません。新しい予想や結果を補完しません。"));
+    host.append(element("p", "empty-state", weekend ? "日程未確認：確認可能な週末日程がありません。" : "この表示範囲の保存済みデータはありません。新しい予想や結果を補完しません。"));
     return;
   }
   const table = element("table", "summary-table");
@@ -84,7 +98,15 @@ function renderSummary(data, {demo, view}) {
   }
   head.append(headings);
   const body = element("tbody", "");
-  body.append(...round.matches.map(match => SummaryRow(match, {previous, demo})));
+  if (!previous && weekend?.period) {
+    for (const [index, day] of weekend.period.entries()) {
+      const group = element("tr", "summary-day"); const heading = element("th", "", `${day}（${index === 0 ? "土" : "日"}曜日）`);
+      heading.colSpan = 5; heading.scope = "rowgroup"; group.append(heading); body.append(group);
+      const matches = round.matches.filter(m => new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Tokyo", year:"numeric", month:"2-digit", day:"2-digit"}).format(new Date(m.kickoffAt)) === day);
+      body.append(...matches.map(match => SummaryRow(match, {previous, demo})));
+      if (!matches.length) { const line = element("tr", ""); const cell = element("td", "", "確認済み対象試合なし"); cell.colSpan=5;line.append(cell);body.append(line); }
+    }
+  } else body.append(...round.matches.map(match => SummaryRow(match, {previous, demo})));
   table.append(caption, head, body); host.append(table);
 }
 
@@ -142,8 +164,9 @@ export function MatchCard(match, { previous, demo }) {
   return card;
 }
 
-export function renderDashboard(data, { demo = false, view = new URLSearchParams(location.search).get("view") } = {}) {
+export function renderDashboard(data, { demo = false, view = new URLSearchParams(location.search).get("view"), weekend = null } = {}) {
   validateDashboard(data, { demo });
+  if (weekend) { if (demo) throw new Error("DEMOに運用週末データは接続できません"); validateWeekend(weekend, data); }
   const empty = data.previousRound.matches.length + data.nextRound.matches.length === 0;
   const notice = document.querySelector("#data-status");
   const message = demo ? "UI DEMO / 架空データのプレビューです。実データではありません。"
@@ -170,7 +193,7 @@ export function renderDashboard(data, { demo = false, view = new URLSearchParams
   }
   notice.dataset.state = demo ? "demo" : empty ? "empty" : "operational";
   document.querySelector("#preview-link").href = demo ? `/${view === "next" || view === "previous" ? `?view=${view}` : ""}` : `/?demo=1${view === "next" || view === "previous" ? `&view=${view}` : ""}`;
-  renderSummary(data, {demo, view});
+  renderSummary(data, {demo, view, weekend});
 }
 
 async function start() {
@@ -184,7 +207,15 @@ async function start() {
       if (!response.ok) throw new Error("表示用APIからデータを取得できませんでした");
       data = await response.json();
     }
-    renderDashboard(data, { demo });
+    let weekend = null;
+    if (!demo && new URLSearchParams(location.search).get("view") === "next") {
+      const response = await fetch("/api/weekend", {cache:"no-store", credentials:"same-origin"});
+      if (response.status !== 404) {
+        if (!response.ok) throw new Error("週末日程を読み取れません。表示を保留します。");
+        weekend = await verifyWeekendBinding(await response.json(), data);
+      }
+    }
+    renderDashboard(data, { demo, weekend });
   } catch (error) {
     // Fail closed. Never fall back to synthetic or research predictions on API/schema failure.
     document.querySelector("#data-status").dataset.state = "error";

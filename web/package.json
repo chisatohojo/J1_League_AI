@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/probability-bar.test.mjs tests/dashboard.test.mjs",
+    "test": "node --test tests/probability-bar.test.mjs tests/dashboard.test.mjs tests/weekend.test.mjs",
     "test:browser": "node --test tests/browser.test.mjs"
   }
 }

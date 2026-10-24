@@ -1,5 +1,8 @@
 # 試合一覧とWindows入口の改善
 
+土日の公式日程と未保存行を区別する任意一覧は[週末の予想](UI_WEEKEND_PREDICTIONS.md)を参照。
+既存schema v1・前節判定・金曜〜月曜の保存済み選定は維持し、運用反映・再起動は別承認とする。
+
 main `05c1598`から独立した`feature/ui-round-summary-shortcut`で実装した。
 元の作業worktree、NN研究branch、モデル・保存確率、公式source/publication、
 学習/評価/推論、07:00/22:00タスクは変更していない。初回UI改善ではfeed生成器も変更せず、
