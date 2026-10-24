@@ -194,11 +194,15 @@ def validate_url(url: str) -> str:
     return url
 
 
-def server_command(python: Path, data: Path | None) -> list[str]:
+def server_command(python: Path, data: Path | None, *, weekend_data: Path | None = None) -> list[str]:
     command = [str(python), "-u", "-m", "scripts.serve_dashboard", "--port", "0"]
     if data is not None:
         # Explicit JSON is read/validated ONLY by the existing server.
         command.extend(("--data", str(data.resolve())))
+    if weekend_data is not None:
+        if data is None:
+            raise ValueError("Weekend display requires its paired schema-v1 data")
+        command.extend(("--weekend-data", str(weekend_data.resolve())))
     return command
 
 
@@ -211,10 +215,10 @@ def browser_command(browser: Path, url: str, profile: Path) -> list[str]:
     ]
 
 
-def start_server(python: Path, root: Path, data: Path | None):
+def start_server(python: Path, root: Path, data: Path | None, *, weekend_data: Path | None = None):
     try:
         return subprocess.Popen(
-            server_command(python, data), cwd=str(root), shell=False,
+            server_command(python, data, weekend_data=weekend_data), cwd=str(root), shell=False,
             stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             text=True, encoding="utf-8", errors="replace", creationflags=CREATE_NO_WINDOW,
         )
@@ -386,8 +390,10 @@ def start_default_browser(url: str) -> None:
 
 
 def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0, stop=False,
-                 python: Path | None = None, browser_mode: str = "app") -> int:
+                 python: Path | None = None, browser_mode: str = "app", weekend_data: Path | None = None) -> int:
     require_windows()
+    if weekend_data is not None and (data is None or stop):
+        raise ValueError("Weekend display requires paired data and cannot be used with Stop")
     controls = WindowsInstance(root)
     server = None
     try:
@@ -410,7 +416,7 @@ def run_launcher(root: Path, *, data: Path | None = None, timeout: float = 20.0,
         if browser_mode == "app":
             browser = find_browser()
             profile = local_directory(root) / ("edge-profile" if browser.name.lower() == "msedge.exe" else "chrome-profile")
-        server = start_server(python, root, data)
+        server = start_server(python, root, data, **({"weekend_data": weekend_data} if weekend_data is not None else {}))
         url = wait_for_ready(server, timeout)
         if browser_mode == "default":
             start_default_browser(url)
@@ -450,12 +456,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--startup-timeout", type=positive_timeout, default=20.0, help="Bounded server readiness wait in seconds (default: 20)")
     parser.add_argument("--python", type=Path, help="Explicit existing python.exe, for a worktree without its own venv")
     parser.add_argument("--browser-mode", choices=("app", "default"), default="app", help="default opens the Windows default browser without managing its profile")
+    parser.add_argument("--weekend-data", type=Path, help="Explicit prepared weekend display sidecar paired with --data; no generation")
     args = parser.parse_args(argv)
+    if args.weekend_data is not None and (args.data is None or args.stop):
+        parser.error("--weekend-data requires --data and cannot be used with --stop")
     root = repository_root()
     try:
         return run_launcher(root, data=args.data, timeout=args.startup_timeout, stop=args.stop,
                             **({"python": args.python} if args.python else {}),
-                            **({"browser_mode": args.browser_mode} if args.browser_mode != "app" else {}))
+                            **({"browser_mode": args.browser_mode} if args.browser_mode != "app" else {}),
+                            **({"weekend_data": args.weekend_data} if args.weekend_data is not None else {}))
     except (Exception, KeyboardInterrupt) as exc:
         code = exc.code if isinstance(exc, LauncherError) else "unexpected_failure"
         # No exception string, traceback, server output or response body is logged.
