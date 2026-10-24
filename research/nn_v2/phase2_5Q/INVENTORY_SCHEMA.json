@@ -1,0 +1,4375 @@
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "NNV2_ACCESS_EVIDENCE_V1"
+    },
+    "scope": {
+      "type": "string",
+      "const": "OFFLINE_REVIEW_ONLY"
+    },
+    "base_commit": {
+      "type": "string",
+      "const": "d57e182521dbf354b41b536a67e27b17440d2950"
+    },
+    "reviewed_utc": {
+      "type": "string",
+      "const": "2026-10-24T12:28:48.765351+00:00"
+    },
+    "identifiers": {
+      "type": "object",
+      "properties": {
+        "user_agent": {
+          "type": "string",
+          "const": "J1AI-Research-Timing-Pilot/1.0"
+        },
+        "product_token": {
+          "type": "string",
+          "const": "Research-Timing-Pilot"
+        },
+        "adoption": {
+          "type": "string",
+          "const": "G1_ADOPTED_OFFLINE_ONLY"
+        }
+      },
+      "required": [
+        "user_agent",
+        "product_token",
+        "adoption"
+      ],
+      "additionalProperties": false
+    },
+    "holds": {
+      "type": "object",
+      "properties": {
+        "B": {
+          "type": "string",
+          "const": "HOLD"
+        },
+        "C": {
+          "type": "string",
+          "const": "HOLD"
+        },
+        "D": {
+          "type": "string",
+          "const": "HOLD"
+        },
+        "HISTORY": {
+          "type": "string",
+          "const": "HOLD"
+        },
+        "PREDICTION": {
+          "type": "string",
+          "const": "HOLD"
+        },
+        "Phase_A": {
+          "type": "string",
+          "const": "BLOCKED"
+        },
+        "Phase_B": {
+          "type": "string",
+          "const": "NOT_AUTHORIZED"
+        },
+        "G3": {
+          "type": "string",
+          "const": "HOLD"
+        },
+        "G4": {
+          "type": "string",
+          "const": "NOT_AUTHORIZED"
+        }
+      },
+      "required": [
+        "B",
+        "C",
+        "D",
+        "HISTORY",
+        "PREDICTION",
+        "Phase_A",
+        "Phase_B",
+        "G3",
+        "G4"
+      ],
+      "additionalProperties": false
+    },
+    "operations": {
+      "type": "object",
+      "properties": {
+        "HTTP": {
+          "type": "integer",
+          "const": 0
+        },
+        "DNS": {
+          "type": "integer",
+          "const": 0
+        },
+        "socket": {
+          "type": "integer",
+          "const": 0
+        },
+        "new_acquisitions": {
+          "type": "integer",
+          "const": 0
+        },
+        "transport_connections": {
+          "type": "integer",
+          "const": 0
+        },
+        "permits_issued_updated": {
+          "type": "integer",
+          "const": 0
+        },
+        "model_operations": {
+          "type": "integer",
+          "const": 0
+        },
+        "GUI_changes": {
+          "type": "integer",
+          "const": 0
+        },
+        "task_changes": {
+          "type": "integer",
+          "const": 0
+        },
+        "policy_changes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "HTTP",
+        "DNS",
+        "socket",
+        "new_acquisitions",
+        "transport_connections",
+        "permits_issued_updated",
+        "model_operations",
+        "GUI_changes",
+        "task_changes",
+        "policy_changes"
+      ],
+      "additionalProperties": false
+    },
+    "normative_counts": {
+      "type": "object",
+      "properties": {
+        "PASS": {
+          "type": "integer",
+          "const": 15
+        },
+        "FAIL": {
+          "type": "integer",
+          "const": 0
+        },
+        "UNKNOWN": {
+          "type": "integer",
+          "const": 9
+        }
+      },
+      "required": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN"
+      ],
+      "additionalProperties": false
+    },
+    "historical_unknown_ids": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "string",
+          "const": "agent_grammar"
+        },
+        {
+          "type": "string",
+          "const": "rule_grammar"
+        },
+        {
+          "type": "string",
+          "const": "longest_rule"
+        },
+        {
+          "type": "string",
+          "const": "reserved_octets"
+        },
+        {
+          "type": "string",
+          "const": "query"
+        },
+        {
+          "type": "string",
+          "const": "encoding_errors"
+        },
+        {
+          "type": "string",
+          "const": "parse_limits"
+        },
+        {
+          "type": "string",
+          "const": "standard_examples"
+        },
+        {
+          "type": "string",
+          "const": "sealed_A1_replay"
+        }
+      ]
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "A1"
+            },
+            "URL": {
+              "type": "string",
+              "const": "https://www.jleague.jp/robots.txt"
+            },
+            "host": {
+              "type": "string",
+              "const": "www.jleague.jp"
+            },
+            "purpose": {
+              "type": "string",
+              "const": "Assess freshness of previously sealed www robots; no automatic refresh"
+            },
+            "necessity": {
+              "type": "string",
+              "const": "保存原本で固定評価を再現できる。現在の条件審査に必要な場合のみ鮮度方針を定め、更新候補とする。"
+            },
+            "original": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "VERIFIED_SAVED_ORIGINAL"
+                },
+                "location": {
+                  "type": "string",
+                  "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/raw.bin"
+                },
+                "raw_SHA256": {
+                  "type": "string",
+                  "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                },
+                "bytes": {
+                  "type": "integer",
+                  "const": 646
+                },
+                "acquired_utc": {
+                  "type": "string",
+                  "const": "2026-10-23T09:46:47.645062+00:00"
+                },
+                "saved_utc": {
+                  "type": "string",
+                  "const": "2026-10-23T09:46:47.663444+00:00"
+                },
+                "source_url": {
+                  "type": "string",
+                  "const": "https://www.jleague.jp/robots.txt"
+                },
+                "supporting_records": {
+                  "type": "array",
+                  "minItems": 5,
+                  "maxItems": 5,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "const": "metadata"
+                        },
+                        "location": {
+                          "type": "string",
+                          "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/metadata.json"
+                        },
+                        "SHA256": {
+                          "type": "string",
+                          "const": "c4b967fd0f7552f462c957044bdfcab2f9f1fd5d6abb9ba734c6beb3b8420817"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "location",
+                        "SHA256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "const": "request"
+                        },
+                        "location": {
+                          "type": "string",
+                          "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/request.json"
+                        },
+                        "SHA256": {
+                          "type": "string",
+                          "const": "96b53165fca74b5af11065ec76dc2aa5c36f472e1eaea0e077e3ca5a48f80d17"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "location",
+                        "SHA256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "const": "seal"
+                        },
+                        "location": {
+                          "type": "string",
+                          "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/seal.json"
+                        },
+                        "SHA256": {
+                          "type": "string",
+                          "const": "a83769cf3b3376886d73279a1a2c5f1ea86618fad0d736bac2f95c8643c6e50f"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "location",
+                        "SHA256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "const": "worker_receipt"
+                        },
+                        "location": {
+                          "type": "string",
+                          "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/worker-receipt.json"
+                        },
+                        "SHA256": {
+                          "type": "string",
+                          "const": "b57692bed2e37ced3f45a469a50e514685ee874ebd31404eaefaa9286ae7e235"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "location",
+                        "SHA256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "const": "parent_receipt"
+                        },
+                        "location": {
+                          "type": "string",
+                          "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/parent-receipt.json"
+                        },
+                        "SHA256": {
+                          "type": "string",
+                          "const": "a68110729e9b1d0ad1a20093dc4397f475d35aa6b8b80aced18a0cb676a38e1a"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "location",
+                        "SHA256"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "location",
+                "raw_SHA256",
+                "bytes",
+                "acquired_utc",
+                "saved_utc",
+                "source_url",
+                "supporting_records"
+              ],
+              "additionalProperties": false
+            },
+            "robots": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "CONDITIONAL_ALLOW_FIXED_ORIGINAL"
+                },
+                "source_url": {
+                  "type": "string",
+                  "const": "https://www.jleague.jp/robots.txt"
+                },
+                "source_host": {
+                  "type": "string",
+                  "const": "www.jleague.jp"
+                },
+                "source_SHA256": {
+                  "type": "string",
+                  "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                },
+                "source_saved_proven": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "source_applicable_to_exact_host": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "adopted_UA_offline_evaluation": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "normative_complete": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "currently_valid": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "current_site_allow": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "evaluation_user_agent": {
+                  "type": "string",
+                  "const": "J1AI-Research-Timing-Pilot/1.0"
+                },
+                "evaluation_product_token": {
+                  "type": "string",
+                  "const": "Research-Timing-Pilot"
+                },
+                "historical_reference": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "const": "ALLOW"
+                    },
+                    "conditional_candidate_only": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "User_Agent": {
+                      "type": "string",
+                      "const": "J1AI-Research-Timing-Pilot/1.0"
+                    },
+                    "product_token": {
+                      "type": "string",
+                      "const": "Research-Timing-Pilot"
+                    },
+                    "parser_version": {
+                      "type": "string",
+                      "const": "nn_v2_robots_offline_groups_v4"
+                    },
+                    "group_selection": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": false,
+                      "prefixItems": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "group": {
+                              "type": "integer",
+                              "const": 1
+                            },
+                            "agents": {
+                              "type": "array",
+                              "minItems": 1,
+                              "maxItems": 1,
+                              "items": false,
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "const": "*"
+                                }
+                              ]
+                            },
+                            "rule_count": {
+                              "type": "integer",
+                              "const": 19
+                            }
+                          },
+                          "required": [
+                            "group",
+                            "agents",
+                            "rule_count"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "matched_rule_count": {
+                      "type": "integer",
+                      "const": 0
+                    },
+                    "reference_SHA256": {
+                      "type": "string",
+                      "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "RFC_2_2_2_IMPLICIT_ROBOTS_URI"
+                    }
+                  },
+                  "required": [
+                    "decision",
+                    "conditional_candidate_only",
+                    "User_Agent",
+                    "product_token",
+                    "parser_version",
+                    "group_selection",
+                    "matched_rule_count",
+                    "reference_SHA256",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "evaluation_source": {
+                  "type": "string",
+                  "const": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json"
+                },
+                "preconditions": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "固定A1 bytes・host・UA/token・queryなしの対象pathだけ"
+                    },
+                    {
+                      "type": "string",
+                      "const": "一般的な規範適合の証明ではない"
+                    },
+                    {
+                      "type": "string",
+                      "const": "現在のrobots・terms・取得許可を示さない"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "source_url",
+                "source_host",
+                "source_SHA256",
+                "source_saved_proven",
+                "source_applicable_to_exact_host",
+                "adopted_UA_offline_evaluation",
+                "normative_complete",
+                "currently_valid",
+                "current_site_allow",
+                "evaluation_user_agent",
+                "evaluation_product_token",
+                "historical_reference",
+                "evaluation_source",
+                "preconditions"
+              ],
+              "additionalProperties": false
+            },
+            "terms": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "originals": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "research_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "automated_access": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "storage": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "processing": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "redistribution": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "publication": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "commercial_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "version": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "robots_relationship": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "research_use",
+                    "automated_access",
+                    "storage",
+                    "processing",
+                    "redistribution",
+                    "publication",
+                    "commercial_use",
+                    "version",
+                    "robots_relationship"
+                  ],
+                  "additionalProperties": false
+                },
+                "missing_reasons": {
+                  "type": "array",
+                  "minItems": 7,
+                  "maxItems": 7,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "MISSING_ORIGINAL"
+                    },
+                    {
+                      "type": "string",
+                      "const": "APPLICABILITY_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "RESEARCH_AUTOMATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "STORAGE_PROCESSING_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "REDISTRIBUTION_PUBLICATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "VERSION_TIME_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ROBOTS_RELATIONSHIP_UNPROVEN"
+                    }
+                  ]
+                },
+                "source_candidates": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "A3"
+                    },
+                    {
+                      "type": "string",
+                      "const": "A4"
+                    }
+                  ]
+                },
+                "scope_caveat": {
+                  "type": "string",
+                  "const": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+                }
+              },
+              "required": [
+                "status",
+                "originals",
+                "conditions",
+                "missing_reasons",
+                "source_candidates",
+                "scope_caveat"
+              ],
+              "additionalProperties": false
+            },
+            "copyright": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "redistribution_authorized": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_candidate": {
+                  "type": "string",
+                  "const": "A4"
+                },
+                "specialist_review": {
+                  "type": "string",
+                  "const": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+                }
+              },
+              "required": [
+                "status",
+                "redistribution_authorized",
+                "source_candidate",
+                "specialist_review"
+              ],
+              "additionalProperties": false
+            },
+            "UA_evidence": {
+              "type": "object",
+              "properties": {
+                "E0": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E1": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E2": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E3": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E4_new": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "G2_E1_record_SHA256": {
+                  "type": "string",
+                  "const": "c88fae27bb0b99192b6c172255e1fa179d21e9cc176758520775357dc0f034d6"
+                },
+                "historical_request_record": {
+                  "type": "string",
+                  "const": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/request.json"
+                },
+                "historical_UA": {
+                  "type": "string",
+                  "const": "NOT_RECORDED_IN_REQUEST_METADATA"
+                },
+                "source_configuration_only": {
+                  "type": "string",
+                  "const": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+                }
+              },
+              "required": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4_new",
+                "G2_E1_record_SHA256",
+                "historical_request_record",
+                "historical_UA",
+                "source_configuration_only"
+              ],
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "approved_TTL_seconds": {
+                  "type": "null"
+                },
+                "represents_current_site": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "age_seconds_at_review": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "reason": {
+                  "type": "string",
+                  "const": "原本時刻は確認済みでもTTL・時計・再審査条件が未承認。古さを測るだけでfresh/stale確定しない。"
+                }
+              },
+              "required": [
+                "status",
+                "approved_TTL_seconds",
+                "represents_current_site",
+                "age_seconds_at_review",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minimum_scope": {
+              "type": "object",
+              "properties": {
+                "candidate_only": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "necessity_status": {
+                  "type": "string",
+                  "const": "EXISTING_ORIGINAL_SUFFICIENT_FOR_OFFLINE"
+                },
+                "method_if_separately_approved": {
+                  "type": "string",
+                  "const": "GET"
+                },
+                "max_requests_if_approved": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "periodic_refresh": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "redirect": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "retry": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "parallel": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "new_URLs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "external_distribution": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "raw_storage": {
+                  "type": "string",
+                  "const": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。"
+                },
+                "narrower_alternative": {
+                  "type": "string",
+                  "const": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。"
+                },
+                "frequency_basis": {
+                  "type": "string",
+                  "const": "一度限りの条件確認候補。定期取得の必要性は未成立。"
+                },
+                "body_cap_proposal_bytes": {
+                  "type": "integer",
+                  "const": 65536
+                }
+              },
+              "required": [
+                "candidate_only",
+                "necessity_status",
+                "method_if_separately_approved",
+                "max_requests_if_approved",
+                "periodic_refresh",
+                "redirect",
+                "retry",
+                "parallel",
+                "new_URLs",
+                "external_distribution",
+                "raw_storage",
+                "narrower_alternative",
+                "frequency_basis",
+                "body_cap_proposal_bytes"
+              ],
+              "additionalProperties": false
+            },
+            "overall_access": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_status": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "acquisition_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "unknown_causes": {
+              "type": "array",
+              "minItems": 7,
+              "maxItems": 7,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_PROVENANCE"
+                },
+                {
+                  "type": "string",
+                  "const": "STALE_EVIDENCE"
+                }
+              ]
+            },
+            "next_evidence": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "P0-B-WWW-CONDITIONS"
+                },
+                {
+                  "type": "string",
+                  "const": "P0-B-FRESHNESS"
+                }
+              ]
+            },
+            "candidate_methods": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存資料・提供済み正本の追加offline照合"
+                },
+                {
+                  "type": "string",
+                  "const": "運営者／利用者提供正本の受領候補（今回は未取得）"
+                },
+                {
+                  "type": "string",
+                  "const": "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "URL",
+            "host",
+            "purpose",
+            "necessity",
+            "original",
+            "robots",
+            "terms",
+            "copyright",
+            "UA_evidence",
+            "freshness",
+            "minimum_scope",
+            "overall_access",
+            "permit_status",
+            "permit_id",
+            "acquisition_authorized",
+            "unknown_causes",
+            "next_evidence",
+            "candidate_methods"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "A2"
+            },
+            "URL": {
+              "type": "string",
+              "const": "https://aboutj.jleague.jp/robots.txt"
+            },
+            "host": {
+              "type": "string",
+              "const": "aboutj.jleague.jp"
+            },
+            "purpose": {
+              "type": "string",
+              "const": "First host-specific robots/access-conditions inspection, only after separately reviewed bootstrap basis"
+            },
+            "necessity": {
+              "type": "string",
+              "const": "aboutjを採用する場合だけhost固有原本が必要。www先行調査からは除外できる。"
+            },
+            "original": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "NO_VERIFIED_ORIGINAL"
+                },
+                "location": {
+                  "type": "null"
+                },
+                "raw_SHA256": {
+                  "type": "null"
+                },
+                "bytes": {
+                  "type": "null"
+                },
+                "acquired_utc": {
+                  "type": "null"
+                },
+                "saved_utc": {
+                  "type": "null"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "supporting_records": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                }
+              },
+              "required": [
+                "status",
+                "location",
+                "raw_SHA256",
+                "bytes",
+                "acquired_utc",
+                "saved_utc",
+                "source_url",
+                "supporting_records"
+              ],
+              "additionalProperties": false
+            },
+            "robots": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "source_host": {
+                  "type": "null"
+                },
+                "source_SHA256": {
+                  "type": "null"
+                },
+                "source_saved_proven": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_applicable_to_exact_host": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "adopted_UA_offline_evaluation": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "normative_complete": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "currently_valid": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "current_site_allow": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "evaluation_user_agent": {
+                  "type": "string",
+                  "const": "J1AI-Research-Timing-Pilot/1.0"
+                },
+                "evaluation_product_token": {
+                  "type": "string",
+                  "const": "Research-Timing-Pilot"
+                },
+                "historical_reference": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "conditional_candidate_only": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "User_Agent": {
+                      "type": "string",
+                      "const": "J1AI-Research-Timing-Pilot/1.0"
+                    },
+                    "product_token": {
+                      "type": "string",
+                      "const": "Research-Timing-Pilot"
+                    },
+                    "parser_version": {
+                      "type": "string",
+                      "const": "nn_v2_robots_offline_groups_v4"
+                    },
+                    "group_selection": {
+                      "type": "array",
+                      "minItems": 0,
+                      "maxItems": 0,
+                      "items": false
+                    },
+                    "matched_rule_count": {
+                      "type": "null"
+                    },
+                    "reference_SHA256": {
+                      "type": "null"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "NO_HOST_SPECIFIC_ORIGINAL"
+                    }
+                  },
+                  "required": [
+                    "decision",
+                    "conditional_candidate_only",
+                    "User_Agent",
+                    "product_token",
+                    "parser_version",
+                    "group_selection",
+                    "matched_rule_count",
+                    "reference_SHA256",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "evaluation_source": {
+                  "type": "string",
+                  "const": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json"
+                },
+                "preconditions": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "固定A1 bytes・host・UA/token・queryなしの対象pathだけ"
+                    },
+                    {
+                      "type": "string",
+                      "const": "一般的な規範適合の証明ではない"
+                    },
+                    {
+                      "type": "string",
+                      "const": "現在のrobots・terms・取得許可を示さない"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "source_url",
+                "source_host",
+                "source_SHA256",
+                "source_saved_proven",
+                "source_applicable_to_exact_host",
+                "adopted_UA_offline_evaluation",
+                "normative_complete",
+                "currently_valid",
+                "current_site_allow",
+                "evaluation_user_agent",
+                "evaluation_product_token",
+                "historical_reference",
+                "evaluation_source",
+                "preconditions"
+              ],
+              "additionalProperties": false
+            },
+            "terms": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "originals": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "research_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "automated_access": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "storage": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "processing": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "redistribution": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "publication": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "commercial_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "version": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "robots_relationship": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "research_use",
+                    "automated_access",
+                    "storage",
+                    "processing",
+                    "redistribution",
+                    "publication",
+                    "commercial_use",
+                    "version",
+                    "robots_relationship"
+                  ],
+                  "additionalProperties": false
+                },
+                "missing_reasons": {
+                  "type": "array",
+                  "minItems": 7,
+                  "maxItems": 7,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "MISSING_ORIGINAL"
+                    },
+                    {
+                      "type": "string",
+                      "const": "APPLICABILITY_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "RESEARCH_AUTOMATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "STORAGE_PROCESSING_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "REDISTRIBUTION_PUBLICATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "VERSION_TIME_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ROBOTS_RELATIONSHIP_UNPROVEN"
+                    }
+                  ]
+                },
+                "source_candidates": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "scope_caveat": {
+                  "type": "string",
+                  "const": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+                }
+              },
+              "required": [
+                "status",
+                "originals",
+                "conditions",
+                "missing_reasons",
+                "source_candidates",
+                "scope_caveat"
+              ],
+              "additionalProperties": false
+            },
+            "copyright": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "redistribution_authorized": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_candidate": {
+                  "type": "null"
+                },
+                "specialist_review": {
+                  "type": "string",
+                  "const": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+                }
+              },
+              "required": [
+                "status",
+                "redistribution_authorized",
+                "source_candidate",
+                "specialist_review"
+              ],
+              "additionalProperties": false
+            },
+            "UA_evidence": {
+              "type": "object",
+              "properties": {
+                "E0": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E1": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E2": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E3": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E4_new": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "G2_E1_record_SHA256": {
+                  "type": "string",
+                  "const": "00bb6bf052072df57790b9f91b6186438afc20f5ffd3e66848b2b1ee15eefbe0"
+                },
+                "historical_request_record": {
+                  "type": "null"
+                },
+                "historical_UA": {
+                  "type": "string",
+                  "const": "NO_REQUEST"
+                },
+                "source_configuration_only": {
+                  "type": "string",
+                  "const": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+                }
+              },
+              "required": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4_new",
+                "G2_E1_record_SHA256",
+                "historical_request_record",
+                "historical_UA",
+                "source_configuration_only"
+              ],
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "approved_TTL_seconds": {
+                  "type": "null"
+                },
+                "represents_current_site": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "age_seconds_at_review": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "const": "原本・取得時刻・版が未確認"
+                }
+              },
+              "required": [
+                "status",
+                "approved_TTL_seconds",
+                "represents_current_site",
+                "age_seconds_at_review",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minimum_scope": {
+              "type": "object",
+              "properties": {
+                "candidate_only": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "necessity_status": {
+                  "type": "string",
+                  "const": "CONDITIONAL_ON_ABOUTJ_SELECTION"
+                },
+                "method_if_separately_approved": {
+                  "type": "string",
+                  "const": "GET"
+                },
+                "max_requests_if_approved": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "periodic_refresh": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "redirect": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "retry": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "parallel": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "new_URLs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "external_distribution": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "raw_storage": {
+                  "type": "string",
+                  "const": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。"
+                },
+                "narrower_alternative": {
+                  "type": "string",
+                  "const": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。"
+                },
+                "frequency_basis": {
+                  "type": "string",
+                  "const": "一度限りの条件確認候補。定期取得の必要性は未成立。"
+                },
+                "body_cap_proposal_bytes": {
+                  "type": "integer",
+                  "const": 65536
+                }
+              },
+              "required": [
+                "candidate_only",
+                "necessity_status",
+                "method_if_separately_approved",
+                "max_requests_if_approved",
+                "periodic_refresh",
+                "redirect",
+                "retry",
+                "parallel",
+                "new_URLs",
+                "external_distribution",
+                "raw_storage",
+                "narrower_alternative",
+                "frequency_basis",
+                "body_cap_proposal_bytes"
+              ],
+              "additionalProperties": false
+            },
+            "overall_access": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_status": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "acquisition_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "unknown_causes": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                }
+              ]
+            },
+            "next_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "P0-B-ABOUTJ-CONDITIONS"
+                }
+              ]
+            },
+            "candidate_methods": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存資料・提供済み正本の追加offline照合"
+                },
+                {
+                  "type": "string",
+                  "const": "運営者／利用者提供正本の受領候補（今回は未取得）"
+                },
+                {
+                  "type": "string",
+                  "const": "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "URL",
+            "host",
+            "purpose",
+            "necessity",
+            "original",
+            "robots",
+            "terms",
+            "copyright",
+            "UA_evidence",
+            "freshness",
+            "minimum_scope",
+            "overall_access",
+            "permit_status",
+            "permit_id",
+            "acquisition_authorized",
+            "unknown_causes",
+            "next_evidence",
+            "candidate_methods"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "A3"
+            },
+            "URL": {
+              "type": "string",
+              "const": "https://www.jleague.jp/general/kiyaku/"
+            },
+            "host": {
+              "type": "string",
+              "const": "www.jleague.jp"
+            },
+            "purpose": {
+              "type": "string",
+              "const": "Confirm current terms applicability and automated retrieval conditions"
+            },
+            "necessity": {
+              "type": "string",
+              "const": "wwwに適用される規約・自動取得・研究利用条件を確認する正本候補。リンクだけでは代替不可。"
+            },
+            "original": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "NO_VERIFIED_ORIGINAL"
+                },
+                "location": {
+                  "type": "null"
+                },
+                "raw_SHA256": {
+                  "type": "null"
+                },
+                "bytes": {
+                  "type": "null"
+                },
+                "acquired_utc": {
+                  "type": "null"
+                },
+                "saved_utc": {
+                  "type": "null"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "supporting_records": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                }
+              },
+              "required": [
+                "status",
+                "location",
+                "raw_SHA256",
+                "bytes",
+                "acquired_utc",
+                "saved_utc",
+                "source_url",
+                "supporting_records"
+              ],
+              "additionalProperties": false
+            },
+            "robots": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "CONDITIONAL_ALLOW_FIXED_ORIGINAL"
+                },
+                "source_url": {
+                  "type": "string",
+                  "const": "https://www.jleague.jp/robots.txt"
+                },
+                "source_host": {
+                  "type": "string",
+                  "const": "www.jleague.jp"
+                },
+                "source_SHA256": {
+                  "type": "string",
+                  "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                },
+                "source_saved_proven": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "source_applicable_to_exact_host": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "adopted_UA_offline_evaluation": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "normative_complete": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "currently_valid": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "current_site_allow": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "evaluation_user_agent": {
+                  "type": "string",
+                  "const": "J1AI-Research-Timing-Pilot/1.0"
+                },
+                "evaluation_product_token": {
+                  "type": "string",
+                  "const": "Research-Timing-Pilot"
+                },
+                "historical_reference": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "const": "ALLOW"
+                    },
+                    "conditional_candidate_only": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "User_Agent": {
+                      "type": "string",
+                      "const": "J1AI-Research-Timing-Pilot/1.0"
+                    },
+                    "product_token": {
+                      "type": "string",
+                      "const": "Research-Timing-Pilot"
+                    },
+                    "parser_version": {
+                      "type": "string",
+                      "const": "nn_v2_robots_offline_groups_v4"
+                    },
+                    "group_selection": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": false,
+                      "prefixItems": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "group": {
+                              "type": "integer",
+                              "const": 1
+                            },
+                            "agents": {
+                              "type": "array",
+                              "minItems": 1,
+                              "maxItems": 1,
+                              "items": false,
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "const": "*"
+                                }
+                              ]
+                            },
+                            "rule_count": {
+                              "type": "integer",
+                              "const": 19
+                            }
+                          },
+                          "required": [
+                            "group",
+                            "agents",
+                            "rule_count"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "matched_rule_count": {
+                      "type": "integer",
+                      "const": 0
+                    },
+                    "reference_SHA256": {
+                      "type": "string",
+                      "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "SUPPORTED_OFFLINE_PATH_SUBSET"
+                    }
+                  },
+                  "required": [
+                    "decision",
+                    "conditional_candidate_only",
+                    "User_Agent",
+                    "product_token",
+                    "parser_version",
+                    "group_selection",
+                    "matched_rule_count",
+                    "reference_SHA256",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "evaluation_source": {
+                  "type": "string",
+                  "const": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json"
+                },
+                "preconditions": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "固定A1 bytes・host・UA/token・queryなしの対象pathだけ"
+                    },
+                    {
+                      "type": "string",
+                      "const": "一般的な規範適合の証明ではない"
+                    },
+                    {
+                      "type": "string",
+                      "const": "現在のrobots・terms・取得許可を示さない"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "source_url",
+                "source_host",
+                "source_SHA256",
+                "source_saved_proven",
+                "source_applicable_to_exact_host",
+                "adopted_UA_offline_evaluation",
+                "normative_complete",
+                "currently_valid",
+                "current_site_allow",
+                "evaluation_user_agent",
+                "evaluation_product_token",
+                "historical_reference",
+                "evaluation_source",
+                "preconditions"
+              ],
+              "additionalProperties": false
+            },
+            "terms": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "originals": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "research_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "automated_access": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "storage": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "processing": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "redistribution": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "publication": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "commercial_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "version": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "robots_relationship": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "research_use",
+                    "automated_access",
+                    "storage",
+                    "processing",
+                    "redistribution",
+                    "publication",
+                    "commercial_use",
+                    "version",
+                    "robots_relationship"
+                  ],
+                  "additionalProperties": false
+                },
+                "missing_reasons": {
+                  "type": "array",
+                  "minItems": 7,
+                  "maxItems": 7,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "MISSING_ORIGINAL"
+                    },
+                    {
+                      "type": "string",
+                      "const": "APPLICABILITY_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "RESEARCH_AUTOMATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "STORAGE_PROCESSING_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "REDISTRIBUTION_PUBLICATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "VERSION_TIME_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ROBOTS_RELATIONSHIP_UNPROVEN"
+                    }
+                  ]
+                },
+                "source_candidates": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "A3"
+                    },
+                    {
+                      "type": "string",
+                      "const": "A4"
+                    }
+                  ]
+                },
+                "scope_caveat": {
+                  "type": "string",
+                  "const": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+                }
+              },
+              "required": [
+                "status",
+                "originals",
+                "conditions",
+                "missing_reasons",
+                "source_candidates",
+                "scope_caveat"
+              ],
+              "additionalProperties": false
+            },
+            "copyright": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "redistribution_authorized": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_candidate": {
+                  "type": "string",
+                  "const": "A4"
+                },
+                "specialist_review": {
+                  "type": "string",
+                  "const": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+                }
+              },
+              "required": [
+                "status",
+                "redistribution_authorized",
+                "source_candidate",
+                "specialist_review"
+              ],
+              "additionalProperties": false
+            },
+            "UA_evidence": {
+              "type": "object",
+              "properties": {
+                "E0": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E1": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E2": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E3": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E4_new": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "G2_E1_record_SHA256": {
+                  "type": "string",
+                  "const": "ca2bb8c6532984135c6b4cf877cbd88e5dc76fad14f379d822f858b031caccfb"
+                },
+                "historical_request_record": {
+                  "type": "null"
+                },
+                "historical_UA": {
+                  "type": "string",
+                  "const": "NO_REQUEST"
+                },
+                "source_configuration_only": {
+                  "type": "string",
+                  "const": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+                }
+              },
+              "required": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4_new",
+                "G2_E1_record_SHA256",
+                "historical_request_record",
+                "historical_UA",
+                "source_configuration_only"
+              ],
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "approved_TTL_seconds": {
+                  "type": "null"
+                },
+                "represents_current_site": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "age_seconds_at_review": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "const": "原本・取得時刻・版が未確認"
+                }
+              },
+              "required": [
+                "status",
+                "approved_TTL_seconds",
+                "represents_current_site",
+                "age_seconds_at_review",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minimum_scope": {
+              "type": "object",
+              "properties": {
+                "candidate_only": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "necessity_status": {
+                  "type": "string",
+                  "const": "PRIORITY_CONDITIONS_SOURCE"
+                },
+                "method_if_separately_approved": {
+                  "type": "string",
+                  "const": "GET"
+                },
+                "max_requests_if_approved": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "periodic_refresh": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "redirect": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "retry": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "parallel": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "new_URLs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "external_distribution": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "raw_storage": {
+                  "type": "string",
+                  "const": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。"
+                },
+                "narrower_alternative": {
+                  "type": "string",
+                  "const": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。"
+                },
+                "frequency_basis": {
+                  "type": "string",
+                  "const": "一度限りの条件確認候補。定期取得の必要性は未成立。"
+                },
+                "body_cap_proposal_bytes": {
+                  "type": "integer",
+                  "const": 1048576
+                }
+              },
+              "required": [
+                "candidate_only",
+                "necessity_status",
+                "method_if_separately_approved",
+                "max_requests_if_approved",
+                "periodic_refresh",
+                "redirect",
+                "retry",
+                "parallel",
+                "new_URLs",
+                "external_distribution",
+                "raw_storage",
+                "narrower_alternative",
+                "frequency_basis",
+                "body_cap_proposal_bytes"
+              ],
+              "additionalProperties": false
+            },
+            "overall_access": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_status": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "acquisition_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "unknown_causes": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                }
+              ]
+            },
+            "next_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "P0-B-WWW-CONDITIONS"
+                }
+              ]
+            },
+            "candidate_methods": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存資料・提供済み正本の追加offline照合"
+                },
+                {
+                  "type": "string",
+                  "const": "運営者／利用者提供正本の受領候補（今回は未取得）"
+                },
+                {
+                  "type": "string",
+                  "const": "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "URL",
+            "host",
+            "purpose",
+            "necessity",
+            "original",
+            "robots",
+            "terms",
+            "copyright",
+            "UA_evidence",
+            "freshness",
+            "minimum_scope",
+            "overall_access",
+            "permit_status",
+            "permit_id",
+            "acquisition_authorized",
+            "unknown_causes",
+            "next_evidence",
+            "candidate_methods"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "A4"
+            },
+            "URL": {
+              "type": "string",
+              "const": "https://www.jleague.jp/general/copyright/"
+            },
+            "host": {
+              "type": "string",
+              "const": "www.jleague.jp"
+            },
+            "purpose": {
+              "type": "string",
+              "const": "Confirm copyright, storage/quote/reuse conditions"
+            },
+            "necessity": {
+              "type": "string",
+              "const": "保存・加工・引用・再利用条件の正本候補。外部再配布を計画しなくても内部保存の条件が未確認。"
+            },
+            "original": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "NO_VERIFIED_ORIGINAL"
+                },
+                "location": {
+                  "type": "null"
+                },
+                "raw_SHA256": {
+                  "type": "null"
+                },
+                "bytes": {
+                  "type": "null"
+                },
+                "acquired_utc": {
+                  "type": "null"
+                },
+                "saved_utc": {
+                  "type": "null"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "supporting_records": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                }
+              },
+              "required": [
+                "status",
+                "location",
+                "raw_SHA256",
+                "bytes",
+                "acquired_utc",
+                "saved_utc",
+                "source_url",
+                "supporting_records"
+              ],
+              "additionalProperties": false
+            },
+            "robots": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "CONDITIONAL_ALLOW_FIXED_ORIGINAL"
+                },
+                "source_url": {
+                  "type": "string",
+                  "const": "https://www.jleague.jp/robots.txt"
+                },
+                "source_host": {
+                  "type": "string",
+                  "const": "www.jleague.jp"
+                },
+                "source_SHA256": {
+                  "type": "string",
+                  "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                },
+                "source_saved_proven": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "source_applicable_to_exact_host": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "adopted_UA_offline_evaluation": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "normative_complete": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "currently_valid": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "current_site_allow": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "evaluation_user_agent": {
+                  "type": "string",
+                  "const": "J1AI-Research-Timing-Pilot/1.0"
+                },
+                "evaluation_product_token": {
+                  "type": "string",
+                  "const": "Research-Timing-Pilot"
+                },
+                "historical_reference": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "const": "ALLOW"
+                    },
+                    "conditional_candidate_only": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "User_Agent": {
+                      "type": "string",
+                      "const": "J1AI-Research-Timing-Pilot/1.0"
+                    },
+                    "product_token": {
+                      "type": "string",
+                      "const": "Research-Timing-Pilot"
+                    },
+                    "parser_version": {
+                      "type": "string",
+                      "const": "nn_v2_robots_offline_groups_v4"
+                    },
+                    "group_selection": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": false,
+                      "prefixItems": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "group": {
+                              "type": "integer",
+                              "const": 1
+                            },
+                            "agents": {
+                              "type": "array",
+                              "minItems": 1,
+                              "maxItems": 1,
+                              "items": false,
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "const": "*"
+                                }
+                              ]
+                            },
+                            "rule_count": {
+                              "type": "integer",
+                              "const": 19
+                            }
+                          },
+                          "required": [
+                            "group",
+                            "agents",
+                            "rule_count"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "matched_rule_count": {
+                      "type": "integer",
+                      "const": 0
+                    },
+                    "reference_SHA256": {
+                      "type": "string",
+                      "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "SUPPORTED_OFFLINE_PATH_SUBSET"
+                    }
+                  },
+                  "required": [
+                    "decision",
+                    "conditional_candidate_only",
+                    "User_Agent",
+                    "product_token",
+                    "parser_version",
+                    "group_selection",
+                    "matched_rule_count",
+                    "reference_SHA256",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "evaluation_source": {
+                  "type": "string",
+                  "const": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json"
+                },
+                "preconditions": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "固定A1 bytes・host・UA/token・queryなしの対象pathだけ"
+                    },
+                    {
+                      "type": "string",
+                      "const": "一般的な規範適合の証明ではない"
+                    },
+                    {
+                      "type": "string",
+                      "const": "現在のrobots・terms・取得許可を示さない"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "source_url",
+                "source_host",
+                "source_SHA256",
+                "source_saved_proven",
+                "source_applicable_to_exact_host",
+                "adopted_UA_offline_evaluation",
+                "normative_complete",
+                "currently_valid",
+                "current_site_allow",
+                "evaluation_user_agent",
+                "evaluation_product_token",
+                "historical_reference",
+                "evaluation_source",
+                "preconditions"
+              ],
+              "additionalProperties": false
+            },
+            "terms": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "originals": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "research_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "automated_access": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "storage": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "processing": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "redistribution": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "publication": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "commercial_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "version": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "robots_relationship": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "research_use",
+                    "automated_access",
+                    "storage",
+                    "processing",
+                    "redistribution",
+                    "publication",
+                    "commercial_use",
+                    "version",
+                    "robots_relationship"
+                  ],
+                  "additionalProperties": false
+                },
+                "missing_reasons": {
+                  "type": "array",
+                  "minItems": 7,
+                  "maxItems": 7,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "MISSING_ORIGINAL"
+                    },
+                    {
+                      "type": "string",
+                      "const": "APPLICABILITY_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "RESEARCH_AUTOMATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "STORAGE_PROCESSING_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "REDISTRIBUTION_PUBLICATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "VERSION_TIME_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ROBOTS_RELATIONSHIP_UNPROVEN"
+                    }
+                  ]
+                },
+                "source_candidates": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "A3"
+                    },
+                    {
+                      "type": "string",
+                      "const": "A4"
+                    }
+                  ]
+                },
+                "scope_caveat": {
+                  "type": "string",
+                  "const": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+                }
+              },
+              "required": [
+                "status",
+                "originals",
+                "conditions",
+                "missing_reasons",
+                "source_candidates",
+                "scope_caveat"
+              ],
+              "additionalProperties": false
+            },
+            "copyright": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "redistribution_authorized": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_candidate": {
+                  "type": "string",
+                  "const": "A4"
+                },
+                "specialist_review": {
+                  "type": "string",
+                  "const": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+                }
+              },
+              "required": [
+                "status",
+                "redistribution_authorized",
+                "source_candidate",
+                "specialist_review"
+              ],
+              "additionalProperties": false
+            },
+            "UA_evidence": {
+              "type": "object",
+              "properties": {
+                "E0": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E1": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E2": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E3": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E4_new": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "G2_E1_record_SHA256": {
+                  "type": "string",
+                  "const": "2ee5ac29d8d164280ff1081c4c9a69935fa398db7380f54d4c32ebe31e54a22f"
+                },
+                "historical_request_record": {
+                  "type": "null"
+                },
+                "historical_UA": {
+                  "type": "string",
+                  "const": "NO_REQUEST"
+                },
+                "source_configuration_only": {
+                  "type": "string",
+                  "const": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+                }
+              },
+              "required": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4_new",
+                "G2_E1_record_SHA256",
+                "historical_request_record",
+                "historical_UA",
+                "source_configuration_only"
+              ],
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "approved_TTL_seconds": {
+                  "type": "null"
+                },
+                "represents_current_site": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "age_seconds_at_review": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "const": "原本・取得時刻・版が未確認"
+                }
+              },
+              "required": [
+                "status",
+                "approved_TTL_seconds",
+                "represents_current_site",
+                "age_seconds_at_review",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minimum_scope": {
+              "type": "object",
+              "properties": {
+                "candidate_only": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "necessity_status": {
+                  "type": "string",
+                  "const": "PRIORITY_CONDITIONS_SOURCE"
+                },
+                "method_if_separately_approved": {
+                  "type": "string",
+                  "const": "GET"
+                },
+                "max_requests_if_approved": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "periodic_refresh": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "redirect": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "retry": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "parallel": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "new_URLs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "external_distribution": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "raw_storage": {
+                  "type": "string",
+                  "const": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。"
+                },
+                "narrower_alternative": {
+                  "type": "string",
+                  "const": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。"
+                },
+                "frequency_basis": {
+                  "type": "string",
+                  "const": "一度限りの条件確認候補。定期取得の必要性は未成立。"
+                },
+                "body_cap_proposal_bytes": {
+                  "type": "integer",
+                  "const": 1048576
+                }
+              },
+              "required": [
+                "candidate_only",
+                "necessity_status",
+                "method_if_separately_approved",
+                "max_requests_if_approved",
+                "periodic_refresh",
+                "redirect",
+                "retry",
+                "parallel",
+                "new_URLs",
+                "external_distribution",
+                "raw_storage",
+                "narrower_alternative",
+                "frequency_basis",
+                "body_cap_proposal_bytes"
+              ],
+              "additionalProperties": false
+            },
+            "overall_access": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_status": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "acquisition_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "unknown_causes": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                }
+              ]
+            },
+            "next_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "P0-B-WWW-CONDITIONS"
+                }
+              ]
+            },
+            "candidate_methods": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存資料・提供済み正本の追加offline照合"
+                },
+                {
+                  "type": "string",
+                  "const": "運営者／利用者提供正本の受領候補（今回は未取得）"
+                },
+                {
+                  "type": "string",
+                  "const": "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "URL",
+            "host",
+            "purpose",
+            "necessity",
+            "original",
+            "robots",
+            "terms",
+            "copyright",
+            "UA_evidence",
+            "freshness",
+            "minimum_scope",
+            "overall_access",
+            "permit_status",
+            "permit_id",
+            "acquisition_authorized",
+            "unknown_causes",
+            "next_evidence",
+            "candidate_methods"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "B1"
+            },
+            "URL": {
+              "type": "string",
+              "const": "https://www.jleague.jp/j1/news/"
+            },
+            "host": {
+              "type": "string",
+              "const": "www.jleague.jp"
+            },
+            "purpose": {
+              "type": "string",
+              "const": "News entry discovery only after www-specific conditions and separate B approval"
+            },
+            "necessity": {
+              "type": "string",
+              "const": "更新通知と発表時刻の探索入口。試合別の過去観測証拠は既存資料で先に評価し、入口選定根拠が固まるまで延期。"
+            },
+            "original": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "NO_VERIFIED_ORIGINAL"
+                },
+                "location": {
+                  "type": "null"
+                },
+                "raw_SHA256": {
+                  "type": "null"
+                },
+                "bytes": {
+                  "type": "null"
+                },
+                "acquired_utc": {
+                  "type": "null"
+                },
+                "saved_utc": {
+                  "type": "null"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "supporting_records": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                }
+              },
+              "required": [
+                "status",
+                "location",
+                "raw_SHA256",
+                "bytes",
+                "acquired_utc",
+                "saved_utc",
+                "source_url",
+                "supporting_records"
+              ],
+              "additionalProperties": false
+            },
+            "robots": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "CONDITIONAL_ALLOW_FIXED_ORIGINAL"
+                },
+                "source_url": {
+                  "type": "string",
+                  "const": "https://www.jleague.jp/robots.txt"
+                },
+                "source_host": {
+                  "type": "string",
+                  "const": "www.jleague.jp"
+                },
+                "source_SHA256": {
+                  "type": "string",
+                  "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                },
+                "source_saved_proven": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "source_applicable_to_exact_host": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "adopted_UA_offline_evaluation": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "normative_complete": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "currently_valid": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "current_site_allow": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "evaluation_user_agent": {
+                  "type": "string",
+                  "const": "J1AI-Research-Timing-Pilot/1.0"
+                },
+                "evaluation_product_token": {
+                  "type": "string",
+                  "const": "Research-Timing-Pilot"
+                },
+                "historical_reference": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "const": "ALLOW"
+                    },
+                    "conditional_candidate_only": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "User_Agent": {
+                      "type": "string",
+                      "const": "J1AI-Research-Timing-Pilot/1.0"
+                    },
+                    "product_token": {
+                      "type": "string",
+                      "const": "Research-Timing-Pilot"
+                    },
+                    "parser_version": {
+                      "type": "string",
+                      "const": "nn_v2_robots_offline_groups_v4"
+                    },
+                    "group_selection": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": false,
+                      "prefixItems": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "group": {
+                              "type": "integer",
+                              "const": 1
+                            },
+                            "agents": {
+                              "type": "array",
+                              "minItems": 1,
+                              "maxItems": 1,
+                              "items": false,
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "const": "*"
+                                }
+                              ]
+                            },
+                            "rule_count": {
+                              "type": "integer",
+                              "const": 19
+                            }
+                          },
+                          "required": [
+                            "group",
+                            "agents",
+                            "rule_count"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "matched_rule_count": {
+                      "type": "integer",
+                      "const": 0
+                    },
+                    "reference_SHA256": {
+                      "type": "string",
+                      "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "SUPPORTED_OFFLINE_PATH_SUBSET"
+                    }
+                  },
+                  "required": [
+                    "decision",
+                    "conditional_candidate_only",
+                    "User_Agent",
+                    "product_token",
+                    "parser_version",
+                    "group_selection",
+                    "matched_rule_count",
+                    "reference_SHA256",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "evaluation_source": {
+                  "type": "string",
+                  "const": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json"
+                },
+                "preconditions": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "固定A1 bytes・host・UA/token・queryなしの対象pathだけ"
+                    },
+                    {
+                      "type": "string",
+                      "const": "一般的な規範適合の証明ではない"
+                    },
+                    {
+                      "type": "string",
+                      "const": "現在のrobots・terms・取得許可を示さない"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "source_url",
+                "source_host",
+                "source_SHA256",
+                "source_saved_proven",
+                "source_applicable_to_exact_host",
+                "adopted_UA_offline_evaluation",
+                "normative_complete",
+                "currently_valid",
+                "current_site_allow",
+                "evaluation_user_agent",
+                "evaluation_product_token",
+                "historical_reference",
+                "evaluation_source",
+                "preconditions"
+              ],
+              "additionalProperties": false
+            },
+            "terms": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "originals": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "research_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "automated_access": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "storage": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "processing": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "redistribution": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "publication": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "commercial_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "version": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "robots_relationship": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "research_use",
+                    "automated_access",
+                    "storage",
+                    "processing",
+                    "redistribution",
+                    "publication",
+                    "commercial_use",
+                    "version",
+                    "robots_relationship"
+                  ],
+                  "additionalProperties": false
+                },
+                "missing_reasons": {
+                  "type": "array",
+                  "minItems": 7,
+                  "maxItems": 7,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "MISSING_ORIGINAL"
+                    },
+                    {
+                      "type": "string",
+                      "const": "APPLICABILITY_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "RESEARCH_AUTOMATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "STORAGE_PROCESSING_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "REDISTRIBUTION_PUBLICATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "VERSION_TIME_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ROBOTS_RELATIONSHIP_UNPROVEN"
+                    }
+                  ]
+                },
+                "source_candidates": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "A3"
+                    },
+                    {
+                      "type": "string",
+                      "const": "A4"
+                    }
+                  ]
+                },
+                "scope_caveat": {
+                  "type": "string",
+                  "const": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+                }
+              },
+              "required": [
+                "status",
+                "originals",
+                "conditions",
+                "missing_reasons",
+                "source_candidates",
+                "scope_caveat"
+              ],
+              "additionalProperties": false
+            },
+            "copyright": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "redistribution_authorized": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_candidate": {
+                  "type": "string",
+                  "const": "A4"
+                },
+                "specialist_review": {
+                  "type": "string",
+                  "const": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+                }
+              },
+              "required": [
+                "status",
+                "redistribution_authorized",
+                "source_candidate",
+                "specialist_review"
+              ],
+              "additionalProperties": false
+            },
+            "UA_evidence": {
+              "type": "object",
+              "properties": {
+                "E0": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E1": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E2": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E3": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E4_new": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "G2_E1_record_SHA256": {
+                  "type": "string",
+                  "const": "c89fbc435e779447cbd1d295277b528c4c47b78bedd3777fbcd40842174ee788"
+                },
+                "historical_request_record": {
+                  "type": "null"
+                },
+                "historical_UA": {
+                  "type": "string",
+                  "const": "NO_REQUEST"
+                },
+                "source_configuration_only": {
+                  "type": "string",
+                  "const": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+                }
+              },
+              "required": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4_new",
+                "G2_E1_record_SHA256",
+                "historical_request_record",
+                "historical_UA",
+                "source_configuration_only"
+              ],
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "approved_TTL_seconds": {
+                  "type": "null"
+                },
+                "represents_current_site": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "age_seconds_at_review": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "const": "原本・取得時刻・版が未確認"
+                }
+              },
+              "required": [
+                "status",
+                "approved_TTL_seconds",
+                "represents_current_site",
+                "age_seconds_at_review",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minimum_scope": {
+              "type": "object",
+              "properties": {
+                "candidate_only": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "necessity_status": {
+                  "type": "string",
+                  "const": "DEFER_UNTIL_CONDITIONS_AND_SELECTION"
+                },
+                "method_if_separately_approved": {
+                  "type": "string",
+                  "const": "GET"
+                },
+                "max_requests_if_approved": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "periodic_refresh": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "redirect": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "retry": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "parallel": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "new_URLs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "external_distribution": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "raw_storage": {
+                  "type": "string",
+                  "const": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。"
+                },
+                "narrower_alternative": {
+                  "type": "string",
+                  "const": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。"
+                },
+                "frequency_basis": {
+                  "type": "string",
+                  "const": "一度限りの条件確認候補。定期取得の必要性は未成立。"
+                },
+                "body_cap_proposal_bytes": {
+                  "type": "integer",
+                  "const": 2097152
+                }
+              },
+              "required": [
+                "candidate_only",
+                "necessity_status",
+                "method_if_separately_approved",
+                "max_requests_if_approved",
+                "periodic_refresh",
+                "redirect",
+                "retry",
+                "parallel",
+                "new_URLs",
+                "external_distribution",
+                "raw_storage",
+                "narrower_alternative",
+                "frequency_basis",
+                "body_cap_proposal_bytes"
+              ],
+              "additionalProperties": false
+            },
+            "overall_access": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_status": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "acquisition_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "unknown_causes": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                }
+              ]
+            },
+            "next_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "P0-B-B-SELECTION"
+                }
+              ]
+            },
+            "candidate_methods": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存資料・提供済み正本の追加offline照合"
+                },
+                {
+                  "type": "string",
+                  "const": "運営者／利用者提供正本の受領候補（今回は未取得）"
+                },
+                {
+                  "type": "string",
+                  "const": "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "URL",
+            "host",
+            "purpose",
+            "necessity",
+            "original",
+            "robots",
+            "terms",
+            "copyright",
+            "UA_evidence",
+            "freshness",
+            "minimum_scope",
+            "overall_access",
+            "permit_status",
+            "permit_id",
+            "acquisition_authorized",
+            "unknown_causes",
+            "next_evidence",
+            "candidate_methods"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "B2"
+            },
+            "URL": {
+              "type": "string",
+              "const": "https://aboutj.jleague.jp/corporate/pressrelease/"
+            },
+            "host": {
+              "type": "string",
+              "const": "aboutj.jleague.jp"
+            },
+            "purpose": {
+              "type": "string",
+              "const": "Press-release entry discovery only after aboutj-specific conditions and separate B approval"
+            },
+            "necessity": {
+              "type": "string",
+              "const": "公式発表時刻の探索入口候補。aboutjの運営者・適用条件・robotsが不足し、www先行なら延期。"
+            },
+            "original": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "NO_VERIFIED_ORIGINAL"
+                },
+                "location": {
+                  "type": "null"
+                },
+                "raw_SHA256": {
+                  "type": "null"
+                },
+                "bytes": {
+                  "type": "null"
+                },
+                "acquired_utc": {
+                  "type": "null"
+                },
+                "saved_utc": {
+                  "type": "null"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "supporting_records": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                }
+              },
+              "required": [
+                "status",
+                "location",
+                "raw_SHA256",
+                "bytes",
+                "acquired_utc",
+                "saved_utc",
+                "source_url",
+                "supporting_records"
+              ],
+              "additionalProperties": false
+            },
+            "robots": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "source_url": {
+                  "type": "null"
+                },
+                "source_host": {
+                  "type": "null"
+                },
+                "source_SHA256": {
+                  "type": "null"
+                },
+                "source_saved_proven": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_applicable_to_exact_host": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "adopted_UA_offline_evaluation": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "normative_complete": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "currently_valid": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "current_site_allow": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "evaluation_user_agent": {
+                  "type": "string",
+                  "const": "J1AI-Research-Timing-Pilot/1.0"
+                },
+                "evaluation_product_token": {
+                  "type": "string",
+                  "const": "Research-Timing-Pilot"
+                },
+                "historical_reference": {
+                  "type": "object",
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "conditional_candidate_only": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "User_Agent": {
+                      "type": "string",
+                      "const": "J1AI-Research-Timing-Pilot/1.0"
+                    },
+                    "product_token": {
+                      "type": "string",
+                      "const": "Research-Timing-Pilot"
+                    },
+                    "parser_version": {
+                      "type": "string",
+                      "const": "nn_v2_robots_offline_groups_v4"
+                    },
+                    "group_selection": {
+                      "type": "array",
+                      "minItems": 0,
+                      "maxItems": 0,
+                      "items": false
+                    },
+                    "matched_rule_count": {
+                      "type": "null"
+                    },
+                    "reference_SHA256": {
+                      "type": "null"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "NO_HOST_SPECIFIC_ORIGINAL"
+                    }
+                  },
+                  "required": [
+                    "decision",
+                    "conditional_candidate_only",
+                    "User_Agent",
+                    "product_token",
+                    "parser_version",
+                    "group_selection",
+                    "matched_rule_count",
+                    "reference_SHA256",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "evaluation_source": {
+                  "type": "string",
+                  "const": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json"
+                },
+                "preconditions": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "固定A1 bytes・host・UA/token・queryなしの対象pathだけ"
+                    },
+                    {
+                      "type": "string",
+                      "const": "一般的な規範適合の証明ではない"
+                    },
+                    {
+                      "type": "string",
+                      "const": "現在のrobots・terms・取得許可を示さない"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "source_url",
+                "source_host",
+                "source_SHA256",
+                "source_saved_proven",
+                "source_applicable_to_exact_host",
+                "adopted_UA_offline_evaluation",
+                "normative_complete",
+                "currently_valid",
+                "current_site_allow",
+                "evaluation_user_agent",
+                "evaluation_product_token",
+                "historical_reference",
+                "evaluation_source",
+                "preconditions"
+              ],
+              "additionalProperties": false
+            },
+            "terms": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "originals": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "research_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "automated_access": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "storage": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "processing": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "redistribution": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "publication": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "commercial_use": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "version": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    },
+                    "robots_relationship": {
+                      "type": "string",
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "research_use",
+                    "automated_access",
+                    "storage",
+                    "processing",
+                    "redistribution",
+                    "publication",
+                    "commercial_use",
+                    "version",
+                    "robots_relationship"
+                  ],
+                  "additionalProperties": false
+                },
+                "missing_reasons": {
+                  "type": "array",
+                  "minItems": 7,
+                  "maxItems": 7,
+                  "items": false,
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "MISSING_ORIGINAL"
+                    },
+                    {
+                      "type": "string",
+                      "const": "APPLICABILITY_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "RESEARCH_AUTOMATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "STORAGE_PROCESSING_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "REDISTRIBUTION_PUBLICATION_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "VERSION_TIME_UNPROVEN"
+                    },
+                    {
+                      "type": "string",
+                      "const": "ROBOTS_RELATIONSHIP_UNPROVEN"
+                    }
+                  ]
+                },
+                "source_candidates": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "scope_caveat": {
+                  "type": "string",
+                  "const": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+                }
+              },
+              "required": [
+                "status",
+                "originals",
+                "conditions",
+                "missing_reasons",
+                "source_candidates",
+                "scope_caveat"
+              ],
+              "additionalProperties": false
+            },
+            "copyright": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "redistribution_authorized": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "source_candidate": {
+                  "type": "null"
+                },
+                "specialist_review": {
+                  "type": "string",
+                  "const": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+                }
+              },
+              "required": [
+                "status",
+                "redistribution_authorized",
+                "source_candidate",
+                "specialist_review"
+              ],
+              "additionalProperties": false
+            },
+            "UA_evidence": {
+              "type": "object",
+              "properties": {
+                "E0": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E1": {
+                  "type": "string",
+                  "const": "OFFLINE_VERIFIED"
+                },
+                "E2": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E3": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "E4_new": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "G2_E1_record_SHA256": {
+                  "type": "string",
+                  "const": "a830c3d3a24b776e0930b20d97a87e405be94d20763fe4a9289dca55fc7493b2"
+                },
+                "historical_request_record": {
+                  "type": "null"
+                },
+                "historical_UA": {
+                  "type": "string",
+                  "const": "NO_REQUEST"
+                },
+                "source_configuration_only": {
+                  "type": "string",
+                  "const": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+                }
+              },
+              "required": [
+                "E0",
+                "E1",
+                "E2",
+                "E3",
+                "E4_new",
+                "G2_E1_record_SHA256",
+                "historical_request_record",
+                "historical_UA",
+                "source_configuration_only"
+              ],
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "UNKNOWN"
+                },
+                "approved_TTL_seconds": {
+                  "type": "null"
+                },
+                "represents_current_site": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "age_seconds_at_review": {
+                  "type": "null"
+                },
+                "reason": {
+                  "type": "string",
+                  "const": "原本・取得時刻・版が未確認"
+                }
+              },
+              "required": [
+                "status",
+                "approved_TTL_seconds",
+                "represents_current_site",
+                "age_seconds_at_review",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "minimum_scope": {
+              "type": "object",
+              "properties": {
+                "candidate_only": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "necessity_status": {
+                  "type": "string",
+                  "const": "DEFER_UNTIL_ABOUTJ_CONDITIONS_AND_SELECTION"
+                },
+                "method_if_separately_approved": {
+                  "type": "string",
+                  "const": "GET"
+                },
+                "max_requests_if_approved": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "periodic_refresh": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "redirect": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "retry": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "parallel": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "new_URLs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 0,
+                  "items": false
+                },
+                "external_distribution": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "raw_storage": {
+                  "type": "string",
+                  "const": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。"
+                },
+                "narrower_alternative": {
+                  "type": "string",
+                  "const": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。"
+                },
+                "frequency_basis": {
+                  "type": "string",
+                  "const": "一度限りの条件確認候補。定期取得の必要性は未成立。"
+                },
+                "body_cap_proposal_bytes": {
+                  "type": "integer",
+                  "const": 2097152
+                }
+              },
+              "required": [
+                "candidate_only",
+                "necessity_status",
+                "method_if_separately_approved",
+                "max_requests_if_approved",
+                "periodic_refresh",
+                "redirect",
+                "retry",
+                "parallel",
+                "new_URLs",
+                "external_distribution",
+                "raw_storage",
+                "narrower_alternative",
+                "frequency_basis",
+                "body_cap_proposal_bytes"
+              ],
+              "additionalProperties": false
+            },
+            "overall_access": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_status": {
+              "type": "string",
+              "const": "HOLD"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "acquisition_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "unknown_causes": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                }
+              ]
+            },
+            "next_evidence": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "P0-B-ABOUTJ-CONDITIONS"
+                },
+                {
+                  "type": "string",
+                  "const": "P0-B-B-SELECTION"
+                }
+              ]
+            },
+            "candidate_methods": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存資料・提供済み正本の追加offline照合"
+                },
+                {
+                  "type": "string",
+                  "const": "運営者／利用者提供正本の受領候補（今回は未取得）"
+                },
+                {
+                  "type": "string",
+                  "const": "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "URL",
+            "host",
+            "purpose",
+            "necessity",
+            "original",
+            "robots",
+            "terms",
+            "copyright",
+            "UA_evidence",
+            "freshness",
+            "minimum_scope",
+            "overall_access",
+            "permit_status",
+            "permit_id",
+            "acquisition_authorized",
+            "unknown_causes",
+            "next_evidence",
+            "candidate_methods"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "required": [
+    "kind",
+    "scope",
+    "base_commit",
+    "reviewed_utc",
+    "identifiers",
+    "holds",
+    "operations",
+    "normative_counts",
+    "historical_unknown_ids",
+    "rows"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

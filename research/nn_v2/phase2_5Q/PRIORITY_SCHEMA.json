@@ -1,0 +1,686 @@
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "NNV2_P0_EVIDENCE_PRIORITY_V1"
+    },
+    "scope": {
+      "type": "string",
+      "const": "PROPOSALS_NOT_APPROVAL"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P0-A-PINS"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 1
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "status": {
+              "type": "string",
+              "const": "COMPLETE"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_requests": {
+              "type": "integer",
+              "const": 0
+            },
+            "contribution": {
+              "type": "string",
+              "const": "6 URL・47私有証拠・G1/G2/P・502原本の出典とhashを照合。E1とE2/E3・リンクと本文を分離。"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "保存時点だけ確認。現在有効性は未認定。"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": false
+            },
+            "residual": {
+              "type": "string",
+              "const": "規範9 UNKNOWN・terms全6 UNKNOWN・アクセスHOLD"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P0-B-WWW-CONDITIONS"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 2
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "status": {
+              "type": "string",
+              "const": "PROPOSED_NOT_AUTHORIZED"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "string",
+              "const": "Only if user/operator originals cannot be supplied"
+            },
+            "minimum_requests": {
+              "type": "integer",
+              "const": 2
+            },
+            "contribution": {
+              "type": "string",
+              "const": "www4 URLに共通する研究・自動取得・保存加工の条件不足を減らせる可能性。適用範囲の証明が必要。"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "発行主体・取得UTC・版・承認された鮮度/改訂確認方針"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": true
+            },
+            "residual": {
+              "type": "string",
+              "const": "A1現在性、aboutj、規範、隔離・永続attempt、実E2/E3、新permit"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P0-B-FRESHNESS"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 3
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "status": {
+              "type": "string",
+              "const": "CONDITIONAL_PROPOSAL"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "string",
+              "const": "Conditional; no automatic refresh"
+            },
+            "minimum_requests": {
+              "type": "integer",
+              "const": 1
+            },
+            "contribution": {
+              "type": "string",
+              "const": "現在のwww条件審査で旧A1が使用可能か鮮度方針を先に決定。必要な場合だけA1更新候補。"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "TTL・時計・改訂時STOP方針を明示"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": true
+            },
+            "residual": {
+              "type": "string",
+              "const": "terms許諾やUA実送信の証明にはならない"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P0-B-ABOUTJ-CONDITIONS"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 4
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "status": {
+              "type": "string",
+              "const": "DEFER_IF_WWW_FIRST"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "string",
+              "const": "Conditional on aboutj selection"
+            },
+            "minimum_requests": {
+              "type": "integer",
+              "const": 1
+            },
+            "contribution": {
+              "type": "string",
+              "const": "aboutj採用時だけA2正本・運営者と適用条件の正本を確認。規約URL未確定のため合計取得数未確定。"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "host固有・版・時点・適用範囲"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": true
+            },
+            "residual": {
+              "type": "string",
+              "const": "A2取得だけではtermsやB2探索を許可できない"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P0-B-B-SELECTION"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 5
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "status": {
+              "type": "string",
+              "const": "DEFERRED_CANDIDATE_SELECTION"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_requests": {
+              "type": "integer",
+              "const": 0
+            },
+            "contribution": {
+              "type": "string",
+              "const": "既存資料で必要性を確認し、条件成立後に選定した入口だけを別審査候補へ。"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "実際に採用した時点で要件確定"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": true
+            },
+            "residual": {
+              "type": "string",
+              "const": "入口HTMLだけでは過去PITや独立観測を立証しない"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P1-ISOLATION"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 6
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P1"
+            },
+            "status": {
+              "type": "string",
+              "const": "NOT_AUTHORIZED"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_requests": {
+              "type": "integer",
+              "const": 0
+            },
+            "contribution": {
+              "type": "string",
+              "const": "別承認の隔離実証と永続attempt管理"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "最終code/config/OSの同一版でqualification"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": true
+            },
+            "residual": {
+              "type": "string",
+              "const": "本サイト実E2/E3/E4は未観測"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "P2-OBSERVATION"
+            },
+            "rank": {
+              "type": "integer",
+              "const": 7
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P2"
+            },
+            "status": {
+              "type": "string",
+              "const": "NOT_AUTHORIZED"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "network_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_requests": {
+              "type": "string",
+              "const": "Only exact subset in future approved permit"
+            },
+            "contribution": {
+              "type": "string",
+              "const": "G4後にのみ実E2/E3/E4を記録"
+            },
+            "freshness": {
+              "type": "string",
+              "const": "承認時刻窓と実UTC"
+            },
+            "legal_operational_review": {
+              "type": "boolean",
+              "const": true
+            },
+            "residual": {
+              "type": "string",
+              "const": "過去PIT・過去送信UAの遡及証明にはならない"
+            }
+          },
+          "required": [
+            "id",
+            "rank",
+            "bucket",
+            "status",
+            "targets",
+            "network_required",
+            "minimum_requests",
+            "contribution",
+            "freshness",
+            "legal_operational_review",
+            "residual"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "minimal_candidate": {
+      "type": "object",
+      "properties": {
+        "first_choice": {
+          "type": "string",
+          "const": "運営者／利用者提供のA3/A4正本と適用scopeを確認。今回の外部取得0。"
+        },
+        "fallback_exact_subset": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": false,
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "A3"
+            },
+            {
+              "type": "string",
+              "const": "A4"
+            }
+          ]
+        },
+        "fallback_max_GET": {
+          "type": "integer",
+          "const": 2
+        },
+        "conditional_A1_refresh_max_GET": {
+          "type": "integer",
+          "const": 1
+        },
+        "aboutj_deferred": {
+          "type": "boolean",
+          "const": true
+        },
+        "B1_B2_deferred": {
+          "type": "boolean",
+          "const": true
+        },
+        "permission": {
+          "type": "string",
+          "const": "根拠・bootstrap条件・exact subset・保存先・時刻窓・予算の別承認が必要。候補の提示はpermitではない。"
+        }
+      },
+      "required": [
+        "first_choice",
+        "fallback_exact_subset",
+        "fallback_max_GET",
+        "conditional_A1_refresh_max_GET",
+        "aboutj_deferred",
+        "B1_B2_deferred",
+        "permission"
+      ],
+      "additionalProperties": false
+    },
+    "next_explicit_approvals": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "string",
+          "const": "条件原本提供または限定条件確認の根拠とscope"
+        },
+        {
+          "type": "string",
+          "const": "必要な場合のA1鮮度確認"
+        },
+        {
+          "type": "string",
+          "const": "aboutj採用とhost固有条件の確認（www先行なら延期）"
+        },
+        {
+          "type": "string",
+          "const": "隔離実証範囲と永続attempt試験"
+        },
+        {
+          "type": "string",
+          "const": "P0/P1成立後のG3本審査・新permit"
+        },
+        {
+          "type": "string",
+          "const": "別途G4開始承認"
+        }
+      ]
+    }
+  },
+  "required": [
+    "kind",
+    "scope",
+    "items",
+    "minimal_candidate",
+    "next_explicit_approvals"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

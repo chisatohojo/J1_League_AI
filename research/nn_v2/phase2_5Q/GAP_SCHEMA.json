@@ -1,0 +1,2841 @@
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "NNV2_ACCESS_GAPS_V1"
+    },
+    "scope": {
+      "type": "string",
+      "const": "OFFLINE_REVIEW_ONLY"
+    },
+    "normative_counts": {
+      "type": "object",
+      "properties": {
+        "PASS": {
+          "type": "integer",
+          "const": 15
+        },
+        "FAIL": {
+          "type": "integer",
+          "const": 0
+        },
+        "UNKNOWN": {
+          "type": "integer",
+          "const": 9
+        }
+      },
+      "required": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN"
+      ],
+      "additionalProperties": false
+    },
+    "fully_resolved_historical_unknowns": {
+      "type": "integer",
+      "const": 0
+    },
+    "priority_axis": {
+      "type": "string",
+      "const": "Evidence preparation timing; M original scope priorities remain unchanged"
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "agent_grammar"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "agent_grammar"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G4_OBSERVATION"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P2"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P2"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": true
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G1採用とE1は照合済み。実header・独立観測はG4観測計画へ。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "RFC product-token uses ASCII letters, underscore and hyphen; it is distinct from the HTTP header. Google suffix handling is a separate profile."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "0fca651254c9fc467c902d4edd157310b973dcf8637f95afd891b5d63e7d9cf3"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "rule_grammar"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "rule_grammar"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "保存済みRFC/GoogleのABNF・例・回復規則をbyte参照で比較。矛盾が残れば追加正本候補へ。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "ABNF path-pattern starts with slash; field parsing supports comments, whitespace and line endings. Google documents BOM and ignoring invalid lines."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "ec60fb475702b32e0267f5b33a7214569a6da4eb41344c5cccc52b6946bcb31c"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "longest_rule"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "longest_rule"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "保存済み正本の順位・marker解釈を比較。固定4 pathの一致0とは区別。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "RFC most-specific matching rule is longest in octets. Google examples distinguish wildcard-inclusive pattern length from literal-only length."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "f975d1e1510bccab0a2676eee7caeecc1a43bded5affb9a41a27a7edefe3a8b6"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "reserved_octets"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "reserved_octets"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存RFC9309と参照仕様の不足箇所を特定し、必要な正本だけ別承認候補へ。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "RFC reserved/non-ASCII octets require the prescribed comparison encoding; encoded reserved bytes must not be indiscriminately decoded."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "69b5069a6ee0802ee13f56de4b955e26f52bfeafe1226f50e46b93cef2be7a79"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "query"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "query"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "保存済み正本のquery subsetを照合。6 URLにはqueryを追加しない。一般解消は未完了。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "Path and query participate in matching (RFC Figure4). Reserved delimiters in query data require careful interpretation; fragments are not fetched."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "e90a81f7da8b69c6b6963a57f81d8f1154d485888dcf797d891e3e31d7c8d9ca"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "encoding_errors"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "encoding_errors"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P1"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P1"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "保存済み仕様の解釈と異常bytes保持方針を設計し、別承認の隔離試験へ。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "RFC requires line-by-line parsing and use of parseable rules. Google tolerates BOM and some invalid/non-text input instead of treating it as permission."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "54f1ab11dedd5d1c9cbda8bf36c6c5caaa845e3e567396b2f82062ffad510e6e"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "parse_limits"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "parse_limits"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P1"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P1"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "64KiBの取得上限と規範parser容量要件を区別し、変更時は別版・資源試験へ。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "RFC parser limit must be at least500KiB; Google documents500KiB and ignoring data beyond that limit."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "27d52a12b9dacabd2bdb73953e54f746705c7d09228da7d0239a66842eaede0d"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "standard_examples"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "standard_examples"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "ROBOTS_NORMATIVE_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "保存された公式例の原文とbyte範囲を比較。説明を補作せず矛盾は残す。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "Source examples must remain byte/anchor attributable; contradictions must not be silently corrected. RFC Figures2,3,4,6 contain separately usable cases."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "cc91e70339e79fb7721056b7a3420dc5f9e5c27b73a09a6707ad0496161c02c4"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "sealed_A1_replay"
+            },
+            "historical_id": {
+              "type": "string",
+              "const": "sealed_A1_replay"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 7,
+              "maxItems": 7,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "MISSING_PROVENANCE"
+                },
+                {
+                  "type": "string",
+                  "const": "STALE_EVIDENCE"
+                },
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                },
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                },
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1原本・保存時刻・hashは確認。アクセス条件と鮮度方針、隔離qualification、新承認、後続観測を分割。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "WWW条件原本はA1/A3/A4/B1に共通する適用範囲を証明できた場合だけ共用。aboutjには流用不可。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "string",
+              "const": "Re-evaluation must bind the actual fixed HTTP header, explicit crawler product-token, host-specific sealed original and reviewed spec; robots alone cannot authorize further GETs."
+            },
+            "source_record_SHA256": {
+              "type": "string",
+              "const": "f280488203586cf871d83963c19c155bd6249fc0ad61d4507ae6d8dd1e599dec"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "www_terms_original"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                },
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A3/A4の正本、時刻・版・発行主体・wwwへの適用・研究自動取得・保存加工条件を確認。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "WWW条件原本はA1/A3/A4/B1に共通する適用範囲を証明できた場合だけ共用。aboutjには流用不可。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "aboutj_conditions"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "MISSING_ORIGINAL"
+                },
+                {
+                  "type": "string",
+                  "const": "TERMS_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "aboutj採用の必要性を先に確定。必要ならA2正本と同host適用条件を別承認候補へ。新規規約URLを推測でscope追加しない。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "WWW条件原本はA1/A3/A4/B1に共通する適用範囲を証明できた場合だけ共用。aboutjには流用不可。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "freshness_policy"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "STALE_EVIDENCE"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-B"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "既存A1の経過時間と現在有効性を分離。承認された鮮度方針または正本提供・限定refresh根拠を審査。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "B_selection"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "SCOPE_UNRESOLVED"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P0"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P0-A"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": true
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "B1/B2が試合更新通知・公式発表時刻の証拠に必要か、既存資料との重複・取得対象数を比較。採用判断は別審査。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "durability"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "STORAGE_AUDIT_UNPROVEN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G3"
+                },
+                {
+                  "type": "string",
+                  "const": "G4"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P1"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P1"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": false
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "隔離環境で永続attempt、crash、競合、raw/metadata/receiptのfsync読戻し・所有者境界を実証。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "actual_E2"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "UA_WIRE_UNKNOWN"
+                },
+                {
+                  "type": "string",
+                  "const": "MISSING_PROVENANCE"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G4_OBSERVATION"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P2"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P2"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": true
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "承認G4で送信直前の実最終header・送信開始・結果を記録。旧requestにUAを補記しない。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "const": "independent_E3"
+            },
+            "historical_id": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "classes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "INDEPENDENT_OBSERVATION_UNKNOWN"
+                }
+              ]
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "A1"
+                },
+                {
+                  "type": "string",
+                  "const": "A2"
+                },
+                {
+                  "type": "string",
+                  "const": "A3"
+                },
+                {
+                  "type": "string",
+                  "const": "A4"
+                },
+                {
+                  "type": "string",
+                  "const": "B1"
+                },
+                {
+                  "type": "string",
+                  "const": "B2"
+                }
+              ]
+            },
+            "affected_gates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "G4_OBSERVATION"
+                }
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "const": "P2"
+            },
+            "bucket": {
+              "type": "string",
+              "const": "P2"
+            },
+            "offline_fully_resolvable": {
+              "type": "boolean",
+              "const": false
+            },
+            "external_acquisition_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "dynamic_isolation_required": {
+              "type": "boolean",
+              "const": false
+            },
+            "only_after_real_communication": {
+              "type": "boolean",
+              "const": true
+            },
+            "additional_approval_required": {
+              "type": "boolean",
+              "const": true
+            },
+            "minimum_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "E3要否・独立性・TLS/privacy方式はG3前に決め、実観測は承認G4で行う。不要承認でもNOT_OBSERVEDを保持。"
+                }
+              ]
+            },
+            "residual_constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "解消しても他の条件・G3新承認・G4開始承認を満たさなければHOLD。旧UNKNOWN件数は変更しない。"
+                }
+              ]
+            },
+            "shared_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": false,
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "固定A1・保存済みRFC/Google原本とG1/G2証拠は複数項目で共通。実観測は代替しない。"
+                }
+              ]
+            },
+            "original_definition": {
+              "type": "null"
+            },
+            "source_record_SHA256": {
+              "type": "null"
+            },
+            "source_reference": {
+              "type": "string",
+              "const": "Phase2.5Q cross-cutting gap; not a tenth normative UNKNOWN"
+            }
+          },
+          "required": [
+            "id",
+            "historical_id",
+            "status",
+            "classes",
+            "targets",
+            "affected_gates",
+            "priority",
+            "bucket",
+            "offline_fully_resolvable",
+            "external_acquisition_required",
+            "dynamic_isolation_required",
+            "only_after_real_communication",
+            "additional_approval_required",
+            "minimum_steps",
+            "residual_constraints",
+            "shared_evidence",
+            "original_definition",
+            "source_record_SHA256",
+            "source_reference"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "required": [
+    "kind",
+    "scope",
+    "normative_counts",
+    "fully_resolved_historical_unknowns",
+    "priority_axis",
+    "rows"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

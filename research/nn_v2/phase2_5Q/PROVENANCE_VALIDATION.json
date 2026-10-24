@@ -1,0 +1,46 @@
+{
+  "kind": "NNV2_Q_PROVENANCE_VALIDATION_V1",
+  "passed": true,
+  "reviewed_utc": "2026-10-24T12:28:48.765351+00:00",
+  "historical_private_files_verified": 47,
+  "public_files_verified": 77,
+  "saved_registry_originals_verified": 502,
+  "source_registry_scope": "502 D originals plus G/I sealed evidence, not all files on disk",
+  "A1_raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+  "A1_records_verified": 5,
+  "A1_metadata_URL_and_times_match": true,
+  "A1_request_does_not_record_UA": true,
+  "worker_AST_only": {
+    "path": "research/nn_v2/phase2_5G/access_worker.py",
+    "SHA256": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8",
+    "UA_source_lines": [
+      {
+        "line": 97,
+        "text": "conn.request('GET',PATHS[i],headers={'Host':host,'User-Agent':AGENT,'Accept-Encoding':'identity','Connection':'close'})"
+      }
+    ],
+    "imported": false
+  },
+  "current_wire_UA_proven": false,
+  "independent_observation_proven": false,
+  "new_acquisitions": 0,
+  "old_permit_terminal_reuse_forbidden": true,
+  "old_G_communication": {
+    "HTTP_GET": 1,
+    "DNS": 1,
+    "TCP": 1,
+    "historical_only": true
+  },
+  "current_phase_operations": {
+    "HTTP": 0,
+    "DNS": 0,
+    "socket": 0,
+    "new_acquisitions": 0,
+    "transport_connections": 0,
+    "permits_issued_updated": 0,
+    "model_operations": 0,
+    "GUI_changes": 0,
+    "task_changes": 0,
+    "policy_changes": 0
+  }
+}

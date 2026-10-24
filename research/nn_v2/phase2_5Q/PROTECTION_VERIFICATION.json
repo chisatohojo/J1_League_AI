@@ -1,0 +1,19 @@
+{
+  "UTC": "2026-10-24T12:32:32.239363+00:00",
+  "passed": true,
+  "protected_files": 118770,
+  "differences": [],
+  "worktrees_unchanged": true,
+  "existing_worktree_count": 32,
+  "main_unchanged": true,
+  "GUI_tasks_listeners_unchanged": true,
+  "model_payloads_unchanged": 53,
+  "private_baseline_SHA256": "fb17b0673363b31e5f92c61e14f8a305411daaa8d857ebaaa792b9f84db63aab",
+  "private_protection_SHA256": "be25312234e87020d29a1e2a80d66eefefad854472004e5ad187b7732ad5c48c",
+  "environment_start_SHA256": "dc7f4eb5040b1defdc943bde44c88b3757de6a1624caee12129e33be8a917173",
+  "environment_final_SHA256": "dc7f4eb5040b1defdc943bde44c88b3757de6a1624caee12129e33be8a917173",
+  "baseline_scope": "Prior P protected-file set plus 32 existing tracked worktrees and existing J1AI evidence trees. New Q worktree/private outputs excluded.",
+  "historical_model_seal_SHA256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f",
+  "scheduled_background_differences": 0,
+  "unexplained_differences": 0
+}

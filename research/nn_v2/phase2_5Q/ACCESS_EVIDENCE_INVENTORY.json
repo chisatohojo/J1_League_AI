@@ -1,0 +1,935 @@
+{
+  "kind": "NNV2_ACCESS_EVIDENCE_V1",
+  "scope": "OFFLINE_REVIEW_ONLY",
+  "base_commit": "d57e182521dbf354b41b536a67e27b17440d2950",
+  "reviewed_utc": "2026-10-24T12:28:48.765351+00:00",
+  "identifiers": {
+    "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+    "product_token": "Research-Timing-Pilot",
+    "adoption": "G1_ADOPTED_OFFLINE_ONLY"
+  },
+  "holds": {
+    "B": "HOLD",
+    "C": "HOLD",
+    "D": "HOLD",
+    "HISTORY": "HOLD",
+    "PREDICTION": "HOLD",
+    "Phase_A": "BLOCKED",
+    "Phase_B": "NOT_AUTHORIZED",
+    "G3": "HOLD",
+    "G4": "NOT_AUTHORIZED"
+  },
+  "operations": {
+    "HTTP": 0,
+    "DNS": 0,
+    "socket": 0,
+    "new_acquisitions": 0,
+    "transport_connections": 0,
+    "permits_issued_updated": 0,
+    "model_operations": 0,
+    "GUI_changes": 0,
+    "task_changes": 0,
+    "policy_changes": 0
+  },
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "historical_unknown_ids": [
+    "agent_grammar",
+    "rule_grammar",
+    "longest_rule",
+    "reserved_octets",
+    "query",
+    "encoding_errors",
+    "parse_limits",
+    "standard_examples",
+    "sealed_A1_replay"
+  ],
+  "rows": [
+    {
+      "id": "A1",
+      "URL": "https://www.jleague.jp/robots.txt",
+      "host": "www.jleague.jp",
+      "purpose": "Assess freshness of previously sealed www robots; no automatic refresh",
+      "necessity": "保存原本で固定評価を再現できる。現在の条件審査に必要な場合のみ鮮度方針を定め、更新候補とする。",
+      "original": {
+        "status": "VERIFIED_SAVED_ORIGINAL",
+        "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/raw.bin",
+        "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "bytes": 646,
+        "acquired_utc": "2026-10-23T09:46:47.645062+00:00",
+        "saved_utc": "2026-10-23T09:46:47.663444+00:00",
+        "source_url": "https://www.jleague.jp/robots.txt",
+        "supporting_records": [
+          {
+            "role": "metadata",
+            "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/metadata.json",
+            "SHA256": "c4b967fd0f7552f462c957044bdfcab2f9f1fd5d6abb9ba734c6beb3b8420817"
+          },
+          {
+            "role": "request",
+            "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/request.json",
+            "SHA256": "96b53165fca74b5af11065ec76dc2aa5c36f472e1eaea0e077e3ca5a48f80d17"
+          },
+          {
+            "role": "seal",
+            "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/seal.json",
+            "SHA256": "a83769cf3b3376886d73279a1a2c5f1ea86618fad0d736bac2f95c8643c6e50f"
+          },
+          {
+            "role": "worker_receipt",
+            "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/worker-receipt.json",
+            "SHA256": "b57692bed2e37ced3f45a469a50e514685ee874ebd31404eaefaa9286ae7e235"
+          },
+          {
+            "role": "parent_receipt",
+            "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/parent-receipt.json",
+            "SHA256": "a68110729e9b1d0ad1a20093dc4397f475d35aa6b8b80aced18a0cb676a38e1a"
+          }
+        ]
+      },
+      "robots": {
+        "status": "CONDITIONAL_ALLOW_FIXED_ORIGINAL",
+        "source_url": "https://www.jleague.jp/robots.txt",
+        "source_host": "www.jleague.jp",
+        "source_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "source_saved_proven": true,
+        "source_applicable_to_exact_host": true,
+        "adopted_UA_offline_evaluation": true,
+        "normative_complete": false,
+        "currently_valid": "UNKNOWN",
+        "current_site_allow": false,
+        "evaluation_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "evaluation_product_token": "Research-Timing-Pilot",
+        "historical_reference": {
+          "decision": "ALLOW",
+          "conditional_candidate_only": true,
+          "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "group_selection": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ],
+              "rule_count": 19
+            }
+          ],
+          "matched_rule_count": 0,
+          "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "reason": "RFC_2_2_2_IMPLICIT_ROBOTS_URI"
+        },
+        "evaluation_source": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json",
+        "preconditions": [
+          "固定A1 bytes・host・UA/token・queryなしの対象pathだけ",
+          "一般的な規範適合の証明ではない",
+          "現在のrobots・terms・取得許可を示さない"
+        ]
+      },
+      "terms": {
+        "status": "UNKNOWN",
+        "originals": [],
+        "conditions": {
+          "applicability": "UNKNOWN",
+          "research_use": "UNKNOWN",
+          "automated_access": "UNKNOWN",
+          "storage": "UNKNOWN",
+          "processing": "UNKNOWN",
+          "redistribution": "UNKNOWN",
+          "publication": "UNKNOWN",
+          "commercial_use": "UNKNOWN",
+          "version": "UNKNOWN",
+          "robots_relationship": "UNKNOWN"
+        },
+        "missing_reasons": [
+          "MISSING_ORIGINAL",
+          "APPLICABILITY_UNPROVEN",
+          "RESEARCH_AUTOMATION_UNPROVEN",
+          "STORAGE_PROCESSING_UNPROVEN",
+          "REDISTRIBUTION_PUBLICATION_UNPROVEN",
+          "VERSION_TIME_UNPROVEN",
+          "ROBOTS_RELATIONSHIP_UNPROVEN"
+        ],
+        "source_candidates": [
+          "A3",
+          "A4"
+        ],
+        "scope_caveat": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+      },
+      "copyright": {
+        "status": "UNKNOWN",
+        "redistribution_authorized": false,
+        "source_candidate": "A4",
+        "specialist_review": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+      },
+      "UA_evidence": {
+        "E0": "OFFLINE_VERIFIED",
+        "E1": "OFFLINE_VERIFIED",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "E4_new": false,
+        "G2_E1_record_SHA256": "c88fae27bb0b99192b6c172255e1fa179d21e9cc176758520775357dc0f034d6",
+        "historical_request_record": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/request.json",
+        "historical_UA": "NOT_RECORDED_IN_REQUEST_METADATA",
+        "source_configuration_only": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+      },
+      "freshness": {
+        "status": "UNKNOWN",
+        "approved_TTL_seconds": null,
+        "represents_current_site": false,
+        "age_seconds_at_review": 96121.12,
+        "reason": "原本時刻は確認済みでもTTL・時計・再審査条件が未承認。古さを測るだけでfresh/stale確定しない。"
+      },
+      "minimum_scope": {
+        "candidate_only": true,
+        "necessity_status": "EXISTING_ORIGINAL_SUFFICIENT_FOR_OFFLINE",
+        "method_if_separately_approved": "GET",
+        "max_requests_if_approved": 1,
+        "periodic_refresh": false,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "new_URLs": [],
+        "external_distribution": false,
+        "raw_storage": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。",
+        "narrower_alternative": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。",
+        "frequency_basis": "一度限りの条件確認候補。定期取得の必要性は未成立。",
+        "body_cap_proposal_bytes": 65536
+      },
+      "overall_access": "HOLD",
+      "permit_status": "HOLD",
+      "permit_id": null,
+      "acquisition_authorized": false,
+      "unknown_causes": [
+        "TERMS_UNKNOWN",
+        "SCOPE_UNRESOLVED",
+        "UA_WIRE_UNKNOWN",
+        "STORAGE_AUDIT_UNPROVEN",
+        "INDEPENDENT_OBSERVATION_UNKNOWN",
+        "MISSING_PROVENANCE",
+        "STALE_EVIDENCE"
+      ],
+      "next_evidence": [
+        "P0-B-WWW-CONDITIONS",
+        "P0-B-FRESHNESS"
+      ],
+      "candidate_methods": [
+        "既存資料・提供済み正本の追加offline照合",
+        "運営者／利用者提供正本の受領候補（今回は未取得）",
+        "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+      ]
+    },
+    {
+      "id": "A2",
+      "URL": "https://aboutj.jleague.jp/robots.txt",
+      "host": "aboutj.jleague.jp",
+      "purpose": "First host-specific robots/access-conditions inspection, only after separately reviewed bootstrap basis",
+      "necessity": "aboutjを採用する場合だけhost固有原本が必要。www先行調査からは除外できる。",
+      "original": {
+        "status": "NO_VERIFIED_ORIGINAL",
+        "location": null,
+        "raw_SHA256": null,
+        "bytes": null,
+        "acquired_utc": null,
+        "saved_utc": null,
+        "source_url": null,
+        "supporting_records": []
+      },
+      "robots": {
+        "status": "UNKNOWN",
+        "source_url": null,
+        "source_host": null,
+        "source_SHA256": null,
+        "source_saved_proven": false,
+        "source_applicable_to_exact_host": false,
+        "adopted_UA_offline_evaluation": false,
+        "normative_complete": false,
+        "currently_valid": "UNKNOWN",
+        "current_site_allow": false,
+        "evaluation_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "evaluation_product_token": "Research-Timing-Pilot",
+        "historical_reference": {
+          "decision": "UNKNOWN",
+          "conditional_candidate_only": false,
+          "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "group_selection": [],
+          "matched_rule_count": null,
+          "reference_SHA256": null,
+          "reason": "NO_HOST_SPECIFIC_ORIGINAL"
+        },
+        "evaluation_source": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json",
+        "preconditions": [
+          "固定A1 bytes・host・UA/token・queryなしの対象pathだけ",
+          "一般的な規範適合の証明ではない",
+          "現在のrobots・terms・取得許可を示さない"
+        ]
+      },
+      "terms": {
+        "status": "UNKNOWN",
+        "originals": [],
+        "conditions": {
+          "applicability": "UNKNOWN",
+          "research_use": "UNKNOWN",
+          "automated_access": "UNKNOWN",
+          "storage": "UNKNOWN",
+          "processing": "UNKNOWN",
+          "redistribution": "UNKNOWN",
+          "publication": "UNKNOWN",
+          "commercial_use": "UNKNOWN",
+          "version": "UNKNOWN",
+          "robots_relationship": "UNKNOWN"
+        },
+        "missing_reasons": [
+          "MISSING_ORIGINAL",
+          "APPLICABILITY_UNPROVEN",
+          "RESEARCH_AUTOMATION_UNPROVEN",
+          "STORAGE_PROCESSING_UNPROVEN",
+          "REDISTRIBUTION_PUBLICATION_UNPROVEN",
+          "VERSION_TIME_UNPROVEN",
+          "ROBOTS_RELATIONSHIP_UNPROVEN"
+        ],
+        "source_candidates": [],
+        "scope_caveat": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+      },
+      "copyright": {
+        "status": "UNKNOWN",
+        "redistribution_authorized": false,
+        "source_candidate": null,
+        "specialist_review": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+      },
+      "UA_evidence": {
+        "E0": "OFFLINE_VERIFIED",
+        "E1": "OFFLINE_VERIFIED",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "E4_new": false,
+        "G2_E1_record_SHA256": "00bb6bf052072df57790b9f91b6186438afc20f5ffd3e66848b2b1ee15eefbe0",
+        "historical_request_record": null,
+        "historical_UA": "NO_REQUEST",
+        "source_configuration_only": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+      },
+      "freshness": {
+        "status": "UNKNOWN",
+        "approved_TTL_seconds": null,
+        "represents_current_site": false,
+        "age_seconds_at_review": null,
+        "reason": "原本・取得時刻・版が未確認"
+      },
+      "minimum_scope": {
+        "candidate_only": true,
+        "necessity_status": "CONDITIONAL_ON_ABOUTJ_SELECTION",
+        "method_if_separately_approved": "GET",
+        "max_requests_if_approved": 1,
+        "periodic_refresh": false,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "new_URLs": [],
+        "external_distribution": false,
+        "raw_storage": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。",
+        "narrower_alternative": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。",
+        "frequency_basis": "一度限りの条件確認候補。定期取得の必要性は未成立。",
+        "body_cap_proposal_bytes": 65536
+      },
+      "overall_access": "HOLD",
+      "permit_status": "HOLD",
+      "permit_id": null,
+      "acquisition_authorized": false,
+      "unknown_causes": [
+        "TERMS_UNKNOWN",
+        "SCOPE_UNRESOLVED",
+        "UA_WIRE_UNKNOWN",
+        "STORAGE_AUDIT_UNPROVEN",
+        "INDEPENDENT_OBSERVATION_UNKNOWN",
+        "MISSING_ORIGINAL"
+      ],
+      "next_evidence": [
+        "P0-B-ABOUTJ-CONDITIONS"
+      ],
+      "candidate_methods": [
+        "既存資料・提供済み正本の追加offline照合",
+        "運営者／利用者提供正本の受領候補（今回は未取得）",
+        "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+      ]
+    },
+    {
+      "id": "A3",
+      "URL": "https://www.jleague.jp/general/kiyaku/",
+      "host": "www.jleague.jp",
+      "purpose": "Confirm current terms applicability and automated retrieval conditions",
+      "necessity": "wwwに適用される規約・自動取得・研究利用条件を確認する正本候補。リンクだけでは代替不可。",
+      "original": {
+        "status": "NO_VERIFIED_ORIGINAL",
+        "location": null,
+        "raw_SHA256": null,
+        "bytes": null,
+        "acquired_utc": null,
+        "saved_utc": null,
+        "source_url": null,
+        "supporting_records": []
+      },
+      "robots": {
+        "status": "CONDITIONAL_ALLOW_FIXED_ORIGINAL",
+        "source_url": "https://www.jleague.jp/robots.txt",
+        "source_host": "www.jleague.jp",
+        "source_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "source_saved_proven": true,
+        "source_applicable_to_exact_host": true,
+        "adopted_UA_offline_evaluation": true,
+        "normative_complete": false,
+        "currently_valid": "UNKNOWN",
+        "current_site_allow": false,
+        "evaluation_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "evaluation_product_token": "Research-Timing-Pilot",
+        "historical_reference": {
+          "decision": "ALLOW",
+          "conditional_candidate_only": true,
+          "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "group_selection": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ],
+              "rule_count": 19
+            }
+          ],
+          "matched_rule_count": 0,
+          "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "reason": "SUPPORTED_OFFLINE_PATH_SUBSET"
+        },
+        "evaluation_source": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json",
+        "preconditions": [
+          "固定A1 bytes・host・UA/token・queryなしの対象pathだけ",
+          "一般的な規範適合の証明ではない",
+          "現在のrobots・terms・取得許可を示さない"
+        ]
+      },
+      "terms": {
+        "status": "UNKNOWN",
+        "originals": [],
+        "conditions": {
+          "applicability": "UNKNOWN",
+          "research_use": "UNKNOWN",
+          "automated_access": "UNKNOWN",
+          "storage": "UNKNOWN",
+          "processing": "UNKNOWN",
+          "redistribution": "UNKNOWN",
+          "publication": "UNKNOWN",
+          "commercial_use": "UNKNOWN",
+          "version": "UNKNOWN",
+          "robots_relationship": "UNKNOWN"
+        },
+        "missing_reasons": [
+          "MISSING_ORIGINAL",
+          "APPLICABILITY_UNPROVEN",
+          "RESEARCH_AUTOMATION_UNPROVEN",
+          "STORAGE_PROCESSING_UNPROVEN",
+          "REDISTRIBUTION_PUBLICATION_UNPROVEN",
+          "VERSION_TIME_UNPROVEN",
+          "ROBOTS_RELATIONSHIP_UNPROVEN"
+        ],
+        "source_candidates": [
+          "A3",
+          "A4"
+        ],
+        "scope_caveat": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+      },
+      "copyright": {
+        "status": "UNKNOWN",
+        "redistribution_authorized": false,
+        "source_candidate": "A4",
+        "specialist_review": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+      },
+      "UA_evidence": {
+        "E0": "OFFLINE_VERIFIED",
+        "E1": "OFFLINE_VERIFIED",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "E4_new": false,
+        "G2_E1_record_SHA256": "ca2bb8c6532984135c6b4cf877cbd88e5dc76fad14f379d822f858b031caccfb",
+        "historical_request_record": null,
+        "historical_UA": "NO_REQUEST",
+        "source_configuration_only": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+      },
+      "freshness": {
+        "status": "UNKNOWN",
+        "approved_TTL_seconds": null,
+        "represents_current_site": false,
+        "age_seconds_at_review": null,
+        "reason": "原本・取得時刻・版が未確認"
+      },
+      "minimum_scope": {
+        "candidate_only": true,
+        "necessity_status": "PRIORITY_CONDITIONS_SOURCE",
+        "method_if_separately_approved": "GET",
+        "max_requests_if_approved": 1,
+        "periodic_refresh": false,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "new_URLs": [],
+        "external_distribution": false,
+        "raw_storage": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。",
+        "narrower_alternative": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。",
+        "frequency_basis": "一度限りの条件確認候補。定期取得の必要性は未成立。",
+        "body_cap_proposal_bytes": 1048576
+      },
+      "overall_access": "HOLD",
+      "permit_status": "HOLD",
+      "permit_id": null,
+      "acquisition_authorized": false,
+      "unknown_causes": [
+        "TERMS_UNKNOWN",
+        "SCOPE_UNRESOLVED",
+        "UA_WIRE_UNKNOWN",
+        "STORAGE_AUDIT_UNPROVEN",
+        "INDEPENDENT_OBSERVATION_UNKNOWN",
+        "MISSING_ORIGINAL"
+      ],
+      "next_evidence": [
+        "P0-B-WWW-CONDITIONS"
+      ],
+      "candidate_methods": [
+        "既存資料・提供済み正本の追加offline照合",
+        "運営者／利用者提供正本の受領候補（今回は未取得）",
+        "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+      ]
+    },
+    {
+      "id": "A4",
+      "URL": "https://www.jleague.jp/general/copyright/",
+      "host": "www.jleague.jp",
+      "purpose": "Confirm copyright, storage/quote/reuse conditions",
+      "necessity": "保存・加工・引用・再利用条件の正本候補。外部再配布を計画しなくても内部保存の条件が未確認。",
+      "original": {
+        "status": "NO_VERIFIED_ORIGINAL",
+        "location": null,
+        "raw_SHA256": null,
+        "bytes": null,
+        "acquired_utc": null,
+        "saved_utc": null,
+        "source_url": null,
+        "supporting_records": []
+      },
+      "robots": {
+        "status": "CONDITIONAL_ALLOW_FIXED_ORIGINAL",
+        "source_url": "https://www.jleague.jp/robots.txt",
+        "source_host": "www.jleague.jp",
+        "source_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "source_saved_proven": true,
+        "source_applicable_to_exact_host": true,
+        "adopted_UA_offline_evaluation": true,
+        "normative_complete": false,
+        "currently_valid": "UNKNOWN",
+        "current_site_allow": false,
+        "evaluation_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "evaluation_product_token": "Research-Timing-Pilot",
+        "historical_reference": {
+          "decision": "ALLOW",
+          "conditional_candidate_only": true,
+          "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "group_selection": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ],
+              "rule_count": 19
+            }
+          ],
+          "matched_rule_count": 0,
+          "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "reason": "SUPPORTED_OFFLINE_PATH_SUBSET"
+        },
+        "evaluation_source": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json",
+        "preconditions": [
+          "固定A1 bytes・host・UA/token・queryなしの対象pathだけ",
+          "一般的な規範適合の証明ではない",
+          "現在のrobots・terms・取得許可を示さない"
+        ]
+      },
+      "terms": {
+        "status": "UNKNOWN",
+        "originals": [],
+        "conditions": {
+          "applicability": "UNKNOWN",
+          "research_use": "UNKNOWN",
+          "automated_access": "UNKNOWN",
+          "storage": "UNKNOWN",
+          "processing": "UNKNOWN",
+          "redistribution": "UNKNOWN",
+          "publication": "UNKNOWN",
+          "commercial_use": "UNKNOWN",
+          "version": "UNKNOWN",
+          "robots_relationship": "UNKNOWN"
+        },
+        "missing_reasons": [
+          "MISSING_ORIGINAL",
+          "APPLICABILITY_UNPROVEN",
+          "RESEARCH_AUTOMATION_UNPROVEN",
+          "STORAGE_PROCESSING_UNPROVEN",
+          "REDISTRIBUTION_PUBLICATION_UNPROVEN",
+          "VERSION_TIME_UNPROVEN",
+          "ROBOTS_RELATIONSHIP_UNPROVEN"
+        ],
+        "source_candidates": [
+          "A3",
+          "A4"
+        ],
+        "scope_caveat": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+      },
+      "copyright": {
+        "status": "UNKNOWN",
+        "redistribution_authorized": false,
+        "source_candidate": "A4",
+        "specialist_review": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+      },
+      "UA_evidence": {
+        "E0": "OFFLINE_VERIFIED",
+        "E1": "OFFLINE_VERIFIED",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "E4_new": false,
+        "G2_E1_record_SHA256": "2ee5ac29d8d164280ff1081c4c9a69935fa398db7380f54d4c32ebe31e54a22f",
+        "historical_request_record": null,
+        "historical_UA": "NO_REQUEST",
+        "source_configuration_only": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+      },
+      "freshness": {
+        "status": "UNKNOWN",
+        "approved_TTL_seconds": null,
+        "represents_current_site": false,
+        "age_seconds_at_review": null,
+        "reason": "原本・取得時刻・版が未確認"
+      },
+      "minimum_scope": {
+        "candidate_only": true,
+        "necessity_status": "PRIORITY_CONDITIONS_SOURCE",
+        "method_if_separately_approved": "GET",
+        "max_requests_if_approved": 1,
+        "periodic_refresh": false,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "new_URLs": [],
+        "external_distribution": false,
+        "raw_storage": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。",
+        "narrower_alternative": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。",
+        "frequency_basis": "一度限りの条件確認候補。定期取得の必要性は未成立。",
+        "body_cap_proposal_bytes": 1048576
+      },
+      "overall_access": "HOLD",
+      "permit_status": "HOLD",
+      "permit_id": null,
+      "acquisition_authorized": false,
+      "unknown_causes": [
+        "TERMS_UNKNOWN",
+        "SCOPE_UNRESOLVED",
+        "UA_WIRE_UNKNOWN",
+        "STORAGE_AUDIT_UNPROVEN",
+        "INDEPENDENT_OBSERVATION_UNKNOWN",
+        "MISSING_ORIGINAL"
+      ],
+      "next_evidence": [
+        "P0-B-WWW-CONDITIONS"
+      ],
+      "candidate_methods": [
+        "既存資料・提供済み正本の追加offline照合",
+        "運営者／利用者提供正本の受領候補（今回は未取得）",
+        "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+      ]
+    },
+    {
+      "id": "B1",
+      "URL": "https://www.jleague.jp/j1/news/",
+      "host": "www.jleague.jp",
+      "purpose": "News entry discovery only after www-specific conditions and separate B approval",
+      "necessity": "更新通知と発表時刻の探索入口。試合別の過去観測証拠は既存資料で先に評価し、入口選定根拠が固まるまで延期。",
+      "original": {
+        "status": "NO_VERIFIED_ORIGINAL",
+        "location": null,
+        "raw_SHA256": null,
+        "bytes": null,
+        "acquired_utc": null,
+        "saved_utc": null,
+        "source_url": null,
+        "supporting_records": []
+      },
+      "robots": {
+        "status": "CONDITIONAL_ALLOW_FIXED_ORIGINAL",
+        "source_url": "https://www.jleague.jp/robots.txt",
+        "source_host": "www.jleague.jp",
+        "source_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "source_saved_proven": true,
+        "source_applicable_to_exact_host": true,
+        "adopted_UA_offline_evaluation": true,
+        "normative_complete": false,
+        "currently_valid": "UNKNOWN",
+        "current_site_allow": false,
+        "evaluation_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "evaluation_product_token": "Research-Timing-Pilot",
+        "historical_reference": {
+          "decision": "ALLOW",
+          "conditional_candidate_only": true,
+          "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "group_selection": [
+            {
+              "group": 1,
+              "agents": [
+                "*"
+              ],
+              "rule_count": 19
+            }
+          ],
+          "matched_rule_count": 0,
+          "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "reason": "SUPPORTED_OFFLINE_PATH_SUBSET"
+        },
+        "evaluation_source": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json",
+        "preconditions": [
+          "固定A1 bytes・host・UA/token・queryなしの対象pathだけ",
+          "一般的な規範適合の証明ではない",
+          "現在のrobots・terms・取得許可を示さない"
+        ]
+      },
+      "terms": {
+        "status": "UNKNOWN",
+        "originals": [],
+        "conditions": {
+          "applicability": "UNKNOWN",
+          "research_use": "UNKNOWN",
+          "automated_access": "UNKNOWN",
+          "storage": "UNKNOWN",
+          "processing": "UNKNOWN",
+          "redistribution": "UNKNOWN",
+          "publication": "UNKNOWN",
+          "commercial_use": "UNKNOWN",
+          "version": "UNKNOWN",
+          "robots_relationship": "UNKNOWN"
+        },
+        "missing_reasons": [
+          "MISSING_ORIGINAL",
+          "APPLICABILITY_UNPROVEN",
+          "RESEARCH_AUTOMATION_UNPROVEN",
+          "STORAGE_PROCESSING_UNPROVEN",
+          "REDISTRIBUTION_PUBLICATION_UNPROVEN",
+          "VERSION_TIME_UNPROVEN",
+          "ROBOTS_RELATIONSHIP_UNPROVEN"
+        ],
+        "source_candidates": [
+          "A3",
+          "A4"
+        ],
+        "scope_caveat": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+      },
+      "copyright": {
+        "status": "UNKNOWN",
+        "redistribution_authorized": false,
+        "source_candidate": "A4",
+        "specialist_review": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+      },
+      "UA_evidence": {
+        "E0": "OFFLINE_VERIFIED",
+        "E1": "OFFLINE_VERIFIED",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "E4_new": false,
+        "G2_E1_record_SHA256": "c89fbc435e779447cbd1d295277b528c4c47b78bedd3777fbcd40842174ee788",
+        "historical_request_record": null,
+        "historical_UA": "NO_REQUEST",
+        "source_configuration_only": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+      },
+      "freshness": {
+        "status": "UNKNOWN",
+        "approved_TTL_seconds": null,
+        "represents_current_site": false,
+        "age_seconds_at_review": null,
+        "reason": "原本・取得時刻・版が未確認"
+      },
+      "minimum_scope": {
+        "candidate_only": true,
+        "necessity_status": "DEFER_UNTIL_CONDITIONS_AND_SELECTION",
+        "method_if_separately_approved": "GET",
+        "max_requests_if_approved": 1,
+        "periodic_refresh": false,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "new_URLs": [],
+        "external_distribution": false,
+        "raw_storage": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。",
+        "narrower_alternative": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。",
+        "frequency_basis": "一度限りの条件確認候補。定期取得の必要性は未成立。",
+        "body_cap_proposal_bytes": 2097152
+      },
+      "overall_access": "HOLD",
+      "permit_status": "HOLD",
+      "permit_id": null,
+      "acquisition_authorized": false,
+      "unknown_causes": [
+        "TERMS_UNKNOWN",
+        "SCOPE_UNRESOLVED",
+        "UA_WIRE_UNKNOWN",
+        "STORAGE_AUDIT_UNPROVEN",
+        "INDEPENDENT_OBSERVATION_UNKNOWN",
+        "MISSING_ORIGINAL"
+      ],
+      "next_evidence": [
+        "P0-B-B-SELECTION"
+      ],
+      "candidate_methods": [
+        "既存資料・提供済み正本の追加offline照合",
+        "運営者／利用者提供正本の受領候補（今回は未取得）",
+        "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+      ]
+    },
+    {
+      "id": "B2",
+      "URL": "https://aboutj.jleague.jp/corporate/pressrelease/",
+      "host": "aboutj.jleague.jp",
+      "purpose": "Press-release entry discovery only after aboutj-specific conditions and separate B approval",
+      "necessity": "公式発表時刻の探索入口候補。aboutjの運営者・適用条件・robotsが不足し、www先行なら延期。",
+      "original": {
+        "status": "NO_VERIFIED_ORIGINAL",
+        "location": null,
+        "raw_SHA256": null,
+        "bytes": null,
+        "acquired_utc": null,
+        "saved_utc": null,
+        "source_url": null,
+        "supporting_records": []
+      },
+      "robots": {
+        "status": "UNKNOWN",
+        "source_url": null,
+        "source_host": null,
+        "source_SHA256": null,
+        "source_saved_proven": false,
+        "source_applicable_to_exact_host": false,
+        "adopted_UA_offline_evaluation": false,
+        "normative_complete": false,
+        "currently_valid": "UNKNOWN",
+        "current_site_allow": false,
+        "evaluation_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "evaluation_product_token": "Research-Timing-Pilot",
+        "historical_reference": {
+          "decision": "UNKNOWN",
+          "conditional_candidate_only": false,
+          "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "group_selection": [],
+          "matched_rule_count": null,
+          "reference_SHA256": null,
+          "reason": "NO_HOST_SPECIFIC_ORIGINAL"
+        },
+        "evaluation_source": "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json",
+        "preconditions": [
+          "固定A1 bytes・host・UA/token・queryなしの対象pathだけ",
+          "一般的な規範適合の証明ではない",
+          "現在のrobots・terms・取得許可を示さない"
+        ]
+      },
+      "terms": {
+        "status": "UNKNOWN",
+        "originals": [],
+        "conditions": {
+          "applicability": "UNKNOWN",
+          "research_use": "UNKNOWN",
+          "automated_access": "UNKNOWN",
+          "storage": "UNKNOWN",
+          "processing": "UNKNOWN",
+          "redistribution": "UNKNOWN",
+          "publication": "UNKNOWN",
+          "commercial_use": "UNKNOWN",
+          "version": "UNKNOWN",
+          "robots_relationship": "UNKNOWN"
+        },
+        "missing_reasons": [
+          "MISSING_ORIGINAL",
+          "APPLICABILITY_UNPROVEN",
+          "RESEARCH_AUTOMATION_UNPROVEN",
+          "STORAGE_PROCESSING_UNPROVEN",
+          "REDISTRIBUTION_PUBLICATION_UNPROVEN",
+          "VERSION_TIME_UNPROVEN",
+          "ROBOTS_RELATIONSHIP_UNPROVEN"
+        ],
+        "source_candidates": [],
+        "scope_caveat": "A3/A4はwwwへの適用も未証明。aboutjへの流用は不可。禁止文言の未発見を許諾としない。"
+      },
+      "copyright": {
+        "status": "UNKNOWN",
+        "redistribution_authorized": false,
+        "source_candidate": null,
+        "specialist_review": "原本・適用根拠を得た後、解釈が必要な条件のみ専門確認。法的結論は出さない。"
+      },
+      "UA_evidence": {
+        "E0": "OFFLINE_VERIFIED",
+        "E1": "OFFLINE_VERIFIED",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "E4_new": false,
+        "G2_E1_record_SHA256": "a830c3d3a24b776e0930b20d97a87e405be94d20763fe4a9289dca55fc7493b2",
+        "historical_request_record": null,
+        "historical_UA": "NO_REQUEST",
+        "source_configuration_only": "旧G workerのheader設定はASTで確認可能。実最終headerの記録や独立観測ではない。"
+      },
+      "freshness": {
+        "status": "UNKNOWN",
+        "approved_TTL_seconds": null,
+        "represents_current_site": false,
+        "age_seconds_at_review": null,
+        "reason": "原本・取得時刻・版が未確認"
+      },
+      "minimum_scope": {
+        "candidate_only": true,
+        "necessity_status": "DEFER_UNTIL_ABOUTJ_CONDITIONS_AND_SELECTION",
+        "method_if_separately_approved": "GET",
+        "max_requests_if_approved": 1,
+        "periodic_refresh": false,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "new_URLs": [],
+        "external_distribution": false,
+        "raw_storage": "証拠として条件原本bytes・metadata・hashを独立研究領域に保存する案。実保存先・権利・容量は要審査。",
+        "narrower_alternative": "運営者または利用者が提供する出典・取得時刻・適用対象付き正本。保存済み資料を先に評価。",
+        "frequency_basis": "一度限りの条件確認候補。定期取得の必要性は未成立。",
+        "body_cap_proposal_bytes": 2097152
+      },
+      "overall_access": "HOLD",
+      "permit_status": "HOLD",
+      "permit_id": null,
+      "acquisition_authorized": false,
+      "unknown_causes": [
+        "TERMS_UNKNOWN",
+        "SCOPE_UNRESOLVED",
+        "UA_WIRE_UNKNOWN",
+        "STORAGE_AUDIT_UNPROVEN",
+        "INDEPENDENT_OBSERVATION_UNKNOWN",
+        "MISSING_ORIGINAL"
+      ],
+      "next_evidence": [
+        "P0-B-ABOUTJ-CONDITIONS",
+        "P0-B-B-SELECTION"
+      ],
+      "candidate_methods": [
+        "既存資料・提供済み正本の追加offline照合",
+        "運営者／利用者提供正本の受領候補（今回は未取得）",
+        "必要な場合だけ限定条件確認の別承認案。実行せず根拠を審査"
+      ]
+    }
+  ]
+}

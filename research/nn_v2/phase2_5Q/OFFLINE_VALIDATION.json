@@ -1,0 +1,137 @@
+{
+  "kind": "NNV2_P0_ACCESS_EVIDENCE_VALIDATION_V1",
+  "reviewed_utc": "2026-10-24T12:35:40.456022+00:00",
+  "gate": "NN_V2_P0_ACCESS_EVIDENCE_REVIEW_READY",
+  "base_commit": "d57e182521dbf354b41b536a67e27b17440d2950",
+  "branch": "feature/nn-v2-p0-access-evidence-review",
+  "tests": {
+    "new": {
+      "PASS": 154,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "deselected": 0,
+      "explicit_negative_tests": 142,
+      "JUnit_SHA256": "e74c80c2d778e67975cf909c8685f93c148bd6d5fa649f61b94c4f34772198ef",
+      "boundary_SHA256": "658a935da51bead14f5d11b542da0fe0862a556b72e9b4dc7cac718967daef95",
+      "test_start_SHA256": "f1de1acf31e13cba852d1680f8ef3804886026ce97538488b3d40b8c48e60e2d",
+      "log_SHA256": "d148a8e99fadbe35524ec2022e937e3ff7b8628e39e1a4b4ac76c4bfb3b7e05c",
+      "test_files": [
+        "test_nn_v2_p0_access_evidence"
+      ]
+    },
+    "regression": {
+      "PASS": 1363,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "deselected": 0,
+      "explicit_negative_tests": 605,
+      "JUnit_SHA256": "3024ca93027e2d0a6c9d0f47475dbd54164411c690e6e93ae6377673a26faaed",
+      "boundary_SHA256": "658a935da51bead14f5d11b542da0fe0862a556b72e9b4dc7cac718967daef95",
+      "test_start_SHA256": "1dce6a739f108425ff803a1d6ddd288b026328c519d513f2ad2b4c2dbb91e5da",
+      "log_SHA256": "dd48c6a759d0f497bea765e04ba5c6e172a131bb8ef1c1fcac0ccb982d6e1bdf",
+      "test_files": [
+        "test_nn_v2_access_fetch",
+        "test_nn_v2_g1_ua_adoption",
+        "test_nn_v2_g2_offline_adapter",
+        "test_nn_v2_g3_pre_review",
+        "test_nn_v2_product_token_groups",
+        "test_nn_v2_robots_layers",
+        "test_nn_v2_robots_normative",
+        "test_nn_v2_robots_offline",
+        "test_nn_v2_spec_fetch",
+        "test_nn_v2_spec_permit_plan",
+        "test_nn_v2_ua_evidence_contract",
+        "test_nn_v2_unknown_impact_review"
+      ]
+    }
+  },
+  "total_PASS": 1517,
+  "warnings_as_errors": true,
+  "negative_fixture_mutations": 53,
+  "new_negative_test_executions": 142,
+  "initial_run": {
+    "PASS": 78,
+    "FAIL": 1,
+    "ERROR": 0,
+    "reason": "Draft202012 schema prefixItems must be omitted for empty arrays. Fixed generator; reran complete new suite.",
+    "JUnit_SHA256": "355b0a93c6cc2380888baca46bd8a06f3c1c68edc0d851ec172f2323d8c6b0a0",
+    "not_added_to_final_counts": true
+  },
+  "static_PASS": 1285,
+  "static_FAIL": 0,
+  "source_provenance": "PROVENANCE_VALIDATION.json",
+  "protection": "PROTECTION_VERIFICATION.json",
+  "final_code_SHA256": {
+    "research/nn_v2/phase2_5Q/access_evidence.py": "39d696b6a75b987208d1e28a871cc262d229bb1ca8a484dc40032bdbe79cfc8e",
+    "tests/test_nn_v2_p0_access_evidence.py": "015ef23bd7d17dc0fd98d33ad2abc4dfc301f63463932ac702aab0d37e91fe6d"
+  },
+  "guard_SHA256": "5ab34675c427d4ea488ac9f4c877f7e379166de2b5a9bbe8c2a54fd806789485",
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "fully_resolved_historical_unknowns": 0,
+  "terms": {
+    "A1": "UNKNOWN",
+    "A2": "UNKNOWN",
+    "A3": "UNKNOWN",
+    "A4": "UNKNOWN",
+    "B1": "UNKNOWN",
+    "B2": "UNKNOWN"
+  },
+  "actual_permit": {
+    "A1": "HOLD",
+    "A2": "HOLD",
+    "A3": "HOLD",
+    "A4": "HOLD",
+    "B1": "HOLD",
+    "B2": "HOLD"
+  },
+  "operations": {
+    "HTTP": 0,
+    "DNS": 0,
+    "socket": 0,
+    "new_acquisitions": 0,
+    "transport_connections": 0,
+    "permits_issued_updated": 0,
+    "model_operations": 0,
+    "GUI_changes": 0,
+    "task_changes": 0,
+    "policy_changes": 0
+  },
+  "OS_dynamic_proofs": 0,
+  "probe_controls_executed": 0,
+  "unexpected_effect_attempts": 0,
+  "new_E4": 0,
+  "E2": "UNKNOWN",
+  "E3": "UNKNOWN",
+  "holds": {
+    "B": "HOLD",
+    "C": "HOLD",
+    "D": "HOLD",
+    "HISTORY": "HOLD",
+    "PREDICTION": "HOLD",
+    "Phase_A": "BLOCKED",
+    "Phase_B": "NOT_AUTHORIZED",
+    "G3": "HOLD",
+    "G4": "NOT_AUTHORIZED"
+  },
+  "access_authorized": false,
+  "G3_review_authorized": false,
+  "G4_authorized": false,
+  "Git_transport": {
+    "status": "NOT_EXECUTED_OFFLINE_CONSTRAINT",
+    "reason": "Normal push requested, but HTTP/DNS/socket forbidden. Git-only exception queried; no exception received at finalization.",
+    "remote_verification": "NOT_PERFORMED",
+    "network_operations": 0
+  },
+  "excluded_tests": {
+    "skip": 0,
+    "deselected": 0,
+    "selection": "Only 12 established offline G1/G2/G3/robots/access contract files plus new Q file. Live collectors, Windows integration, model/training/evaluation and general repository suites outside authorized scope were not selected."
+  },
+  "private_evidence_alias": "%LOCALAPPDATA%/J1AI/NNV2P0AccessEvidence-20261024-2125"
+}
