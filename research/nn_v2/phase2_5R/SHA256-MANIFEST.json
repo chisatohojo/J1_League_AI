@@ -1,0 +1,22 @@
+{
+  "kind": "NNV2_R_OUTPUT_SHA256_V1",
+  "scope": "Self excluded; no actual raw response present",
+  "files": {
+    "docs/NN_V2_PHASE_2_5R_ACCESS_TERMS_REVIEW.md": "ff245ad335c7c38ef5a5e5d104d74fc498282b76d6e7e5c3e28ff4e6667c48d5",
+    "docs/NN_V2_PHASE_2_5R_FETCH_PRECHECK.md": "1bd8e5fabd0bea387983a59ccc83b80972f1b5d52ca431e7392c01f4f6707c8d",
+    "research/nn_v2/phase2_5R/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5R/ENVIRONMENT_REVIEW.json": "2e790c5cafa88990bc53d73bb3ac8a433fdf7677c624985cec9c7d97717c57ea",
+    "research/nn_v2/phase2_5R/FETCH_ATTEMPT_LEDGER.json": "b09afa349fb67997bac4b6dc890093e5d2f763c1e7fe924360ee165c4fa15f52",
+    "research/nn_v2/phase2_5R/FETCH_EVIDENCE.json": "82aae83388b9385ff7bccfac2ddfa398fdc415c8b4295ba1992934ade9a095ce",
+    "research/nn_v2/phase2_5R/FETCH_PRECHECK.json": "e44fccb64208794e63bbcd961dd84a527d73047438f68e81ccbc78742d559e2f",
+    "research/nn_v2/phase2_5R/INPUT_EVIDENCE.json": "4d964c9df4ca64eb109e4db837b824541e6a754fa5f4b2ef5afd607f43d433aa",
+    "research/nn_v2/phase2_5R/offline_review.py": "0c00349af87f604b95de93c267ef3ddb0585960379c16f9af62487d5d64ca884",
+    "research/nn_v2/phase2_5R/PROTECTION_VERIFICATION.json": "fb7a9b19213a7d795867bbec79f8e39f77b38be78c00ec79872a85f21209dbff",
+    "research/nn_v2/phase2_5R/REQUEST_SCHEMA.json": "8d1df0fb5ae037fc61735cdcdb7f3e352658162e8de6ac8f8030151fb465968d",
+    "research/nn_v2/phase2_5R/STATIC_VALIDATION.json": "db605efae8a181d7430d16a89c69e92c548e024c596c91962e59669cf2c8eef0",
+    "research/nn_v2/phase2_5R/TERMS_REVIEW.json": "3a302da77184a892fe9dddc4c8223ff6198a6a61e6b1b2d3d39dafb00f2993cd",
+    "research/nn_v2/phase2_5R/TEST_SELECTION.json": "894b914d33ffca2b66b6fa7b10ceaab264fadfd9d22ef9b9614028110a545610",
+    "research/nn_v2/phase2_5R/VALIDATION.json": "21ae6c6e1f984c0d8ad2e4b5a004cb5fcea242df8b022b7c52d4ae4c81951384",
+    "tests/test_nn_v2_phase2_5R.py": "f9915732ac2520f21e919fd5b05b3a0b32e09e6ffc24851fdda25558d38fc361"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "total_modules": 196,
+  "selected_modules": 14,
+  "not_selected_modules": 182,
+  "known_server_modules": [
+    {
+      "file": "tests/test_dashboard_server.py",
+      "source_test_functions_with_server_constructor": [
+        "test_reload_retains_last_good_on_invalid_data_and_recovers",
+        "test_reload_requires_explicit_data_and_bounded_poll"
+      ]
+    },
+    {
+      "file": "tests/test_retrospective_generations.py",
+      "source_test_functions_with_server_constructor": [
+        "test_98_results_then_results_and_ten_predictions_atomic_reload"
+      ]
+    },
+    {
+      "file": "tests/test_retrospective_overlay.py",
+      "source_test_functions_with_server_constructor": [
+        "test_server_explicit_overlay_is_anchored_and_v2_cannot_masquerade"
+      ]
+    }
+  ],
+  "server_capable_module_count": 3,
+  "server_constructor_source_function_count": 4,
+  "reason": "Server-capable modules excluded conservatively, including validation cases. All other nonselected modules outside NN v2 access-contract scope. Counts are source functions/modules, not uncollected parameter instances.",
+  "skip": 0,
+  "deselected": 0,
+  "external_network_tests_executed": 0
+}

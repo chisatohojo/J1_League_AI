@@ -1,0 +1,163 @@
+{
+  "kind": "NNV2_R_FETCH_PRECHECK_V1",
+  "gate": "NN_V2_2_5R_FETCH_BLOCKED",
+  "reviewed_utc": "2026-10-24T14:43:05.218819+00:00",
+  "base_commit": "bd424d86fe56ddb20adfb5ff40fc41b62e1f21bf",
+  "authorization_SHA256": "4e51eee113ec80479a3c35d8def4cfa9cae974b47f4208ee2b5d7f21b7a12537",
+  "scope": {
+    "targets": {
+      "A3": "https://www.jleague.jp/general/kiyaku/",
+      "A4": "https://www.jleague.jp/general/copyright/"
+    },
+    "request": {
+      "A3": {
+        "target": "A3",
+        "URL": "https://www.jleague.jp/general/kiyaku/",
+        "method": "GET",
+        "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "purpose": "CONDITIONS_INSPECTION_ONLY",
+        "limits": {
+          "max_attempts_per_URL": 1,
+          "max_total_attempts": 2,
+          "body_cap": 1048576,
+          "connect_timeout_seconds": 5,
+          "read_timeout_seconds": 15,
+          "redirect": 0,
+          "retry": 0,
+          "external_resources": 0
+        },
+        "cookie": null,
+        "authentication": false,
+        "certificate_verification": true,
+        "hostname_verification": true,
+        "G3_permit": false,
+        "G4_authority": false
+      },
+      "A4": {
+        "target": "A4",
+        "URL": "https://www.jleague.jp/general/copyright/",
+        "method": "GET",
+        "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "purpose": "CONDITIONS_INSPECTION_ONLY",
+        "limits": {
+          "max_attempts_per_URL": 1,
+          "max_total_attempts": 2,
+          "body_cap": 1048576,
+          "connect_timeout_seconds": 5,
+          "read_timeout_seconds": 15,
+          "redirect": 0,
+          "retry": 0,
+          "external_resources": 0
+        },
+        "cookie": null,
+        "authentication": false,
+        "certificate_verification": true,
+        "hostname_verification": true,
+        "G3_permit": false,
+        "G4_authority": false
+      }
+    },
+    "single_session_only": true,
+    "Git_network_authorized": false,
+    "G3_permit_authorized": false,
+    "G4_authorized": false
+  },
+  "checks": {
+    "source_binding": "PASS",
+    "robots_applicability": "PASS",
+    "robots_freshness_basis": "UNKNOWN",
+    "no_major_robots_uncertainty": "UNKNOWN",
+    "bounded_conditions_inspection_basis": "PASS",
+    "known_conditions_review": "UNKNOWN",
+    "TLS_client_qualification": "UNKNOWN",
+    "proxy_policy": "UNKNOWN",
+    "operational_write_boundary": "UNKNOWN",
+    "private_storage_identity": "UNKNOWN",
+    "exact_client_limits": "UNKNOWN",
+    "durable_attempt_qualification": "UNKNOWN"
+  },
+  "stages": {
+    "R0": "PASS_LOCAL_PREFLIGHT",
+    "R1": "HOLD_FRESHNESS_AND_APPLICABILITY_BASIS",
+    "R2": "LIVE_PATH_NOT_QUALIFIED",
+    "R3": "LIVE_NOT_STARTED_SYNTHETIC_STORE_TESTS_ONLY",
+    "R4": "NOT_EXECUTED",
+    "R5": "NO_ORIGINAL_ACQUIRED",
+    "R6": "UNKNOWN_NO_TEXT"
+  },
+  "primary_blockers": [
+    {
+      "id": "R1_ROBOTS_CURRENT_VALIDITY",
+      "reason": "固定A1への条件付きALLOWは確認。取得から約28.9時間経過した原本の現在有効性・利用方針が未立証。保存済みRFC2.4の通常24h推奨、到達不能例外の適用根拠、標準cache control解釈との整合が未確定。",
+      "source": "research/nn_v2/phase2_5Q/ACCESS_EVIDENCE_INVENTORY.json",
+      "resolution": "A1の現行性確認または保存原本を今回の限定確認に使う具体的な審査根拠を別途確定。A1のGET/HEADは今回のscope外。"
+    },
+    {
+      "id": "R2_EXECUTION_AND_WRITE_BOUNDARY",
+      "reason": "旧Gの成功記録は旧permit・10秒期限・parent-owned Jobと専用DACLの実行経路に限定される。今回の5秒connect/15秒read・操作禁止条件へ同じqualificationを流用できない。current userは運用原本とChampionモデルrootにもFullControl ACEを持ち、研究環境の運用write禁止は実証されていない。",
+      "source": "research/nn_v2/phase2_5G/access_worker.py",
+      "resolution": "既存構成のまま今回の条件とwrite禁止を満たす経路の証拠、または別承認の隔離環境構築・qualificationが必要。"
+    }
+  ],
+  "terms_absence_alone_is_not_a_prohibition": true,
+  "user_conditions_inspection_approval_recognized": true,
+  "known_legal_or_contractual_prohibition_found": false,
+  "absence_of_prohibition_is_not_license": true,
+  "legal_conclusion": "NOT_MADE",
+  "known_conditions_review": "正本未取得のため制約の不存在は未立証。terms未取得だけを停止理由にしていない。",
+  "robots": {
+    "raw_location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/raw.bin",
+    "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+    "acquired_utc": "2026-10-23T09:46:47.645062+00:00",
+    "age_seconds": 104177.574,
+    "age_hours": 28.938,
+    "fixed_offline_path_results": {
+      "A3": {
+        "decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_PATH_SUBSET",
+        "matched_rules": [],
+        "work_units": 38
+      },
+      "A4": {
+        "decision": "ALLOW",
+        "reason": "SUPPORTED_OFFLINE_PATH_SUBSET",
+        "matched_rules": [],
+        "work_units": 38
+      }
+    },
+    "currently_valid": "UNKNOWN",
+    "approved_TTL_seconds": null,
+    "unreachable_exception_proven": false,
+    "cache_control_note": "保存済みs-maxageは承認TTL・権利許諾ではない。24h推奨も自動的な法的禁止・独自TTLと扱わない。",
+    "source": {
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "anchor": "section-2.4-1",
+      "byte_range": [
+        64364,
+        64841
+      ],
+      "paragraph_SHA256": "f9129fc24a9a305268df0c6fa4a1b052e9adc255c46be1c4a8a350caa328468e",
+      "semantic_summary": "通常24h超のキャッシュ使用を避ける推奨と到達不能例外。根拠のない現在有効性への昇格をしない。"
+    }
+  },
+  "operations": {
+    "HTTP": 0,
+    "DNS": 0,
+    "socket": 0,
+    "transport_calls": 0,
+    "GET": 0,
+    "HEAD": 0,
+    "Git_network": 0,
+    "permits_issued": 0,
+    "Job_changes": 0,
+    "ACL_changes": 0,
+    "Firewall_changes": 0,
+    "VM_changes": 0,
+    "model_operations": 0,
+    "GUI_changes": 0,
+    "task_changes": 0
+  },
+  "decision": "NO_SEND; no retry, no extra URL, no A1 refresh, no live permit or G4 enablement"
+}

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "method": {
+      "const": "GET"
+    },
+    "user_agent": {
+      "const": "J1AI-Research-Timing-Pilot/1.0"
+    },
+    "product_token": {
+      "const": "Research-Timing-Pilot"
+    },
+    "purpose": {
+      "const": "CONDITIONS_INSPECTION_ONLY"
+    },
+    "limits": {
+      "const": {
+        "max_attempts_per_URL": 1,
+        "max_total_attempts": 2,
+        "body_cap": 1048576,
+        "connect_timeout_seconds": 5,
+        "read_timeout_seconds": 15,
+        "redirect": 0,
+        "retry": 0,
+        "external_resources": 0
+      }
+    },
+    "cookie": {
+      "const": null
+    },
+    "authentication": {
+      "const": false
+    },
+    "certificate_verification": {
+      "const": true
+    },
+    "hostname_verification": {
+      "const": true
+    },
+    "G3_permit": {
+      "const": false
+    },
+    "G4_authority": {
+      "const": false
+    },
+    "target": {
+      "enum": [
+        "A3",
+        "A4"
+      ]
+    },
+    "URL": {
+      "enum": [
+        "https://www.jleague.jp/general/kiyaku/",
+        "https://www.jleague.jp/general/copyright/"
+      ]
+    }
+  },
+  "required": [
+    "target",
+    "URL",
+    "method",
+    "user_agent",
+    "product_token",
+    "purpose",
+    "limits",
+    "cookie",
+    "authentication",
+    "certificate_verification",
+    "hostname_verification",
+    "G3_permit",
+    "G4_authority"
+  ],
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "target": {
+          "const": "A3"
+        },
+        "URL": {
+          "const": "https://www.jleague.jp/general/kiyaku/"
+        }
+      }
+    },
+    {
+      "properties": {
+        "target": {
+          "const": "A4"
+        },
+        "URL": {
+          "const": "https://www.jleague.jp/general/copyright/"
+        }
+      }
+    }
+  ]
+}

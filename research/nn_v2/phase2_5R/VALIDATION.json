@@ -1,0 +1,132 @@
+{
+  "kind": "NNV2_R_VALIDATION_V1",
+  "gate": "NN_V2_2_5R_FETCH_BLOCKED",
+  "UTC": "2026-10-24T14:51:08.405505+00:00",
+  "branch": "feature/nn-v2-a3-a4-terms-fetch",
+  "base_commit": "bd424d86fe56ddb20adfb5ff40fc41b62e1f21bf",
+  "tests": {
+    "new": {
+      "PASS": 94,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "deselected": 0,
+      "explicit_negative_tests": 86,
+      "JUnit_SHA256": "66ca755eafd3532289f68292a188fb0d8d7b59fc9a804123fe0aa437eb50ea5a",
+      "log_SHA256": "451635065f004e269bb18bb958c18e8ed9e2bd3d6acc0406885b1230906381b5",
+      "boundary_SHA256": "658a935da51bead14f5d11b542da0fe0862a556b72e9b4dc7cac718967daef95",
+      "test_start_SHA256": "5e1e0f54b26b5dcc9710590b960b1cd0e95922ac8fd83cd25aab8f47407a26ea"
+    },
+    "regression": {
+      "PASS": 1517,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "deselected": 0,
+      "explicit_negative_tests": 747,
+      "JUnit_SHA256": "a793c24ce9029f114dac9e8f12ecaad99487063f59bfaadcc60ce5b41c6e8230",
+      "log_SHA256": "763c7d0f5e4242c44e08657fd45a25956f3f002b34933bdc886d1124207ce455",
+      "boundary_SHA256": "658a935da51bead14f5d11b542da0fe0862a556b72e9b4dc7cac718967daef95",
+      "test_start_SHA256": "f70da178dba9964852543dc082692fc61dd4d034c11804719601c430b585ce53"
+    }
+  },
+  "total_PASS": 1611,
+  "new_negative_tests": 86,
+  "warnings_as_errors": true,
+  "initial_run": {
+    "PASS": 60,
+    "FAIL": 0,
+    "ERROR": 2,
+    "reason": "Oversized fixture default pytest ID exceeded Windows PYTEST_CURRENT_TEST environment limit of 32767 characters. Assigned short explicit ID; reran all new tests.",
+    "JUnit_SHA256": "dd46f0478bf1feca435595048c441ee982f27e40750af1f5043e7b8560b62468",
+    "not_in_final_counts": true
+  },
+  "static_PASS": 200,
+  "static_FAIL": 0,
+  "synthetic_store": {
+    "scope": "LOCAL_SYNTHETIC_ONLY",
+    "exclusive_file_create": true,
+    "fsync_and_readback_tested": true,
+    "reopen_duplicate_rejection_tested": true,
+    "real_process_crash_tested": false,
+    "multiprocess_competition_tested": false,
+    "power_loss_or_parent_directory_durability_proven": false,
+    "real_transport_qualification": false
+  },
+  "protection": "PROTECTION_VERIFICATION.json",
+  "precheck": "FETCH_PRECHECK.json",
+  "environment": "ENVIRONMENT_REVIEW.json",
+  "test_selection": "TEST_SELECTION.json",
+  "source_authorization_SHA256": "4e51eee113ec80479a3c35d8def4cfa9cae974b47f4208ee2b5d7f21b7a12537",
+  "code_SHA256": {
+    "research/nn_v2/phase2_5R/offline_review.py": "0c00349af87f604b95de93c267ef3ddb0585960379c16f9af62487d5d64ca884",
+    "tests/test_nn_v2_phase2_5R.py": "f9915732ac2520f21e919fd5b05b3a0b32e09e6ffc24851fdda25558d38fc361"
+  },
+  "guard_SHA256": "5923bad97bdb6cacaa8a5650c4a0b7963109e1034da583965da0fbcfbc5bbcf7",
+  "observed_operations": {
+    "HTTP": 0,
+    "DNS": 0,
+    "socket": 0,
+    "transport_calls": 0,
+    "GET": 0,
+    "HEAD": 0,
+    "Git_network": 0,
+    "permits_issued": 0,
+    "Job_changes": 0,
+    "ACL_changes": 0,
+    "Firewall_changes": 0,
+    "VM_changes": 0,
+    "model_operations": 0,
+    "GUI_changes": 0,
+    "task_changes": 0
+  },
+  "unexpected_effect_attempts": 0,
+  "network_probe_tests": 0,
+  "actual_attempts": 0,
+  "actual_originals": 0,
+  "raw_readbacks": 0,
+  "synthetic_ledgers_not_actual_attempts": true,
+  "terms": {
+    "A1": "UNKNOWN",
+    "A2": "UNKNOWN",
+    "A3": "UNKNOWN",
+    "A4": "UNKNOWN",
+    "B1": "UNKNOWN",
+    "B2": "UNKNOWN"
+  },
+  "G3_permits": {
+    "A1": "HOLD",
+    "A2": "HOLD",
+    "A3": "HOLD",
+    "A4": "HOLD",
+    "B1": "HOLD",
+    "B2": "HOLD"
+  },
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "E2": "NOT_OBSERVED",
+  "E3": "UNKNOWN",
+  "E4": "NOT_ACQUIRED",
+  "G3_review": false,
+  "G3_permit_issued": false,
+  "G4": false,
+  "models_executed": 0,
+  "policy_changes": 0,
+  "Git_remote_operations": 0,
+  "P0_remaining": [
+    "A1 current validity or exact bounded-inspection basis",
+    "Applicable A3/A4 originals and use/storage conditions",
+    "Exact live storage and proxy policy"
+  ],
+  "P1_remaining": [
+    "Qualified 5s connect/15s read client and operational write deny",
+    "Live attempt concurrency/crash/storage boundaries"
+  ],
+  "P2_remaining": [
+    "Actual E2/E3/E4 and TLS observation only after separately approved qualified send"
+  ],
+  "private_evidence_alias": "%LOCALAPPDATA%/J1AI/NNV2PhaseR-20261024-2335"
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "NNV2_R_ENVIRONMENT_REVIEW_V1",
+  "observed_utc": "2026-10-24T14:35:32.2311932Z",
+  "method": "Read-only local inspection; no configuration changes or write/network probes",
+  "existing_client": {
+    "module": "http.client",
+    "implementation_SHA256": "c2c0694155837d72fc710a4138e5d1e53ae1a652b117a2e23a5b1b0db527a0f9",
+    "python": "3.12.14 (main, Sep  1 2026, 14:17:39) [MSC v.1944 64 bit (AMD64)]",
+    "ssl": "OpenSSL 3.5.8 25 Aug 2026",
+    "TLS_context_check_hostname": true,
+    "TLS_context_verify_mode": 2,
+    "handshake_performed": false
+  },
+  "old_worker": {
+    "path": "research/nn_v2/phase2_5G/access_worker.py",
+    "SHA256": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8",
+    "imported": false,
+    "inspection": "AST/source only",
+    "socket_and_global_worker_seconds": 10,
+    "connect5_read15_qualification": false,
+    "legacy_permit_reuse": false,
+    "required_parent_job": "OwnedJob",
+    "parent_SHA256": "1ff9ff9c35f119717cb566b9d348ed603c3185da1e38c6a3bf842c76a066d370",
+    "old_success_qualifies_this_session": false
+  },
+  "proxy": {
+    "environment_configured": false,
+    "Windows_explicit_proxy_enabled": false,
+    "Windows_PAC_configured": true,
+    "PAC_downloaded": false,
+    "PAC_executed": false,
+    "observed_client_behavior": "旧Gはstdlib直結socketでproxy_used=False。Windows PACの今回の運用影響・直結可否を未審査。"
+  },
+  "storage": {
+    "private_root_inherited_owner_and_DACL_read": true,
+    "private_root_current_user_full_control": true,
+    "private_root_reparse": false,
+    "ACL_changed": false,
+    "raw_storage_initialized": false,
+    "raw_storage_candidate": "%LOCALAPPDATA%/J1AI/NNV2PhaseR-20261024-2335/raw",
+    "raw_storage_candidate_created": false,
+    "note": "監査・合成fixture領域の権限読取りと、実raw保存先のidentity/アクセス境界qualificationは別。実保存先は未初期化。"
+  },
+  "production_boundary": {
+    "current_user_FullControl_ACE_on_official_and_Champion_model_roots": true,
+    "deny_ACE_present": false,
+    "write_probe_performed": false,
+    "application_test_guard_only": true,
+    "qualified_live_write_deny": false,
+    "OS_network_isolation": "NOT_PROVEN",
+    "Job_ACL_VM_changes": 0
+  },
+  "alternate_path_assessment": "今回の制約下で旧経路を安全に流用できる証拠は不足。OS隔離の有無だけを理由にせず、正確なtimeout、expired permit、実運用write境界とPAC方針を個別に検討し、未qualificationとした。",
+  "private_record_SHA256": "8e07bfce70aacf69cf3929b1d46f8ba34ddd40b8dffc84c0188355c35bb9f6d2"
+}

@@ -1,0 +1,20 @@
+{
+  "UTC": "2026-10-24T14:46:55.305460+00:00",
+  "passed": true,
+  "protected_files": 120156,
+  "differences": [],
+  "worktrees_unchanged": true,
+  "existing_worktrees": 33,
+  "main_unchanged": true,
+  "models": {
+    "payloads": 53,
+    "verified": true,
+    "seal_SHA256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f"
+  },
+  "GUI_tasks_listeners_unchanged": true,
+  "other_refs_unchanged": true,
+  "baseline_SHA256": "771d898e837a84f3f4ed4302eda8cbabfa5833a1fd3cc44066e7f8aaaaa198f0",
+  "private_protection_SHA256": "baeefb3a146fd5b39994a70413421518c21ac18b6496993c19d5e8b972fbcdb6",
+  "baseline_scope": "Prior Q Git-push protected files, all 33 existing tracked worktrees, old J1AI evidence. New R outputs and synthetic stores excluded.",
+  "new_raw_and_attempt_separated": true
+}

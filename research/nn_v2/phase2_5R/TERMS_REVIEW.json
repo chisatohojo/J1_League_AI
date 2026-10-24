@@ -1,0 +1,267 @@
+{
+  "kind": "NNV2_R_TERMS_REVIEW_V1",
+  "rows": [
+    {
+      "target": "A3",
+      "URL": "https://www.jleague.jp/general/kiyaku/",
+      "original_status": "NO_VERIFIED_ORIGINAL",
+      "raw_SHA256": null,
+      "acquired_utc": null,
+      "conditions": [
+        {
+          "category": "automated_access",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "robots_relationship",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "personal_noncommercial_use",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "research_use",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "data_collection",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "data_storage",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "copying_processing",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "secondary_use",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "redistribution_publication",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "frequency",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "server_load",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "prohibited_actions",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "permission_application",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "other_page_applicability",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "revision_effective_date",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        }
+      ],
+      "terms": "UNKNOWN",
+      "research_automation_authorized": false,
+      "redistribution_authorized": false,
+      "legal_judgment": "NOT_MADE"
+    },
+    {
+      "target": "A4",
+      "URL": "https://www.jleague.jp/general/copyright/",
+      "original_status": "NO_VERIFIED_ORIGINAL",
+      "raw_SHA256": null,
+      "acquired_utc": null,
+      "conditions": [
+        {
+          "category": "automated_access",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "robots_relationship",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "personal_noncommercial_use",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "research_use",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "data_collection",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "data_storage",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "copying_processing",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "secondary_use",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "redistribution_publication",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "frequency",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "server_load",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "prohibited_actions",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "permission_application",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "other_page_applicability",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        },
+        {
+          "category": "revision_effective_date",
+          "status": "UNKNOWN",
+          "original_anchor": null,
+          "original_byte_range": null,
+          "reason": "原本未取得のため本文根拠なし。禁止・許諾のいずれも創作しない。"
+        }
+      ],
+      "terms": "UNKNOWN",
+      "research_automation_authorized": false,
+      "redistribution_authorized": false,
+      "legal_judgment": "NOT_MADE"
+    }
+  ],
+  "all_six_terms": {
+    "A1": "UNKNOWN",
+    "A2": "UNKNOWN",
+    "A3": "UNKNOWN",
+    "A4": "UNKNOWN",
+    "B1": "UNKNOWN",
+    "B2": "UNKNOWN"
+  },
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "actual_G3_permits": {
+    "A1": "HOLD",
+    "A2": "HOLD",
+    "A3": "HOLD",
+    "A4": "HOLD",
+    "B1": "HOLD",
+    "B2": "HOLD"
+  },
+  "A2_B2": "UNKNOWN",
+  "B1_acquisition_authorized": false,
+  "G3_review": false,
+  "G4": false,
+  "historical_records_modified": false
+}

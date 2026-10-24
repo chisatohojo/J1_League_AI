@@ -1,0 +1,131 @@
+{
+  "kind": "NNV2_R_FETCH_EVIDENCE_V1",
+  "scope": "NO_NEW_RESPONSE_OR_ORIGINAL",
+  "rows": [
+    {
+      "target": "A3",
+      "URL": "https://www.jleague.jp/general/kiyaku/",
+      "sent": false,
+      "HTTP_status": null,
+      "content_type": null,
+      "content_length": null,
+      "bytes": 0,
+      "raw_SHA256": null,
+      "raw_location": null,
+      "readback_SHA256": null,
+      "received_utc": null,
+      "saved_utc": null,
+      "effective_URL": null,
+      "response_headers": null,
+      "body_encoding": null,
+      "TLS_handshake_observed": false,
+      "E0": {
+        "status": "G1_MANIFEST_AND_SCOPE_VERIFIED",
+        "manifest_SHA256": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78"
+      },
+      "E1": {
+        "status": "OFFLINE_REQUEST_SPEC_ONLY_NOT_SEND_TIME_EVIDENCE",
+        "request": {
+          "target": "A3",
+          "URL": "https://www.jleague.jp/general/kiyaku/",
+          "method": "GET",
+          "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "purpose": "CONDITIONS_INSPECTION_ONLY",
+          "limits": {
+            "max_attempts_per_URL": 1,
+            "max_total_attempts": 2,
+            "body_cap": 1048576,
+            "connect_timeout_seconds": 5,
+            "read_timeout_seconds": 15,
+            "redirect": 0,
+            "retry": 0,
+            "external_resources": 0
+          },
+          "cookie": null,
+          "authentication": false,
+          "certificate_verification": true,
+          "hostname_verification": true,
+          "G3_permit": false,
+          "G4_authority": false
+        },
+        "G2_original_preserved": true
+      },
+      "E2": "NOT_OBSERVED",
+      "E3": "UNKNOWN",
+      "E4": "NOT_ACQUIRED",
+      "server_observation_proven": false
+    },
+    {
+      "target": "A4",
+      "URL": "https://www.jleague.jp/general/copyright/",
+      "sent": false,
+      "HTTP_status": null,
+      "content_type": null,
+      "content_length": null,
+      "bytes": 0,
+      "raw_SHA256": null,
+      "raw_location": null,
+      "readback_SHA256": null,
+      "received_utc": null,
+      "saved_utc": null,
+      "effective_URL": null,
+      "response_headers": null,
+      "body_encoding": null,
+      "TLS_handshake_observed": false,
+      "E0": {
+        "status": "G1_MANIFEST_AND_SCOPE_VERIFIED",
+        "manifest_SHA256": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78"
+      },
+      "E1": {
+        "status": "OFFLINE_REQUEST_SPEC_ONLY_NOT_SEND_TIME_EVIDENCE",
+        "request": {
+          "target": "A4",
+          "URL": "https://www.jleague.jp/general/copyright/",
+          "method": "GET",
+          "user_agent": "J1AI-Research-Timing-Pilot/1.0",
+          "product_token": "Research-Timing-Pilot",
+          "purpose": "CONDITIONS_INSPECTION_ONLY",
+          "limits": {
+            "max_attempts_per_URL": 1,
+            "max_total_attempts": 2,
+            "body_cap": 1048576,
+            "connect_timeout_seconds": 5,
+            "read_timeout_seconds": 15,
+            "redirect": 0,
+            "retry": 0,
+            "external_resources": 0
+          },
+          "cookie": null,
+          "authentication": false,
+          "certificate_verification": true,
+          "hostname_verification": true,
+          "G3_permit": false,
+          "G4_authority": false
+        },
+        "G2_original_preserved": true
+      },
+      "E2": "NOT_OBSERVED",
+      "E3": "UNKNOWN",
+      "E4": "NOT_ACQUIRED",
+      "server_observation_proven": false
+    }
+  ],
+  "operations": {
+    "HTTP": 0,
+    "DNS": 0,
+    "socket": 0,
+    "transport_calls": 0,
+    "GET": 0,
+    "HEAD": 0,
+    "Git_network": 0,
+    "permits_issued": 0,
+    "Job_changes": 0,
+    "ACL_changes": 0,
+    "Firewall_changes": 0,
+    "VM_changes": 0,
+    "model_operations": 0,
+    "GUI_changes": 0,
+    "task_changes": 0
+  }
+}
