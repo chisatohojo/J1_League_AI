@@ -1,0 +1,107 @@
+{
+  "kind": "NNV2_S_ROBOTS_FRESHNESS_V1",
+  "base_revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+  "reviewed_utc": "2026-10-24T22:30:53.223719+00:00",
+  "scope": "SAVED_ORIGINALS_OFFLINE_ONLY",
+  "original": {
+    "location": "%LOCALAPPDATA%/J1AI/NNResearch-phase2_5F-A-approval-pending-20261023-01/A/access-0001/raw.bin",
+    "SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+    "bytes": 646,
+    "acquired_utc": "2026-10-23T09:46:47.645062+00:00",
+    "saved_utc": "2026-10-23T09:46:47.663444+00:00",
+    "HTTP_status": 200,
+    "metadata_SHA256": "c4b967fd0f7552f462c957044bdfcab2f9f1fd5d6abb9ba734c6beb3b8420817",
+    "status_headers_saved": true,
+    "status_headers_SHA256": "788db52f40de8fe266eaaf0135c72151dfef3239c5bded1138c805410fc1ecb9",
+    "headers": {
+      "Date": [
+        "Fri, 23 Oct 2026 09:46:47 GMT"
+      ],
+      "Cache-Control": [
+        "s-maxage=31536000"
+      ],
+      "Expires": null,
+      "Age": null,
+      "Last-Modified": null,
+      "ETag": null
+    }
+  },
+  "outputs": {
+    "NORMATIVE_CACHE_ELIGIBILITY": "UNKNOWN",
+    "PROJECT_FRESHNESS_POLICY": "UNKNOWN",
+    "SOURCE_CURRENTNESS_EVIDENCE": "UNKNOWN",
+    "FETCH_ELIGIBILITY": "HOLD_OFFLINE_ONLY",
+    "age_seconds": 132245.578657,
+    "cache_control_evidence": "PRESENT_UNINTERPRETED",
+    "normative_recommendation_is_project_TTL": false,
+    "age_alone_invalidates_original": false,
+    "cached_bytes_are_current_live_bytes": false,
+    "permit_ready": false,
+    "execution_authorized": false
+  },
+  "source_paragraphs": [
+    {
+      "reference": "Saved RFC9309#section-2.4-1",
+      "revision": "SEALED_SPEC_ORIGINAL",
+      "SHA256": "f9129fc24a9a305268df0c6fa4a1b052e9adc255c46be1c4a8a350caa328468e",
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "byte_range": [
+        64364,
+        64841
+      ]
+    },
+    {
+      "reference": "Saved RFC9309#section-2.3.1.3",
+      "revision": "SEALED_SPEC_ORIGINAL",
+      "SHA256": "c084f76382332de9ea0b2213d30a5bfe94b8055662280705997fdad8219db8fa",
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "byte_range": [
+        61465,
+        62385
+      ]
+    },
+    {
+      "reference": "Saved RFC9309#section-2.3.1.4",
+      "revision": "SEALED_SPEC_ORIGINAL",
+      "SHA256": "126f6598f96901aa7a43ba9c3fbe3479503ae5711f2a0e9fb7fa1ca0e39d3ed2",
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "byte_range": [
+        62423,
+        63552
+      ]
+    }
+  ],
+  "NORMATIVE_CACHE_ELIGIBILITY": {
+    "status": "UNKNOWN",
+    "basis": "RFC9309 permits caching; SHOULD NOT beyond 24h has an unreachable exception and standard-cache-control context. Current evidence does not establish this exception or a reviewed alternative.",
+    "cache_bytes_remain_valid_as_historical_original": true,
+    "not_an_absolute_expiry_rule": true
+  },
+  "PROJECT_FRESHNESS_POLICY": {
+    "status": "UNKNOWN",
+    "existing_approved_TTL_seconds": null,
+    "proposed_policy": "DRAFT: review current source or an explicit bounded reuse rationale before any separately approved acquisition",
+    "policy_adopted": false,
+    "RFC_recommendation_not_automatically_project_TTL": true
+  },
+  "SOURCE_CURRENTNESS_EVIDENCE": {
+    "status": "UNKNOWN",
+    "new_robots_observation": false,
+    "unreachable_observed": false,
+    "current_bytes_unchanged_proven": false
+  },
+  "FETCH_ELIGIBILITY": {
+    "status": "BLOCKED",
+    "reason": "Offline S grants no GET/permit authority; source currentness, project use basis, terms and qualified boundary remain separate"
+  },
+  "cache_headers_notes": "s-maxage is saved evidence, not a license or proof the current source is unchanged. RFC9111 is only a reference in saved RFC9309, not a newly retrieved or fully audited original here.",
+  "R_review_preserved": true,
+  "R_safety_gate_not_retroactively_rewritten": true,
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "A1_reGET": 0,
+  "A3_A4_fixed_original_basis": "Q/R saved path-only conditional ALLOW, currentness UNKNOWN, no execution authority"
+}

@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "NNV2_S_QUALIFICATION_MATRIX_V1"
+    },
+    "base_revision": {
+      "const": "4acaf75b7fab4517508d3d174b82e70a642cb09b"
+    },
+    "reviewed_utc": {
+      "const": "2026-10-24T22:30:53.223719+00:00"
+    },
+    "scope": {
+      "const": "OFFLINE_ONLY"
+    },
+    "tracks": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "properties": {
+          "track": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ]
+          },
+          "summary_status": {
+            "enum": [
+              "PROVEN_OFFLINE",
+              "PROVEN_STATIC_ONLY",
+              "UNKNOWN",
+              "BLOCKED",
+              "REQUIRES_DYNAMIC_APPROVAL"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "next_action": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "approval": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "G3_impact": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "enum": [
+                    "PROVEN_OFFLINE",
+                    "PROVEN_STATIC_ONLY",
+                    "UNKNOWN",
+                    "BLOCKED",
+                    "REQUIRES_DYNAMIC_APPROVAL"
+                  ]
+                },
+                "method": {
+                  "enum": [
+                    "OFFLINE",
+                    "STATIC",
+                    "UNPROVEN"
+                  ]
+                },
+                "actual_OS_or_transport_proven": {
+                  "const": false
+                },
+                "evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "reference": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "SHA256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "reference",
+                      "revision",
+                      "SHA256"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "unproven": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "stop_conditions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "subject",
+                "status",
+                "method",
+                "evidence",
+                "actual_OS_or_transport_proven",
+                "unproven",
+                "next_action",
+                "approval",
+                "stop_conditions",
+                "G3_impact"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "track",
+          "summary_status",
+          "items"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "authority": {
+      "const": {
+        "scope": "OFFLINE_ONLY",
+        "terms": "UNKNOWN",
+        "robots": "CONDITIONAL_FIXED_ALLOW",
+        "E2": "UNKNOWN",
+        "E3": "UNKNOWN",
+        "holds": {
+          "B": "HOLD",
+          "C": "HOLD",
+          "D": "HOLD",
+          "HISTORY": "HOLD",
+          "PREDICTION": "HOLD",
+          "Phase_A": "BLOCKED",
+          "Phase_B": "NOT_AUTHORIZED",
+          "G3": "HOLD",
+          "G4": "NOT_AUTHORIZED"
+        },
+        "overall_access": "HOLD",
+        "permit_ready": false,
+        "G3_authorized": false,
+        "G4_authorized": false,
+        "live_send_authorized": false
+      }
+    },
+    "actual_dynamic_qualification": {
+      "const": false
+    },
+    "actual_attempts_consumed": {
+      "const": 0
+    },
+    "terms_all_six": {
+      "const": "UNKNOWN"
+    },
+    "normative_counts": {
+      "const": {
+        "PASS": 15,
+        "FAIL": 0,
+        "UNKNOWN": 9
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "base_revision",
+    "reviewed_utc",
+    "scope",
+    "tracks",
+    "authority",
+    "actual_dynamic_qualification",
+    "actual_attempts_consumed",
+    "terms_all_six",
+    "normative_counts"
+  ],
+  "additionalProperties": false
+}

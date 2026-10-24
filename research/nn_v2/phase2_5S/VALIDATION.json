@@ -1,0 +1,138 @@
+{
+  "kind": "NNV2_S_VALIDATION_V1",
+  "gate": "NN_V2_2_5S_OFFLINE_QUALIFICATION_READY",
+  "UTC": "2026-10-24T22:38:02.014286+00:00",
+  "base_revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+  "branch": "feature/nn-v2-offline-safety-qualification",
+  "tests": {
+    "new": {
+      "PASS": 80,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "deselected": 0,
+      "explicit_negative_tests": 68,
+      "JUnit_SHA256": "33cd99a1d64b4e396eb9bbc2cf8799f870e2e86272ef9ff2bec2f6cd584ba045",
+      "log_SHA256": "c84b62036939299c451ea811adb71d63b209b6f34bd58aca94e30b5a11812e20",
+      "boundary_SHA256": "658a935da51bead14f5d11b542da0fe0862a556b72e9b4dc7cac718967daef95",
+      "start_SHA256": "31ed8cfebf77ec5275bd90e8785cc0065ee9335695c1cfec53bc90497aa6c230"
+    },
+    "regression": {
+      "PASS": 1611,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "deselected": 0,
+      "explicit_negative_tests": 833,
+      "JUnit_SHA256": "96b89a060cd3502b0a8e74ea95138b66edf34474491fcd82334b5fad32caa89e",
+      "log_SHA256": "8f367ac754cbd2655e827939ae3403fdb669a5da57730f1f8768f044572ed926",
+      "boundary_SHA256": "658a935da51bead14f5d11b542da0fe0862a556b72e9b4dc7cac718967daef95",
+      "start_SHA256": "2bb874bf486f770d17da24d5311ef672986326c9050909e5cab43a8bf5cbfcee"
+    }
+  },
+  "total_PASS": 1691,
+  "negative_required_controls": 26,
+  "negative_controls_covered": 26,
+  "new_negative_tests": 68,
+  "warnings_as_errors": true,
+  "intermediate": [
+    {
+      "label": "new1",
+      "PASS": 76,
+      "FAIL": 1,
+      "reason": "Static boundary check confused a local set named requests with the HTTP library identifier. Renamed seen_request_hashes; not a network attempt.",
+      "JUnit_SHA256": "c4a92bc83b52f74bceb0153933ae0f23fe666622a3cbe0380667ff33fdd682e6"
+    },
+    {
+      "label": "new2",
+      "PASS": 76,
+      "FAIL": 1,
+      "reason": "Static boundary check confused a local set named requests with the HTTP library identifier. Renamed seen_request_hashes; not a network attempt.",
+      "JUnit_SHA256": "a362624020d05472fb10f06bc4e7d97f63f0c368882147df3a2587d2e1df7f56"
+    }
+  ],
+  "intermediate_successes_not_added_to_final_counts": true,
+  "static_PASS": 264,
+  "static_FAIL": 0,
+  "code_SHA256": {
+    "research/nn_v2/phase2_5S/qualification.py": "adafd89aadfb435afabc89d93764c54df004a120c2ad8c84ae5e5a6a3613eeda",
+    "research/nn_v2/phase2_5S/attempt_staging.py": "4f120d4df307c59fb97dcbd468ebee6e5801074c922d8aba013592da0c393752",
+    "tests/test_nn_v2_phase2_5S.py": "a2d060adfa35180b04e8daba4dbf4ccd1aa59489abec814c03deb3c2c3419718"
+  },
+  "guard_SHA256": "5060a33a62d9015b846e32f90062f1f82ae4c38bb535b36d9ce8e43812481e81",
+  "private_staging_file_manifest_SHA256": "5b27eafe44e8241950c40c49dacea0bdd0dcd6086573e17cfde4a9f92e1d6b31",
+  "qualification_matrix": "QUALIFICATION_MATRIX.json",
+  "protection": "PROTECTION_VERIFICATION.json",
+  "test_selection": "TEST_SELECTION.json",
+  "actual_dynamic_OS_qualification": false,
+  "real_process_concurrency": false,
+  "real_Job_ACL_tests": false,
+  "power_loss_durability_proven": false,
+  "operations": {
+    "research_HTTP": 0,
+    "research_DNS": 0,
+    "research_socket": 0,
+    "official_GET_HEAD": 0,
+    "Git_network": 0,
+    "actual_transport_calls": 0,
+    "real_permits_issued_or_updated": 0,
+    "production_attempt_reservations": 0,
+    "isolation_test_process_starts": 0,
+    "model_operations": 0,
+    "GUI_operations": 0,
+    "task_operations": 0,
+    "ACL_Firewall_Job_VM_changes": 0,
+    "existing_data_repairs": 0
+  },
+  "unexpected_effect_attempts": 0,
+  "socket_DNS_process_probe_controls_run": 0,
+  "terms": {
+    "A1": "UNKNOWN",
+    "A2": "UNKNOWN",
+    "A3": "UNKNOWN",
+    "A4": "UNKNOWN",
+    "B1": "UNKNOWN",
+    "B2": "UNKNOWN"
+  },
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "G3_permits": {
+    "A1": "HOLD",
+    "A2": "HOLD",
+    "A3": "HOLD",
+    "A4": "HOLD",
+    "B1": "HOLD",
+    "B2": "HOLD"
+  },
+  "holds": {
+    "B": "HOLD",
+    "C": "HOLD",
+    "D": "HOLD",
+    "HISTORY": "HOLD",
+    "PREDICTION": "HOLD",
+    "Phase_A": "BLOCKED",
+    "Phase_B": "NOT_AUTHORIZED",
+    "G3": "HOLD",
+    "G4": "NOT_AUTHORIZED"
+  },
+  "E2": "UNKNOWN",
+  "E3": "UNKNOWN",
+  "E4": "NOT_ACQUIRED",
+  "G3_review": false,
+  "G4_authorized": false,
+  "remote_agreement": "UNVERIFIED_NO_GIT_COMMUNICATION",
+  "private_evidence_alias": "%LOCALAPPDATA%/J1AI/NNV2PhaseS-20261025-0718",
+  "remaining_P0": [
+    "Source currentness or bounded reuse basis and adopted freshness policy",
+    "Applicable terms and exact future execution/storage/proxy/clock/capture contract"
+  ],
+  "remaining_P1": [
+    "Real Windows watchdog/Job/descendant cleanup",
+    "Effective token/DACL/OS write/modify/delete deny and reparse/volume races",
+    "Real process CAS/crash/storage durability"
+  ],
+  "next_dynamic_approval": "See docs/NN_V2_2_5S_DYNAMIC_PROOF_HANDOFF.md; no dynamic trial or acquisition authorized by this READY"
+}

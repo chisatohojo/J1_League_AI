@@ -1,0 +1,46 @@
+{
+  "kind": "NNV2_S_ATTEMPT_PERSISTENCE_V1",
+  "base_revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+  "reviewed_utc": "2026-10-24T22:30:53.223719+00:00",
+  "scope": "SYNTHETIC_STAGING_NO_LIVE_ATTEMPTS",
+  "code": [
+    {
+      "reference": "research/nn_v2/phase2_5P/pre_review.py",
+      "revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+      "SHA256": "af5fdf5f5118165abf79b7330f27b6e0f433288c65f6d40af7dd701bebab04e0"
+    },
+    {
+      "reference": "research/nn_v2/phase2_5R/offline_review.py",
+      "revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+      "SHA256": "0c00349af87f604b95de93c267ef3ddb0585960379c16f9af62487d5d64ca884"
+    },
+    {
+      "reference": "research/nn_v2/phase2_5S/attempt_staging.py",
+      "revision": "S_WORKING_COPY_OFFLINE",
+      "SHA256": "4f120d4df307c59fb97dcbd468ebee6e5801074c922d8aba013592da0c393752"
+    }
+  ],
+  "design": "Append-only immutable revision states and exclusive per-revision claim; fsync/readback, then same-directory os.replace of a new pending head. Orphan/incomplete artifacts stop reopening without repair.",
+  "guarantees": "At-most-once reservation/consumption in the tested model. Never exactly-once server delivery. A crash after a claim burns the slot or requires manual review; it is never automatically refunded.",
+  "trust": "Hashes are not signatures. A separately trusted head anchor and an effective ownership boundary are required against same-user rewriting/rehashing.",
+  "offline_tests": [
+    "immutable identity",
+    "exclusive reservation",
+    "stale-head and revision CAS",
+    "logical competing instances",
+    "interrupted claim/state/replace",
+    "corrupt JSON/hash",
+    "reopen/readback",
+    "unknown outcome no replay",
+    "clock rollback",
+    "ENOSPC/EACCES faults"
+  ],
+  "actual_file_IO_scope": "New syn-* test staging only",
+  "real_processes_started": 0,
+  "actual_multiprocess_CAS_proven": false,
+  "actual_process_crash_tested": false,
+  "power_loss_directory_durability_proven": false,
+  "Windows_atomicity_full_proof": false,
+  "production_ledger_created": false,
+  "verification_results": "Final measured test counts and private JUnit hashes are recorded in VALIDATION.json after execution."
+}

@@ -1,0 +1,31 @@
+{
+  "UTC": "2026-10-24T22:31:51.189894+00:00",
+  "passed": true,
+  "protected_files": 121541,
+  "differences": [
+    "C:\\Users\\megum\\AppData\\Local\\J1AI\\Dashboard\\1f49ca9a37f89a590bea0a6c\\launcher.log"
+  ],
+  "worktrees_unchanged": true,
+  "existing_worktrees": 34,
+  "main_unchanged": true,
+  "models": {
+    "payloads": 53,
+    "verified": true,
+    "seal_SHA256": "d620f8a9cb44a3940996f89ded80c5396b0925e862501261870b6598458d392f"
+  },
+  "GUI_tasks_listeners_unchanged": true,
+  "other_refs_unchanged": true,
+  "unchanged_files": 121540,
+  "explained_append_only_log_differences": 1,
+  "unexplained_differences": 0,
+  "review_method": "Retained initial full SHA audit, verified old-prefix hash and unchanged log identity/source; checked all other protected metadata again. No repair or baseline rewrite.",
+  "log_reconciliation_SHA256": "bb59505bec81a61ba97976c8610b6256ba5d5441a8a259bab31b7ef7454010d7",
+  "raw_audit_SHA256": "60be3c9429b3bb8c369152aa7214abe8c6ed19c046b266aaf756f382b12991f1",
+  "baseline_SHA256": "cfa96c8a8d031e9ec9380b04e9f4876d3f2ebd5b3e9aa82a137ae49cb01d0c59",
+  "private_reviewed_audit_SHA256": "dae31858120f6e150ff7b73f8c26d327d28838594b20d85bc91df809589d958d",
+  "initial_full_hash_audit_SHA256": "60be3c9429b3bb8c369152aa7214abe8c6ed19c046b266aaf756f382b12991f1",
+  "preexisting_morning_interval_differences": 13,
+  "baseline_scope": "Prior R protected set plus 34 existing worktrees and previous J1AI evidence. New S worktree and private staging excluded.",
+  "repair_operations": 0,
+  "initial_failed_raw_audit_preserved": true
+}

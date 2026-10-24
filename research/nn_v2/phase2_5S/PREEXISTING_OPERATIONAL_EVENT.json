@@ -1,0 +1,87 @@
+{
+  "kind": "NNV2_S_PREEXISTING_OPERATIONAL_EVENT_V1",
+  "observed_utc": "2026-10-24T22:19:21.795242+00:00",
+  "task": "J1AI-Champion-Morning",
+  "last_run_JST": "2026-10-25T07:00:01.0000000+09:00",
+  "result": 0,
+  "task_definition_unchanged": true,
+  "attribution": "Inferred from unchanged task definition, success history, timestamps, official revision/archive hashes and display generation chain",
+  "changed_files": 13,
+  "unexplained_differences": 0,
+  "manual_task_starts": 0,
+  "GUI_processes_listeners_unchanged": true,
+  "official_revision": "58423d4070570e0723df7d64104fa023c5694d29847fe75cbb3d51458745cbca",
+  "official_manifest_SHA256": "fa2f86159abc31aa83b8c9f9e66997b18a5bce068ff121de16dde7d633a09915",
+  "retrospective_generation": "3c4a447c701d31e34cdf0d819ca77c71004e89f24d3809837dc8f1a20160cf75",
+  "core_finished_utc": "2026-10-24T22:02:01.894214+00:00",
+  "display_finished_utc": "2026-10-24T22:02:03.377845+00:00",
+  "files": [
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/change_log.csv",
+      "before_SHA256": "7e5a2c9213cbe18f09d18bcfadd0bb3e351359c1b0ad87b91788394bc566ce08",
+      "after_SHA256": "7e5a2c9213cbe18f09d18bcfadd0bb3e351359c1b0ad87b91788394bc566ce08"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/completed_matches.csv",
+      "before_SHA256": "ce6c7b4a986fab06d4a49a44fb409d7611cf05531777fb3a9110b6a22305bfae",
+      "after_SHA256": "c8b3726659af5c67687c1f414a34a7e7b4310f8db10a2898b9c68940622d8b27"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/fixture_identity.csv",
+      "before_SHA256": "5f517b7cdeca1b29fc45a79642e70de35e9decc04d5197111ee70e218f6130d5",
+      "after_SHA256": "5f517b7cdeca1b29fc45a79642e70de35e9decc04d5197111ee70e218f6130d5"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/identity_bridges.csv",
+      "before_SHA256": "e88c198c38d32be253221c786300daf0aebaab3e9b8a89fdae737e41c49758f7",
+      "after_SHA256": "e88c198c38d32be253221c786300daf0aebaab3e9b8a89fdae737e41c49758f7"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/latest.json",
+      "before_SHA256": "da866c91e91df6ab76e336c37b5cfeeda04902f36131ba3a7961c9ba0f409b2d",
+      "after_SHA256": "c72d4f69a0c57587e6a70f25dc40a01d55ecb91efce12a6d1ff8a4104216927e"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/review.md",
+      "before_SHA256": "dbcd6067821db012e9d039de9d97faa7e869c10e80e5d3dfb8998df08f129b1d",
+      "after_SHA256": "4be96332af63bbf6dff21a2211c4eaf6beac61ae504ee6854978fd7a574a8069"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/schedule.csv",
+      "before_SHA256": "ddf4a1cf1acadb2775342007db911152c5d34b41dbaf25ad2fae8df50adbde3d",
+      "after_SHA256": "75cbe454c74b17b077866d3cd27b66a6ca1c836f60dd24996345836d72d5e6f0"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/update_summary.json",
+      "before_SHA256": "53fb071b76531a6095e6a86969b0fa0a7d6a5ebdd6743d32e1084b951c993bd8",
+      "after_SHA256": "40a583e652db02fc9cec3608c2ea7aeca90412028f96ff3074b4a9fa3a4fc2ab"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/view/champion_home.json",
+      "before_SHA256": "deb9ab88173f5a43e4e1444ff0c9cc1eeedaa0f8877f93320e619970b0e19167",
+      "after_SHA256": "0b594bfa68353c843723d560bd76540a67bb7e912fb7bc486bf9742feabd6f10"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/view/champion_rounds.json",
+      "before_SHA256": "39bac4b9696c3e820b7e07db33dd960733d3754cd88db574e62b7adf8c9f6245",
+      "after_SHA256": "7dc82f5a927400c3a59b630b53b29e14aabfcb0b6b34cc0714aa3f3ebf8ef63d"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/view/update-status.json",
+      "before_SHA256": "6d3a5bb68ec492cb82633483529a7134f27b82a3a814d4005d7e87bda11bc513",
+      "after_SHA256": "de7a8c47ebdf8d89c7746e013207830ebff1e0bdfdeae589a2831e4c9b40619f"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/RetrospectiveGenerationPreview-01/current.json",
+      "before_SHA256": "b40dafa0a03856de12ff213c6401efd60d738a3febde551c87d46d2b78267392",
+      "after_SHA256": "cbcb507ce0d189421debb80b52cc6e5c27d8feae2c1a9257ecc2d1976a3af292"
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/RetrospectiveGenerationPreview-01/status.json",
+      "before_SHA256": "5585cfc01a6f4faf59f3e0686e8f66ec2008b70252463b991bb8f36bc69ab8a8",
+      "after_SHA256": "63572bf6b934ef496d3ae81e5c8466c7ca3682cc9cb5e413c58d9527c0fc0b62"
+    }
+  ],
+  "old_evidence_repaired_or_modified": 0,
+  "private_difference_record_SHA256": "d2dff6b98d2d18088eaa8fa917dee908bfa30469256244f02a316ee63311b98a"
+}

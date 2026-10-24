@@ -1,0 +1,288 @@
+{
+  "kind": "NNV2_S_QUALIFICATION_MATRIX_V1",
+  "base_revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+  "reviewed_utc": "2026-10-24T22:30:53.223719+00:00",
+  "scope": "OFFLINE_ONLY",
+  "tracks": [
+    {
+      "track": "A",
+      "summary_status": "PROVEN_STATIC_ONLY",
+      "items": [
+        {
+          "subject": "cached_original_and_normative_text",
+          "status": "PROVEN_STATIC_ONLY",
+          "method": "STATIC",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/ROBOTS_FRESHNESS_REVIEW.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "bf3e2c2994e7f41e84f1fa1616377fd13dbc9ba43db25f4389df4fba281fbb10"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Current live source",
+            "Approved project freshness/reuse policy"
+          ],
+          "next_action": "Review exact currentness evidence or bounded reuse rationale",
+          "approval": "New A1 observation, if needed, requires separate exact approval",
+          "stop_conditions": [
+            "hash/time inconsistency",
+            "unknown applicability"
+          ],
+          "G3_impact": "Currentness and use basis remain P0 HOLD"
+        },
+        {
+          "subject": "source_currentness",
+          "status": "UNKNOWN",
+          "method": "UNPROVEN",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/ROBOTS_FRESHNESS_REVIEW.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "bf3e2c2994e7f41e84f1fa1616377fd13dbc9ba43db25f4389df4fba281fbb10"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "No fresh A1 observation"
+          ],
+          "next_action": "Obtain only separately approved evidence",
+          "approval": "No GET authorized in S",
+          "stop_conditions": [
+            "Cannot infer unchanged source from cache eligibility"
+          ],
+          "G3_impact": "No fetch authority"
+        }
+      ]
+    },
+    {
+      "track": "B",
+      "summary_status": "PROVEN_OFFLINE",
+      "items": [
+        {
+          "subject": "virtual_deadline_hierarchy",
+          "status": "PROVEN_OFFLINE",
+          "method": "OFFLINE",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/qualification.py",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "adafd89aadfb435afabc89d93764c54df004a120c2ad8c84ae5e5a6a3613eeda"
+            },
+            {
+              "reference": "research/nn_v2/phase2_5S/TIMEOUT_JOB_MATRIX.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "777d65b3df31068836d476ae77e37795591ad6445340a25fa0c3215f58a6d648"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Real blocking DNS/TLS/read/fsync cancellation"
+          ],
+          "next_action": "Review draft dedicated-worker contract and capture design",
+          "approval": "Separate bounded worker/endpoint/fixture qualification approval",
+          "stop_conditions": [
+            "Any deadline overrun",
+            "unknown outcome"
+          ],
+          "G3_impact": "Live boundary qualification remains P1"
+        },
+        {
+          "subject": "real_Job",
+          "status": "REQUIRES_DYNAMIC_APPROVAL",
+          "method": "UNPROVEN",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5B_13/windows_local.py",
+              "revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+              "SHA256": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Wall-clock watchdog",
+            "membership",
+            "descendant escape/cleanup",
+            "owner identity"
+          ],
+          "next_action": "Test in isolated nonproduction Windows environment",
+          "approval": "Explicit process/Job scope and cleanup approval",
+          "stop_conditions": [
+            "Unowned PID",
+            "cleanup incomplete"
+          ],
+          "G3_impact": "No dynamic Job PASS"
+        }
+      ]
+    },
+    {
+      "track": "C",
+      "summary_status": "PROVEN_STATIC_ONLY",
+      "items": [
+        {
+          "subject": "ACL_readonly_and_path_policy",
+          "status": "PROVEN_STATIC_ONLY",
+          "method": "STATIC",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/ACL_WRITE_BOUNDARY_MATRIX.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "37e380eb4bc6e47a7b9859a7fc71d2808f4a42e15dc24dab4346f0ea6cfad0d7"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Effective token privilege set",
+            "live reparse races"
+          ],
+          "next_action": "Review allowed/denied roots and least-privilege token design",
+          "approval": "Read-only now; dynamic mirror tests require approval",
+          "stop_conditions": [
+            "Same-user native access",
+            "path identity unknown"
+          ],
+          "G3_impact": "Path policy is not OS denial"
+        },
+        {
+          "subject": "OS_write_deny",
+          "status": "REQUIRES_DYNAMIC_APPROVAL",
+          "method": "UNPROVEN",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/ACL_WRITE_BOUNDARY_MATRIX.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "37e380eb4bc6e47a7b9859a7fc71d2808f4a42e15dc24dab4346f0ea6cfad0d7"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "OS denial of write/modify/delete",
+            "junction/symlink/volume escape"
+          ],
+          "next_action": "Use dedicated nonproduction protected mirrors, never production write probes",
+          "approval": "Explicit identity/ACL/Job/environment and failure-injection approval",
+          "stop_conditions": [
+            "Unexpected write success",
+            "privilege/token mismatch"
+          ],
+          "G3_impact": "Operational boundary remains P1"
+        }
+      ]
+    },
+    {
+      "track": "D",
+      "summary_status": "PROVEN_OFFLINE",
+      "items": [
+        {
+          "subject": "staging_persistence_and_CAS_model",
+          "status": "PROVEN_OFFLINE",
+          "method": "OFFLINE",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/attempt_staging.py",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "4f120d4df307c59fb97dcbd468ebee6e5801074c922d8aba013592da0c393752"
+            },
+            {
+              "reference": "research/nn_v2/phase2_5S/ATTEMPT_PERSISTENCE_VALIDATION.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "5e91e0feaf53993e4c6d24ffc37deb97ac6b791d11157c1aa99caf5e1700062f"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Actual process interleaving and crash"
+          ],
+          "next_action": "Freeze code/fixture/trusted-head and storage acceptance criteria",
+          "approval": "No live ledger authority from this staging experiment",
+          "stop_conditions": [
+            "Orphan/partial state",
+            "corruption",
+            "clock rollback",
+            "I/O denial/full"
+          ],
+          "G3_impact": "At-most-once model only"
+        },
+        {
+          "subject": "real_process_CAS",
+          "status": "REQUIRES_DYNAMIC_APPROVAL",
+          "method": "UNPROVEN",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/ATTEMPT_PERSISTENCE_VALIDATION.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "5e91e0feaf53993e4c6d24ffc37deb97ac6b791d11157c1aa99caf5e1700062f"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Real competing processes",
+            "real crash timing"
+          ],
+          "next_action": "Run isolated multi-process/crash matrix after explicit approval",
+          "approval": "Process identities, paths, failure points and cleanup must be approved",
+          "stop_conditions": [
+            "Ambiguous reservation",
+            "missing durable intent"
+          ],
+          "G3_impact": "P1 qualification outstanding"
+        },
+        {
+          "subject": "power_loss_durability",
+          "status": "UNKNOWN",
+          "method": "UNPROVEN",
+          "evidence": [
+            {
+              "reference": "research/nn_v2/phase2_5S/ATTEMPT_PERSISTENCE_VALIDATION.json",
+              "revision": "S_OFFLINE_WORKING_COPY",
+              "SHA256": "5e91e0feaf53993e4c6d24ffc37deb97ac6b791d11157c1aa99caf5e1700062f"
+            }
+          ],
+          "actual_OS_or_transport_proven": false,
+          "unproven": [
+            "Directory flush and power loss across Windows/storage stack"
+          ],
+          "next_action": "Define durability assumptions, independent ledger head and platform-specific tests",
+          "approval": "Separate storage-fault/power-loss test approval if required",
+          "stop_conditions": [
+            "Head-state mismatch",
+            "unproven commit outcome"
+          ],
+          "G3_impact": "Never call file fsync full power-loss proof"
+        }
+      ]
+    }
+  ],
+  "authority": {
+    "scope": "OFFLINE_ONLY",
+    "terms": "UNKNOWN",
+    "robots": "CONDITIONAL_FIXED_ALLOW",
+    "E2": "UNKNOWN",
+    "E3": "UNKNOWN",
+    "holds": {
+      "B": "HOLD",
+      "C": "HOLD",
+      "D": "HOLD",
+      "HISTORY": "HOLD",
+      "PREDICTION": "HOLD",
+      "Phase_A": "BLOCKED",
+      "Phase_B": "NOT_AUTHORIZED",
+      "G3": "HOLD",
+      "G4": "NOT_AUTHORIZED"
+    },
+    "overall_access": "HOLD",
+    "permit_ready": false,
+    "G3_authorized": false,
+    "G4_authorized": false,
+    "live_send_authorized": false
+  },
+  "actual_dynamic_qualification": false,
+  "actual_attempts_consumed": 0,
+  "terms_all_six": "UNKNOWN",
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  }
+}

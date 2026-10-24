@@ -1,0 +1,349 @@
+{
+  "kind": "NNV2_S_NEGATIVE_CONTROL_COVERAGE_V1",
+  "required_controls": 26,
+  "covered_controls": 26,
+  "new_negative_test_instances": 68,
+  "rows": [
+    {
+      "required_control": 1,
+      "source_functions": [
+        "test_negative_01_old_robots_does_not_establish_fetch_eligibility"
+      ],
+      "passed_test_instances": [
+        "test_negative_01_old_robots_does_not_establish_fetch_eligibility"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 2,
+      "source_functions": [
+        "test_negative_02_unknown_Cache_Control_is_not_invented_TTL"
+      ],
+      "passed_test_instances": [
+        "test_negative_02_unknown_Cache_Control_is_not_invented_TTL"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 3,
+      "source_functions": [
+        "test_negative_03_original_hash_mismatch"
+      ],
+      "passed_test_instances": [
+        "test_negative_03_original_hash_mismatch"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 4,
+      "source_functions": [
+        "test_negative_04_normative_rule_is_not_project_policy_adoption"
+      ],
+      "passed_test_instances": [
+        "test_negative_04_normative_rule_is_not_project_policy_adoption"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 5,
+      "source_functions": [
+        "test_negative_05_eligible_cache_does_not_prove_currentness"
+      ],
+      "passed_test_instances": [
+        "test_negative_05_eligible_cache_does_not_prove_currentness"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 6,
+      "source_functions": [
+        "test_negative_06_repeated_slow_reads_have_finite_total_deadline"
+      ],
+      "passed_test_instances": [
+        "test_negative_06_repeated_slow_reads_have_finite_total_deadline"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 7,
+      "source_functions": [
+        "test_negative_07_fake_Job_expiry_is_stop_not_real_Job_proof"
+      ],
+      "passed_test_instances": [
+        "test_negative_07_fake_Job_expiry_is_stop_not_real_Job_proof"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 8,
+      "source_functions": [
+        "test_negative_08_storage_hash_fsync_readback_share_a_finite_budget"
+      ],
+      "passed_test_instances": [
+        "test_negative_08_storage_hash_fsync_readback_share_a_finite_budget"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 9,
+      "source_functions": [
+        "test_negative_09_unknown_outcome_is_consumed_and_never_retried"
+      ],
+      "passed_test_instances": [
+        "test_negative_09_unknown_outcome_is_consumed_and_never_retried"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 10,
+      "source_functions": [
+        "test_negative_10_same_user_path_policy_is_not_OS_write_deny"
+      ],
+      "passed_test_instances": [
+        "test_negative_10_same_user_path_policy_is_not_OS_write_deny"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 11,
+      "source_functions": [
+        "test_negative_11_reparse_junction_or_volume_escape"
+      ],
+      "passed_test_instances": [
+        "test_negative_11_reparse_junction_or_volume_escape[R:/syn-session/raw/file.bin]",
+        "test_negative_11_reparse_junction_or_volume_escape[R:/syn-session/ledger/intent.json]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 12,
+      "source_functions": [
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root"
+      ],
+      "passed_test_instances": [
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[R:/syn-session/raw/../../production/file]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[R:/syn-session/raw/../raw/file]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[R:/syn-session/rawish/file]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[R:relative]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[//server/share/raw/file]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[\\\\\\\\?\\\\R:\\\\syn-session\\\\raw\\\\file]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[R:/syn-session/raw/file:stream]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[C:/syn-session/raw/file]",
+        "test_negative_12_path_traversal_UNC_ADS_or_wrong_root[R:/syn-session/raw/./file]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 13,
+      "source_functions": [
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair"
+      ],
+      "passed_test_instances": [
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[ENOSPC]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[EACCES]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[partial]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[after_claim]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[after_state]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[replace_denied]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 14,
+      "source_functions": [
+        "test_negative_14_duplicate_reservation_and_20_ID_reuse"
+      ],
+      "passed_test_instances": [
+        "test_negative_14_duplicate_reservation_and_20_ID_reuse"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 15,
+      "source_functions": [
+        "test_negative_15_two_simulated_contenders_use_CAS_without_process_claim"
+      ],
+      "passed_test_instances": [
+        "test_negative_15_two_simulated_contenders_use_CAS_without_process_claim"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 16,
+      "source_functions": [
+        "test_negative_16_corrupt_JSON_is_not_repaired"
+      ],
+      "passed_test_instances": [
+        "test_negative_16_corrupt_JSON_is_not_repaired"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 17,
+      "source_functions": [
+        "test_negative_17_hash_tamper_and_untrusted_new_head",
+        "test_negative_17_whitespace_byte_tamper_is_not_silently_recanonicalized"
+      ],
+      "passed_test_instances": [
+        "test_negative_17_hash_tamper_and_untrusted_new_head",
+        "test_negative_17_whitespace_byte_tamper_is_not_silently_recanonicalized"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 18,
+      "source_functions": [
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair"
+      ],
+      "passed_test_instances": [
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[ENOSPC]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[EACCES]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[partial]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[after_claim]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[after_state]",
+        "test_negative_13_18_staging_failures_and_incomplete_write_hold_without_repair[replace_denied]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 19,
+      "source_functions": [
+        "test_negative_19_wall_clock_rollback_and_bad_virtual_clock"
+      ],
+      "passed_test_instances": [
+        "test_negative_19_wall_clock_rollback_and_bad_virtual_clock"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 20,
+      "source_functions": [
+        "test_negative_14_duplicate_reservation_and_20_ID_reuse"
+      ],
+      "passed_test_instances": [
+        "test_negative_14_duplicate_reservation_and_20_ID_reuse"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 21,
+      "source_functions": [
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS"
+      ],
+      "passed_test_instances": [
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[OS_write_deny]",
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[real_Job]",
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[real_process_CAS]",
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[power_loss_durability]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 22,
+      "source_functions": [
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS"
+      ],
+      "passed_test_instances": [
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[OS_write_deny]",
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[real_Job]",
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[real_process_CAS]",
+        "test_negative_21_22_static_or_fake_evidence_cannot_be_dynamic_PASS[power_loss_durability]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 23,
+      "source_functions": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion"
+      ],
+      "passed_test_instances": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[permit_ready-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[terms-ALLOW]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E2-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E3-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G3_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G4_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[live_send_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[overall_access-ALLOW]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 24,
+      "source_functions": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion"
+      ],
+      "passed_test_instances": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[permit_ready-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[terms-ALLOW]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E2-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E3-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G3_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G4_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[live_send_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[overall_access-ALLOW]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 25,
+      "source_functions": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion"
+      ],
+      "passed_test_instances": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[permit_ready-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[terms-ALLOW]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E2-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E3-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G3_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G4_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[live_send_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[overall_access-ALLOW]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    },
+    {
+      "required_control": 26,
+      "source_functions": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion"
+      ],
+      "passed_test_instances": [
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[permit_ready-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[terms-ALLOW]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E2-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[E3-PASS]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G3_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[G4_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[live_send_authorized-True]",
+        "test_negative_23_24_25_26_no_robots_only_terms_E1_or_G3_G4_promotion[overall_access-ALLOW]"
+      ],
+      "method": "OFFLINE_OR_SYNTHETIC_STAGING",
+      "actual_dynamic_OS_proof": false
+    }
+  ]
+}

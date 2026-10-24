@@ -1,0 +1,26 @@
+{
+  "kind": "NNV2_S_OUTPUT_SHA256_V1",
+  "scope": "Self excluded; offline artifacts only, no new source raw or live attempt ledger",
+  "files": {
+    "docs/NN_V2_2_5S_DYNAMIC_PROOF_HANDOFF.md": "e6e21df27ddd2a7b5fa0285cca1f63643f9cd1617c61d13d636d3c0b1d779af4",
+    "docs/NN_V2_2_5S_SAFETY_QUALIFICATION.md": "dc24d1e5db12370853f6622d314e4fc169403dba7b928f46e4bc70604125e336",
+    "research/nn_v2/phase2_5S/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5S/ACL_WRITE_BOUNDARY_MATRIX.json": "37e380eb4bc6e47a7b9859a7fc71d2808f4a42e15dc24dab4346f0ea6cfad0d7",
+    "research/nn_v2/phase2_5S/ATTEMPT_PERSISTENCE_VALIDATION.json": "5e91e0feaf53993e4c6d24ffc37deb97ac6b791d11157c1aa99caf5e1700062f",
+    "research/nn_v2/phase2_5S/attempt_staging.py": "4f120d4df307c59fb97dcbd468ebee6e5801074c922d8aba013592da0c393752",
+    "research/nn_v2/phase2_5S/INPUT_EVIDENCE.json": "ca45efd7f1b09e07891f8d8c595f27a8469236f60a821614e62710744871df06",
+    "research/nn_v2/phase2_5S/NEGATIVE_CONTROL_COVERAGE.json": "c762c67f244d6042bce79baff955c2dcdea1a1ed1796ef64211f15a7bc0a5b4b",
+    "research/nn_v2/phase2_5S/OPERATIONAL_LOG_EVENT.json": "98b14a732d4c302d1eeb8ecef856987ec1dbc72dbd70b19501d4d01dd598257e",
+    "research/nn_v2/phase2_5S/PREEXISTING_OPERATIONAL_EVENT.json": "422476a9efb6a0c2ffa0424b03ddaa6fa6c41520e34d504ddb8b8febd6cea22e",
+    "research/nn_v2/phase2_5S/PROTECTION_VERIFICATION.json": "2b80444e0faa1812043ab641800de75ca56f843a9ebccfe978297f19470a2424",
+    "research/nn_v2/phase2_5S/qualification.py": "adafd89aadfb435afabc89d93764c54df004a120c2ad8c84ae5e5a6a3613eeda",
+    "research/nn_v2/phase2_5S/QUALIFICATION_MATRIX.json": "46f5808038cde9f64d33187530c90cafcac31d6e2bbf105482d1a54ae30642de",
+    "research/nn_v2/phase2_5S/QUALIFICATION_SCHEMA.json": "a111c3aa4de6b7ac903c90b0c233edee9bee02482da8ac7d9cbe844366828b94",
+    "research/nn_v2/phase2_5S/ROBOTS_FRESHNESS_REVIEW.json": "bf3e2c2994e7f41e84f1fa1616377fd13dbc9ba43db25f4389df4fba281fbb10",
+    "research/nn_v2/phase2_5S/STATIC_VALIDATION.json": "1e2181b0d5a5764e1e35d926d0fd795024ff466bcb88ab363ec0e3039dfeb4d7",
+    "research/nn_v2/phase2_5S/TEST_SELECTION.json": "245f4352c44e904662b40840f02ecc545db742e0aca6ad1fab0162a02311484b",
+    "research/nn_v2/phase2_5S/TIMEOUT_JOB_MATRIX.json": "777d65b3df31068836d476ae77e37795591ad6445340a25fa0c3215f58a6d648",
+    "research/nn_v2/phase2_5S/VALIDATION.json": "53a23e44deb988fe64181397b80ae7158653f4236c90bd6eaa6f7e1a69386f4d",
+    "tests/test_nn_v2_phase2_5S.py": "a2d060adfa35180b04e8daba4dbf4ccd1aa59489abec814c03deb3c2c3419718"
+  }
+}

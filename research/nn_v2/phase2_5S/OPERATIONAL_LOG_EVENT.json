@@ -1,0 +1,23 @@
+{
+  "kind": "NNV2_S_REVIEWED_LOG_APPEND_V1",
+  "UTC": "2026-10-24T22:33:59.944661+00:00",
+  "classification": "EXISTING_GUI_DUPLICATE_LAUNCH_REJECTION_LOG_APPEND",
+  "attribution": "Inferred from append-only bytes and unchanged launcher source; requesting actor not independently identified. No new server start/Stop/restart is shown by this event or by process identity readback.",
+  "path": "%LOCALAPPDATA%/J1AI/Dashboard/1f49ca9a37f89a590bea0a6c/launcher.log",
+  "before_bytes": 142,
+  "after_bytes": 192,
+  "before_SHA256": "7531837e7ff96e0a42d1f54215c5e235c184924448fe7a85c751874a4240a6c3",
+  "after_SHA256": "019eb731599813acb89a8078ae1afc72470b72eee27f077654fbdae20f065a28",
+  "original_prefix_SHA256_preserved": true,
+  "appended_event_utc": "2026-10-24T22:21:37.198286+00:00",
+  "event": "already_running",
+  "source_reference": "Existing ui-weekend-deployment/scripts/launch_dashboard.py: run_launcher failed-instance-acquire branch",
+  "source_SHA256": "68cb5ad6c4a72e9f99d9287a2fbcad8c9b19a08dc58c8cc80dd114e91b34062d",
+  "source_inspection_only": true,
+  "source_imported": false,
+  "GUI_server_identity_and_listeners_unchanged": true,
+  "actual_GUI_or_task_calls_by_agent": 0,
+  "protected_data_repaired": 0,
+  "initial_raw_audit_retained": true,
+  "private_difference_record_SHA256": "498a8b6f81fb04931e8c0ff91a70422605d74a1ed68fe844fe12a565b7c0ca39"
+}

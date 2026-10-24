@@ -1,0 +1,74 @@
+{
+  "kind": "NNV2_S_TIMEOUT_JOB_V1",
+  "base_revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b",
+  "reviewed_utc": "2026-10-24T22:30:53.223719+00:00",
+  "scope": "STATIC_AND_VIRTUAL_CLOCK_ONLY",
+  "sources": [
+    {
+      "reference": "research/nn_v2/phase2_5G/access_worker.py",
+      "SHA256": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8",
+      "revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b"
+    },
+    {
+      "reference": "research/nn_v2/phase2_5G/access_parent.py",
+      "SHA256": "1ff9ff9c35f119717cb566b9d348ed603c3185da1e38c6a3bf842c76a066d370",
+      "revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b"
+    },
+    {
+      "reference": "research/nn_v2/phase2_5B_13/windows_local.py",
+      "SHA256": "ddfbbac1aa8156466e8e768ef4d887e54197b56358f44adfde0b49efc45242c1",
+      "revision": "4acaf75b7fab4517508d3d174b82e70a642cb09b"
+    }
+  ],
+  "observed_legacy": {
+    "worker_deadline_seconds": 10,
+    "parent_wait_seconds": 12,
+    "cleanup_seconds": 2,
+    "session_deadline_seconds": 120,
+    "DNS": "Synchronous getaddrinfo; worker checks elapsed after it returns. Worker alone cannot preempt a blocked resolver.",
+    "TCP_TLS": "Remaining worker 10-second budget used; not a fixed 5-second TCP contract.",
+    "read": "Each loop recomputes worker remaining budget; not a dedicated 15-second idle-read contract.",
+    "Job": "Kill-on-close and active-process limit 4; no independent wall-clock job-time deadline set in this code. Parent finite wait/cleanup is responsible.",
+    "Job_time_limit_is_not_parent_wall_clock": true,
+    "OS_functions_imported_or_executed": false
+  },
+  "options": [
+    {
+      "id": "KEEP_10S",
+      "status": "PROVEN_STATIC_ONLY",
+      "conclusion": "Preserves old contract but cannot be called the exact new 5s connect/15s idle-read contract; no live qualification transfer."
+    },
+    {
+      "id": "NEW_TOTAL_DEADLINE",
+      "status": "PROVEN_OFFLINE",
+      "conclusion": "A finite monotonic worker/parent/storage/cleanup hierarchy is necessary. Socket timeouts alone cannot bound blocking DNS or endless successful small reads."
+    },
+    {
+      "id": "DEDICATED_CONDITIONS_WORKER",
+      "status": "PROVEN_OFFLINE",
+      "conclusion": "Recommended draft: separate exact 2-URL worker with fixed identity, total wall deadline, bounded storage and attempt-first consumption. Implementation/OS qualification needs separate approval."
+    }
+  ],
+  "recommended_draft": {
+    "kind": "DRAFT_DEDICATED_CONDITIONS_WORKER_NOT_APPROVED",
+    "tcp_connect_seconds": 5,
+    "TLS_handshake_seconds": 5,
+    "read_idle_seconds": 15,
+    "worker_wall_seconds": 60,
+    "storage_total_seconds": 10,
+    "cleanup_seconds": 5,
+    "parent_wall_seconds": 70,
+    "redirect": 0,
+    "retry": 0
+  },
+  "proposal_is_adopted": false,
+  "live_worker_implemented": false,
+  "DNS_TLS_handshake_bounds": "DNS must be covered by the external parent watchdog; TLS has a proposed 5s cap. Actual cancellation/descendant cleanup remains dynamic proof.",
+  "storage_budget": "Hash, fsync and readback share 10s and must remain inside the worker 60s deadline. No reset per storage operation.",
+  "repeated_read_budget": "15s is per blocked read, not whole-body duration. Every call also gets min(idle cap, remaining global budget).",
+  "session_total_window": "Not inferred from 5+15; a future exact subset/session time window and total budget require approval.",
+  "mock_STOP_is_OS_termination": false,
+  "actual_Job_proven": false,
+  "timeout_consumes_attempt": true,
+  "unknown_outcome_auto_retry": false
+}
