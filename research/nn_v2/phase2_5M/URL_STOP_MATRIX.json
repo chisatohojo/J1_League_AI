@@ -1,0 +1,732 @@
+{
+  "kind": "NNV2_M_URL_STOP_MATRIX_V1",
+  "scope": "OFFLINE_REVIEW_ONLY",
+  "rows": [
+    {
+      "id": "A1",
+      "URL": "https://www.jleague.jp/robots.txt",
+      "scheme": "https",
+      "host": "www.jleague.jp",
+      "port": 443,
+      "method": "GET",
+      "robots": {
+        "decision": "ALLOW",
+        "conditional_candidate_only": true,
+        "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "parser_version": "nn_v2_robots_offline_groups_v4",
+        "group_selection": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ],
+            "rule_count": 19
+          }
+        ],
+        "matched_rule_count": 0,
+        "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "reason": "RFC_2_2_2_IMPLICIT_ROBOTS_URI"
+      },
+      "related_UNKNOWN_IDs": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples",
+        "sealed_A1_replay"
+      ],
+      "impact_priorities": {
+        "agent_grammar": "P0",
+        "rule_grammar": "P2",
+        "longest_rule": "P2",
+        "reserved_octets": "P2",
+        "query": "P2",
+        "encoding_errors": "P2",
+        "parse_limits": "P2",
+        "standard_examples": "P2",
+        "sealed_A1_replay": "P0"
+      },
+      "scope_analysis": {
+        "binding": {
+          "URL": "https://www.jleague.jp/robots.txt",
+          "header": "J1AI-Research-Timing-Pilot/1.0",
+          "token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "candidate_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+          "scope": "SEALED_A1_OFFLINE_REVIEW",
+          "specification_SHA256": {
+            "S1": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "S2": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581"
+          },
+          "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "expected_reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+        },
+        "facts": {
+          "reference_integrity_verified": true,
+          "bytes": 646,
+          "line_count": 25,
+          "group_count": 2,
+          "total_rule_count": 20,
+          "all_defined_rules_supported": true,
+          "unresolved_records": 0,
+          "ASCII_reference": true,
+          "percent_in_patterns": false,
+          "percent_in_target": false,
+          "query_in_patterns": false,
+          "query_in_target": false,
+          "no_priority_contest": true,
+          "work_units": 39,
+          "conflicting_examples_absent": true
+        },
+        "scope_exclusions": {
+          "agent_grammar": false,
+          "rule_grammar": true,
+          "longest_rule": true,
+          "reserved_octets": true,
+          "query": true,
+          "encoding_errors": true,
+          "parse_limits": true,
+          "standard_examples": true,
+          "sealed_A1_replay": false
+        }
+      },
+      "scope_certificate_SHA256": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+      "evidence": {
+        "status": "UNKNOWN",
+        "candidate_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+        "real_E2_qualified": false,
+        "real_E3_verified": false,
+        "historical_User_Agent": "UNKNOWN",
+        "historical_missing_header_not_required_to_be_retroactively_repaired": true,
+        "L_schema_version": "NNV2_UA_EVIDENCE_V1"
+      },
+      "permit": {
+        "status": "UNAPPROVED",
+        "current_request_authority": 0,
+        "old_G_I_budget_reusable": false
+      },
+      "site_access": {
+        "status": "UNKNOWN",
+        "operator": "Existing official-site context; current automation terms unconfirmed",
+        "terms_applicability": "UNKNOWN",
+        "robots_404_not_site_permission": true
+      },
+      "final_communication": false,
+      "direct_STOP_reasons": [
+        "FORMAL_UA_TOKEN_ADOPTION_NOT_APPROVED",
+        "REAL_ADAPTER_PRE_SEND_CAPTURE_NOT_QUALIFIED",
+        "NEW_PERMIT_AND_G4_START_APPROVAL_ABSENT",
+        "ACCESS_CONDITIONS_OR_BOUNDED_INSPECTION_SCOPE_UNCONFIRMED",
+        "FRESHNESS_AND_SCOPE_POLICY_NOT_FIXED_FOR_NEW_REQUEST"
+      ],
+      "release_conditions": [
+        "G1 explicit identity adoption decision (no automatic runtime deployment)",
+        "G2 offline integration qualification and separately approved scope-proof policy",
+        "G3 new exact URL/method/UA/budget/deadline/destination approval",
+        "G4 explicit start approval and one-use attempt/evidence controls",
+        "Do not require current-request E2/E3 before its first approved send",
+        "Review bounded ACCESS_CONDITIONS_ONLY inspection/robots-bootstrap policy using F precedent; no unknown-to-ALLOW promotion or implicit B authority",
+        "Existing A1 is not fetched again; a refresh requires its own exact repeat-URL approval if freshness policy requires it"
+      ]
+    },
+    {
+      "id": "A3",
+      "URL": "https://www.jleague.jp/general/kiyaku/",
+      "scheme": "https",
+      "host": "www.jleague.jp",
+      "port": 443,
+      "method": "GET",
+      "robots": {
+        "decision": "ALLOW",
+        "conditional_candidate_only": true,
+        "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "parser_version": "nn_v2_robots_offline_groups_v4",
+        "group_selection": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ],
+            "rule_count": 19
+          }
+        ],
+        "matched_rule_count": 0,
+        "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "reason": "SUPPORTED_OFFLINE_PATH_SUBSET"
+      },
+      "related_UNKNOWN_IDs": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples",
+        "sealed_A1_replay"
+      ],
+      "impact_priorities": {
+        "agent_grammar": "P0",
+        "rule_grammar": "P2",
+        "longest_rule": "P2",
+        "reserved_octets": "P2",
+        "query": "P2",
+        "encoding_errors": "P2",
+        "parse_limits": "P2",
+        "standard_examples": "P2",
+        "sealed_A1_replay": "P0"
+      },
+      "scope_analysis": {
+        "binding": {
+          "URL": "https://www.jleague.jp/general/kiyaku/",
+          "header": "J1AI-Research-Timing-Pilot/1.0",
+          "token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "candidate_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+          "scope": "SEALED_A1_OFFLINE_REVIEW",
+          "specification_SHA256": {
+            "S1": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "S2": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581"
+          },
+          "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "expected_reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+        },
+        "facts": {
+          "reference_integrity_verified": true,
+          "bytes": 646,
+          "line_count": 25,
+          "group_count": 2,
+          "total_rule_count": 20,
+          "all_defined_rules_supported": true,
+          "unresolved_records": 0,
+          "ASCII_reference": true,
+          "percent_in_patterns": false,
+          "percent_in_target": false,
+          "query_in_patterns": false,
+          "query_in_target": false,
+          "no_priority_contest": true,
+          "work_units": 38,
+          "conflicting_examples_absent": true
+        },
+        "scope_exclusions": {
+          "agent_grammar": false,
+          "rule_grammar": true,
+          "longest_rule": true,
+          "reserved_octets": true,
+          "query": true,
+          "encoding_errors": true,
+          "parse_limits": true,
+          "standard_examples": true,
+          "sealed_A1_replay": false
+        }
+      },
+      "scope_certificate_SHA256": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+      "evidence": {
+        "status": "UNKNOWN",
+        "candidate_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+        "real_E2_qualified": false,
+        "real_E3_verified": false,
+        "historical_User_Agent": "UNKNOWN",
+        "historical_missing_header_not_required_to_be_retroactively_repaired": true,
+        "L_schema_version": "NNV2_UA_EVIDENCE_V1"
+      },
+      "permit": {
+        "status": "UNAPPROVED",
+        "current_request_authority": 0,
+        "old_G_I_budget_reusable": false
+      },
+      "site_access": {
+        "status": "UNKNOWN",
+        "operator": "Existing official-site context; current automation terms unconfirmed",
+        "terms_applicability": "UNKNOWN",
+        "robots_404_not_site_permission": true
+      },
+      "final_communication": false,
+      "direct_STOP_reasons": [
+        "FORMAL_UA_TOKEN_ADOPTION_NOT_APPROVED",
+        "REAL_ADAPTER_PRE_SEND_CAPTURE_NOT_QUALIFIED",
+        "NEW_PERMIT_AND_G4_START_APPROVAL_ABSENT",
+        "ACCESS_CONDITIONS_OR_BOUNDED_INSPECTION_SCOPE_UNCONFIRMED",
+        "FRESHNESS_AND_SCOPE_POLICY_NOT_FIXED_FOR_NEW_REQUEST"
+      ],
+      "release_conditions": [
+        "G1 explicit identity adoption decision (no automatic runtime deployment)",
+        "G2 offline integration qualification and separately approved scope-proof policy",
+        "G3 new exact URL/method/UA/budget/deadline/destination approval",
+        "G4 explicit start approval and one-use attempt/evidence controls",
+        "Do not require current-request E2/E3 before its first approved send",
+        "Review bounded ACCESS_CONDITIONS_ONLY inspection/robots-bootstrap policy using F precedent; no unknown-to-ALLOW promotion or implicit B authority"
+      ]
+    },
+    {
+      "id": "A4",
+      "URL": "https://www.jleague.jp/general/copyright/",
+      "scheme": "https",
+      "host": "www.jleague.jp",
+      "port": 443,
+      "method": "GET",
+      "robots": {
+        "decision": "ALLOW",
+        "conditional_candidate_only": true,
+        "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "parser_version": "nn_v2_robots_offline_groups_v4",
+        "group_selection": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ],
+            "rule_count": 19
+          }
+        ],
+        "matched_rule_count": 0,
+        "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "reason": "SUPPORTED_OFFLINE_PATH_SUBSET"
+      },
+      "related_UNKNOWN_IDs": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples",
+        "sealed_A1_replay"
+      ],
+      "impact_priorities": {
+        "agent_grammar": "P0",
+        "rule_grammar": "P2",
+        "longest_rule": "P2",
+        "reserved_octets": "P2",
+        "query": "P2",
+        "encoding_errors": "P2",
+        "parse_limits": "P2",
+        "standard_examples": "P2",
+        "sealed_A1_replay": "P0"
+      },
+      "scope_analysis": {
+        "binding": {
+          "URL": "https://www.jleague.jp/general/copyright/",
+          "header": "J1AI-Research-Timing-Pilot/1.0",
+          "token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "candidate_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+          "scope": "SEALED_A1_OFFLINE_REVIEW",
+          "specification_SHA256": {
+            "S1": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "S2": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581"
+          },
+          "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "expected_reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+        },
+        "facts": {
+          "reference_integrity_verified": true,
+          "bytes": 646,
+          "line_count": 25,
+          "group_count": 2,
+          "total_rule_count": 20,
+          "all_defined_rules_supported": true,
+          "unresolved_records": 0,
+          "ASCII_reference": true,
+          "percent_in_patterns": false,
+          "percent_in_target": false,
+          "query_in_patterns": false,
+          "query_in_target": false,
+          "no_priority_contest": true,
+          "work_units": 38,
+          "conflicting_examples_absent": true
+        },
+        "scope_exclusions": {
+          "agent_grammar": false,
+          "rule_grammar": true,
+          "longest_rule": true,
+          "reserved_octets": true,
+          "query": true,
+          "encoding_errors": true,
+          "parse_limits": true,
+          "standard_examples": true,
+          "sealed_A1_replay": false
+        }
+      },
+      "scope_certificate_SHA256": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+      "evidence": {
+        "status": "UNKNOWN",
+        "candidate_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+        "real_E2_qualified": false,
+        "real_E3_verified": false,
+        "historical_User_Agent": "UNKNOWN",
+        "historical_missing_header_not_required_to_be_retroactively_repaired": true,
+        "L_schema_version": "NNV2_UA_EVIDENCE_V1"
+      },
+      "permit": {
+        "status": "UNAPPROVED",
+        "current_request_authority": 0,
+        "old_G_I_budget_reusable": false
+      },
+      "site_access": {
+        "status": "UNKNOWN",
+        "operator": "Existing official-site context; current automation terms unconfirmed",
+        "terms_applicability": "UNKNOWN",
+        "robots_404_not_site_permission": true
+      },
+      "final_communication": false,
+      "direct_STOP_reasons": [
+        "FORMAL_UA_TOKEN_ADOPTION_NOT_APPROVED",
+        "REAL_ADAPTER_PRE_SEND_CAPTURE_NOT_QUALIFIED",
+        "NEW_PERMIT_AND_G4_START_APPROVAL_ABSENT",
+        "ACCESS_CONDITIONS_OR_BOUNDED_INSPECTION_SCOPE_UNCONFIRMED",
+        "FRESHNESS_AND_SCOPE_POLICY_NOT_FIXED_FOR_NEW_REQUEST"
+      ],
+      "release_conditions": [
+        "G1 explicit identity adoption decision (no automatic runtime deployment)",
+        "G2 offline integration qualification and separately approved scope-proof policy",
+        "G3 new exact URL/method/UA/budget/deadline/destination approval",
+        "G4 explicit start approval and one-use attempt/evidence controls",
+        "Do not require current-request E2/E3 before its first approved send",
+        "Review bounded ACCESS_CONDITIONS_ONLY inspection/robots-bootstrap policy using F precedent; no unknown-to-ALLOW promotion or implicit B authority"
+      ]
+    },
+    {
+      "id": "B1",
+      "URL": "https://www.jleague.jp/j1/news/",
+      "scheme": "https",
+      "host": "www.jleague.jp",
+      "port": 443,
+      "method": "GET",
+      "robots": {
+        "decision": "ALLOW",
+        "conditional_candidate_only": true,
+        "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "parser_version": "nn_v2_robots_offline_groups_v4",
+        "group_selection": [
+          {
+            "group": 1,
+            "agents": [
+              "*"
+            ],
+            "rule_count": 19
+          }
+        ],
+        "matched_rule_count": 0,
+        "reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+        "reason": "SUPPORTED_OFFLINE_PATH_SUBSET"
+      },
+      "related_UNKNOWN_IDs": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples",
+        "sealed_A1_replay"
+      ],
+      "impact_priorities": {
+        "agent_grammar": "P0",
+        "rule_grammar": "P2",
+        "longest_rule": "P2",
+        "reserved_octets": "P2",
+        "query": "P2",
+        "encoding_errors": "P2",
+        "parse_limits": "P2",
+        "standard_examples": "P2",
+        "sealed_A1_replay": "P0"
+      },
+      "scope_analysis": {
+        "binding": {
+          "URL": "https://www.jleague.jp/j1/news/",
+          "header": "J1AI-Research-Timing-Pilot/1.0",
+          "token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "candidate_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+          "scope": "SEALED_A1_OFFLINE_REVIEW",
+          "specification_SHA256": {
+            "S1": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "S2": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581"
+          },
+          "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+          "expected_reference_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+        },
+        "facts": {
+          "reference_integrity_verified": true,
+          "bytes": 646,
+          "line_count": 25,
+          "group_count": 2,
+          "total_rule_count": 20,
+          "all_defined_rules_supported": true,
+          "unresolved_records": 0,
+          "ASCII_reference": true,
+          "percent_in_patterns": false,
+          "percent_in_target": false,
+          "query_in_patterns": false,
+          "query_in_target": false,
+          "no_priority_contest": true,
+          "work_units": 40,
+          "conflicting_examples_absent": true
+        },
+        "scope_exclusions": {
+          "agent_grammar": false,
+          "rule_grammar": true,
+          "longest_rule": true,
+          "reserved_octets": true,
+          "query": true,
+          "encoding_errors": true,
+          "parse_limits": true,
+          "standard_examples": true,
+          "sealed_A1_replay": false
+        }
+      },
+      "scope_certificate_SHA256": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+      "evidence": {
+        "status": "UNKNOWN",
+        "candidate_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+        "real_E2_qualified": false,
+        "real_E3_verified": false,
+        "historical_User_Agent": "UNKNOWN",
+        "historical_missing_header_not_required_to_be_retroactively_repaired": true,
+        "L_schema_version": "NNV2_UA_EVIDENCE_V1"
+      },
+      "permit": {
+        "status": "UNAPPROVED",
+        "current_request_authority": 0,
+        "old_G_I_budget_reusable": false
+      },
+      "site_access": {
+        "status": "UNKNOWN",
+        "operator": "Existing official-site context; current automation terms unconfirmed",
+        "terms_applicability": "UNKNOWN",
+        "robots_404_not_site_permission": true
+      },
+      "final_communication": false,
+      "direct_STOP_reasons": [
+        "FORMAL_UA_TOKEN_ADOPTION_NOT_APPROVED",
+        "REAL_ADAPTER_PRE_SEND_CAPTURE_NOT_QUALIFIED",
+        "NEW_PERMIT_AND_G4_START_APPROVAL_ABSENT",
+        "ACCESS_CONDITIONS_OR_BOUNDED_INSPECTION_SCOPE_UNCONFIRMED",
+        "FRESHNESS_AND_SCOPE_POLICY_NOT_FIXED_FOR_NEW_REQUEST"
+      ],
+      "release_conditions": [
+        "G1 explicit identity adoption decision (no automatic runtime deployment)",
+        "G2 offline integration qualification and separately approved scope-proof policy",
+        "G3 new exact URL/method/UA/budget/deadline/destination approval",
+        "G4 explicit start approval and one-use attempt/evidence controls",
+        "Do not require current-request E2/E3 before its first approved send",
+        "Host-specific robots and operator/terms/automated-access conditions must be resolved before B entry inspection"
+      ]
+    },
+    {
+      "id": "A2",
+      "URL": "https://aboutj.jleague.jp/robots.txt",
+      "scheme": "https",
+      "host": "aboutj.jleague.jp",
+      "port": 443,
+      "method": "GET",
+      "robots": {
+        "decision": "UNKNOWN",
+        "conditional_candidate_only": false,
+        "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "parser_version": "nn_v2_robots_offline_groups_v4",
+        "group_selection": [],
+        "matched_rule_count": null,
+        "reference_SHA256": null,
+        "reason": "NO_HOST_SPECIFIC_ORIGINAL"
+      },
+      "related_UNKNOWN_IDs": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples",
+        "sealed_A1_replay"
+      ],
+      "impact_priorities": {
+        "agent_grammar": "P0",
+        "rule_grammar": "P1",
+        "longest_rule": "P1",
+        "reserved_octets": "P1",
+        "query": "P1",
+        "encoding_errors": "P1",
+        "parse_limits": "P1",
+        "standard_examples": "P1",
+        "sealed_A1_replay": "P0"
+      },
+      "scope_analysis": {
+        "binding": {
+          "URL": "https://aboutj.jleague.jp/robots.txt",
+          "header": "J1AI-Research-Timing-Pilot/1.0",
+          "token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "candidate_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+          "scope": "SEALED_A1_OFFLINE_REVIEW",
+          "specification_SHA256": {
+            "S1": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "S2": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581"
+          }
+        },
+        "source_absent": true
+      },
+      "scope_certificate_SHA256": "e8af3cef5f17943a71b56c0559da4b81ac5c1a7055f652b96c4086ecd8b25431",
+      "evidence": {
+        "status": "UNKNOWN",
+        "candidate_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+        "real_E2_qualified": false,
+        "real_E3_verified": false,
+        "historical_User_Agent": "UNKNOWN",
+        "historical_missing_header_not_required_to_be_retroactively_repaired": true,
+        "L_schema_version": "NNV2_UA_EVIDENCE_V1"
+      },
+      "permit": {
+        "status": "UNAPPROVED",
+        "current_request_authority": 0,
+        "old_G_I_budget_reusable": false
+      },
+      "site_access": {
+        "status": "UNKNOWN",
+        "operator": "UNKNOWN",
+        "terms_applicability": "UNKNOWN",
+        "robots_404_not_site_permission": true
+      },
+      "final_communication": false,
+      "direct_STOP_reasons": [
+        "FORMAL_UA_TOKEN_ADOPTION_NOT_APPROVED",
+        "REAL_ADAPTER_PRE_SEND_CAPTURE_NOT_QUALIFIED",
+        "NEW_PERMIT_AND_G4_START_APPROVAL_ABSENT",
+        "ACCESS_CONDITIONS_OR_BOUNDED_INSPECTION_SCOPE_UNCONFIRMED",
+        "FRESHNESS_AND_SCOPE_POLICY_NOT_FIXED_FOR_NEW_REQUEST",
+        "NO_ABOUTJ_HOST_SPECIFIC_ROBOTS_OPERATOR_TERMS"
+      ],
+      "release_conditions": [
+        "G1 explicit identity adoption decision (no automatic runtime deployment)",
+        "G2 offline integration qualification and separately approved scope-proof policy",
+        "G3 new exact URL/method/UA/budget/deadline/destination approval",
+        "G4 explicit start approval and one-use attempt/evidence controls",
+        "Do not require current-request E2/E3 before its first approved send",
+        "Review bounded ACCESS_CONDITIONS_ONLY inspection/robots-bootstrap policy using F precedent; no unknown-to-ALLOW promotion or implicit B authority",
+        "Do not substitute www robots; obtain aboutj source only under a separately approved bounded inspection scope"
+      ]
+    },
+    {
+      "id": "B2",
+      "URL": "https://aboutj.jleague.jp/corporate/pressrelease/",
+      "scheme": "https",
+      "host": "aboutj.jleague.jp",
+      "port": 443,
+      "method": "GET",
+      "robots": {
+        "decision": "UNKNOWN",
+        "conditional_candidate_only": false,
+        "User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+        "product_token": "Research-Timing-Pilot",
+        "parser_version": "nn_v2_robots_offline_groups_v4",
+        "group_selection": [],
+        "matched_rule_count": null,
+        "reference_SHA256": null,
+        "reason": "NO_HOST_SPECIFIC_ORIGINAL"
+      },
+      "related_UNKNOWN_IDs": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples",
+        "sealed_A1_replay"
+      ],
+      "impact_priorities": {
+        "agent_grammar": "P0",
+        "rule_grammar": "P1",
+        "longest_rule": "P1",
+        "reserved_octets": "P1",
+        "query": "P1",
+        "encoding_errors": "P1",
+        "parse_limits": "P1",
+        "standard_examples": "P1",
+        "sealed_A1_replay": "P0"
+      },
+      "scope_analysis": {
+        "binding": {
+          "URL": "https://aboutj.jleague.jp/corporate/pressrelease/",
+          "header": "J1AI-Research-Timing-Pilot/1.0",
+          "token": "Research-Timing-Pilot",
+          "parser_version": "nn_v2_robots_offline_groups_v4",
+          "candidate_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+          "scope": "SEALED_A1_OFFLINE_REVIEW",
+          "specification_SHA256": {
+            "S1": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "S2": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581"
+          }
+        },
+        "source_absent": true
+      },
+      "scope_certificate_SHA256": "ba5793113dc9087b5e5a8b0211e0dd285829fd44a6ce80a8e7a03d4c0f4e1a73",
+      "evidence": {
+        "status": "UNKNOWN",
+        "candidate_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+        "real_E2_qualified": false,
+        "real_E3_verified": false,
+        "historical_User_Agent": "UNKNOWN",
+        "historical_missing_header_not_required_to_be_retroactively_repaired": true,
+        "L_schema_version": "NNV2_UA_EVIDENCE_V1"
+      },
+      "permit": {
+        "status": "UNAPPROVED",
+        "current_request_authority": 0,
+        "old_G_I_budget_reusable": false
+      },
+      "site_access": {
+        "status": "UNKNOWN",
+        "operator": "UNKNOWN",
+        "terms_applicability": "UNKNOWN",
+        "robots_404_not_site_permission": true
+      },
+      "final_communication": false,
+      "direct_STOP_reasons": [
+        "FORMAL_UA_TOKEN_ADOPTION_NOT_APPROVED",
+        "REAL_ADAPTER_PRE_SEND_CAPTURE_NOT_QUALIFIED",
+        "NEW_PERMIT_AND_G4_START_APPROVAL_ABSENT",
+        "ACCESS_CONDITIONS_OR_BOUNDED_INSPECTION_SCOPE_UNCONFIRMED",
+        "FRESHNESS_AND_SCOPE_POLICY_NOT_FIXED_FOR_NEW_REQUEST",
+        "NO_ABOUTJ_HOST_SPECIFIC_ROBOTS_OPERATOR_TERMS"
+      ],
+      "release_conditions": [
+        "G1 explicit identity adoption decision (no automatic runtime deployment)",
+        "G2 offline integration qualification and separately approved scope-proof policy",
+        "G3 new exact URL/method/UA/budget/deadline/destination approval",
+        "G4 explicit start approval and one-use attempt/evidence controls",
+        "Do not require current-request E2/E3 before its first approved send",
+        "Host-specific robots and operator/terms/automated-access conditions must be resolved before B entry inspection",
+        "Do not substitute www robots; obtain aboutj source only under a separately approved bounded inspection scope"
+      ]
+    }
+  ],
+  "counts": {
+    "conditional_robots_ALLOW": 4,
+    "robots_UNKNOWN": 2,
+    "communication_allowed": 0
+  },
+  "current_authorized_requests": 0,
+  "old_approvals_not_reused": true,
+  "legacy_L_all_five_facet_synthetic_test_not_changed": true,
+  "B_HOLD": 288,
+  "C_HOLD": 288,
+  "D_HOLD": 288,
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED"
+}

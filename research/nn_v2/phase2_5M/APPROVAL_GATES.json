@@ -1,0 +1,168 @@
+{
+  "kind": "NNV2_M_APPROVAL_GATES_DESIGN_V1",
+  "scope": "DESIGN_NOT_PERMIT",
+  "current_status": "ALL_UNAPPROVED_NO_EXECUTION",
+  "execution_order": [
+    "G1",
+    "G2",
+    "G3",
+    "G4_START",
+    "G4_POST_SEND_REVIEW"
+  ],
+  "gates": [
+    {
+      "id": "G1",
+      "requires": [],
+      "approval": "Explicit formal UA/product-token adoption decision",
+      "state": "UNAPPROVED",
+      "pre_send": [
+        "Frozen candidate SHA and RFC binding",
+        "Separate decision for runtime configuration deployment"
+      ],
+      "does_not_authorize": [
+        "runtime change",
+        "adapter execution",
+        "GET",
+        "permit issuance"
+      ]
+    },
+    {
+      "id": "G2",
+      "requires": [
+        "G1"
+      ],
+      "approval": "Offline real-adapter integration design and qualification scope",
+      "state": "UNAPPROVED",
+      "pre_send": [
+        "Pinned code and exact configuration",
+        "E0/E1 and final-client-header capture tested with mocks",
+        "one-use attempt charging even for uncertain outcomes",
+        "TLS/redirect/retry/timeout/ownership/storage/receipt safety verified in isolated mock testing",
+        "Exact scope proof and freshness policy reviewed; existing K/L parser/evidence outputs remain unchanged",
+        "If E3 required: independent observation method/privacy/TLS feasibility separately qualified without pretending that current-request E3 already exists",
+        "For A access-condition inspection: explicit bounded bootstrap policy review, known stricter restrictions take precedence"
+      ],
+      "does_not_authorize": [
+        "actual adapter connection",
+        "actual HTTP",
+        "model execution"
+      ]
+    },
+    {
+      "id": "G3",
+      "requires": [
+        "G1",
+        "G2"
+      ],
+      "approval": "New bounded permit, separately from G4 run start",
+      "state": "UNAPPROVED",
+      "pre_send": [
+        "Exact URLs/host/443/GET/UA/token/code/source hashes/destination identities",
+        "New non-reusable permit and finite UTC window",
+        "Explicit required evidence facets: E0/E1 before send; E2/E4 after; E3 method/scope and required-or-not decision stated",
+        "Known robots DENY or unresolved applicable rule interpretation STOP; no broad UNKNOWN bypass",
+        "A2 bootstrap/conditions inspection must be expressly approved as such; never activate B",
+        "B requires completed host-specific access-condition review; A and B budgets cannot transfer"
+      ],
+      "proposed_bounds_not_issued": {
+        "A_remaining_max_requests": 3,
+        "A_targets": [
+          "A2",
+          "A3",
+          "A4"
+        ],
+        "B_entry_max_requests": 2,
+        "B_targets": [
+          "B1",
+          "B2"
+        ],
+        "each_URL_max_requests": 1,
+        "body_caps": {
+          "A2": 65536,
+          "A3": 1048576,
+          "A4": 1048576,
+          "B1": 2097152,
+          "B2": 2097152
+        },
+        "interval_min_seconds": 5,
+        "socket_timeout_seconds": 10,
+        "parent_deadline_seconds": 12,
+        "cleanup_deadline_seconds": 2,
+        "global_deadline_seconds": 120,
+        "redirect": 0,
+        "retry": 0,
+        "parallel": 0,
+        "old_unused_budget_reusable": false,
+        "A1_refresh_included": false
+      },
+      "conditions_inspection_precedent": {
+        "source": "research/nn_v2/phase2_5F/A_ACCESS_PLAN.json",
+        "SHA256": "fda4f524b703bb6171b4d27a46d35dd313cbaded773bd366926e57918252bd2d",
+        "original_rule": "A inspects conditions only after separate explicit bounded inspection approval; unknown conditions are not presumed permission.",
+        "current_authority": 0
+      },
+      "does_not_authorize": [
+        "G4 start by inference",
+        "B through A",
+        "extra article/index/search requests",
+        "budget revival"
+      ]
+    },
+    {
+      "id": "G4",
+      "requires": [
+        "G1",
+        "G2",
+        "G3"
+      ],
+      "approval": "Explicit bounded run start; then independent post-send evidence review",
+      "state": "UNAPPROVED",
+      "pre_send": [
+        "New permit/current bound code/host/URL/candidate/freshness/clock/budget/storage identities rechecked",
+        "E0/E1 sealed, final headers checked, capture mechanism already qualified",
+        "Current-request E2/E3 may be absent before send; this is not permission to omit their post-send status"
+      ],
+      "post_send": [
+        "E2 start/final outcome/error and actual UTC captured",
+        "E4 raw/metadata/request/receipt readback SHA confirmed",
+        "E3 required => qualified observation verified, otherwise STOP",
+        "E3 not in expressly approved scope => NOT_OBSERVED/UNVERIFIED retained, never infer independent User-Agent proof",
+        "Evidence contradictions/missing receipt/403/429/TLS/timeout/unknown completion => STOP, preserve attempt, no retry"
+      ],
+      "does_not_authorize": [
+        "automatic resume",
+        "subsequent URLs before checkpoint",
+        "history admission",
+        "model evaluation"
+      ]
+    }
+  ],
+  "pre_vs_post": {
+    "before": [
+      "G1/G2 qualification",
+      "new G3 approval",
+      "G4-start instruction",
+      "current E0/E1",
+      "validated ability to capture E2/E4 and E3 if required"
+    ],
+    "after": [
+      "actual current-request E2",
+      "actual E4",
+      "E3 observed status within approved method/scope"
+    ],
+    "prohibited_circular_requirement": "Actual current-request E2/E3 cannot be demanded as a precondition of that same first send",
+    "historical_unknowns": "Past outbound headers remain UNKNOWN; new requests cannot manufacture historical proof"
+  },
+  "forbidden_now": [
+    "GET",
+    "HEAD",
+    "DNS probe",
+    "permit issuance",
+    "UA adoption",
+    "adapter connection",
+    "runtime change"
+  ],
+  "approval_reuse": false,
+  "code_integrated": false,
+  "permits_issued": 0
+}

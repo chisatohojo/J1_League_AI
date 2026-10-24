@@ -1,0 +1,15 @@
+{
+  "kind": "NNV2_M_PROTECTION_V1",
+  "UTC": "2026-10-24T01:27:22.312151+00:00",
+  "protected_files": 60515,
+  "SHA_differences": 0,
+  "identity_metadata_differences": 0,
+  "model_payloads_verified": 53,
+  "task_definitions_and_state_unchanged": true,
+  "main_and_other_worktrees_unchanged": true,
+  "old_new_parsers_collectors_UA_contracts_evidence_unchanged": true,
+  "prior_interval_difference": 0,
+  "baseline_SHA256": "cd8431e4cf05991a0a10231674aea35f19e67d9fb7d950e9e0476c7efb5c8e47",
+  "private_final_audit_SHA256": "c3da5e3d03e5f939bb81ff3f24c3c1e2352ba44314cba2599f50afcbacbf0c92",
+  "status": "PASS"
+}

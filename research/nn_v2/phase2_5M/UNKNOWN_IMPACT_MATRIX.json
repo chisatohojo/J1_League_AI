@@ -1,0 +1,1291 @@
+{
+  "kind": "NNV2_M_UNKNOWN_IMPACT_V1",
+  "scope": "OFFLINE_REVIEW_ONLY",
+  "base_commit": "17017b6cce031f26347b3dd4aeef4a2c188d2ff0",
+  "formal_ledger_SHA256": "63732be9ae316c1ce7ea5875efedbbd52f99c2f9875273d1f6b33ae8a795f77b",
+  "rows": [
+    {
+      "id": "agent_grammar",
+      "name": "agent_grammar",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "RFC product-token uses ASCII letters, underscore and hyphen; it is distinct from the HTTP header. Google suffix handling is a separate profile.",
+      "original_I_record": {
+        "id": "agent_grammar",
+        "RFC_section": "2.2.1",
+        "Google_section": "user-agent",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.2.1",
+            "anchor_attribute_byte_offset": 43058,
+            "tag_byte_range": [
+              43049,
+              43077
+            ],
+            "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "user-agent",
+            "anchor_attribute_byte_offset": 53151,
+            "tag_byte_range": [
+              53124,
+              53181
+            ],
+            "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+          }
+        ],
+        "normative_expected_behavior": "RFC product-token uses ASCII letters, underscore and hyphen; it is distinct from the HTTP header. Google suffix handling is a separate profile.",
+        "old_parser_behavior": "H accepts digit-bearing agent identifiers and derives applicability using the CPython legacy helper.",
+        "new_parser_difference": "New parser requires an explicit valid product-token bound to the supplied header. No token is silently selected for J1AI; the HTTP header is unchanged.",
+        "tests": [
+          "test_agent_grammar_valid_explicit_product_token",
+          "test_agent_grammar_no_implicit_or_unsupported_identity"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "Explicit crawler identity/product-token binding for the existing digit-bearing HTTP product remains undeclared.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.2.1",
+      "Google_section": "user-agent",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "user-agent",
+          "anchor_attribute_byte_offset": 53151,
+          "tag_byte_range": [
+            53124,
+            53181
+          ],
+          "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+        }
+      ],
+      "inherited_J_interpretation": "RFC token grammar is settled; the actual crawler has no declared valid product-token bound to its fixed HTTP header. This is missing configuration, not permission to infer a token.",
+      "inherited_J_unresolved": "Declare/review the token/header binding in a separate explicit decision; no HTTP identity is changed here.",
+      "inherited_K_effect": "ASCII grammar, explicit declaration, group selection verified in bounded K tests. Historical outbound header absent and no adopted token; overall axis remains UNKNOWN.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "候補の文法・明示bindingは検証済み。正式採用と実adapterでのbindingは未承認。",
+        "current": "K v4は明示された単一tokenのcase-insensitive完全一致とwildcard fallbackを使う。候補未採用は維持。",
+        "necessary": [
+          "G1の正式候補採用判断",
+          "G2でE0/E1と最終header検査をqualified化",
+          "G4で新requestのE2を保存。過去の送信値はUNKNOWNのまま"
+        ],
+        "offline": "候補文法と完全一致の再確認は完了可能。正式採用・実送信はオフライン審査の成功で代用しない。",
+        "false_allow": "header全文や別tokenを誤抽出すると別groupを選ぶ危険。",
+        "over_refusal": "明示宣言やqualifiedな新request証拠がない限り、許可されるpathも通信を停止する。"
+      },
+      "scoped_priorities": {
+        "A1": "P0",
+        "A3": "P0",
+        "A4": "P0",
+        "B1": "P0",
+        "A2": "P0",
+        "B2": "P0"
+      },
+      "overall_priority": "P0",
+      "dependencies": [],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": null,
+        "A3": null,
+        "A4": null,
+        "B1": null,
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "rule_grammar",
+      "name": "rule_grammar",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "ABNF path-pattern starts with slash; field parsing supports comments, whitespace and line endings. Google documents BOM and ignoring invalid lines.",
+      "original_I_record": {
+        "id": "rule_grammar",
+        "RFC_section": "2.2",
+        "Google_section": "syntax",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.2",
+            "anchor_attribute_byte_offset": 40949,
+            "tag_byte_range": [
+              40940,
+              40966
+            ],
+            "tag_SHA256": "64fd9b6bf7af9761e1a1d23bfbf2aab8f6a44d59121ab2f850b500439aa07cab"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "syntax",
+            "anchor_attribute_byte_offset": 50375,
+            "tag_byte_range": [
+              50352,
+              50401
+            ],
+            "tag_SHA256": "c30fdfbcbce7250a69a8330e4ec1a7b29a61dbe36a13ed41061a773d81861f60"
+          }
+        ],
+        "normative_expected_behavior": "ABNF path-pattern starts with slash; field parsing supports comments, whitespace and line endings. Google documents BOM and ignoring invalid lines.",
+        "old_parser_behavior": "H requires slash paths, handles BOM/newlines/comments/empty rule values, and blocks malformed or ungrouped rules.",
+        "new_parser_difference": "New subset retains strict parsing and marks malformed records UNKNOWN. The slash-less RFC5.1 example is not silently repaired.",
+        "tests": [
+          "test_rule_grammar_bom_comments_line_endings_empty_values",
+          "test_malformed_encoding_empty_and_ambiguous_s1_example_stay_unknown"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "S1 section5.1 contains a slash-less wildcard path that conflicts with the section2.2 ABNF; tolerant recovery is not adopted.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.2",
+      "Google_section": "syntax",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2",
+          "anchor_attribute_byte_offset": 40949,
+          "tag_byte_range": [
+            40940,
+            40966
+          ],
+          "tag_SHA256": "64fd9b6bf7af9761e1a1d23bfbf2aab8f6a44d59121ab2f850b500439aa07cab"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "syntax",
+          "anchor_attribute_byte_offset": 50375,
+          "tag_byte_range": [
+            50352,
+            50401
+          ],
+          "tag_SHA256": "c30fdfbcbce7250a69a8330e4ec1a7b29a61dbe36a13ed41061a773d81861f60"
+        }
+      ],
+      "inherited_J_interpretation": "Keep normative slash-start ABNF and strict UNKNOWN for malformed defined rules. Do not copy the slash-less example into a permissive fallback.",
+      "inherited_J_unresolved": "Source/example conflict and standard tolerant recovery remain unresolved as a complete implementation.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "RFC ABNFと5.1のslashなし例、tolerant recoveryが未解決。",
+        "current": "H/I/J/Kのstrictな拒否を維持。A1の定義済み全20規則は対応構文で未分類recordはない。",
+        "necessary": [
+          "既存原本にある例とABNFの矛盾を隔離した審査",
+          "一般化する場合の公式clarificationまたは取得承認済み資料"
+        ],
+        "offline": "A1の構文適用範囲はオフラインで立証可能。矛盾した例を黙って修正しない。",
+        "false_allow": "不正規則を捨てて残りだけALLOWとすれば禁止規則を欠落させ得る。",
+        "over_refusal": "規範のtolerant recoveryを未実装のため、解釈可能な原本もUNKNOWNで停止し得る。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "longest_rule",
+      "name": "longest_rule",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "RFC most-specific matching rule is longest in octets. Google examples distinguish wildcard-inclusive pattern length from literal-only length.",
+      "original_I_record": {
+        "id": "longest_rule",
+        "RFC_section": "2.2.2",
+        "Google_section": "order-of-precedence-for-rules",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.2.2",
+            "anchor_attribute_byte_offset": 49112,
+            "tag_byte_range": [
+              49103,
+              49131
+            ],
+            "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "order-of-precedence-for-rules",
+            "anchor_attribute_byte_offset": 73028,
+            "tag_byte_range": [
+              72987,
+              73077
+            ],
+            "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+          }
+        ],
+        "normative_expected_behavior": "RFC most-specific matching rule is longest in octets. Google examples distinguish wildcard-inclusive pattern length from literal-only length.",
+        "old_parser_behavior": "H specificity excludes wildcard/anchor markers; its synthetic /page.htm example can yield ALLOW where the Google example denies.",
+        "new_parser_difference": "New parser cross-checks literal-octet ranking against Google marker-inclusive ranking; disagreement returns UNKNOWN, never that old candidate ALLOW.",
+        "tests": [
+          "test_longest_rule_literal_octets_and_allow_tie",
+          "test_longest_rule_google_marker_examples_no_false_allow"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "Marker contribution to RFC specificity and ranking of multiple escaped patterns are not asserted fully settled by this subset.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.2.2",
+      "Google_section": "order-of-precedence-for-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "order-of-precedence-for-rules",
+          "anchor_attribute_byte_offset": 73028,
+          "tag_byte_range": [
+            72987,
+            73077
+          ],
+          "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+        }
+      ],
+      "inherited_J_interpretation": "Retain the I cross-check of literal length and Google marker-inclusive length. Different outcomes stay UNKNOWN; wildcard expansion length is not silently adopted as rule specificity.",
+      "inherited_J_unresolved": "Complete RFC treatment of marker contribution and encoded competing-pattern length is not verified.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "wildcard/anchorの長さ寄与、encoded規則の競合順位が未完証。",
+        "current": "I/J/Kはliteral長とGoogle側長の候補が異なればUNKNOWN。A1四pathは一致規則0で順位比較に入らない。",
+        "necessary": [
+          "marker/escapeを含む順位の追加規範審査",
+          "別版変更をする場合の差分・negative-control"
+        ],
+        "offline": "一致0の限定path隔離は立証可能。完全な一般順位のPASSは別工程。",
+        "false_allow": "Hのliteral-only順位を無条件採用すると既知のGoogle例で誤ALLOWとなり得る。",
+        "over_refusal": "相反する順位解釈をUNKNOWNへ停止するため過剰拒否があり得る。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [
+        "rule_grammar",
+        "reserved_octets"
+      ],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "reserved_octets",
+      "name": "reserved_octets",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "RFC reserved/non-ASCII octets require the prescribed comparison encoding; encoded reserved bytes must not be indiscriminately decoded.",
+      "original_I_record": {
+        "id": "reserved_octets",
+        "RFC_section": "2.2.2",
+        "Google_section": "url-matching-based-on-path-values",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.2.2",
+            "anchor_attribute_byte_offset": 49112,
+            "tag_byte_range": [
+              49103,
+              49131
+            ],
+            "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "url-matching-based-on-path-values",
+            "anchor_attribute_byte_offset": 64558,
+            "tag_byte_range": [
+              64497,
+              64611
+            ],
+            "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+          }
+        ],
+        "normative_expected_behavior": "RFC reserved/non-ASCII octets require the prescribed comparison encoding; encoded reserved bytes must not be indiscriminately decoded.",
+        "old_parser_behavior": "H preserves encoded reserved tokens distinct from raw delimiters without an authoritative normalization proof.",
+        "new_parser_difference": "New subset accepts the verified encoded special data examples but returns UNKNOWN for other reserved escapes and ambiguous multi-escaped-rule ranking.",
+        "tests": [
+          "test_reserved_octets_and_malformed_escapes_no_unquote_all"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "A complete reserved-delimiter and encoded-octet precedence implementation remains outside the verified subset.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.2.2",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "inherited_J_interpretation": "Preserve encoded data and avoid unquote-all. Only the already verified special/unreserved/UTF8 subset is used.",
+      "inherited_J_unresolved": "Complete reserved-octet context and competing escape ranking remain unsupported; no linked RFC3986 is fetched.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "全reserved delimiter文脈とencoded競合の規範照合が未完了。",
+        "current": "KはIのbounded octet matcherを再利用。A1の規則・四対象にpercent escapeはない。",
+        "necessary": [
+          "保存済みS1が参照するRFC3986等の不足原文の取得候補固定と別承認",
+          "encoded比較の独立設計審査"
+        ],
+        "offline": "A1の未使用条件は証明可能。未取得RFCを読んだことにはしない。",
+        "false_allow": "unquote-all等による別pathの同一化は誤ALLOWを招く。",
+        "over_refusal": "未対応のreserved escapeはUNKNOWNへ停止する。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "query",
+      "name": "query",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "Path and query participate in matching (RFC Figure4). Reserved delimiters in query data require careful interpretation; fragments are not fetched.",
+      "original_I_record": {
+        "id": "query",
+        "RFC_section": "2.2.2",
+        "Google_section": "url-matching-based-on-path-values",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.2.2",
+            "anchor_attribute_byte_offset": 49112,
+            "tag_byte_range": [
+              49103,
+              49131
+            ],
+            "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "url-matching-based-on-path-values",
+            "anchor_attribute_byte_offset": 64558,
+            "tag_byte_range": [
+              64497,
+              64611
+            ],
+            "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+          }
+        ],
+        "normative_expected_behavior": "Path and query participate in matching (RFC Figure4). Reserved delimiters in query data require careful interpretation; fragments are not fetched.",
+        "old_parser_behavior": "H appends the query and permits more reserved combinations without a source-backed complete comparison proof.",
+        "new_parser_difference": "Simple and empty query suffixes are tested; complex reserved query strings and unsafe URLs remain UNKNOWN.",
+        "tests": [
+          "test_query_simple_and_empty_but_complex_query_unknown",
+          "test_host_scope_and_invalid_url_fail_closed",
+          "test_encoded_dot_segments_not_silently_rewritten"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "Complete reserved-query normalization is not implemented or inferred from translated examples.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.2.2",
+      "Google_section": "url-matching-based-on-path-values",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "url-matching-based-on-path-values",
+          "anchor_attribute_byte_offset": 64558,
+          "tag_byte_range": [
+            64497,
+            64611
+          ],
+          "tag_SHA256": "1895cc092a27c807b37821c3d4a364ed62ac752c1cd3414c262ead617fc4a9c6"
+        }
+      ],
+      "inherited_J_interpretation": "RFC Figure4 directly supports a simple ASCII key=value query. J adds this narrow pure matching case; embedded reserved data, multiple pairs and percent query data remain UNKNOWN.",
+      "inherited_J_unresolved": "General query normalization is not proved. The original I evidence gate remains stricter even for the added semantic subset.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "複雑なquery、reserved data、順序等を含む完全比較が未完了。",
+        "current": "J/Kは検証済みASCII key=valueの狭いsubsetだけ追加。六URLにqueryはなくA1規則にもqueryはない。",
+        "necessary": [
+          "queryを含む別URL集合の固定と独立審査",
+          "reserved_octetsとの整合確認"
+        ],
+        "offline": "現URLをquery付きへ拡張しない条件なら隔離可能。Bのpage/検索parameterを勝手に追加しない。",
+        "false_allow": "queryを捨てたり未検証の正規化をすると禁止対象との違いを隠す。",
+        "over_refusal": "complex queryをUNKNOWNで止めるため許可可能なrequestも停止する。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [
+        "reserved_octets"
+      ],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "encoding_errors",
+      "name": "encoding_errors",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "RFC requires line-by-line parsing and use of parseable rules. Google tolerates BOM and some invalid/non-text input instead of treating it as permission.",
+      "original_I_record": {
+        "id": "encoding_errors",
+        "RFC_section": "2.3.1.5",
+        "Google_section": "file-format",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.3.1.5",
+            "anchor_attribute_byte_offset": 63595,
+            "tag_byte_range": [
+              63586,
+              63616
+            ],
+            "tag_SHA256": "26810cf65bdfacedf0b5ada7664af3e2be29b3305bc1ad15bec2a761302ec8d8"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "file-format",
+            "anchor_attribute_byte_offset": 48694,
+            "tag_byte_range": [
+              48659,
+              48725
+            ],
+            "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+          }
+        ],
+        "normative_expected_behavior": "RFC requires line-by-line parsing and use of parseable rules. Google tolerates BOM and some invalid/non-text input instead of treating it as permission.",
+        "old_parser_behavior": "H accepts UTF8 BOM but returns UNKNOWN for malformed/invalid/HTML input.",
+        "new_parser_difference": "New subset retains strict UNKNOWN while separately documenting standard recovery behavior; no HTTP MIME/status is converted into permission.",
+        "tests": [
+          "test_rule_grammar_bom_comments_line_endings_empty_values",
+          "test_malformed_encoding_empty_and_ambiguous_s1_example_stay_unknown"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "No tolerant partial-line or HTML extraction profile is implemented; stricter UNKNOWN is intentional.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.3.1.5",
+      "Google_section": "file-format",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.3.1.5",
+          "anchor_attribute_byte_offset": 63595,
+          "tag_byte_range": [
+            63586,
+            63616
+          ],
+          "tag_SHA256": "26810cf65bdfacedf0b5ada7664af3e2be29b3305bc1ad15bec2a761302ec8d8"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-format",
+          "anchor_attribute_byte_offset": 48694,
+          "tag_byte_range": [
+            48659,
+            48725
+          ],
+          "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+        }
+      ],
+      "inherited_J_interpretation": "Invalid UTF8 and malformed defined lines stay UNKNOWN. RFC line-by-line recovery and Google tolerant extraction are documented, not silently implemented.",
+      "inherited_J_unresolved": "Tolerant recovery is incomplete; strict safety behavior is not presented as complete normative conformance.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "不正UTF8/line/HTMLのtolerant抽出と規範能力が未完了。",
+        "current": "旧版のstrict UNKNOWNを維持。A1は646 bytesのASCII/valid UTF8で対応外recordはない。",
+        "necessary": [
+          "tolerant recoveryを採用する場合の別版設計と安全性証明"
+        ],
+        "offline": "A1の正常encodingは確認可能。未知の次原本へその証明を流用しない。",
+        "false_allow": "不正行の扱いでdisallowを欠落させる危険。",
+        "over_refusal": "parse可能な規則が含まれていても現strict実装では全体UNKNOWNとなり得る。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [
+        "rule_grammar"
+      ],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "parse_limits",
+      "name": "parse_limits",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "RFC parser limit must be at least500KiB; Google documents500KiB and ignoring data beyond that limit.",
+      "original_I_record": {
+        "id": "parse_limits",
+        "RFC_section": "2.5",
+        "Google_section": "file-format",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.5",
+            "anchor_attribute_byte_offset": 64887,
+            "tag_byte_range": [
+              64878,
+              64904
+            ],
+            "tag_SHA256": "45659a1dd1c62dd471bbb5e9d079aece2acb12af1d1468a97e069636257be1bd"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "file-format",
+            "anchor_attribute_byte_offset": 48694,
+            "tag_byte_range": [
+              48659,
+              48725
+            ],
+            "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+          }
+        ],
+        "normative_expected_behavior": "RFC parser limit must be at least500KiB; Google documents500KiB and ignoring data beyond that limit.",
+        "old_parser_behavior": "H uses64KiB,4096lines,1000rules and finite matching work limits.",
+        "new_parser_difference": "New subset keeps current safety/resource caps. The2MiB specification acquisition cap is unrelated to the64KiB robots parser cap.",
+        "tests": [
+          "test_parse_limits_not_full_500kib_conformance"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "The64KiB parser cannot claim RFC2.5 full conformance. Changing existing fetch/parser resource approvals is not implicit in this work.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.5",
+      "Google_section": "file-format",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.5",
+          "anchor_attribute_byte_offset": 64887,
+          "tag_byte_range": [
+            64878,
+            64904
+          ],
+          "tag_SHA256": "45659a1dd1c62dd471bbb5e9d079aece2acb12af1d1468a97e069636257be1bd"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "file-format",
+          "anchor_attribute_byte_offset": 48694,
+          "tag_byte_range": [
+            48659,
+            48725
+          ],
+          "tag_SHA256": "870a4b77d0d4c920acb3f64710d48bad63ae6126b3fe8816ce37ae15ad869911"
+        }
+      ],
+      "inherited_J_interpretation": "64KiB is a J1AI evidence/resource bound, not the RFC minimum parser capability. Both I and J still reject above65536 bytes.",
+      "inherited_J_unresolved": "Full >=500KiB parsing support is not implemented; no fetch cap or permit budget is relaxed.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "現64 KiB上限はRFCの最低500 KiB parser能力を満たさない。",
+        "current": "64 KiB/4096line/1000rule/有限workを維持。A1全体は646 bytesで全上限内。",
+        "necessary": [
+          ">=500 KiBの別版実装・資源見積り・合成境界試験",
+          "変更時の取得capとpermitの別審査"
+        ],
+        "offline": "固定小原本の全体読取りを証明可能。現capを増やさずfull conformanceは宣言しない。",
+        "false_allow": "先頭部分だけを原本全体と誤認すると後半の禁止規則を見落とす。",
+        "over_refusal": "64 KiB超は切り捨てALLOWせずUNKNOWN/STOPとなる。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "standard_examples",
+      "name": "standard_examples",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "Source examples must remain byte/anchor attributable; contradictions must not be silently corrected. RFC Figures2,3,4,6 contain separately usable cases.",
+      "original_I_record": {
+        "id": "standard_examples",
+        "RFC_section": "5.2",
+        "Google_section": "order-of-precedence-for-rules",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-5.2",
+            "anchor_attribute_byte_offset": 71917,
+            "tag_byte_range": [
+              71908,
+              71934
+            ],
+            "tag_SHA256": "32421bea244f7841736b694b58cb1bce91ce75f98f468b7b15ef181ef7a5c4dd"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "order-of-precedence-for-rules",
+            "anchor_attribute_byte_offset": 73028,
+            "tag_byte_range": [
+              72987,
+              73077
+            ],
+            "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+          }
+        ],
+        "normative_expected_behavior": "Source examples must remain byte/anchor attributable; contradictions must not be silently corrected. RFC Figures2,3,4,6 contain separately usable cases.",
+        "old_parser_behavior": "H tests were synthetic and had no acquired normative source.",
+        "new_parser_difference": "New tests use identified figure cases and Google/page examples, and retain original RFC5.1/5.2 inconsistencies as unresolved; synthetic variations are labeled.",
+        "tests": [
+          "test_group_merge_s1_figures_2_3_and_sitemap_boundary",
+          "test_percent_encoding_unreserved_and_utf8_s1_figure4",
+          "test_percent_special_s1_figure6_literal_star_dollar",
+          "test_longest_rule_google_marker_examples_no_false_allow"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "S1 section5.1 slash-less wildcard versus ABNF; section5.2 disallowed.gif rule versus disallow.gif target. No external errata or linked sources were fetched.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "5.2",
+      "Google_section": "order-of-precedence-for-rules",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-5.2",
+          "anchor_attribute_byte_offset": 71917,
+          "tag_byte_range": [
+            71908,
+            71934
+          ],
+          "tag_SHA256": "32421bea244f7841736b694b58cb1bce91ce75f98f468b7b15ef181ef7a5c4dd"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "order-of-precedence-for-rules",
+          "anchor_attribute_byte_offset": 73028,
+          "tag_byte_range": [
+            72987,
+            73077
+          ],
+          "tag_SHA256": "ce9fa622278b85c7d37a923f4ede28657e5eb2568ac8bd0e35723a22e91366a6"
+        }
+      ],
+      "inherited_J_interpretation": "Keep original example bytes and isolate supported figure cases from inconsistent examples; no exception is inferred from the inconsistent text.",
+      "inherited_J_unresolved": "A complete standard-example reconciliation needs additional clarification; saved originals are not repaired.",
+      "inherited_K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "RFC5.1/5.2の例とABNF・綴りの不整合を未解決として保持。",
+        "current": "Hの合成値からI/Jの原本anchor付き照合へ移行。Kは既知conflictを修正していない。A1は対応する有効構文で競合順位なし。",
+        "necessary": [
+          "公式のclarification/errata等が必要なら保存済み実リンクの候補固定と別取得承認",
+          "原文を変えない例単位の設計審査"
+        ],
+        "offline": "今回の限定判定が未解決例に依存しないことを確認する。例の完全な和解は主張しない。",
+        "false_allow": "例の誤記に合わせた例外やfallbackは誤ALLOWを作り得る。",
+        "over_refusal": "未解決例を一般化しない保守方針により過剰拒否が残る。"
+      },
+      "scoped_priorities": {
+        "A1": "P2",
+        "A3": "P2",
+        "A4": "P2",
+        "B1": "P2",
+        "A2": "P1",
+        "B2": "P1"
+      },
+      "overall_priority": "P1",
+      "dependencies": [
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets"
+      ],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+        "A3": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+        "A4": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+        "B1": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "sealed_A1_replay",
+      "name": "sealed_A1_replay",
+      "name_source": "Original ledger has no separate name; exact ID retained",
+      "definition": "Re-evaluation must bind the actual fixed HTTP header, explicit crawler product-token, host-specific sealed original and reviewed spec; robots alone cannot authorize further GETs.",
+      "original_I_record": {
+        "id": "sealed_A1_replay",
+        "RFC_section": "2.2.1",
+        "Google_section": "user-agent",
+        "source_references": [
+          {
+            "source": "S1",
+            "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+            "anchor": "section-2.2.1",
+            "anchor_attribute_byte_offset": 43058,
+            "tag_byte_range": [
+              43049,
+              43077
+            ],
+            "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+          },
+          {
+            "source": "S2",
+            "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+            "anchor": "user-agent",
+            "anchor_attribute_byte_offset": 53151,
+            "tag_byte_range": [
+              53124,
+              53181
+            ],
+            "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+          }
+        ],
+        "normative_expected_behavior": "Re-evaluation must bind the actual fixed HTTP header, explicit crawler product-token, host-specific sealed original and reviewed spec; robots alone cannot authorize further GETs.",
+        "old_parser_behavior": "H formally returned UNKNOWN for all four www URLs; G正式STOP and aboutjUNKNOWN remain immutable.",
+        "new_parser_difference": "Private raw A1 SHA is reverified and all four are independently replayed; missing declared product-token keeps them UNKNOWN. Aboutj has no host-specific source.",
+        "tests": [
+          "test_sealed_A1_replay_fixed_http_agent_not_implicitly_rfc_token"
+        ],
+        "status": "UNKNOWN",
+        "unresolved": "Explicit product-token and full subset limitations remain unresolved; site terms/access conditions and aboutj evidence are still unconfirmed.",
+        "PASS_meaning": "Resolved source comparison for the stated subset and safety profile; not full RFC or Google conformance"
+      },
+      "RFC_section": "2.2.1",
+      "Google_section": "user-agent",
+      "source_references": [
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "source": "S2",
+          "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+          "anchor": "user-agent",
+          "anchor_attribute_byte_offset": 53151,
+          "tag_byte_range": [
+            53124,
+            53181
+          ],
+          "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+        },
+        {
+          "source": "S1",
+          "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        }
+      ],
+      "inherited_J_interpretation": "RFC2.2.2 independently allows the exact robots URI. J separates that Layer1 result from missing token/evidence/permit conditions; the other three paths stay UNKNOWN.",
+      "inherited_J_unresolved": "Three www paths lack an explicit product-token binding; aboutj has no host-specific original. Site terms/access and actual permit remain unapproved.",
+      "inherited_K_effect": "Four conditional normative ALLOWs for explicit proposed token; original undeclared baseline and actual sender evidence remain unresolved. No communication candidate.",
+      "normative_status": "UNKNOWN",
+      "classification": {
+        "summary": "固定候補の条件付き結果と、実requestの証拠・host適用・承認は別。",
+        "current": "H/I/Jの正式履歴を保持。K/Lでは候補指定の四pathはALLOW、未宣言は1ALLOW/3UNKNOWN。aboutj原本はない。",
+        "necessary": [
+          "新requestの候補採用・構築/送信/保存mechanismのqualification",
+          "host固有証拠とaccess条件",
+          "新permitとG4実行承認"
+        ],
+        "offline": "限定再計算・過去記録の不変性は確認可能。過去の実送信headerは新規GETでも遡及証明できない。",
+        "false_allow": "wwwをaboutjへ流用、条件付きALLOWを実送信保証や通信許可と取り違える危険。",
+        "over_refusal": "未承認・証拠不足ではpathが規範上許可でも停止する。"
+      },
+      "scoped_priorities": {
+        "A1": "P0",
+        "A3": "P0",
+        "A4": "P0",
+        "B1": "P0",
+        "A2": "P0",
+        "B2": "P0"
+      },
+      "overall_priority": "P0",
+      "dependencies": [
+        "agent_grammar",
+        "rule_grammar",
+        "longest_rule",
+        "reserved_octets",
+        "query",
+        "encoding_errors",
+        "parse_limits",
+        "standard_examples"
+      ],
+      "dependency_meaning": "Full normative coverage prerequisites; not a blanket requirement that all axes PASS for a separately approved bounded scope",
+      "affected_targets": [
+        "A1",
+        "A3",
+        "A4",
+        "B1",
+        "A2",
+        "B2"
+      ],
+      "scope_exclusion_certificates": {
+        "A1": null,
+        "A3": null,
+        "A4": null,
+        "B1": null,
+        "A2": null,
+        "B2": null
+      },
+      "risk_note": "over_refusal is operational blocking by UNKNOWN, not a claim that parser returned normative DENY",
+      "history": [
+        {
+          "phase": "I",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "J",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "K",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "L",
+          "status": "UNKNOWN"
+        },
+        {
+          "phase": "M",
+          "status": "UNKNOWN"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "overall_six_targets": {
+      "P0": 2,
+      "P1": 7,
+      "P2": 0,
+      "P3": 0
+    },
+    "www_fixed_A1": {
+      "P0": 2,
+      "P1": 0,
+      "P2": 7,
+      "P3": 0
+    },
+    "aboutj_missing_source": {
+      "P0": 2,
+      "P1": 7,
+      "P2": 0,
+      "P3": 0
+    }
+  },
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "priority_is_not_normative_promotion": true,
+  "gate": "NN_V2_UNKNOWN_IMPACT_REVIEW_READY"
+}

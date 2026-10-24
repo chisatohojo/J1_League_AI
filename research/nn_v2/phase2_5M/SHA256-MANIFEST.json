@@ -1,0 +1,17 @@
+{
+  "kind": "NNV2_M_PUBLIC_SHA256_V1",
+  "self_excluded": true,
+  "files": {
+    "research/nn_v2/phase2_5M/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5M/APPROVAL_GATES.json": "879475141495d59c46149a588b0aa966696100dd6e785ba15caa05e581602d92",
+    "research/nn_v2/phase2_5M/impact_review.py": "b45d3f4150cf34936e5cc68ee3b47a8a83c4e8b69859d19f1819f329583ac278",
+    "research/nn_v2/phase2_5M/INPUT_EVIDENCE.json": "4f07adccf45b3341adf69783183ec13538c35b68c45f915bd29af34581959a60",
+    "research/nn_v2/phase2_5M/PROTECTION_VERIFICATION.json": "e29745ddc81e751ee142984c0d4de554c2e2840ffe7ed3042fac8a3514ed9c0a",
+    "research/nn_v2/phase2_5M/REVIEW_SCHEMAS.json": "d453ed97b5c76433248e083a6781ea3f7f61c1d6ff90c5cc1acc59fc3a22b4a9",
+    "research/nn_v2/phase2_5M/UNKNOWN_IMPACT_MATRIX.json": "d1b95cb8c2ea693838070bb33f19cb8f319e624f323c332d57fdfaaced34a2a0",
+    "research/nn_v2/phase2_5M/UNKNOWN_IMPACT_REVIEW.md": "18a8b04ad3d2687468d7ddbf864b236db4e4f5ff66b93e369cdf21179197f3dc",
+    "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json": "70a6d7a97fa84f865a5a634909cfe3e5f8d35c8dc2f19dbc4e95fa994fba8c87",
+    "research/nn_v2/phase2_5M/VALIDATION.json": "8fe7ef43c3441e186b76efd0feee79e09287bd01685383f66e9c1760201da58f",
+    "tests/test_nn_v2_unknown_impact_review.py": "b16345ceb321eb730e2f4451624f1b731b9851e76ee6b9c40f186646a47280dc"
+  }
+}

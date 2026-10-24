@@ -1,0 +1,47 @@
+{
+  "verification_UTC": "2026-10-24T01:21:43.382776+00:00",
+  "source_resolution": "I SPEC_FETCH_LEDGER -> exact permit SHA -> private original ledger -> matching raw SHA; no guessed source location",
+  "sources": [
+    {
+      "id": "S1",
+      "requested_URL": "https://www.rfc-editor.org/rfc/rfc9309.html",
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "bytes": 82367,
+      "metadata_SHA256": "1fd1ff738958012195672bf9b872355f1ababb95fa914e679b0bb6fe3845c068",
+      "request_SHA256": "925f59b32b96f130035568039aacb0e35848187c3b0aa62d9a74cd3dafdb564e",
+      "parent_receipt_SHA256": "2b22fca02e01ea5bdfd7f4b1c0e31630996f4ed457f00385110d36c792da081e",
+      "acquired_UTC": "2026-10-23T12:49:52.811587+00:00",
+      "original_readback_SHA_verified": true,
+      "section_anchors_verified": 16
+    },
+    {
+      "id": "S2",
+      "requested_URL": "https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec?hl=ja",
+      "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+      "bytes": 107151,
+      "metadata_SHA256": "1dc06938913600590d480890bec6c36b6719d5c2004e49e18344d677d773efa3",
+      "request_SHA256": "1782f5ea2cda4c2d09511cd97e402dd639669f03903a747dcc18e0a9d0e0182a",
+      "parent_receipt_SHA256": "e19425dceb031074be57082cbfcdc981ffce379041f03b3585a266927cc3c602",
+      "acquired_UTC": "2026-10-23T12:50:27.260566+00:00",
+      "original_readback_SHA_verified": true,
+      "section_anchors_verified": 16
+    }
+  ],
+  "A1": {
+    "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+    "bytes": 646,
+    "request_SHA256": "96b53165fca74b5af11065ec76dc2aa5c36f472e1eaea0e077e3ca5a48f80d17",
+    "metadata_SHA256": "c4b967fd0f7552f462c957044bdfcab2f9f1fd5d6abb9ba734c6beb3b8420817",
+    "acquired_UTC": "2026-10-23T09:46:47.645062+00:00",
+    "readback_SHA_verified": true
+  },
+  "private_input_ledger_SHA256": "9aed7688c334c988c5d5d5e620003e4620f023f569c104ff30efd00c44b70c8b",
+  "I_original28_files_unchanged": true,
+  "G_communication_ledger_unchanged": true,
+  "old_H_I_unchanged": true,
+  "new_GET": 0,
+  "HEAD": 0,
+  "DNS_probe": 0,
+  "permit_issued": 0,
+  "old_run_reexecuted": 0
+}
