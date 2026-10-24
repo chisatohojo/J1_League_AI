@@ -1,0 +1,132 @@
+{
+  "kind": "NNV2_Q_FOLLOWUP_OPERATIONAL_EVENT_V1",
+  "observed_utc": "2026-10-24T13:58:06.539257+00:00",
+  "scope": "READ_ONLY_RECONCILIATION_AFTER_ORIGINAL_Q_COMPLETION",
+  "original_Q_protection_record": "PROTECTION_VERIFICATION.json",
+  "original_record_preserved": true,
+  "classification": "EXPLAINED_EXISTING_SCHEDULED_OPERATIONAL_UPDATE",
+  "attribution": "Task history, unchanged definition, output timestamps, official revision and generation hash chains agree; attribution inferred from these local records.",
+  "task": {
+    "name": "J1AI-Champion-Evening",
+    "last_run_JST": "2026-10-24T22:00:01.0000000+09:00",
+    "result": 0,
+    "definition_unchanged": true,
+    "manually_started_by_agent": false
+  },
+  "expected_existing_file_differences": 13,
+  "unexplained_differences": 0,
+  "files": [
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/change_log.csv",
+      "before_SHA256": "23ba3ebc5d7b3c6b49e59dabae289c2bc97c8938df4e1856a4f8f4daf00b0ec7",
+      "after_SHA256": "7e5a2c9213cbe18f09d18bcfadd0bb3e351359c1b0ad87b91788394bc566ce08",
+      "before_mtime_ns": 1792792865598415400,
+      "after_mtime_ns": 1792846884332633000
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/completed_matches.csv",
+      "before_SHA256": "12a92814363158a5f1098bb12423f7a64ddb9cdf55a09bcb092f078f434a84e4",
+      "after_SHA256": "ce6c7b4a986fab06d4a49a44fb409d7611cf05531777fb3a9110b6a22305bfae",
+      "before_mtime_ns": 1792792865595140100,
+      "after_mtime_ns": 1792846884322949000
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/fixture_identity.csv",
+      "before_SHA256": "61b73ac2baf3d35316d3dcb28880d945231bf9aadcd2b2362f9a5cdd56d657bb",
+      "after_SHA256": "5f517b7cdeca1b29fc45a79642e70de35e9decc04d5197111ee70e218f6130d5",
+      "before_mtime_ns": 1792792865598415400,
+      "after_mtime_ns": 1792846884344890200
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/identity_bridges.csv",
+      "before_SHA256": "54f5602a096732512dd48a589fcd4ec9d138276d0518aa5b856df72b77ec3698",
+      "after_SHA256": "e88c198c38d32be253221c786300daf0aebaab3e9b8a89fdae737e41c49758f7",
+      "before_mtime_ns": 1792792865598415400,
+      "after_mtime_ns": 1792846884347558700
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/latest.json",
+      "before_SHA256": "3a9321c7200b95608772216a0b5eff286d5994f40f053aac0ef857411e56a1ef",
+      "after_SHA256": "da866c91e91df6ab76e336c37b5cfeeda04902f36131ba3a7961c9ba0f409b2d",
+      "before_mtime_ns": 1792792865613203100,
+      "after_mtime_ns": 1792846884355643100
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/review.md",
+      "before_SHA256": "369871735f84951f178a69671bfb41ca983164488914ae98ebc4e199da4935f5",
+      "after_SHA256": "dbcd6067821db012e9d039de9d97faa7e869c10e80e5d3dfb8998df08f129b1d",
+      "before_mtime_ns": 1792792865611853200,
+      "after_mtime_ns": 1792846884347558700
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/schedule.csv",
+      "before_SHA256": "43a3dfe3f33797662f33c82eb2a168a8d48bee793e6a13f2881925a07a8812c1",
+      "after_SHA256": "ddf4a1cf1acadb2775342007db911152c5d34b41dbaf25ad2fae8df50adbde3d",
+      "before_mtime_ns": 1792792865579913400,
+      "after_mtime_ns": 1792846884322949000
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/official/update_summary.json",
+      "before_SHA256": "db284886150c3879b58621344d86338fc978f78d7038c37bffd3ac14cc5ecd2d",
+      "after_SHA256": "53fb071b76531a6095e6a86969b0fa0a7d6a5ebdd6743d32e1084b951c993bd8",
+      "before_mtime_ns": 1792792865598415400,
+      "after_mtime_ns": 1792846884340029500
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/view/champion_home.json",
+      "before_SHA256": "d86ef2688601278da07eeb6f574d50e9b92cf73da3911be446699aff134b6fbe",
+      "after_SHA256": "deb9ab88173f5a43e4e1444ff0c9cc1eeedaa0f8877f93320e619970b0e19167",
+      "before_mtime_ns": 1792760405086163600,
+      "after_mtime_ns": 1792846884898118200
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/view/champion_rounds.json",
+      "before_SHA256": "99e70aba51aafcdb6be1153b14954674864b952bfb3352710e835d4afde71dc9",
+      "after_SHA256": "39bac4b9696c3e820b7e07db33dd960733d3754cd88db574e62b7adf8c9f6245",
+      "before_mtime_ns": 1792760405054278700,
+      "after_mtime_ns": 1792846884879045800
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/ChampionUpdates-evening-20261017-01/view/update-status.json",
+      "before_SHA256": "b51064d5137e95b32bcb9f53837b435a9a650779b38a6a06bbdc17f23ce9f738",
+      "after_SHA256": "6d3a5bb68ec492cb82633483529a7134f27b82a3a814d4005d7e87bda11bc513",
+      "before_mtime_ns": 1792792865658087600,
+      "after_mtime_ns": 1792846884905668200
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/RetrospectiveGenerationPreview-01/current.json",
+      "before_SHA256": "49ea3d7ff029b19908c4d2b42800e949cd3f84b68ab6828a502605dd06c76637",
+      "after_SHA256": "b40dafa0a03856de12ff213c6401efd60d738a3febde551c87d46d2b78267392",
+      "before_mtime_ns": 1792760405943269600,
+      "after_mtime_ns": 1792846885487679100
+    },
+    {
+      "path": "%LOCALAPPDATA%/J1AI/RetrospectiveGenerationPreview-01/status.json",
+      "before_SHA256": "dea1dc56e6fe1d68a9c484e621f8400ce662678630bf6805ae54cd316ba5e3ac",
+      "after_SHA256": "5585cfc01a6f4faf59f3e0686e8f66ec2008b70252463b991bb8f36bc69ab8a8",
+      "before_mtime_ns": 1792760405967047300,
+      "after_mtime_ns": 1792846885506437900
+    }
+  ],
+  "GUI_processes_and_listeners_unchanged": true,
+  "task_definitions_unchanged": true,
+  "official_revision": "fe4a771a41ecc0aeeb9425e1df3dbe5cfbec2afeb255521f47d2d0b0ef687660",
+  "official_manifest_SHA256": "b1536bd4e02fef2507ca14c9a5c3dc5f6807d6b8d5473eccc32143014d69778c",
+  "retrospective_generation": "3dcd2b569f8d38171dfa8f6d9cb245843b8375b000c332349adfab6c2b8ef409",
+  "generation_manifest_SHA256": "3dcd2b569f8d38171dfa8f6d9cb245843b8375b000c332349adfab6c2b8ef409",
+  "official_archive_and_current_copies_verified": true,
+  "retrospective_overlay_matches_official_revision": true,
+  "core_finished_utc": "2026-10-24T13:01:24.905668+00:00",
+  "display_finished_utc": "2026-10-24T13:01:25.506437+00:00",
+  "changed_files_repaired_or_restored": 0,
+  "agent_model_operations": 0,
+  "agent_GUI_or_task_changes": 0,
+  "research_HTTP": 0,
+  "research_DNS": 0,
+  "research_socket": 0,
+  "Git_remote_operations": 0,
+  "permits_issued": 0,
+  "G4_authorized": false,
+  "private_difference_record_SHA256": "1362b6868a88155501b99424994c5939e3ec806f842417b67b3e25574be5a0d3",
+  "local_environment_record_SHA256": "67d8429dc684916c6387f5598be464465e2644449c8e1fac51bb4a73633e5865"
+}

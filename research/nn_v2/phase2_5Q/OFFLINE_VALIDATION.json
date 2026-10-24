@@ -126,7 +126,12 @@
     "status": "INTENTIONALLY_HELD_PENDING_SEPARATE_APPROVAL",
     "reason": "User explicitly selected complete offline operation. Push is intentionally held for later separate approval and is not a research validation failure.",
     "validation_failure": false,
-    "prohibited_remote_operations": ["push", "fetch", "pull", "ls-remote"],
+    "prohibited_remote_operations": [
+      "push",
+      "fetch",
+      "pull",
+      "ls-remote"
+    ],
     "remote_verification": "NOT_PERFORMED",
     "network_operations": 0
   },
@@ -135,5 +140,12 @@
     "deselected": 0,
     "selection": "Only 12 established offline G1/G2/G3/robots/access contract files plus new Q file. Live collectors, Windows integration, model/training/evaluation and general repository suites outside authorized scope were not selected."
   },
-  "private_evidence_alias": "%LOCALAPPDATA%/J1AI/NNV2P0AccessEvidence-20261024-2125"
+  "private_evidence_alias": "%LOCALAPPDATA%/J1AI/NNV2P0AccessEvidence-20261024-2125",
+  "followup_operational_event": {
+    "record": "FOLLOWUP_OPERATIONAL_EVENT.json",
+    "explained_existing_file_differences": 13,
+    "unexplained_differences": 0,
+    "original_zero_difference_audit_preserved": true,
+    "research_validation_failure": false
+  }
 }
