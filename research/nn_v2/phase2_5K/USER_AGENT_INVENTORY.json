@@ -1,0 +1,379 @@
+{
+  "kind": "NNV2_K_STATIC_UA_INVENTORY_V1",
+  "audit_UTC": "2026-10-24T00:10:30.028983+00:00",
+  "base_commit": "33835802f8cddc006edc7db01d67649e79b6a756",
+  "settings": [
+    {
+      "file": "scripts/update_jleague_ongoing.py",
+      "line": 35,
+      "SHA256": "89c1335e216ac9fa37c15fcae2d7e2332fa9ffd04df8407d0ca7c84ab1330a95",
+      "configured_User_Agent": "J1-Match-Predictor-Research/0.1",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/cup_regulation_results.py",
+      "line": 301,
+      "SHA256": "02e2aa983d10ca0292ad02f1c1c3fe28020803a31b0a910c35f4c32a4e3b9299",
+      "configured_User_Agent": "J1-League-AI bounded Cup result materialization",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/emperors_cup_matches.py",
+      "line": 62,
+      "SHA256": "20a99d1642921a018126b2fdc078b228500b6f0a8a1d2fcf281217ad6d9605a8",
+      "configured_User_Agent": "J1-League-AI research prototype",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jleague_cup_matches.py",
+      "line": 50,
+      "SHA256": "8ff35e9cccd1cc20215383eaacdd31bf29d60014087b1ae997cf6be6ec7ace6d",
+      "configured_User_Agent": "J1-League-AI research prototype",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jleague_j2_matches.py",
+      "line": 162,
+      "SHA256": "724c788e0a3b13807c6ef42cbd3dfbdb194a49ecf15e26058527a8ad637791b1",
+      "configured_User_Agent": "J1-League-AI research prototype",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jleague_manager_master.py",
+      "line": 64,
+      "SHA256": "19abc64d99ddabb0651876fe99dc8fa7dccefd41b37e61bbc8548a91aee710ee",
+      "configured_User_Agent": "J1-League-AI research prototype",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jleague_match_stats.py",
+      "line": 180,
+      "SHA256": "4aecc4f8190218b1c4362ae94ca7cfcbee10f20a2e9ac0f340a95cd8da7976ba",
+      "configured_User_Agent": "J1-League-AI research prototype",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jleague_match_xg.py",
+      "line": 548,
+      "SHA256": "fd2f7918675184931ae074b309c4e4f8e60920d65500ca8074e248ea2a6a52aa",
+      "configured_User_Agent": "J1-League-AI official match xG collector/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jleague_suspensions.py",
+      "line": 457,
+      "SHA256": "a9a110ad0123ce6eda2a3a9a9b5c22945dc3666134adddf7a7edb495d262cf75",
+      "configured_User_Agent": "J1LeagueAI/1.0 (+prospective point-in-time research; no archive crawl)",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jstats_previous_season_profiles.py",
+      "line": 184,
+      "SHA256": "55783d4868ad99af8410c4cf26a89752c82b11cf4e2a98e1d45508e611b2b82e",
+      "configured_User_Agent": "J1LeagueAI/1.0 (+historical profile materialization)",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "src/collect/jstats_team_snapshots.py",
+      "line": 247,
+      "SHA256": "7088d8dcd122638d19c04c16938f53767c536734760e2affbb9851e290ef8f2a",
+      "configured_User_Agent": "J1LeagueAI/1.0 (+point-in-time research; no bulk crawl)",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5G/access_worker.py",
+      "line": 97,
+      "SHA256": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5I/spec_worker.py",
+      "line": 97,
+      "SHA256": "e770792738bc7d2860e33dbc1c63239a5d48961dc3f5563536f7c31315feabc8",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5B_14/http_worker.py",
+      "line": 66,
+      "SHA256": "a6c249c01917c1fe4a4687168aef2c778ec76494cb74cbb5dc9b1b9c651ae08f",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5B_15/expanded_http_worker.py",
+      "line": 66,
+      "SHA256": "6a7b3bb527f3ae66651013d780e6478b24b95d8538a8689241c0c4af56ad16fc",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5B_16/multibatch_http_worker.py",
+      "line": 66,
+      "SHA256": "2ca9384df2f0a363c7760fce592a388f1754b4410df4a5cd2f620f3d3f0a210c",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5B_18/collection_http_worker.py",
+      "line": 66,
+      "SHA256": "40b029e3c5bb3907a7437036f455904654381774739fc52626c62d4ce33f7eea",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "STATIC_COLLECTOR_OR_OLD_RESEARCH_WORKER",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    },
+    {
+      "file": "research/nn_v2/phase2_5E/design_contract.py",
+      "line": 15,
+      "SHA256": "5d93a6266bb27abd3d8b581fe889d7635b94fa4b24ea6d5552e177482dede4e9",
+      "configured_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+      "route": "FUTURE_NEWS_PRESS_DESIGN_ONLY_NOT_EXECUTOR",
+      "CLI_or_environment_UA_override": "NONE_FOUND_IN_LISTED_MODULE; imported/custom runtime replacement not proven impossible",
+      "actual_transmitted_value": "UNKNOWN",
+      "proof_level": "CODE_SETTING_ONLY_NOT_HISTORICAL_WIRE_PROOF"
+    }
+  ],
+  "library_defaults": [
+    {
+      "client": "urllib.request",
+      "default_User_Agent": "Python-urllib/3.12",
+      "source_SHA256": "6ffc7d993de64319a40fad631966bd1fd643d355a5c154c1a8b1821f49e5c470",
+      "source_line": 424,
+      "version_source_SHA256": null,
+      "value_method": "Read installed source; no request/client execution",
+      "override": "Explicit per-request headers / configured opener or client headers; no automatic application to pinned research worker",
+      "active_official_route": true,
+      "no_automatic_header": false
+    },
+    {
+      "client": "http.client",
+      "default_User_Agent": null,
+      "source_SHA256": "c2c0694155837d72fc710a4138e5d1e53ae1a652b117a2e23a5b1b0db527a0f9",
+      "source_line": 1186,
+      "version_source_SHA256": null,
+      "value_method": "Read installed source; no request/client execution",
+      "override": "Explicit per-request headers / configured opener or client headers; no automatic application to pinned research worker",
+      "active_official_route": true,
+      "no_automatic_header": true
+    },
+    {
+      "client": "requests",
+      "default_User_Agent": "python-requests/2.34.2",
+      "source_SHA256": "657fd02343b2586bbd138a4ec0f03ceeb7610c2712f96ac54f28a708bf7d079c",
+      "source_line": 942,
+      "version_source_SHA256": "abba90670b0370a3dc40d97c2dea46a35d4bec941ff10d7c3cf3098ef04a17f9",
+      "value_method": "Read installed source; no request/client execution",
+      "override": "Explicit per-request headers / configured opener or client headers; no automatic application to pinned research worker",
+      "active_official_route": false,
+      "no_automatic_header": false
+    },
+    {
+      "client": "httpx",
+      "default_User_Agent": "python-httpx/0.28.1",
+      "source_SHA256": "c43f941baefe58c91e96d00039e1868fe719d91453026d7db1647194563bff8d",
+      "source_line": 119,
+      "version_source_SHA256": "2e853261e3974e2786cee3ffeb850bd30c5db718eebbf41b3af13b34e83e22a5",
+      "value_method": "Read installed source; no request/client execution",
+      "override": "Explicit per-request headers / configured opener or client headers; no automatic application to pinned research worker",
+      "active_official_route": false,
+      "no_automatic_header": false
+    }
+  ],
+  "official_route": {
+    "updater": {
+      "file": "scripts/update_champion_dashboard.py",
+      "line": 315,
+      "SHA256": "e06284d62769ea5a0a8b5316eea4dcc3b39ba94ea003b68e368d1fd900390e75"
+    },
+    "fetch": {
+      "file": "scripts/update_jleague_ongoing.py",
+      "line": 35,
+      "SHA256": "89c1335e216ac9fa37c15fcae2d7e2332fa9ffd04df8407d0ca7c84ab1330a95"
+    },
+    "operational_copy_SHA_matches": true,
+    "no_runtime_execution": true,
+    "request_metadata_does_not_record_User_Agent": true
+  },
+  "future_news_press_route": {
+    "design": {
+      "file": "research/nn_v2/phase2_5E/design_contract.py",
+      "line": 71,
+      "SHA256": "5d93a6266bb27abd3d8b581fe889d7635b94fa4b24ea6d5552e177482dede4e9"
+    },
+    "B_executor_exists": false,
+    "permit_binding": "E design checks exact UA; G/I old permits pin worker code, not a standalone UA property. No new or reusable permit here."
+  },
+  "historical_evidence": [
+    {
+      "id": "A1",
+      "raw_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+      "metadata_SHA256": "c4b967fd0f7552f462c957044bdfcab2f9f1fd5d6abb9ba734c6beb3b8420817",
+      "request_SHA256": "96b53165fca74b5af11065ec76dc2aa5c36f472e1eaea0e077e3ca5a48f80d17",
+      "request_fields": [
+        "PID",
+        "TLS_verification",
+        "id",
+        "method",
+        "permit_SHA256",
+        "permit_id",
+        "proxy_used",
+        "redirect",
+        "request_id",
+        "request_started_UTC",
+        "retry",
+        "task_SHA256",
+        "url"
+      ],
+      "request_started_UTC": "2026-10-23T09:46:47.361661+00:00",
+      "response_completed_UTC": "2026-10-23T09:46:47.645062+00:00",
+      "permit_SHA256": "8c12fecec3222effb5b554c3f9a6c734bc3c003cfc6b55ae0a98be2d2caaf46e",
+      "fixed_worker": {
+        "file": "research/nn_v2/phase2_5G/access_worker.py",
+        "line": 97,
+        "SHA256": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8"
+      },
+      "code_pin_verified": true,
+      "code_constructed_header": "J1AI-Research-Timing-Pilot/1.0",
+      "outbound_header_recorded": false,
+      "transmitted_header": "UNKNOWN",
+      "server_echo_or_packet_capture_available": false,
+      "distinction": "SHA-bound worker reconstructs intended argument; request receipt records no outbound header"
+    },
+    {
+      "id": "S1",
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "metadata_SHA256": "1fd1ff738958012195672bf9b872355f1ababb95fa914e679b0bb6fe3845c068",
+      "request_SHA256": "925f59b32b96f130035568039aacb0e35848187c3b0aa62d9a74cd3dafdb564e",
+      "request_fields": [
+        "PID",
+        "TLS_verification",
+        "id",
+        "method",
+        "permit_SHA256",
+        "permit_id",
+        "proxy_used",
+        "redirect",
+        "request_id",
+        "request_started_UTC",
+        "retry",
+        "task_SHA256",
+        "url"
+      ],
+      "request_started_UTC": "2026-10-23T12:49:52.319670+00:00",
+      "response_completed_UTC": "2026-10-23T12:49:52.811587+00:00",
+      "permit_SHA256": "f048df67da08da219d8d56448b164fa8528e31478d892978d11ff2ba096e04e3",
+      "fixed_worker": {
+        "file": "research/nn_v2/phase2_5I/spec_worker.py",
+        "line": 97,
+        "SHA256": "e770792738bc7d2860e33dbc1c63239a5d48961dc3f5563536f7c31315feabc8"
+      },
+      "code_pin_verified": true,
+      "code_constructed_header": "J1AI-Research-Timing-Pilot/1.0",
+      "outbound_header_recorded": false,
+      "transmitted_header": "UNKNOWN",
+      "server_echo_or_packet_capture_available": false,
+      "distinction": "SHA-bound worker reconstructs intended argument; request receipt records no outbound header"
+    },
+    {
+      "id": "S2",
+      "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+      "metadata_SHA256": "1dc06938913600590d480890bec6c36b6719d5c2004e49e18344d677d773efa3",
+      "request_SHA256": "1782f5ea2cda4c2d09511cd97e402dd639669f03903a747dcc18e0a9d0e0182a",
+      "request_fields": [
+        "PID",
+        "TLS_verification",
+        "id",
+        "method",
+        "permit_SHA256",
+        "permit_id",
+        "proxy_used",
+        "redirect",
+        "request_id",
+        "request_started_UTC",
+        "retry",
+        "task_SHA256",
+        "url"
+      ],
+      "request_started_UTC": "2026-10-23T12:50:26.355611+00:00",
+      "response_completed_UTC": "2026-10-23T12:50:27.260566+00:00",
+      "permit_SHA256": "f048df67da08da219d8d56448b164fa8528e31478d892978d11ff2ba096e04e3",
+      "fixed_worker": {
+        "file": "research/nn_v2/phase2_5I/spec_worker.py",
+        "line": 97,
+        "SHA256": "e770792738bc7d2860e33dbc1c63239a5d48961dc3f5563536f7c31315feabc8"
+      },
+      "code_pin_verified": true,
+      "code_constructed_header": "J1AI-Research-Timing-Pilot/1.0",
+      "outbound_header_recorded": false,
+      "transmitted_header": "UNKNOWN",
+      "server_echo_or_packet_capture_available": false,
+      "distinction": "SHA-bound worker reconstructs intended argument; request receipt records no outbound header"
+    }
+  ],
+  "inventory_limit": "Listed collector sources, G/I request records, installed client sources; not proof of arbitrary injection or every historical network transmission.",
+  "override_review": {
+    "env_CLI_UA_option_in_listed_collectors": "NOT_FOUND_STATIC",
+    "arbitrary_monkeypatch_or_custom_opener": "NOT_PROVEN_IMPOSSIBLE",
+    "current_runtime_header": "UNKNOWN_WITHOUT_EXECUTION_EVIDENCE",
+    "research_permit_override": "No UA CLI/env lookup in G/I worker; pinned code and task/permit only. No runtime activation now."
+  },
+  "candidate": {
+    "HTTP_User_Agent": "J1AI-Research-Timing-Pilot/1.0",
+    "product_token": "Research-Timing-Pilot",
+    "basis": "Explicit valid ASCII substring declaration proposed for offline review only; no digit stripping or automatic extraction",
+    "adopted": false,
+    "runtime_setting_changed": false,
+    "actual_transmission_proven": false
+  }
+}

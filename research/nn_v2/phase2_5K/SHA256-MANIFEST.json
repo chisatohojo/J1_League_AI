@@ -1,0 +1,18 @@
+{
+  "kind": "NNV2_K_PUBLIC_FILE_SHA256_V1",
+  "self_excluded": true,
+  "files": {
+    "research/nn_v2/phase2_5K/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5K/GROUP_SELECTION_VALIDATION.json": "aa17f835fbd12556e6f6e1957c174c6ec224b295451ad2ef9cdff214148f4185",
+    "research/nn_v2/phase2_5K/INPUT_EVIDENCE.json": "3e352933b10aa03b7b21b7b12f2ea09dcac86868326a9df4395c6ea50419f944",
+    "research/nn_v2/phase2_5K/PARSER_DIFF.json": "0d81a93af2c8458c77f4fb6ff22939da1ab4bc3936710c701bd29d0b885c5714",
+    "research/nn_v2/phase2_5K/PREEXISTING_OPERATIONAL_EVENT.json": "85d36ac0c150973c3f0947c9ece981590aeeaf54a43c62b1b86adcec3953a4d6",
+    "research/nn_v2/phase2_5K/product_token_groups.py": "ce8698385af3d4feb5c00bdacc0ae661389c5ca473fcb154e92ff1a1bcab31a6",
+    "research/nn_v2/phase2_5K/PRODUCT_TOKEN_REVIEW.md": "0220dd7003992f1abd1f5f6bc7a8dae178f995d2030ac0086f200959a145c95b",
+    "research/nn_v2/phase2_5K/PROTECTION_VERIFICATION.json": "da7d83c45338cdeb24221c0bc5d45098244bc56730a296b15ef712428fb1f4a3",
+    "research/nn_v2/phase2_5K/ROBOTS_REEVALUATION.json": "75dbcaae9b6747ab2894fe7c306c4e319d811433157f95519b94f04333d1d3b4",
+    "research/nn_v2/phase2_5K/USER_AGENT_INVENTORY.json": "d3ecbcc303d64ecdbe1e898993ddb5217220966251ce3df3c3c6860e72835eb0",
+    "research/nn_v2/phase2_5K/VALIDATION.json": "a676c73b6dc43ef9a563736f653df9a35ebb2a598ee6309fa41218ce9f3787b8",
+    "tests/test_nn_v2_product_token_groups.py": "32b078321968169d93b488c45a6a883ea46e4632b3792eb6fd079ff2c6c43d39"
+  }
+}

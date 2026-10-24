@@ -1,0 +1,68 @@
+{
+  "kind": "NNV2_K_J_DIFFERENTIAL_V1",
+  "cases": [
+    {
+      "id": "explicit_simple",
+      "J_layer1": "ALLOW",
+      "J_reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+      "K_layer1": "ALLOW",
+      "K_group_status": "SELECTED",
+      "K_reason": "SUPPORTED_OFFLINE_PATH_SUBSET",
+      "execution_authorized": false
+    },
+    {
+      "id": "missing_declaration",
+      "J_layer1": "UNKNOWN",
+      "J_reason": "EXPLICIT_RFC_PRODUCT_TOKEN_REQUIRED",
+      "K_layer1": "UNKNOWN",
+      "K_group_status": "UNKNOWN",
+      "K_reason": "GROUP_SELECTION_UNKNOWN",
+      "execution_authorized": false
+    },
+    {
+      "id": "RFC_figure1_header",
+      "J_layer1": "UNKNOWN",
+      "J_reason": "UNSUPPORTED_HTTP_AGENT",
+      "K_layer1": "DENY",
+      "K_group_status": "SELECTED",
+      "K_reason": "SUPPORTED_OFFLINE_PATH_SUBSET",
+      "execution_authorized": false
+    },
+    {
+      "id": "known_group_unknown_rule",
+      "J_layer1": "UNKNOWN",
+      "J_reason": "NOT_SOLELY_OTHER_RECORDS",
+      "K_layer1": "UNKNOWN",
+      "K_group_status": "SELECTED",
+      "K_reason": "DEFINED_RULE_OR_PATH_UNKNOWN",
+      "execution_authorized": false
+    },
+    {
+      "id": "not_header_substring_selection",
+      "J_layer1": "ALLOW",
+      "J_reason": "SUPPORTED_OFFLINE_SUBSET_ONLY",
+      "K_layer1": "ALLOW",
+      "K_group_status": "SELECTED",
+      "K_reason": "SUPPORTED_OFFLINE_PATH_SUBSET",
+      "execution_authorized": false
+    },
+    {
+      "id": "Google_suffix_not_generalized",
+      "J_layer1": "UNKNOWN",
+      "J_reason": "NO_AGENT_GROUP",
+      "K_layer1": "UNKNOWN",
+      "K_group_status": "UNKNOWN",
+      "K_reason": "GROUP_SELECTION_UNKNOWN",
+      "execution_authorized": false
+    }
+  ],
+  "J_version": "nn_v2_robots_offline_layers_v3",
+  "K_version": "nn_v2_robots_offline_groups_v4",
+  "A1_same_explicit_candidate_J_counts": {
+    "ALLOW": 4
+  },
+  "A1_difference_from_formal_J": "Declared token condition differs; not a path relaxation or adopted runtime change",
+  "new_false_ALLOW_in_these_cases": 0,
+  "universal_conformance_proven": false,
+  "old_results_modified": false
+}

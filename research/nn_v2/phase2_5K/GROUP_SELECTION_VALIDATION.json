@@ -1,0 +1,186 @@
+{
+  "kind": "NNV2_K_GROUP_REVIEW_V1",
+  "parser_version": "nn_v2_robots_offline_groups_v4",
+  "sources": [
+    {
+      "id": "S1",
+      "raw_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+      "anchors": [
+        {
+          "anchor": "section-2.2",
+          "anchor_attribute_byte_offset": 40949,
+          "tag_byte_range": [
+            40940,
+            40966
+          ],
+          "tag_SHA256": "64fd9b6bf7af9761e1a1d23bfbf2aab8f6a44d59121ab2f850b500439aa07cab"
+        },
+        {
+          "anchor": "section-2.2.1",
+          "anchor_attribute_byte_offset": 43058,
+          "tag_byte_range": [
+            43049,
+            43077
+          ],
+          "tag_SHA256": "1d9141c797fd8b511907cc934c150994ee6d11fceb37007c69f2d9342f40f2ce"
+        },
+        {
+          "anchor": "section-2.2.2",
+          "anchor_attribute_byte_offset": 49112,
+          "tag_byte_range": [
+            49103,
+            49131
+          ],
+          "tag_SHA256": "68f0ecf0466cec25851ccb1884d69bfd43a552c3893d4293c90142bef723117c"
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "raw_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+      "anchors": [
+        {
+          "anchor": "user-agent",
+          "anchor_attribute_byte_offset": 53151,
+          "tag_byte_range": [
+            53124,
+            53181
+          ],
+          "tag_SHA256": "15503130819ead7302ad768d79adc6649f1dd6319cdcb04225b596be440345f9"
+        },
+        {
+          "anchor": "grouping-of-lines-and-rules",
+          "anchor_attribute_byte_offset": 57645,
+          "tag_byte_range": [
+            57595,
+            57692
+          ],
+          "tag_SHA256": "3858e315178243a6ad11690368aa6dde46cc776b7159c17782ba52efc15bfaa4"
+        },
+        {
+          "anchor": "order-of-precedence-for-user-agents",
+          "anchor_attribute_byte_offset": 58876,
+          "tag_byte_range": [
+            58813,
+            58931
+          ],
+          "tag_SHA256": "567ab1b8ea6f25c5ed573de4d2001e4cd4b94ecef6131b2b5f2017666f1c7dc1"
+        },
+        {
+          "anchor": "matching-of-user-agent-fields",
+          "anchor_attribute_byte_offset": 60252,
+          "tag_byte_range": [
+            60194,
+            60301
+          ],
+          "tag_SHA256": "af23027aa0b79f94d83c774f7faac697a2d3c1b20a324c6fa2c297e1bab38a72"
+        },
+        {
+          "anchor": "grouping-of-rules",
+          "anchor_attribute_byte_offset": 62489,
+          "tag_byte_range": [
+            62445,
+            62526
+          ],
+          "tag_SHA256": "95a61acb13fddb97cd452260dfb3ba8088dcb33bb99bb6c9a4a5a88f4f5931c1"
+        }
+      ]
+    }
+  ],
+  "basis": {
+    "RFC": "Explicit ASCII identifier; exact case-insensitive matching; all matching groups merge; wildcard fallback; no rules if none.",
+    "RFC_header_relation": "Crawler chooses token; SHOULD substring of HTTP header, not header entirety. J1AI requires explicit single declaration and binding.",
+    "Google_specific": "Google crawler-specific most-specific matching and googlebot/1.2 or googlebot* examples are documented, not generalized for J1AI.",
+    "J1AI": "Single declaration only; ambiguous/missing/invalid token, unrecorded actual header, unsupported structure or path remain separate UNKNOWNs."
+  },
+  "reviewed_axis_IDs": [
+    "agent_grammar",
+    "rule_grammar",
+    "longest_rule",
+    "reserved_octets",
+    "query",
+    "encoding_errors",
+    "parse_limits",
+    "standard_examples",
+    "sealed_A1_replay"
+  ],
+  "items": [
+    {
+      "id": "agent_grammar",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "ASCII grammar, explicit declaration, group selection verified in bounded K tests. Historical outbound header absent and no adopted token; overall axis remains UNKNOWN.",
+      "J_unresolved": "Declare/review the token/header binding in a separate explicit decision; no HTTP identity is changed here."
+    },
+    {
+      "id": "rule_grammar",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "Source/example conflict and standard tolerant recovery remain unresolved as a complete implementation."
+    },
+    {
+      "id": "longest_rule",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "Complete RFC treatment of marker contribution and encoded competing-pattern length is not verified."
+    },
+    {
+      "id": "reserved_octets",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "Complete reserved-octet context and competing escape ranking remain unsupported; no linked RFC3986 is fetched."
+    },
+    {
+      "id": "query",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "General query normalization is not proved. The original I evidence gate remains stricter even for the added semantic subset."
+    },
+    {
+      "id": "encoding_errors",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "Tolerant recovery is incomplete; strict safety behavior is not presented as complete normative conformance."
+    },
+    {
+      "id": "parse_limits",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "Full >=500KiB parsing support is not implemented; no fetch cap or permit budget is relaxed."
+    },
+    {
+      "id": "standard_examples",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Outside K scope; retain J unresolved issue and strict subset.",
+      "J_unresolved": "A complete standard-example reconciliation needs additional clarification; saved originals are not repaired."
+    },
+    {
+      "id": "sealed_A1_replay",
+      "inherited_status": "UNKNOWN",
+      "status": "UNKNOWN",
+      "K_effect": "Four conditional normative ALLOWs for explicit proposed token; original undeclared baseline and actual sender evidence remain unresolved. No communication candidate.",
+      "J_unresolved": "Three www paths lack an explicit product-token binding; aboutj has no host-specific original. Site terms/access and actual permit remain unapproved."
+    }
+  ],
+  "nine_axis_counts": {
+    "PASS": 0,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "combined_24_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "old_results_modified": false,
+  "full_RFC_conformance": false,
+  "full_Google_conformance": false,
+  "gate": "NN_V2_PRODUCT_TOKEN_REVIEW_PARTIAL"
+}
