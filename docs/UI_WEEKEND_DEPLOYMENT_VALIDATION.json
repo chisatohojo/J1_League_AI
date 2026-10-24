@@ -1,0 +1,341 @@
+{
+  "format": "j1ai-weekend-gui-deployment-validation-v1",
+  "recorded_at_utc": "2026-10-24T05:15:22.296796+00:00",
+  "gate": "J1AI_WEEKEND_GUI_DEPLOYED_VERIFIED",
+  "branch": "feature/ui-weekend-deployment",
+  "revisions": {
+    "old_ui": "b57454857e779bd4b4a16d620decc9a125423cce",
+    "candidate": "c0b1652257977a7db67af73a2f4ceb5eb949e17a",
+    "deployed_executable_code": "1b660f1843323c0f0325a3fde43836c9e2445c94",
+    "final_record_commit": "The commit containing this file; runtime code hashes remain pinned above."
+  },
+  "runtime": {
+    "observed_at_utc": "2026-10-24T05:12:38.236470+00:00",
+    "launcher_pid": 10872,
+    "server_pid": 556,
+    "endpoint": "http://127.0.0.1:51502/",
+    "browser_mode": "default",
+    "entry": "Desktop J1AI.lnk",
+    "creation_executable_command_owner_session_parentage_verified": true,
+    "kernel_mutex_event_ownership_verified": true,
+    "listener_ownership_verified": true,
+    "unrelated_server_preserved": true,
+    "shortcut_sha256": "280c21175365c0bb63bb9cef1957a7853ea20c9ccac21fb3fb83b3566e600a04",
+    "resume_server_stops": 0,
+    "resume_server_starts": 0,
+    "resume_redeployments": 0
+  },
+  "display_pair": {
+    "format": "j1ai-display-pair-v1",
+    "scope": "DISPLAY_ONLY_NO_INFERENCE",
+    "pair_manifest_sha256": "d6cf2060f458c90f25ed0c84c6c58a3acb87da43b3802856511ab1e212abc8dc",
+    "files_sha256": {
+      "champion_home.json": "371c7cf559a2aa52d9a76c978244154ce5ed638a3b21fc12a4efada20bdaf230",
+      "weekend.json": "3efe7785c97e9ed579be8faf2d99bff4bc4448d81bd83517f4103665ecad5ac7"
+    },
+    "source_revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+    "source_manifest_sha256": "5e6d370c0eaeee8d0bca676c7d8dc3b75fabb12cf7c03c7372a34ddff9f37f3e",
+    "source_observed_at_utc": "2026-10-23T22:00:22.614190+00:00",
+    "publication": "New immutable directory, rename, fsync/readback and independent copied readback verified",
+    "API_verification": "Parsed payload equality with pinned pair; API serializer bytes are recorded separately",
+    "API_body_sha256": {
+      "champion_home.json": "ef900954d2d28bd085557354960eecbd00333c697b8a21de238e9aac503df158",
+      "weekend.json": "f3d54b2f023ee14f5fb6bcb73ef2668d9953528164b0224c5788afd71837ce4d"
+    },
+    "operational_feed_overwritten": false,
+    "automatic_refresh": false
+  },
+  "display": {
+    "period_jst": [
+      "2026-10-24",
+      "2026-10-25"
+    ],
+    "Saturday": {
+      "fixtures": 5,
+      "saved": 5,
+      "unsaved": 0
+    },
+    "Sunday": {
+      "fixtures": 5,
+      "saved": 0,
+      "unsaved": 5
+    },
+    "total_rows": 10,
+    "saved_probabilities_exact": true,
+    "unsaved_prediction": null,
+    "unsaved_probabilities_displayed": false,
+    "previous_matches": 10,
+    "previous_equal_old_live_snapshot": true,
+    "research_status": "ST2 SEALED; no research predictions connected",
+    "viewports_px": [
+      1280,
+      375,
+      320
+    ],
+    "horizontal_overflow": false,
+    "JS_or_console_errors": 0
+  },
+  "tests": {
+    "prior_candidate_historical": {
+      "passed": 465,
+      "rerun_in_resume": false,
+      "included_in_predeploy_total": false
+    },
+    "predeploy_evidence_reused": {
+      "python-predeploy.xml": {
+        "passed": 401,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "9a7310ec8d2259182b4f6c9d5f5df909d69bf13dcda4d986101c8e13ce2c9acd",
+        "historical_execution_reused": true,
+        "rerun_in_resume": false
+      },
+      "node-predeploy.xml": {
+        "passed": 70,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "c0c58504db757a2e8424cb47917b4de03210825c6bab6d5784ebb3416cb49c56",
+        "historical_execution_reused": true,
+        "rerun_in_resume": false
+      }
+    },
+    "predeploy_total": 471,
+    "new_suite_executions_in_resume": 0,
+    "resumed_live_DOM_checks": [
+      {
+        "name": "weekend-title",
+        "passed": true
+      },
+      {
+        "name": "official-10-saved-5-unsaved-5-summary",
+        "passed": true
+      },
+      {
+        "name": "Saturday-and-Sunday-headings",
+        "passed": true
+      },
+      {
+        "name": "Champion-A-and-sealed-research",
+        "passed": true
+      },
+      {
+        "name": "fixture-identity-order",
+        "passed": true
+      },
+      {
+        "name": "HOME-AWAY-binding",
+        "passed": true
+      },
+      {
+        "name": "JST-kickoff",
+        "passed": true
+      },
+      {
+        "name": "five-saved-probability-bars",
+        "passed": true
+      },
+      {
+        "name": "exact-saved-probabilities-in-bars",
+        "passed": true
+      },
+      {
+        "name": "bar-width-normalization",
+        "passed": true
+      },
+      {
+        "name": "AI-PICK-from-saved-maximum",
+        "passed": true
+      },
+      {
+        "name": "unsaved-five-without-fabricated-probabilities",
+        "passed": true
+      },
+      {
+        "name": "saved-update-JST-visible",
+        "passed": true
+      },
+      {
+        "name": "layout-1280-no-horizontal-overflow",
+        "passed": true
+      },
+      {
+        "name": "layout-375-no-horizontal-overflow",
+        "passed": true
+      },
+      {
+        "name": "layout-320-no-horizontal-overflow",
+        "passed": true
+      },
+      {
+        "name": "previous-ten-exact-old-live-snapshot",
+        "passed": true
+      },
+      {
+        "name": "home-navigation",
+        "passed": true
+      },
+      {
+        "name": "return-to-weekend-navigation",
+        "passed": true
+      },
+      {
+        "name": "no-JavaScript-or-console-errors",
+        "passed": true
+      },
+      {
+        "name": "page-network-only-approved-loopback-GET",
+        "passed": true
+      },
+      {
+        "name": "owned-temporary-browser-normal-exit",
+        "passed": true
+      }
+    ],
+    "resumed_live_DOM_passed": 22,
+    "default_browser_UIA": {
+      "actual_document_verified": true,
+      "rows": 10,
+      "previous_rows": 10,
+      "navigation": [
+        "next",
+        "previous",
+        "home",
+        "next"
+      ]
+    },
+    "page_requests": {
+      "same_server_origin_GET_only": true,
+      "external_attempts": 0,
+      "errors": 0,
+      "all_OS_network_isolation_claimed": false
+    },
+    "temporary_browser_normal_exit": true,
+    "temporary_browser_residual_processes": 0,
+    "screenshots_reviewed_locally": true
+  },
+  "stop_history": {
+    "prior_formal_stop_requests": 1,
+    "formal_CLI_exit_codes": [
+      0,
+      0
+    ],
+    "old_owned_processes_exited": 4,
+    "old_port_mutex_event_released": true,
+    "execution_policy_changed": false,
+    "helper_load_failure_distinct_from_formal_stop": true,
+    "force_kill_or_lock_removal": false,
+    "resumed_Stop_requests": 0
+  },
+  "helper_issues": [
+    {
+      "issue": "Prior optional PowerShell helper refused by existing execution policy",
+      "resolution": "Policy unchanged; formal Stop success independently reconciled, exact owned acknowledgement closed",
+      "original_evidence_preserved": true
+    },
+    {
+      "issue": "Locale-dependent UIA helper input",
+      "resolution": "UTF-8 source helper used; actual default-browser navigation verified",
+      "original_evidence_preserved": true
+    },
+    {
+      "issue": "Additional DOM audit incorrectly required year in month/day display",
+      "resolution": "Audit expectation corrected to existing month/day/weekday/JST contract; runtime unchanged",
+      "original_evidence_preserved": true
+    },
+    {
+      "issue": "Audit helper empty process list serialized as empty output",
+      "resolution": "Explicit JSON array serialization; verified zero own temporary Chrome processes",
+      "original_evidence_preserved": true
+    }
+  ],
+  "backup": {
+    "files": 323,
+    "independent_readback_files": 323,
+    "all_SHA_verified": true,
+    "old_live_differs_from_old_disk": true,
+    "old_live_snapshot_sha256": "e814f6350ce26d94b28f2729031111d79efe0a009ce20fef7d5713f8554d2c2b",
+    "original_shortcut_retained": true,
+    "prepared_rollback_shortcut_verified": true,
+    "rollback_executed": false,
+    "restore_drill_executed": false
+  },
+  "protection": {
+    "observed_at_utc": "2026-10-24T05:12:51.579592+00:00",
+    "baseline_files": 61069,
+    "permitted_changed_files": [
+      "Desktop J1AI.lnk",
+      "old-instance launcher termination log"
+    ],
+    "fixed_files_verified": 61067,
+    "differences": [],
+    "SHA_file_identity_size_mtime_creation_verified": true,
+    "access_time_compared": false,
+    "model_payloads": 53,
+    "saved_predictions_unchanged": 19,
+    "existing_worktrees_HEAD_status_unchanged": 26,
+    "main_unchanged": true,
+    "task_definitions_state_history_unchanged": true,
+    "official_sources_research_weekend_batch_unchanged": true,
+    "deployment_storage_owner_DACL_reparse_verified": true,
+    "passed": true
+  },
+  "operational_event": {
+    "morning_last_result": 1,
+    "morning_failure": "Existing prediction_history_incomplete; kept separate, not repaired",
+    "evening_last_result": 0,
+    "task_reruns_or_changes": 0,
+    "GUI_causality_claimed": false,
+    "new_task_execution_during_audit": false
+  },
+  "prohibited_operations": {
+    "official_GET": 0,
+    "model_load": 0,
+    "model_fit": 0,
+    "model_inference": 0,
+    "new_prediction": 0,
+    "original_prediction_change": 0,
+    "operational_feed_overwrite": 0,
+    "operational_task_change_or_run": 0,
+    "weekend_batch_enablement": 0,
+    "NN_evaluation": 0,
+    "main_merge": 0
+  },
+  "remaining_limits": [
+    "Frozen observation snapshot, not live match status or automatic prediction generation",
+    "Rollback inputs and independent readback verified; actual rollback not performed",
+    "No claim of power-loss durability or universal TOCTOU resistance",
+    "Runtime PID/port are observations, must reverify identity for future lifecycle actions",
+    "07:00 task failure remains an independent unresolved operational issue"
+  ],
+  "private_evidence_SHA256": {
+    "baseline.json": "adc2349471f5afd59665262b3d22de508dbd5f13bdc53e2ae0f50d503569ecf6",
+    "backup-manifest.json": "7abefbec464210f85da49dd565dcd42dabb15019994cb33b460b8dd536d2f7c5",
+    "deployment-plan.json": "2c3fb118dd999c0bdf0339c6a711044c2cc679e67971dd4efd0eb17c629e9de3",
+    "deployment-code-sha256.json": "aceabfa786fb3f9bd2ae81ff7960337e12dceaf881a6bb9a671193c1d6f0c007",
+    "storage-owner-acl.json": "4bb1ddce16f89f1bc4f782516cceb8f3798feac8f84ce5fdc5553e300bd6b673",
+    "ownership-pre.json": "a814174193a78fdc2bacbef34a08bfebeb5bb02cde13065cff8bd5766444eac1",
+    "ownership-new.json": "addf1d1242c67f6634f76a985801884665a7243d8cdbb2a4a809b8fc89bb7fa9",
+    "stop-result-reconciled.json": "863101a6b4f0de8b96a7e41a624c25e0a77c3aeb5d3b2e439e9a60755b4b783a",
+    "desktop-replace-result.json": "22e8c9f9be5f97d1ea6a9d1693832eb766acc889e83c09ae34dadf3d0bae2301",
+    "desktop-start-intent.json": "745b50a6f6d2aa91cca55c76ae48ee4e8e7c9977dd2d2a649f9c523c6fb01619",
+    "pair-summary.json": "fc455da4f24b66caeeb74081d82d56265e2e3751e02e0820526c10c1015674cc",
+    "server-verification.json": "d7855e26a421836010acf3ff704015b14b167813bb69e53c6489dc935410c360",
+    "resume-readback.json": "87069e7373dbd3185279ff99511b61cf68dbed9dbdb7dc9c4634512221a3335f",
+    "resume-actual-ui-result.json": "882844921f8bee28fed4a476d6d681b0ff7e2556cf272f55a3078146093ff7f4",
+    "resume-live-dom.mjs": "6f33d07471b55f12a5f0915382838d36b9fd8f103e281fb45285a2ff8e25eaac",
+    "resume-live-dom-result.json": "dd2263d0064401c3b0b3fc6f3f634c3f795afddd06da086fcb3ed05ed7df5b99",
+    "resume-live2-dom.mjs": "58194a6061dc32449c085d909d8d554297b8f882a73c6e73bd65cad6588cece2",
+    "resume-live2-dom-result.json": "5fd06a332b567c931f817c1d564268ded9c391f4dc9fc64c71330b3c6d912c8a",
+    "resume-live2-dom-state.json": "b437a74fece0413ee0973199155686a11cbed9eb346ddf1c07ea11ae7eaa1b50",
+    "resume-dom2-browser-ownership.json": "7dc3a82af3f274dcc8de69fb8f46582942ccac4f7ca8547b001abc76ada96647",
+    "resume-final-audit.py": "0236c259f7aaa22e4a49976fe7a605220a6025263de039d22022eab9b9860bd6",
+    "resume-final2-audit.py": "f28fae0c9c714cc667970a5c231963e862048621be2271c4f1aa557a69a2e2b7",
+    "resume-final2-ownership.json": "524bb979b05ee61f7f3b69766bfd0abdbd18659db4b8341c1d638cb7daed8c2d",
+    "resume-final2-shortcut.json": "98a5107efca5c60063ad2efc1c43c5cdb03478fee63e5b2c1dcf14a6d5cca510",
+    "resume-backup-and-live-audit.json": "2ac1414aa29feebc0ec835730137a64c4c461de0a963ba9bd5cb9bf1b72b4560",
+    "resume-test-evidence.json": "c9e794f5a77de74b97c5308f9bf0f6cc86461f573cbd22a3d482af3d2416f0db",
+    "protection-resume-final.json": "d66c167647b06d5d7ad6f68db5e576386d9444be3a577f9737d21e45756f5961",
+    "python-predeploy.xml": "9a7310ec8d2259182b4f6c9d5f5df909d69bf13dcda4d986101c8e13ce2c9acd",
+    "node-predeploy.xml": "c0c58504db757a2e8424cb47917b4de03210825c6bab6d5784ebb3416cb49c56"
+  }
+}
