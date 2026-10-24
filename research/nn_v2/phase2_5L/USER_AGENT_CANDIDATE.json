@@ -1,0 +1,46 @@
+{
+  "kind": "NNV2_L_UA_CANDIDATE_V1",
+  "candidate": {
+    "configuration_revision": "NNV2_L_UA_CANDIDATE_V1",
+    "intended_user_agent": "J1AI-Research-Timing-Pilot/1.0",
+    "product_token": "Research-Timing-Pilot",
+    "state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+    "activated": false
+  },
+  "header_configuration_hash": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1",
+  "canonical_hash_format": "Sorted compact ASCII-escaped JSON + LF, UTF-8/ASCII bytes; candidate object only",
+  "basis": {
+    "RFC_original_SHA256": "bbaa280636d3e38f0a1a130a5ce40e9753db1ed18c860945b0bf795ff8dc1a87",
+    "Google_original_SHA256": "ead8ce5275092f57333ac66bc47c1cd4551717b8d69f2bb34f76c09ac3a89581",
+    "sections": [
+      "S1#section-2.2",
+      "S1#section-2.2.1"
+    ],
+    "token_grammar": "[A-Za-z_-]+; explicitly selected, not extracted from the complete HTTP header",
+    "token_in_header": true,
+    "HTTP_header_equals_product_token": false
+  },
+  "actual_transmitted_User_Agent": "UNKNOWN",
+  "operational_configuration_changed": false,
+  "permit_issued": false,
+  "parser_version": "nn_v2_robots_offline_groups_v4",
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "B": "HOLD",
+  "C": "HOLD",
+  "D": "HOLD",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "configuration_source": {
+    "file": "research/nn_v2/phase2_5L/ua_evidence_contract.py",
+    "SHA256": "30ca3ed3bdad3c190f552dc81fde16130ad9d6d3787f226145dd052a408afe00",
+    "based_on_commit": "8a89ddd83e1cd1e210e0a55ac8218d0712f3ed3f"
+  },
+  "prospective_permit_id": null,
+  "permit_status": "UNAPPROVED"
+}

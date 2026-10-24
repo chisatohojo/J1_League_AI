@@ -1,0 +1,113 @@
+{
+  "kind": "NNV2_L_EVIDENCE_FACETS_V1",
+  "levels": [
+    {
+      "level": "E0",
+      "purpose": "Configuration",
+      "requires": [
+        "exact candidate",
+        "configuration revision/hash",
+        "request/permit identifiers"
+      ],
+      "limit": "No request construction or sending proved",
+      "design_status": "SPECIFIED",
+      "synthetic_check": "PASS_SCHEMA_AND_CONSISTENCY_ONLY",
+      "real_environment_verified": false,
+      "current_historical_sender_proof": "UNKNOWN",
+      "testcase_witness": [
+        "test_each_facet_is_consistent_synthetic_evidence_not_real_sending[E0]"
+      ]
+    },
+    {
+      "level": "E1",
+      "purpose": "Prepared request input",
+      "requires": [
+        "canonical method/URL/headers",
+        "request ID",
+        "prepared request SHA"
+      ],
+      "limit": "Client input, no send proved",
+      "design_status": "SPECIFIED",
+      "synthetic_check": "PASS_SCHEMA_AND_CONSISTENCY_ONLY",
+      "real_environment_verified": false,
+      "current_historical_sender_proof": "UNKNOWN",
+      "testcase_witness": [
+        "test_each_facet_is_consistent_synthetic_evidence_not_real_sending[E1]"
+      ]
+    },
+    {
+      "level": "E2",
+      "purpose": "Client send processing",
+      "requires": [
+        "pinned adapter",
+        "start/final events",
+        "final headers/hash",
+        "outcome/error/UTC"
+      ],
+      "limit": "Client processing, not independent wire observation; start only is incomplete",
+      "design_status": "SPECIFIED",
+      "synthetic_check": "PASS_SCHEMA_AND_CONSISTENCY_ONLY",
+      "real_environment_verified": false,
+      "current_historical_sender_proof": "UNKNOWN",
+      "testcase_witness": [
+        "test_each_facet_is_consistent_synthetic_evidence_not_real_sending[E2]"
+      ]
+    },
+    {
+      "level": "E3",
+      "purpose": "Independent observation",
+      "requires": [
+        "distinct observer/method",
+        "method/URL/header/request-ID binding",
+        "UTC/hash"
+      ],
+      "limit": "Method independence and plaintext visibility need separate validation; encrypted pcap alone insufficient",
+      "design_status": "SPECIFIED",
+      "synthetic_check": "PASS_SCHEMA_AND_CONSISTENCY_ONLY",
+      "real_environment_verified": false,
+      "current_historical_sender_proof": "UNKNOWN",
+      "testcase_witness": [
+        "test_each_facet_is_consistent_synthetic_evidence_not_real_sending[E3]"
+      ]
+    },
+    {
+      "level": "E4",
+      "purpose": "Response/storage",
+      "requires": [
+        "status/metadata",
+        "raw SHA",
+        "storage identity",
+        "readback SHA"
+      ],
+      "limit": "No implication about actual outbound User-Agent; no automatic E1/E2/E3 promotion",
+      "design_status": "SPECIFIED",
+      "synthetic_check": "PASS_SCHEMA_AND_CONSISTENCY_ONLY",
+      "real_environment_verified": false,
+      "current_historical_sender_proof": "UNKNOWN",
+      "testcase_witness": [
+        "test_each_facet_is_consistent_synthetic_evidence_not_real_sending[E4]"
+      ]
+    }
+  ],
+  "hierarchy": "Independent evidence facets, not a monotone proof ladder",
+  "claims": {
+    "actual_E2_send_verified": false,
+    "actual_E3_observation_verified": false,
+    "actual_E4_filesystem_durability_verified": false,
+    "historical_A1_S1_S2_request_header": "ABSENT_FROM_REQUEST_RECORDS",
+    "retroactive_evidence_creation": false
+  },
+  "TLS_observation": {
+    "encrypted_capture_alone_reveals_HTTP_header": false,
+    "approved_real_method": null,
+    "TLS_decryption_MITM_certificate_change_approved": false
+  },
+  "future_gates": [
+    "Reviewed live adapter integration",
+    "Separate transport experiment approval",
+    "Independent observation method/privacy review",
+    "Exact new URL/host/method/budget/UTC/destination permit approval",
+    "No reuse of G/I permits"
+  ],
+  "validation_result": "VALIDATION.json"
+}

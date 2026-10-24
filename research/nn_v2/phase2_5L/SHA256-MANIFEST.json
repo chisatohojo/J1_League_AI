@@ -1,0 +1,17 @@
+{
+  "kind": "NNV2_L_PUBLIC_SHA256_V1",
+  "self_excluded": true,
+  "files": {
+    "research/nn_v2/phase2_5L/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5L/A1_REEVALUATION.json": "92e7e562ca8db1bc20775e5bc7d6be3fc270228625136a351501ff504322828e",
+    "research/nn_v2/phase2_5L/EVIDENCE_LEVEL_MATRIX.json": "2324af84e8b3443ac63699e429583caa7d2357a8935e303cd5f82a1b4183d50f",
+    "research/nn_v2/phase2_5L/INPUT_EVIDENCE.json": "a224fcfefe4acba88a0a87c2cb9ab13477bd332c364f2360c60d15cb755feb35",
+    "research/nn_v2/phase2_5L/PROTECTION_VERIFICATION.json": "82856a8f4ac156f11aac4502c3ec926e37b22c1095297828a3e1d60bbaf8a944",
+    "research/nn_v2/phase2_5L/REQUEST_EVIDENCE_SCHEMA.json": "c643688edd9bca0da25d35dc5808cf81145fba87f0e5dbada231e4f8e898c6c5",
+    "research/nn_v2/phase2_5L/ua_evidence_contract.py": "30ca3ed3bdad3c190f552dc81fde16130ad9d6d3787f226145dd052a408afe00",
+    "research/nn_v2/phase2_5L/USER_AGENT_CANDIDATE.json": "abab599fdf54b2fc0e88e5bb62b3e261ecf1bb8fc326afca9c26417991a3f0af",
+    "research/nn_v2/phase2_5L/USER_AGENT_EVIDENCE_CONTRACT.md": "bee15fb1e9e04d90a482d393967f70b354362abbab839bdedb84905c7c111d92",
+    "research/nn_v2/phase2_5L/VALIDATION.json": "25cf15743aba85b00cd90f70d81004cb52b211cdf3c4a54694cf5d32185bbff3",
+    "tests/test_nn_v2_ua_evidence_contract.py": "49e7c6ce9c0afa90bbb975bb59a77ab3c3e371d179bf2e50586c713b1293ad3a"
+  }
+}

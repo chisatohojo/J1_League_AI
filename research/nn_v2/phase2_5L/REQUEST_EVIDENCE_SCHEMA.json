@@ -1,0 +1,759 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:j1ai:nn-v2:synthetic-ua-evidence:v1",
+  "title": "NN v2 synthetic-only User-Agent evidence record v1",
+  "description": "No live permit/transport authority. JSON identity, not wire bytes. Semantic hash/time/binding checks are mandatory in ua_evidence_contract.verify_record.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "NNV2_UA_EVIDENCE_V1"
+    },
+    "scope": {
+      "const": "SYNTHETIC_ONLY"
+    },
+    "simulated": {
+      "const": true
+    },
+    "retroactive": {
+      "const": false
+    },
+    "run_started_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "T.*(Z|[+]00:00)$"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+    },
+    "permit_id": {
+      "type": "string",
+      "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+    },
+    "source_revision": {
+      "type": "string",
+      "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+    },
+    "target_url": {
+      "type": "string",
+      "pattern": "^https://synthetic[.]invalid(?::443)?(/|$|[?])"
+    },
+    "method": {
+      "const": "GET"
+    },
+    "intended_user_agent": {
+      "const": "J1AI-Research-Timing-Pilot/1.0"
+    },
+    "product_token": {
+      "const": "Research-Timing-Pilot"
+    },
+    "header_configuration_hash": {
+      "const": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1"
+    },
+    "prepared_request_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "transport_adapter_identity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/adapter"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_level": {
+      "enum": [
+        "E0",
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ]
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "T.*(Z|[+]00:00)$"
+    },
+    "timestamp_source": {
+      "const": "SYNTHETIC_CLOCK"
+    },
+    "transport_outcome": {
+      "enum": [
+        null,
+        "STARTED",
+        "COMPLETED",
+        "FAILED",
+        "UNKNOWN"
+      ]
+    },
+    "response_status": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "response_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "storage_identity": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "namespace": {
+              "const": "SYNTHETIC_MEMORY"
+            },
+            "object_id": {
+              "type": "string",
+              "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+            }
+          },
+          "required": [
+            "namespace",
+            "object_id"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "readback_verified": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "failure_reason": {
+      "enum": [
+        null,
+        "TRANSPORT_TIMEOUT",
+        "TRANSPORT_ERROR",
+        "CANCELLED",
+        "HTTP_FAILURE",
+        "STORAGE_READBACK_FAILED"
+      ]
+    },
+    "evidence_payload": {
+      "type": "object"
+    },
+    "record_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "scope",
+    "simulated",
+    "retroactive",
+    "run_started_utc",
+    "request_id",
+    "execution_id",
+    "permit_id",
+    "source_revision",
+    "target_url",
+    "method",
+    "intended_user_agent",
+    "product_token",
+    "header_configuration_hash",
+    "prepared_request_hash",
+    "transport_adapter_identity",
+    "evidence_level",
+    "timestamp_utc",
+    "timestamp_source",
+    "transport_outcome",
+    "response_status",
+    "response_hash",
+    "storage_identity",
+    "readback_verified",
+    "failure_reason",
+    "evidence_payload",
+    "record_hash"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "prepared": {
+      "type": "object",
+      "properties": {
+        "canonical": {
+          "type": "object",
+          "properties": {
+            "schema_version": {
+              "const": "NNV2_UA_PREPARED_V1"
+            },
+            "method": {
+              "const": "GET"
+            },
+            "target_url": {
+              "type": "string"
+            },
+            "URL": {
+              "type": "object",
+              "properties": {
+                "literal": {
+                  "type": "string"
+                },
+                "scheme": {
+                  "const": "https"
+                },
+                "host": {
+                  "const": "synthetic.invalid"
+                },
+                "port": {
+                  "const": 443
+                },
+                "explicit_port": {
+                  "enum": [
+                    null,
+                    443
+                  ]
+                },
+                "path": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "literal",
+                "scheme",
+                "host",
+                "port",
+                "explicit_port",
+                "path",
+                "query"
+              ],
+              "additionalProperties": false
+            },
+            "headers": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 6,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [
+                  {
+                    "enum": [
+                      "accept",
+                      "accept-encoding",
+                      "connection",
+                      "host",
+                      "user-agent",
+                      "x-j1ai-request-id"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                  }
+                ],
+                "items": false
+              }
+            },
+            "request_id": {
+              "type": "string",
+              "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+            },
+            "execution_id": {
+              "type": "string",
+              "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+            },
+            "permit_id": {
+              "type": "string",
+              "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+            },
+            "source_revision": {
+              "type": "string",
+              "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+            },
+            "intended_user_agent": {
+              "const": "J1AI-Research-Timing-Pilot/1.0"
+            },
+            "product_token": {
+              "const": "Research-Timing-Pilot"
+            },
+            "header_configuration_hash": {
+              "const": "14834db73d0b4448d1cb03dee3ca3399882e89bba546845d16175c4c5b164ae1"
+            }
+          },
+          "required": [
+            "schema_version",
+            "method",
+            "target_url",
+            "URL",
+            "headers",
+            "request_id",
+            "execution_id",
+            "permit_id",
+            "source_revision",
+            "intended_user_agent",
+            "product_token",
+            "header_configuration_hash"
+          ],
+          "additionalProperties": false
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "canonical",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "adapter": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+        },
+        "code_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "identity",
+        "revision",
+        "code_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "E0": {
+      "type": "object",
+      "properties": {
+        "configuration_revision": {
+          "const": "NNV2_L_UA_CANDIDATE_V1"
+        },
+        "state": {
+          "const": "CANDIDATE_FROZEN_NOT_ACTIVATED"
+        }
+      },
+      "required": [
+        "configuration_revision",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "E1": {
+      "type": "object",
+      "properties": {
+        "prepared_request": {
+          "$ref": "#/$defs/prepared"
+        }
+      },
+      "required": [
+        "prepared_request"
+      ],
+      "additionalProperties": false
+    },
+    "E2": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "event": {
+                "enum": [
+                  "SEND_STARTED",
+                  "SEND_COMPLETED",
+                  "SEND_FAILED"
+                ]
+              },
+              "timestamp_utc": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "T.*(Z|[+]00:00)$"
+              }
+            },
+            "required": [
+              "event",
+              "timestamp_utc"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "final_request": {
+          "$ref": "#/$defs/prepared"
+        }
+      },
+      "required": [
+        "events",
+        "final_request"
+      ],
+      "additionalProperties": false
+    },
+    "E3": {
+      "type": "object",
+      "properties": {
+        "observation_method": {
+          "const": "SYNTHETIC_INDEPENDENT_OBSERVER"
+        },
+        "observer_identity": {
+          "type": "string",
+          "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+        },
+        "observed_request": {
+          "$ref": "#/$defs/prepared"
+        },
+        "observed_utc": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "T.*(Z|[+]00:00)$"
+        },
+        "observation_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "observation_method",
+        "observer_identity",
+        "observed_request",
+        "observed_utc",
+        "observation_hash"
+      ],
+      "additionalProperties": false
+    },
+    "E4": {
+      "type": "object",
+      "properties": {
+        "response_metadata": {
+          "type": "object",
+          "properties": {
+            "request_id": {
+              "type": "string",
+              "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+            },
+            "status": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 599
+            },
+            "content_type": {
+              "enum": [
+                "text/plain",
+                "text/html",
+                "application/octet-stream"
+              ]
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 65536
+            }
+          },
+          "required": [
+            "request_id",
+            "status",
+            "content_type",
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        "readback_hash": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "response_received_utc": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "T.*(Z|[+]00:00)$"
+        },
+        "storage_verified_utc": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "T.*(Z|[+]00:00)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "response_metadata",
+        "readback_hash",
+        "response_received_utc",
+        "storage_verified_utc"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "evidence_level": {
+            "const": "E0"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_payload": {
+            "$ref": "#/$defs/E0"
+          },
+          "failure_reason": {
+            "type": "null"
+          },
+          "prepared_request_hash": {
+            "type": "null"
+          },
+          "readback_verified": {
+            "type": "null"
+          },
+          "response_hash": {
+            "type": "null"
+          },
+          "response_status": {
+            "type": "null"
+          },
+          "storage_identity": {
+            "type": "null"
+          },
+          "transport_adapter_identity": {
+            "type": "null"
+          },
+          "transport_outcome": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evidence_level": {
+            "const": "E1"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_payload": {
+            "$ref": "#/$defs/E1"
+          },
+          "failure_reason": {
+            "type": "null"
+          },
+          "readback_verified": {
+            "type": "null"
+          },
+          "response_hash": {
+            "type": "null"
+          },
+          "response_status": {
+            "type": "null"
+          },
+          "storage_identity": {
+            "type": "null"
+          },
+          "transport_adapter_identity": {
+            "type": "null"
+          },
+          "transport_outcome": {
+            "type": "null"
+          },
+          "prepared_request_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evidence_level": {
+            "const": "E2"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_payload": {
+            "$ref": "#/$defs/E2"
+          },
+          "readback_verified": {
+            "type": "null"
+          },
+          "response_hash": {
+            "type": "null"
+          },
+          "response_status": {
+            "type": "null"
+          },
+          "storage_identity": {
+            "type": "null"
+          },
+          "prepared_request_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "transport_adapter_identity": {
+            "$ref": "#/$defs/adapter"
+          },
+          "transport_outcome": {
+            "enum": [
+              "STARTED",
+              "COMPLETED",
+              "FAILED",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evidence_level": {
+            "const": "E3"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_payload": {
+            "$ref": "#/$defs/E3"
+          },
+          "failure_reason": {
+            "type": "null"
+          },
+          "readback_verified": {
+            "type": "null"
+          },
+          "response_hash": {
+            "type": "null"
+          },
+          "response_status": {
+            "type": "null"
+          },
+          "storage_identity": {
+            "type": "null"
+          },
+          "transport_outcome": {
+            "type": "null"
+          },
+          "prepared_request_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "transport_adapter_identity": {
+            "$ref": "#/$defs/adapter"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evidence_level": {
+            "const": "E4"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_payload": {
+            "$ref": "#/$defs/E4"
+          },
+          "prepared_request_hash": {
+            "type": "null"
+          },
+          "transport_adapter_identity": {
+            "type": "null"
+          },
+          "transport_outcome": {
+            "type": "null"
+          },
+          "response_status": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "response_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "storage_identity": {
+            "type": "object",
+            "properties": {
+              "namespace": {
+                "const": "SYNTHETIC_MEMORY"
+              },
+              "object_id": {
+                "type": "string",
+                "pattern": "^syn-[A-Za-z0-9_-]{1,80}$"
+              }
+            },
+            "required": [
+              "namespace",
+              "object_id"
+            ],
+            "additionalProperties": false
+          },
+          "readback_verified": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  ]
+}
