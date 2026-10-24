@@ -1,0 +1,499 @@
+{
+  "format": "champion-a-early-prediction-dependency-validation-v1",
+  "recorded_at_UTC": "2026-10-24T07:57:20.053940+00:00",
+  "gate": "CHAMPION_A_EARLY_PREDICTION_POLICY_READY",
+  "gate_scope": "Design and synthetic validation only; no operational gate replacement",
+  "operational_Sunday_gate": "CHAMPION_A_SUNDAY_PREDICTION_BLOCKED_UNCHANGED",
+  "branch": "feature/champion-early-prediction-policy",
+  "base_commit": "ea494d8b2ac94ab42912cc4557e6c94317357326",
+  "operational_commit": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+  "model": {
+    "version": "operational_champion_20260922_v1",
+    "input_features": [
+      "elo_diff"
+    ],
+    "shape": "N x 1 float",
+    "scaler": "fixed transform only",
+    "K": 30,
+    "home_advantage": 175,
+    "initial_rating": 1500,
+    "generic_Elo_default_K": 20,
+    "model_prefix_rows": 3788,
+    "prefix_source": "3588 fixed training J1 + 200 Hyakunen, all SHA verified",
+    "load_fit_predict_performed": false,
+    "actual_joblib_shape_ABI_reverified": false
+  },
+  "features": [
+    {
+      "name": "elo_diff",
+      "used": true,
+      "dependency": "Home and Away ratings, including time-ordered opponent ancestors",
+      "league_global_dynamic_state": false
+    },
+    {
+      "name": "last_N_form",
+      "used": false
+    },
+    {
+      "name": "home_away_record",
+      "used": false
+    },
+    {
+      "name": "rest_days",
+      "used": false
+    },
+    {
+      "name": "standings",
+      "used": false
+    },
+    {
+      "name": "head_to_head_feature",
+      "used": false
+    },
+    {
+      "name": "schedule_density",
+      "used": false
+    },
+    {
+      "name": "league_mean_or_common_dynamic_update",
+      "used": false
+    },
+    {
+      "name": "missing_value_imputation",
+      "used": false
+    },
+    {
+      "name": "standardization",
+      "used": true,
+      "dependency": "Sealed training scaler only; no per-batch refit"
+    }
+  ],
+  "mathematical_contract": {
+    "participant_local_update": true,
+    "frozen_K_HA": true,
+    "dynamic_league_mean": false,
+    "future_other_team_games_after_last_target_update_cannot_change_target_rating": true,
+    "past_opponent_results_can_indirectly_change_target_rating": true,
+    "backward_time_ordered_closure_required": true,
+    "retain_full_verified_completed_replay_not_pruned_real_Elo": true,
+    "same_team_same_JST_date_duplicate_still_rejected": true,
+    "global_history_complete_must_not_be_implied": true
+  },
+  "policies": {
+    "A": "Existing all-history gate remains production behavior",
+    "B": "Target-team-only latest-history check insufficient in general",
+    "C": "Recommended dependency closure with verified complete-prefix/no-target-update fast path",
+    "production_default_changed": false,
+    "eligible_subset_in_old_daily_format_allowed": false,
+    "initial_future_rollout": "Require all fixtures of the target date eligible before full-date commit",
+    "partial_fixture_storage": "Separate versioned format and canonical reader approval required"
+  },
+  "parameters": {
+    "prediction_horizon_days": {
+      "analysis_default": 2,
+      "analysis_bounds": [
+        0,
+        14
+      ],
+      "current_operational_config": 2,
+      "current_operational_config_bounds": [
+        1,
+        14
+      ],
+      "uses_JST_calendar_days": true,
+      "does_not_waive_dependencies": true
+    },
+    "last_required_result_date": "Latest JST date in required ongoing closure; fixed prefix still mandatory",
+    "next_intervening_match_date": "Next relevant target-team match strictly after actual freeze and before target kickoff; UNKNOWN is not NONE",
+    "feature_dependency_cutoff": "Actual freeze UTC; required result acquisition <= source observation <= freeze",
+    "source_observed_at": "Sealed observation UTC, distinct from publication completion",
+    "prediction_valid_until": "New-generation deadline limited by target kickoff and source freshness; not a deletion or reforecast deadline for immutable saved predictions"
+  },
+  "source": {
+    "revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+    "manifest_sha256": "5e6d370c0eaeee8d0bca676c7d8dc3b75fabb12cf7c03c7372a34ddff9f37f3e",
+    "observed_at_UTC": "2026-10-23T22:00:22.614190+00:00",
+    "analysis_freeze_UTC": "2026-10-24T07:48:53.441282+00:00",
+    "regular_J1_calendar_count": 380,
+    "before_target_date_count": 115,
+    "completed": 110,
+    "unfinished": 5,
+    "sealed_prefix_verified_rows": 3788,
+    "saved_predictions": 19,
+    "Sunday_saved": 0,
+    "all_competition_schedule_coverage": "UNKNOWN_OUTSIDE_FIXED_CHAMPION_FEATURE_SCOPE"
+  },
+  "Sunday": [
+    {
+      "match_id": "102502",
+      "fixture_key": "j1_2026_2027:nagoya:yokohamafm",
+      "namespace": "jleague_match_page",
+      "kickoff_JST": "2026-10-25T14:00:00+09:00",
+      "home_team_id": "team_0018",
+      "away_team_id": "team_0033",
+      "home": "名古屋",
+      "away": "横浜FM",
+      "candidate": true,
+      "reasons": [],
+      "required_ongoing_count": 91,
+      "required_set_sha256": "cc2ec0c8623c9a0f242a1062ee0ea362ead262954c4a9c63f1aa3967cd096fd9",
+      "required_team_count": 20,
+      "last_required_result_date": "2026-10-21",
+      "required_result_acquired_lower_bound_UTC": "2026-10-21T22:00:14.745023+00:00",
+      "target_identity_acquired_UTC": "2026-10-22T22:00:08.912791+00:00",
+      "earliest_information_lower_bound_UTC": "2026-10-22T22:00:08.912791+00:00",
+      "earliest_actual_prediction_time": "UNKNOWN_PUBLICATION_COMPLETION_AND_HISTORICAL_EXECUTION_NOT_PROVEN",
+      "intervening_model_fixture_keys": [],
+      "intervening_any_competition": "UNKNOWN_OUTSIDE_FIXED_ELO_SCOPE",
+      "input_dependency_digest": "eae769413ed75b3de0de1f73865fa6140eff62de55319ea83a73963d34c8f49b",
+      "history_admission": false,
+      "execution_authorized": false,
+      "direct_last_matches": {
+        "home": {
+          "fixture_key": "j1_2026_2027:nagoya:cosaka",
+          "match_id": "34621",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:14.745023+00:00"
+        },
+        "away": {
+          "fixture_key": "j1_2026_2027:yokohamafm:tokyov",
+          "match_id": "34619",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:07.701104+00:00"
+        }
+      },
+      "unrelated_unfinished_count": 5
+    },
+    {
+      "match_id": "102504",
+      "fixture_key": "j1_2026_2027:cosaka:chiba",
+      "namespace": "jleague_match_page",
+      "kickoff_JST": "2026-10-25T15:00:00+09:00",
+      "home_team_id": "team_0002",
+      "away_team_id": "team_0001",
+      "home": "Ｃ大阪",
+      "away": "千葉",
+      "candidate": true,
+      "reasons": [],
+      "required_ongoing_count": 90,
+      "required_set_sha256": "aadd7eb821b3babe15281edf42441aa136637f7d77050107357f7b14cdeabf3d",
+      "required_team_count": 20,
+      "last_required_result_date": "2026-10-21",
+      "required_result_acquired_lower_bound_UTC": "2026-10-21T22:00:22.952930+00:00",
+      "target_identity_acquired_UTC": "2026-10-22T22:00:15.473471+00:00",
+      "earliest_information_lower_bound_UTC": "2026-10-22T22:00:15.473471+00:00",
+      "earliest_actual_prediction_time": "UNKNOWN_PUBLICATION_COMPLETION_AND_HISTORICAL_EXECUTION_NOT_PROVEN",
+      "intervening_model_fixture_keys": [],
+      "intervening_any_competition": "UNKNOWN_OUTSIDE_FIXED_ELO_SCOPE",
+      "input_dependency_digest": "c96a39f44c13bc166c8afccfd3a0d01a21e9d7b8c160c1bd107cf4e1de614408",
+      "history_admission": false,
+      "execution_authorized": false,
+      "direct_last_matches": {
+        "home": {
+          "fixture_key": "j1_2026_2027:nagoya:cosaka",
+          "match_id": "34621",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:14.745023+00:00"
+        },
+        "away": {
+          "fixture_key": "j1_2026_2027:urawa:chiba",
+          "match_id": "34626",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:33",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:22.952930+00:00"
+        }
+      },
+      "unrelated_unfinished_count": 5
+    },
+    {
+      "match_id": "102503",
+      "fixture_key": "j1_2026_2027:urawa:nagasaki",
+      "namespace": "jleague_match_page",
+      "kickoff_JST": "2026-10-25T15:00:00+09:00",
+      "home_team_id": "team_0030",
+      "away_team_id": "team_0017",
+      "home": "浦和",
+      "away": "長崎",
+      "candidate": true,
+      "reasons": [],
+      "required_ongoing_count": 93,
+      "required_set_sha256": "7205d8a8fb18b11b027b0859379bf4e9f36b2f15401265fd9679076a96252f9a",
+      "required_team_count": 20,
+      "last_required_result_date": "2026-10-21",
+      "required_result_acquired_lower_bound_UTC": "2026-10-21T22:00:22.952930+00:00",
+      "target_identity_acquired_UTC": "2026-10-22T22:00:12.240213+00:00",
+      "earliest_information_lower_bound_UTC": "2026-10-22T22:00:12.240213+00:00",
+      "earliest_actual_prediction_time": "UNKNOWN_PUBLICATION_COMPLETION_AND_HISTORICAL_EXECUTION_NOT_PROVEN",
+      "intervening_model_fixture_keys": [],
+      "intervening_any_competition": "UNKNOWN_OUTSIDE_FIXED_ELO_SCOPE",
+      "input_dependency_digest": "c894f205a977e4412b9391a6c08d9cabd4fae62b4b3fd67a0185ad51666fea66",
+      "history_admission": false,
+      "execution_authorized": false,
+      "direct_last_matches": {
+        "home": {
+          "fixture_key": "j1_2026_2027:urawa:chiba",
+          "match_id": "34626",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:33",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:22.952930+00:00"
+        },
+        "away": {
+          "fixture_key": "j1_2026_2027:nagasaki:hiroshima",
+          "match_id": "34625",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:21.227789+00:00"
+        }
+      },
+      "unrelated_unfinished_count": 5
+    },
+    {
+      "match_id": "102505",
+      "fixture_key": "j1_2026_2027:ftokyo:mito",
+      "namespace": "jleague_match_page",
+      "kickoff_JST": "2026-10-25T16:00:00+09:00",
+      "home_team_id": "team_0003",
+      "away_team_id": "team_0016",
+      "home": "FC東京",
+      "away": "水戸",
+      "candidate": true,
+      "reasons": [],
+      "required_ongoing_count": 91,
+      "required_set_sha256": "c1650fc75d2856956123d81af02d5031c119b617d23a8a9796b9e541121d1d67",
+      "required_team_count": 20,
+      "last_required_result_date": "2026-10-21",
+      "required_result_acquired_lower_bound_UTC": "2026-10-21T22:00:18.055831+00:00",
+      "target_identity_acquired_UTC": "2026-10-22T22:00:18.502194+00:00",
+      "earliest_information_lower_bound_UTC": "2026-10-22T22:00:18.502194+00:00",
+      "earliest_actual_prediction_time": "UNKNOWN_PUBLICATION_COMPLETION_AND_HISTORICAL_EXECUTION_NOT_PROVEN",
+      "intervening_model_fixture_keys": [],
+      "intervening_any_competition": "UNKNOWN_OUTSIDE_FIXED_ELO_SCOPE",
+      "input_dependency_digest": "6d21fd3e4c1c5d180e5a643696bb4c57072b811e9129fd0a43801cfc9075b26e",
+      "history_admission": false,
+      "execution_authorized": false,
+      "direct_last_matches": {
+        "home": {
+          "fixture_key": "j1_2026_2027:ftokyo:kashiwa",
+          "match_id": "34617",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:09.472011+00:00"
+        },
+        "away": {
+          "fixture_key": "j1_2026_2027:okayama:mito",
+          "match_id": "34623",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:18.055831+00:00"
+        }
+      },
+      "unrelated_unfinished_count": 5
+    },
+    {
+      "match_id": "102506",
+      "fixture_key": "j1_2026_2027:kawasakif:okayama",
+      "namespace": "jleague_match_page",
+      "kickoff_JST": "2026-10-25T16:00:00+09:00",
+      "home_team_id": "team_0010",
+      "away_team_id": "team_0021",
+      "home": "川崎Ｆ",
+      "away": "岡山",
+      "candidate": true,
+      "reasons": [],
+      "required_ongoing_count": 91,
+      "required_set_sha256": "136d9a5f8f22fb4252ab5ee52abb0d757431c237be49dbcc567a786f00d4cd73",
+      "required_team_count": 20,
+      "last_required_result_date": "2026-10-21",
+      "required_result_acquired_lower_bound_UTC": "2026-10-21T22:00:18.055831+00:00",
+      "target_identity_acquired_UTC": "2026-10-22T22:00:21.798359+00:00",
+      "earliest_information_lower_bound_UTC": "2026-10-22T22:00:21.798359+00:00",
+      "earliest_actual_prediction_time": "UNKNOWN_PUBLICATION_COMPLETION_AND_HISTORICAL_EXECUTION_NOT_PROVEN",
+      "intervening_model_fixture_keys": [],
+      "intervening_any_competition": "UNKNOWN_OUTSIDE_FIXED_ELO_SCOPE",
+      "input_dependency_digest": "dbd18378616833bed1cb06d0d3278ed388ffb4672ed59f98195a0e0dd53dc33d",
+      "history_admission": false,
+      "execution_authorized": false,
+      "direct_last_matches": {
+        "home": {
+          "fixture_key": "j1_2026_2027:kawasakif:kobe",
+          "match_id": "34618",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:11.369479+00:00"
+        },
+        "away": {
+          "fixture_key": "j1_2026_2027:okayama:mito",
+          "match_id": "34623",
+          "match_id_namespace": "jleague_data_site",
+          "match_date": "2026-10-21",
+          "kickoff_time": "19:03",
+          "status": "completed",
+          "evidence_fetched_at_utc": "2026-10-21T22:00:18.055831+00:00"
+        }
+      },
+      "unrelated_unfinished_count": 5
+    }
+  ],
+  "earliest_timing": {
+    "oldest_saved_candidate_source": {
+      "revision": "ec06f50fe01d7d68206204d67272675160de795ac59f5873eb419413f64c25ca",
+      "observed_at_UTC": "2026-10-22T22:00:21.798359+00:00",
+      "manifest_sha256": "1a9c23806af32635cf72903e0b9257efca3e5d5b10500fb6d2b78e9806c117c6"
+    },
+    "raw_acquisition_lower_bound_is_not_execution_time": true,
+    "publication_complete_UTC": "UNKNOWN",
+    "actual_earliest_historical_prediction_UTC": "UNKNOWN",
+    "Friday_0700_snapshot_compatible": false,
+    "reason": "Oldest candidate observation completed at Friday 07:00:21.798359 JST, after 07:00; cannot backdate"
+  },
+  "prototype": {
+    "file": "research/champion_early_prediction_policy.py",
+    "scope": "STATIC_DEPENDENCY_ANALYSIS_ONLY_NO_ADMISSION",
+    "pure_standard_library_only": true,
+    "I_O_or_network_entrypoint": false,
+    "imported_by_runtime": false,
+    "assumption_flags_are_not_source_proofs": true,
+    "history_admission": false,
+    "execution_authorized": false,
+    "frozen_input_mutation_detection": true,
+    "whole_league_state_complete_claim": false
+  },
+  "tests": {
+    "new": {
+      "passed": 43,
+      "failed": 0,
+      "skipped": 0,
+      "warnings_as_errors": true,
+      "sha256": "b0ab16e0f31558469a35d83a454c9ea379d9e850ec0cd08fd5b019ae8eca6f15"
+    },
+    "regression": {
+      "passed": 251,
+      "failed": 0,
+      "skipped": 0,
+      "warnings_as_errors": true,
+      "sha256": "cd5ac2b7193f707a4c2dc1bc800e7dd852b3de1eb907fc5eadd88b2b0bca792f"
+    },
+    "total_PASS_executed_now": 294,
+    "FAIL": 0,
+    "skip": 0,
+    "deselected": 2,
+    "deselected_cases": [
+      "socket-bind sidecar API check",
+      "Node subprocess numeric binding check"
+    ],
+    "synthetic_other_team_result_combinations": 243,
+    "243_combinations_counted_as_one_test": true,
+    "indirect_dependency_counterexample_tested": true,
+    "old_test_evidence_not_added": true,
+    "real_data_Elo_values_computed": false,
+    "real_model_or_prediction_tests": 0
+  },
+  "protection": {
+    "at": "2026-10-24T07:52:27.520658+00:00",
+    "passed": true,
+    "protected_files": 69585,
+    "differences": [],
+    "worktrees_unchanged": 28,
+    "model_payloads_unchanged": 53,
+    "GUI_identity_and_endpoint_unchanged": true,
+    "GUI_server": {
+      "IP": "127.0.0.1",
+      "Port": 51502,
+      "PID": 556
+    },
+    "tasks_definitions_state_history_unchanged": true,
+    "main_unchanged": true
+  },
+  "GUI": {
+    "effective_server_PID": 556,
+    "endpoint": "http://127.0.0.1:51502/",
+    "unchanged": true,
+    "deployed_code": "1b660f1843323c0f0325a3fde43836c9e2445c94",
+    "deployment_record": "d21c4d206a69fc9e8aaea6d348e4964b54264b77"
+  },
+  "tasks": [
+    {
+      "name": "J1AI-Champion-Morning",
+      "state": "Ready",
+      "last": "2026-10-24T07:00:01.0000000+09:00",
+      "last_result": 1,
+      "next": "2026-10-25T07:00:00.0000000+09:00"
+    },
+    {
+      "name": "J1AI-Champion-Evening",
+      "state": "Ready",
+      "last": "2026-10-23T22:00:01.0000000+09:00",
+      "last_result": 0,
+      "next": "2026-10-24T22:00:00.0000000+09:00"
+    }
+  ],
+  "unproved_or_conditional": [
+    "All-competition absence of intervening fixtures, including cups",
+    "Actual earliest historical source publication completion and inference time",
+    "Native production integration of the research policy",
+    "New dependency-bound save format, partial-day storage and canonical readers",
+    "Real estimator load/ABI/numeric compatibility in the proposed new path",
+    "OS/process concurrency, post-publication receipt and power-loss behavior for a new save path"
+  ],
+  "required_next_approvals": [
+    "Approve fixed-Elo model-scope policy and initial complete-date-only rollout",
+    "Approve offline production-bound validator, source snapshot and versioned reader/storage design implementation",
+    "Approve isolated real-model integration validation separately",
+    "Recheck actual source, exact targets, no overlap, generation time and tasks before any explicit prediction/save approval",
+    "Approve display pair generation and GUI lifecycle separately if required"
+  ],
+  "prohibited_operations": {
+    "official_GET_HEAD": 0,
+    "real_model_load_fit_predict": 0,
+    "new_prediction_save": 0,
+    "real_data_Elo_replay": 0,
+    "original_prediction_change": 0,
+    "collector_worker_run": 0,
+    "task_operation": 0,
+    "GUI_snapshot_change": 0,
+    "server_Stop_restart": 0,
+    "model_payload_change": 0,
+    "NN_artifact_change": 0,
+    "main_merge": 0
+  },
+  "code_SHA256": {
+    "operational/src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "operational/src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
+    "operational/src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
+    "operational/scripts/update_champion_dashboard.py": "e06284d62769ea5a0a8b5316eea4dcc3b39ba94ea003b68e368d1fd900390e75",
+    "deployed_display/scripts/weekend_display.py": "e2a5bff11c8da4153521412e847d5354e2dd6e649c7aec9eaa6902a8426cd765",
+    "deployed_display/scripts/build_dashboard_feed.py": "273091ddaf1a16cfcc4a62aa90b87bec2bed7ad7f7f5f12f6ca95211d9f32eb6",
+    "research_only/research/champion_early_prediction_policy.py": "14f3d1bcbc45b605fcd5d78ea89d44d8ee8acddb7526472a719595e0fb2d7c37",
+    "research_only/tests/test_champion_early_prediction_policy.py": "a635f3265438f49d149348ae431a3a64699a1256e97206bb2e6a0c0249cba43c"
+  },
+  "private_evidence_SHA256": {
+    "baseline.json": "b466dfa38f677ad8a3de86fab7a4857ab5385e633a0f3972ec1bf4748b9ee7b7",
+    "protection-start.json": "0c92cb45a5513d58d4839c3b6f330b01009405ca6f63b2645e1826606523b754",
+    "protection-after-tests.json": "0d8147ddab685bf888ce9235eaada1d1029eec028a04a83cf90b769b3c55eacf",
+    "calendar-analysis.json": "64d95d6488d53fc93808bcf0f305b434a73b80f99a0f0d3d61b4da9bfd290abd",
+    "analyse_saved_calendar.py": "9be19ee31ab5ee0a3d58d3099be06eb9d509a34c15c00bd9ecb9bb975972c4af",
+    "new-tests.xml": "b0ab16e0f31558469a35d83a454c9ea379d9e850ec0cd08fd5b019ae8eca6f15",
+    "regression-tests.xml": "cd5ac2b7193f707a4c2dc1bc800e7dd852b3de1eb907fc5eadd88b2b0bca792f"
+  }
+}
