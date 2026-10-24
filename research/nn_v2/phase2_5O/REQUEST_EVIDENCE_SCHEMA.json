@@ -1,0 +1,422 @@
+{
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scope",
+    "evidence_level",
+    "offline_only",
+    "adapter_revision",
+    "request_id",
+    "run_id",
+    "created_utc",
+    "evidence_utc",
+    "G1_manifest_SHA256",
+    "G1_configuration_loaded_offline",
+    "source_evidence_revision",
+    "prepared_request",
+    "final_client_input",
+    "actual_gates",
+    "legacy_facet_reference",
+    "E2",
+    "E3",
+    "E4_new_acquisition",
+    "transport_outcome",
+    "response_status",
+    "response_hash",
+    "real_permit_issued",
+    "execution_authorized",
+    "history_admission",
+    "B",
+    "C",
+    "D",
+    "HISTORY",
+    "PREDICTION",
+    "Phase_A",
+    "Phase_B",
+    "record_SHA256"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "NNV2_G2_E1_OFFLINE_V1"
+    },
+    "scope": {
+      "type": "string",
+      "const": "NN_V2_G2_OFFLINE_ONLY"
+    },
+    "evidence_level": {
+      "type": "string",
+      "const": "E1"
+    },
+    "offline_only": {
+      "type": "boolean",
+      "const": true
+    },
+    "adapter_revision": {
+      "type": "string",
+      "const": "NNV2_G2_OFFLINE_ADAPTER_V1"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "evidence_utc": {
+      "type": "string"
+    },
+    "G1_manifest_SHA256": {
+      "type": "string",
+      "const": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78"
+    },
+    "G1_configuration_loaded_offline": {
+      "type": "boolean",
+      "const": true
+    },
+    "source_evidence_revision": {
+      "type": "string",
+      "const": "ce39d7e3f868b33a14d657f433feeeafc96a5c87"
+    },
+    "prepared_request": {
+      "type": "object",
+      "required": [
+        "request",
+        "SHA256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "required": [
+            "schema_version",
+            "scope",
+            "adapter_revision",
+            "request_id",
+            "run_id",
+            "target_id",
+            "method",
+            "exact_url",
+            "origin",
+            "host",
+            "port",
+            "path",
+            "query",
+            "user_agent",
+            "product_token",
+            "source_evidence_revision",
+            "source_evidence_manifest_SHA256",
+            "robots_reference_SHA256",
+            "created_utc",
+            "G1_manifest_SHA256",
+            "G1_canonical_SHA256",
+            "G1_state",
+            "robots_state",
+            "robots_conditional_only",
+            "terms_state",
+            "permit_state",
+            "permit_id",
+            "redirect",
+            "retry",
+            "parallel",
+            "execution_authorized",
+            "history_admission"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "string",
+              "const": "NNV2_G2_CANDIDATE_REQUEST_V1"
+            },
+            "scope": {
+              "type": "string",
+              "const": "NN_V2_G2_OFFLINE_ONLY"
+            },
+            "adapter_revision": {
+              "type": "string",
+              "const": "NNV2_G2_OFFLINE_ADAPTER_V1"
+            },
+            "request_id": {
+              "type": "string"
+            },
+            "run_id": {
+              "type": "string"
+            },
+            "target_id": {
+              "type": "string",
+              "enum": [
+                "A1",
+                "A3",
+                "A4",
+                "B1",
+                "A2",
+                "B2"
+              ]
+            },
+            "method": {
+              "type": "string",
+              "const": "GET"
+            },
+            "exact_url": {
+              "type": "string",
+              "enum": [
+                "https://www.jleague.jp/robots.txt",
+                "https://www.jleague.jp/general/kiyaku/",
+                "https://www.jleague.jp/general/copyright/",
+                "https://www.jleague.jp/j1/news/",
+                "https://aboutj.jleague.jp/robots.txt",
+                "https://aboutj.jleague.jp/corporate/pressrelease/"
+              ]
+            },
+            "origin": {
+              "type": "string"
+            },
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer",
+              "const": 443
+            },
+            "path": {
+              "type": "string"
+            },
+            "query": {
+              "type": "string"
+            },
+            "user_agent": {
+              "type": "string",
+              "const": "J1AI-Research-Timing-Pilot/1.0"
+            },
+            "product_token": {
+              "type": "string",
+              "const": "Research-Timing-Pilot"
+            },
+            "source_evidence_revision": {
+              "type": "string",
+              "const": "ce39d7e3f868b33a14d657f433feeeafc96a5c87"
+            },
+            "source_evidence_manifest_SHA256": {
+              "type": "string",
+              "const": "70a6d7a97fa84f865a5a634909cfe3e5f8d35c8dc2f19dbc4e95fa994fba8c87"
+            },
+            "robots_reference_SHA256": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "const": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c"
+                }
+              ]
+            },
+            "created_utc": {
+              "type": "string"
+            },
+            "G1_manifest_SHA256": {
+              "type": "string",
+              "const": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78"
+            },
+            "G1_canonical_SHA256": {
+              "type": "string",
+              "const": "796a201eb853ff50fe70f026dbc84ef15a430235e05b1732c66078d645c74420"
+            },
+            "G1_state": {
+              "type": "string",
+              "const": "G1_ADOPTED_OFFLINE_ONLY"
+            },
+            "robots_state": {
+              "type": "string",
+              "enum": [
+                "ALLOW",
+                "UNKNOWN"
+              ]
+            },
+            "robots_conditional_only": {
+              "type": "boolean",
+              "const": true
+            },
+            "terms_state": {
+              "type": "string",
+              "const": "UNKNOWN"
+            },
+            "permit_state": {
+              "type": "string",
+              "const": "UNAPPROVED"
+            },
+            "permit_id": {
+              "type": "null"
+            },
+            "redirect": {
+              "type": "integer",
+              "const": 0
+            },
+            "retry": {
+              "type": "integer",
+              "const": 0
+            },
+            "parallel": {
+              "type": "integer",
+              "const": 0
+            },
+            "execution_authorized": {
+              "type": "boolean",
+              "const": false
+            },
+            "history_admission": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        },
+        "SHA256": {
+          "type": "string"
+        }
+      }
+    },
+    "final_client_input": {
+      "type": "object",
+      "required": [
+        "method",
+        "request_target",
+        "headers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "const": "GET"
+        },
+        "request_target": {
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "required": [
+            "Host",
+            "User-Agent",
+            "Accept-Encoding",
+            "Connection"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "Host": {
+              "type": "string",
+              "enum": [
+                "www.jleague.jp",
+                "aboutj.jleague.jp"
+              ]
+            },
+            "User-Agent": {
+              "type": "string",
+              "const": "J1AI-Research-Timing-Pilot/1.0"
+            },
+            "Accept-Encoding": {
+              "type": "string",
+              "const": "identity"
+            },
+            "Connection": {
+              "type": "string",
+              "const": "close"
+            }
+          }
+        }
+      }
+    },
+    "actual_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "gate",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "gate": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 10,
+      "maxItems": 10
+    },
+    "legacy_facet_reference": {
+      "type": "string",
+      "const": "NNV2_UA_EVIDENCE_V1; separate G2 representation, not a legacy live record"
+    },
+    "E2": {
+      "type": "string",
+      "const": "UNKNOWN"
+    },
+    "E3": {
+      "type": "string",
+      "const": "UNKNOWN"
+    },
+    "E4_new_acquisition": {
+      "type": "boolean",
+      "const": false
+    },
+    "transport_outcome": {
+      "type": "null"
+    },
+    "response_status": {
+      "type": "null"
+    },
+    "response_hash": {
+      "type": "null"
+    },
+    "real_permit_issued": {
+      "type": "boolean",
+      "const": false
+    },
+    "execution_authorized": {
+      "type": "boolean",
+      "const": false
+    },
+    "history_admission": {
+      "type": "boolean",
+      "const": false
+    },
+    "B": {
+      "type": "string",
+      "const": "HOLD"
+    },
+    "C": {
+      "type": "string",
+      "const": "HOLD"
+    },
+    "D": {
+      "type": "string",
+      "const": "HOLD"
+    },
+    "HISTORY": {
+      "type": "string",
+      "const": "HOLD"
+    },
+    "PREDICTION": {
+      "type": "string",
+      "const": "HOLD"
+    },
+    "Phase_A": {
+      "type": "string",
+      "const": "BLOCKED"
+    },
+    "Phase_B": {
+      "type": "string",
+      "const": "NOT_AUTHORIZED"
+    },
+    "record_SHA256": {
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Local shape plus mandatory pure semantic/hash/URL/time validation. This schema is OFFLINE ONLY, not a live NNV2_UA_EVIDENCE_V1 record."
+}

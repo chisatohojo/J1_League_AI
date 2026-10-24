@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-24T10:18:00.530233+00:00",
+  "passed": true,
+  "protected_files": 73977,
+  "differences": [],
+  "worktrees_unchanged": 30,
+  "model_payloads_unchanged": 53,
+  "GUI_identity_and_endpoint_unchanged": true,
+  "tasks_definitions_state_history_unchanged": true,
+  "main_unchanged": true,
+  "private_baseline_SHA256": "6555ed1b9b26e780edc8783ba108330d7672ea7240cdb32b8a9b808dde7c802e",
+  "private_final_audit_SHA256": "a63c6209fd35a5382b2bff12bf5b45ceda0615da6534274a355e8918c2aded47",
+  "fixed_vs_operational_outputs_separate": true,
+  "existing_predictions": 19,
+  "official_detail_originals": 288
+}

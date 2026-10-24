@@ -1,0 +1,18 @@
+{
+  "kind": "NNV2_G2_ARTIFACT_SHA256_V1",
+  "self_excluded": true,
+  "files": {
+    "docs/NN_V2_G2_OFFLINE_ADAPTER.md": "708e3d47eccf526c6033efbd4e3556c9fb1b94c11f44f268e91f06f60d3a7677",
+    "docs/NN_V2_G2_TO_G3_HANDOFF.md": "be820fc5d1f7dea6d5a50e1b8607f0882dde380eb891aebde7523fbffe6620e2",
+    "research/nn_v2/phase2_5O/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5O/ADAPTER_OFFLINE_CONTRACT.json": "309daf84324f13c6a12ef63eb3c626730174b7fe70109ececeb6a3fbfa66bc73",
+    "research/nn_v2/phase2_5O/E1_REQUEST_EVIDENCE.json": "3d50ebdca0a2c41cbebdb0225395ac843b7e6d73e32a8b28939981f6dcd09c1c",
+    "research/nn_v2/phase2_5O/INPUT_EVIDENCE.json": "fe17c09e84407e1885ade54c04191d7dcac02d314a6590f17b0792cfc8f94c99",
+    "research/nn_v2/phase2_5O/offline_adapter.py": "94f645d722468cc54b553ead12ebc972ab6bebb7ed7ae7c0ae0a653eb312bf7b",
+    "research/nn_v2/phase2_5O/OFFLINE_INTEGRATION_VALIDATION.json": "5cf112080aac370e1a5f3e4e73f3068f29283418aa50a77f4db81806d30bc682",
+    "research/nn_v2/phase2_5O/PROTECTION_VERIFICATION.json": "0169277b72f32310b619fdd8123fa6ac1c0b451918c802a79a6867f7639a06a5",
+    "research/nn_v2/phase2_5O/REQUEST_EVIDENCE_SCHEMA.json": "4efd809fbf0030d2f7db8682bf2d7c6e8263278c718b461c1b75d13ec4cc3f3d",
+    "research/nn_v2/phase2_5O/STATIC_VALIDATION.json": "5440ed9998f70474fb9187dcf9dd0fa97e9d969cc9a1d2717965ce54cecd4cee",
+    "tests/test_nn_v2_g2_offline_adapter.py": "2caf2ea7f3dd2c2c00c90389399d4225226980dd4b28dc1824c3c2e053a92405"
+  }
+}

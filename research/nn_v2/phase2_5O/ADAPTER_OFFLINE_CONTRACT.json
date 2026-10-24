@@ -1,0 +1,85 @@
+{
+  "schema_version": "NNV2_G2_OFFLINE_CONTRACT_V1",
+  "scope": "NN_V2_G2_OFFLINE_ONLY",
+  "generated_UTC": "2026-10-24T10:18:45.771641+00:00",
+  "base_commit": "5eefeec9fe2f7b7cd93fa6820097353bdab96e9c",
+  "adapter_revision": "NNV2_G2_OFFLINE_ADAPTER_V1",
+  "adapter_code_SHA256": "94f645d722468cc54b553ead12ebc972ab6bebb7ed7ae7c0ae0a653eb312bf7b",
+  "G1_manifest_file_SHA256": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78",
+  "G1_schema_SHA256": "ace72dce9845f753d616f1c9232d76380d703c1f7c01175e7a67fff64c03839b",
+  "source_revision": "ce39d7e3f868b33a14d657f433feeeafc96a5c87",
+  "source_matrix_SHA256": "70a6d7a97fa84f865a5a634909cfe3e5f8d35c8dc2f19dbc4e95fa994fba8c87",
+  "gate_order": [
+    "G1",
+    "request_schema",
+    "method",
+    "URL_scope",
+    "robots",
+    "terms",
+    "permit",
+    "identity",
+    "redirect_retry",
+    "final_pre_send"
+  ],
+  "targets": {
+    "A1": "https://www.jleague.jp/robots.txt",
+    "A3": "https://www.jleague.jp/general/kiyaku/",
+    "A4": "https://www.jleague.jp/general/copyright/",
+    "B1": "https://www.jleague.jp/j1/news/",
+    "A2": "https://aboutj.jleague.jp/robots.txt",
+    "B2": "https://aboutj.jleague.jp/corporate/pressrelease/"
+  },
+  "request_schema_version": "NNV2_G2_CANDIDATE_REQUEST_V1",
+  "E1_schema_version": "NNV2_G2_E1_OFFLINE_V1",
+  "legacy_schema_unchanged": "NNV2_UA_EVIDENCE_V1",
+  "binding": "Static legacy conn.request argument contract -> G1 IdentityProvider -> offline final-client input -> memory-only sink; old fetch/main never imported or invoked",
+  "pinned_worker_AST_evidence": {
+    "research/nn_v2/phase2_5G/access_worker.py": {
+      "SHA256": "64a0406ba0249f398fb03058a4e4333ad11b9370899b64b5d6ade44fbe2b13b8",
+      "method": "GET",
+      "second_argument": "PATHS[i]",
+      "headers": [
+        "Host",
+        "User-Agent",
+        "Accept-Encoding",
+        "Connection"
+      ],
+      "mode": "AST_ONLY_NOT_IMPORTED"
+    },
+    "research/nn_v2/phase2_5I/spec_worker.py": {
+      "SHA256": "e770792738bc7d2860e33dbc1c63239a5d48961dc3f5563536f7c31315feabc8",
+      "method": "GET",
+      "second_argument": "PATHS[i]",
+      "headers": [
+        "Host",
+        "User-Agent",
+        "Accept-Encoding",
+        "Connection"
+      ],
+      "mode": "AST_ONLY_NOT_IMPORTED"
+    }
+  },
+  "real_transport_connected": false,
+  "arbitrary_transport_callback_supported": false,
+  "synthetic_plan_checker": "Unmodified L.check_plan on explicit synthetic.invalid subview only; no real permit supported",
+  "actual_terms": "UNKNOWN",
+  "actual_permit": "UNAPPROVED",
+  "actual_requests": 0,
+  "E0": "G1 configuration validated and loaded by offline provider only",
+  "E1": "OFFLINE_VERIFIED",
+  "E2": "UNKNOWN",
+  "E3": "UNKNOWN",
+  "E4_new_acquisition": false,
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "risk_limits": [
+    "Application guard, not OS-wide network isolation or native-code sandbox",
+    "No real TLS/Job/ACL/timeout/crash qualification claimed",
+    "No persistent cross-process permit/attempt enforcement",
+    "No historical outbound UA repaired",
+    "No full RFC/Google conformance"
+  ]
+}
