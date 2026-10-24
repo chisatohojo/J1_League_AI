@@ -1,0 +1,31 @@
+{
+  "UTC": "2026-10-24T11:22:19.831937+00:00",
+  "method": "Read-only CIM, plus separately dated existing local environment records; no feature/ACL/Firewall/VM changes",
+  "current_CIM": {
+    "Caption": "Microsoft Windows 11 Home",
+    "Version": "10.0.26200",
+    "Build": "26200",
+    "Architecture": "64 ビット",
+    "HypervisorPresent": true,
+    "TotalMemoryBytes": 16800235520,
+    "FreeMemoryKiB": 4460956
+  },
+  "current_CIM_private_SHA256": "f6c805974735d91e180b23c67e4e2d981122d4d8cba6319a5cc09e1e732855b7",
+  "prior_VM_survey": {
+    "revision": "f39d0a6a0a950ac88caf36fe9d201ac73d7cab2d",
+    "file": "docs/WEEKEND_BATCH_PHASE5B2_ENV_PREFLIGHT.json",
+    "SHA256": "a4b54501d2163415e7d0836af4c83b0a210396921589cbd263bc794a9818e990",
+    "observed_UTC": "2026-10-22T22:29:21.587099+00:00",
+    "scope": "Historical survey/design, not proof an isolated VM exists now"
+  },
+  "OS_network_isolation": "UNKNOWN_NOT_ESTABLISHED",
+  "Sandbox": "Prior Home survey: unavailable; no activation attempted",
+  "VBS": "Historical survey running; current detailed state not requeried; never disabled",
+  "Job_ACL_current_dynamic_proof": "NOT_PERFORMED",
+  "prior_G_TLS_Job_storage": "Historical sealed run only, not qualification of a new adapter",
+  "host_6GiB_guest_9GiB_free_plan_gate": false,
+  "VM_status": "UNKNOWN_NOT_CREATED_OR_STARTED",
+  "admin_operations": 0,
+  "Job_child_starts": 0,
+  "policy_changes": 0
+}

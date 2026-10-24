@@ -1,0 +1,22 @@
+{
+  "kind": "NNV2_G3_PRE_REVIEW_SHA256_V1",
+  "self_excluded": true,
+  "files": {
+    "docs/NN_V2_G3_DYNAMIC_PROOF_PLAN.md": "2e7e5d2df8034ac32f55fa0863a499164364457b00859ed419213a1488e6bedb",
+    "docs/NN_V2_G3_PRE_REVIEW.md": "17954ad53aeb7549362af4d88dc3c3806ec7d00e882d9cd3c5b045d9a32db310",
+    "docs/NN_V2_G3_TO_PERMIT_REVIEW_HANDOFF.md": "e85f97f24ff5f3ecaac7adcc0d413022d9321967d967507da52f510d9e40a64f",
+    "research/nn_v2/phase2_5P/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5P/ENVIRONMENT_REVIEW.json": "ba5cd08388e789e71e58368f6427983a7f512dd3827ad5db0bd46f0b40916dc6",
+    "research/nn_v2/phase2_5P/G3_PERMIT_CONTRACT.json": "6404656b4e6b302ff1c30064fa09ff63509352aad88ca734dd16563f54c5450a",
+    "research/nn_v2/phase2_5P/G3_PRE_REVIEW_MATRIX.json": "18c82934adf6675dde7ab3ae288d608c73b0fd6ea0a89e73d8fadb5c54810762",
+    "research/nn_v2/phase2_5P/G3_UNKNOWN_CLASSIFICATION.json": "c24faa9b2023788e8560031da48eaf379dad34c5606bf1d3787e389ede9236df",
+    "research/nn_v2/phase2_5P/INPUT_EVIDENCE.json": "8c0c6a0aab34854daf65f0dc4323e73e9e796b716ffeb33b56ff0910d66854c9",
+    "research/nn_v2/phase2_5P/pre_review.py": "af5fdf5f5118165abf79b7330f27b6e0f433288c65f6d40af7dd701bebab04e0",
+    "research/nn_v2/phase2_5P/PROOF_REQUIREMENTS.json": "00503486a30f8ca15eb1f114c20df015983736a9ab4d97aadca06e8cb3ac7e98",
+    "research/nn_v2/phase2_5P/PROTECTION_VERIFICATION.json": "47105c6739a7fe5202b88cfe142d5651acb8703f268952099f3674efa5919a57",
+    "research/nn_v2/phase2_5P/STATIC_VALIDATION.json": "778668105ccbd49c64a38c56461a0287be5e1018b608001df1e338cafb45723a",
+    "research/nn_v2/phase2_5P/SYNTHETIC_REVIEW_SCHEMA.json": "fe4eaa79f2759baa0e0eaacc1397d18f2293bf8e21ccb2a7c48f3fb46a5469c1",
+    "research/nn_v2/phase2_5P/VALIDATION.json": "0fab7f317608e0e6e3c69648f0b37946a35453bb166e2191e00a1828945a8c14",
+    "tests/test_nn_v2_g3_pre_review.py": "971bc4f8627a2d44ec571980a52114d4abb6f42266f4b9f7b2e1ecf5546625a3"
+  }
+}

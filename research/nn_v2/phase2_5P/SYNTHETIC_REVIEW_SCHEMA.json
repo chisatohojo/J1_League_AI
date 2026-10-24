@@ -1,0 +1,372 @@
+{
+  "type": "object",
+  "required": [
+    "kind",
+    "scope",
+    "fixture_id",
+    "approver",
+    "approval_utc",
+    "start_utc",
+    "end_utc",
+    "target_id",
+    "exact_url",
+    "family",
+    "method",
+    "user_agent",
+    "product_token",
+    "G1_manifest_SHA256",
+    "source_revision",
+    "limits",
+    "storage",
+    "audit_ledger",
+    "checks",
+    "P2",
+    "issued",
+    "allow_resume"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "NNV2_G3_SYNTHETIC_REVIEW_V1"
+    },
+    "scope": {
+      "type": "string",
+      "const": "SYNTHETIC_ONLY"
+    },
+    "fixture_id": {
+      "type": "string"
+    },
+    "approver": {
+      "type": "string"
+    },
+    "approval_utc": {
+      "type": "string"
+    },
+    "start_utc": {
+      "type": "string"
+    },
+    "end_utc": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string",
+      "enum": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "B1",
+        "B2"
+      ]
+    },
+    "exact_url": {
+      "type": "string",
+      "enum": [
+        "https://www.jleague.jp/robots.txt",
+        "https://aboutj.jleague.jp/robots.txt",
+        "https://www.jleague.jp/general/kiyaku/",
+        "https://www.jleague.jp/general/copyright/",
+        "https://www.jleague.jp/j1/news/",
+        "https://aboutj.jleague.jp/corporate/pressrelease/"
+      ]
+    },
+    "family": {
+      "type": "string",
+      "enum": [
+        "A_ACCESS_CONDITIONS_ONLY",
+        "B_ENTRY_ONLY"
+      ]
+    },
+    "method": {
+      "type": "string",
+      "const": "GET"
+    },
+    "user_agent": {
+      "type": "string",
+      "const": "J1AI-Research-Timing-Pilot/1.0"
+    },
+    "product_token": {
+      "type": "string",
+      "const": "Research-Timing-Pilot"
+    },
+    "G1_manifest_SHA256": {
+      "type": "string",
+      "const": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78"
+    },
+    "source_revision": {
+      "type": "string",
+      "const": "ce39d7e3f868b33a14d657f433feeeafc96a5c87"
+    },
+    "limits": {
+      "type": "object",
+      "required": [
+        "max_requests",
+        "per_URL",
+        "body_cap",
+        "total_body_cap",
+        "header_cap",
+        "socket_seconds",
+        "parent_seconds",
+        "cleanup_seconds",
+        "global_seconds",
+        "interval_seconds",
+        "redirect",
+        "retry",
+        "parallel"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "max_requests": {
+          "type": "integer",
+          "const": 1
+        },
+        "per_URL": {
+          "type": "integer",
+          "const": 1
+        },
+        "body_cap": {
+          "type": "integer",
+          "enum": [
+            65536,
+            1048576,
+            2097152
+          ]
+        },
+        "total_body_cap": {
+          "type": "integer",
+          "enum": [
+            65536,
+            1048576,
+            2097152
+          ]
+        },
+        "header_cap": {
+          "type": "integer",
+          "const": 32768
+        },
+        "socket_seconds": {
+          "type": "integer",
+          "const": 10
+        },
+        "parent_seconds": {
+          "type": "integer",
+          "const": 12
+        },
+        "cleanup_seconds": {
+          "type": "integer",
+          "const": 2
+        },
+        "global_seconds": {
+          "type": "integer",
+          "const": 120
+        },
+        "interval_seconds": {
+          "type": "integer",
+          "const": 5
+        },
+        "redirect": {
+          "type": "integer",
+          "const": 0
+        },
+        "retry": {
+          "type": "integer",
+          "const": 0
+        },
+        "parallel": {
+          "type": "integer",
+          "const": 0
+        }
+      }
+    },
+    "storage": {
+      "type": "string",
+      "const": "SYNTHETIC_MEMORY_ONLY"
+    },
+    "audit_ledger": {
+      "type": "string",
+      "const": "SYNTHETIC_HASH_CHAIN_ONLY"
+    },
+    "checks": {
+      "type": "object",
+      "required": [
+        "G1",
+        "G2_E1",
+        "robots",
+        "terms",
+        "TLS_policy",
+        "OS_isolation",
+        "Job",
+        "ACL",
+        "attempt_durability",
+        "limits",
+        "storage",
+        "source_binding",
+        "clock",
+        "production_separation",
+        "explicit_user_approval"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "G1": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "G2_E1": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "robots": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "terms": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "TLS_policy": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "OS_isolation": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "Job": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "ACL": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "attempt_durability": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "limits": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "storage": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "source_binding": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "clock": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "production_separation": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        },
+        "explicit_user_approval": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "DENY",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "P2": {
+      "type": "object",
+      "required": [
+        "E2",
+        "E3",
+        "E4",
+        "TLS_handshake"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "E2": {
+          "type": "string",
+          "const": "UNKNOWN"
+        },
+        "E3": {
+          "type": "string",
+          "const": "UNKNOWN"
+        },
+        "E4": {
+          "type": "string",
+          "const": "NOT_ACQUIRED"
+        },
+        "TLS_handshake": {
+          "type": "string",
+          "const": "NOT_OBSERVED"
+        }
+      }
+    },
+    "issued": {
+      "type": "boolean",
+      "const": false
+    },
+    "allow_resume": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Synthetic pre-review only. Pure semantic validator also required. Not an actual permit schema or issuer."
+}

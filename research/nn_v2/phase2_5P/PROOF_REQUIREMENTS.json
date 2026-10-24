@@ -1,0 +1,30 @@
+{
+  "kind": "NNV2_G3_PROOF_REQUIREMENTS_V1",
+  "scope": "PLAN_ONLY_NOT_EXECUTION",
+  "UTC": "2026-10-24T11:31:13.617241+00:00",
+  "P0_required_before_issuance": [
+    "Exact scope/host/path/method/UA/token/source revisions",
+    "Current applicable robots/terms or explicitly reviewed bounded inspection basis",
+    "Code/config/storage identity and limits/time window",
+    "Capture mechanism and E3 requirement/method/privacy decision",
+    "Specific G3 approval distinct from G4 start"
+  ],
+  "P1_required_dynamic_qualification": [
+    "Isolated Windows environment and OS network deny",
+    "TLS validation and failure handling on isolated approved peer",
+    "Job membership/child identity/finite owned cleanup",
+    "Owner SID/DACL/reparse/path races",
+    "Actual process CAS/exclusive reservation/durable intent before connect",
+    "Crash/ledger/seal/receipt recovery and no retry"
+  ],
+  "P2_only_after_approved_G4": [
+    "Actual current-request E2/final headers/outcome",
+    "Actual independent E3 according to approved scope",
+    "E4 raw/metadata/request/receipt/TLS response/real UTC"
+  ],
+  "P2_required_before_first_send": false,
+  "P2_capture_mechanism_required_before_send": true,
+  "actual_permit_issuable_now": false,
+  "dynamic_plan_file": "docs/NN_V2_G3_DYNAMIC_PROOF_PLAN.md",
+  "dynamic_plan_SHA256": "2e7e5d2df8034ac32f55fa0863a499164364457b00859ed419213a1488e6bedb"
+}

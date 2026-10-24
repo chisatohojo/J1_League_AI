@@ -1,0 +1,180 @@
+{
+  "kind": "DESIGN_NOT_PERMIT",
+  "format_version": "NNV2_G3_FUTURE_PERMIT_CONTRACT_V1",
+  "UTC": "2026-10-24T11:22:19.831937+00:00",
+  "scope": "CONTRACT_DESIGN_ONLY",
+  "permit_issued": false,
+  "permit_id": null,
+  "approval": null,
+  "required_future_permit_fields": [
+    "permit_id",
+    "approver",
+    "approval_utc",
+    "valid_start_utc",
+    "valid_end_utc",
+    "scope_family",
+    "exact_URL_allowlist",
+    "HTTP_method_allowlist",
+    "max_requests",
+    "per_URL_max_requests",
+    "redirect_policy",
+    "retry_policy",
+    "User_Agent",
+    "robots_product_token",
+    "robots_review_revision",
+    "terms_review_revision",
+    "code_config_manifest_SHA256",
+    "storage_identity",
+    "max_storage_bytes",
+    "audit_ledger",
+    "stop_conditions",
+    "rollback_conditions",
+    "usage_state_reference",
+    "execution_result_reference",
+    "unused_expiry_conditions",
+    "G4_start_approval_reference",
+    "E3_requirement_and_method"
+  ],
+  "immutability": "Approved permit bytes/hash never edited; consumed/use/outcome are append-only ledger references, not mutations of approval",
+  "activation": "No issuer, live validator, storage or execution entrypoint in this phase",
+  "A_B_separation": "One explicitly bounded conditions-inspection or B-entry scope per approval; no budget transfer; A1 repeat requires exact repeat approval",
+  "reject_policy": "DENY or UNKNOWN robots/terms reject ordinary issuance; no generic UNKNOWN bypass. Initial conditions inspection requires independent explicit bootstrap policy review, currently unapproved.",
+  "synthetic_fixture_schema": "SYNTHETIC_REVIEW_SCHEMA.json",
+  "single_URL_simulation_limits": {
+    "A1": {
+      "max_requests": 1,
+      "per_URL": 1,
+      "body_cap": 65536,
+      "total_body_cap": 65536,
+      "header_cap": 32768,
+      "socket_seconds": 10,
+      "parent_seconds": 12,
+      "cleanup_seconds": 2,
+      "global_seconds": 120,
+      "interval_seconds": 5,
+      "redirect": 0,
+      "retry": 0,
+      "parallel": 0
+    },
+    "A2": {
+      "max_requests": 1,
+      "per_URL": 1,
+      "body_cap": 65536,
+      "total_body_cap": 65536,
+      "header_cap": 32768,
+      "socket_seconds": 10,
+      "parent_seconds": 12,
+      "cleanup_seconds": 2,
+      "global_seconds": 120,
+      "interval_seconds": 5,
+      "redirect": 0,
+      "retry": 0,
+      "parallel": 0
+    },
+    "A3": {
+      "max_requests": 1,
+      "per_URL": 1,
+      "body_cap": 1048576,
+      "total_body_cap": 1048576,
+      "header_cap": 32768,
+      "socket_seconds": 10,
+      "parent_seconds": 12,
+      "cleanup_seconds": 2,
+      "global_seconds": 120,
+      "interval_seconds": 5,
+      "redirect": 0,
+      "retry": 0,
+      "parallel": 0
+    },
+    "A4": {
+      "max_requests": 1,
+      "per_URL": 1,
+      "body_cap": 1048576,
+      "total_body_cap": 1048576,
+      "header_cap": 32768,
+      "socket_seconds": 10,
+      "parent_seconds": 12,
+      "cleanup_seconds": 2,
+      "global_seconds": 120,
+      "interval_seconds": 5,
+      "redirect": 0,
+      "retry": 0,
+      "parallel": 0
+    },
+    "B1": {
+      "max_requests": 1,
+      "per_URL": 1,
+      "body_cap": 2097152,
+      "total_body_cap": 2097152,
+      "header_cap": 32768,
+      "socket_seconds": 10,
+      "parent_seconds": 12,
+      "cleanup_seconds": 2,
+      "global_seconds": 120,
+      "interval_seconds": 5,
+      "redirect": 0,
+      "retry": 0,
+      "parallel": 0
+    },
+    "B2": {
+      "max_requests": 1,
+      "per_URL": 1,
+      "body_cap": 2097152,
+      "total_body_cap": 2097152,
+      "header_cap": 32768,
+      "socket_seconds": 10,
+      "parent_seconds": 12,
+      "cleanup_seconds": 2,
+      "global_seconds": 120,
+      "interval_seconds": 5,
+      "redirect": 0,
+      "retry": 0,
+      "parallel": 0
+    }
+  },
+  "state_model": {
+    "None": [
+      "CREATED"
+    ],
+    "CREATED": [
+      "RESERVED",
+      "REJECTED",
+      "ABORTED"
+    ],
+    "RESERVED": [
+      "STARTED",
+      "ABORTED",
+      "UNKNOWN_OUTCOME"
+    ],
+    "STARTED": [
+      "SENT",
+      "UNKNOWN_OUTCOME"
+    ],
+    "SENT": [
+      "COMPLETED",
+      "UNKNOWN_OUTCOME"
+    ],
+    "COMPLETED": [],
+    "REJECTED": [],
+    "ABORTED": [],
+    "UNKNOWN_OUTCOME": []
+  },
+  "legacy_mapping": {
+    "G_consumed_marker": "Run reservation concept only; existing marker never changed/reused",
+    "G_consumed_intent": "Per-slot reservation before DNS/connect; use separate new ledger in future",
+    "G_connection_started": "STARTED analogue; not proof of completed send",
+    "G_terminal_policy_STOP": "Terminal no-reuse retained; NOT_STARTED slots are expired authority, not new remaining budget"
+  },
+  "ledger_acceptance": [
+    "Exclusive atomic reservation across actual processes",
+    "Durable intent fsync/readback BEFORE first DNS/connect",
+    "CAS revision/attempt/request/permit hash binding",
+    "No refund after RESERVED even on ABORTED or unknown outcome",
+    "STARTED/SENT crash requires UNKNOWN_OUTCOME and manual owned review; no automatic retry",
+    "COMPLETED only after response/raw/metadata/request/receipt/seal readback; SENT is client progress, not server proof",
+    "Tampered/missing/partial ledger STOP; no forced lock reclamation",
+    "Real Windows power-loss durability remains separately unproven"
+  ],
+  "P2_not_precondition_for_same_first_send": true,
+  "all_real_issuance_and_execution_authority": false
+}
