@@ -1,0 +1,497 @@
+{
+  "format": "champion-a-sunday-prediction-preflight-v1",
+  "recorded_at_utc": "2026-10-24T07:09:29.057545+00:00",
+  "gate": "CHAMPION_A_SUNDAY_PREDICTION_BLOCKED",
+  "audit_deliverables_status": "COMPLETE_EXECUTION_NOT_AUTHORIZED",
+  "branch": "feature/champion-sunday-preflight",
+  "base_commit": "d21c4d206a69fc9e8aaea6d348e4964b54264b77",
+  "operational_code_commit": "5ac9052a221c6d8d563ec982bc48fbddb9e80bfa",
+  "GUI": {
+    "deployed_code": "1b660f1843323c0f0325a3fde43836c9e2445c94",
+    "record_commit": "d21c4d206a69fc9e8aaea6d348e4964b54264b77",
+    "observed_server_PID": 556,
+    "observed_launcher_PID": 10872,
+    "endpoint": "http://127.0.0.1:51502/",
+    "startup_snapshot": true,
+    "read_only_pair_unchanged": true,
+    "restart_performed": false,
+    "HTTP_update_API": false
+  },
+  "source": {
+    "revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+    "manifest_sha256": "5e6d370c0eaeee8d0bca676c7d8dc3b75fabb12cf7c03c7372a34ddff9f37f3e",
+    "observation_UTC": "2026-10-23T22:00:22.614190+00:00",
+    "inspection_UTC": "2026-10-24T06:55:31.923628+00:00",
+    "age_hours_at_inspection": 8.919252621666667,
+    "max_age_hours": 24,
+    "old_revision_24h_boundary_UTC": "2026-10-24T22:00:22.614190+00:00",
+    "format": "ongoing-v2",
+    "completion_policy": "official-game-over-v1",
+    "all_fixtures": 380,
+    "completed": 110,
+    "target_date": "2026-10-25",
+    "unresolved_before_target": [
+      {
+        "fixture_key": "j1_2026_2027:hiroshima:shimizu",
+        "match_date": "2026-10-24",
+        "status": "scheduled"
+      },
+      {
+        "fixture_key": "j1_2026_2027:kashima:kashiwa",
+        "match_date": "2026-10-24",
+        "status": "scheduled"
+      },
+      {
+        "fixture_key": "j1_2026_2027:tokyov:fukuoka",
+        "match_date": "2026-10-24",
+        "status": "scheduled"
+      },
+      {
+        "fixture_key": "j1_2026_2027:kobe:machida",
+        "match_date": "2026-10-24",
+        "status": "scheduled"
+      },
+      {
+        "fixture_key": "j1_2026_2027:gosaka:kyoto",
+        "match_date": "2026-10-24",
+        "status": "scheduled"
+      }
+    ],
+    "snapshot_manifest_SHA_verified": true,
+    "validated_archived_snapshots": 12,
+    "validated_source_entries": 148,
+    "entries_with_request_start_UTC": 133,
+    "entries_without_request_start_UTC": 15,
+    "historical_publication_completed_UTC": "UNKNOWN_NOT_DERIVED_FROM_MTIME",
+    "result_pages_reparsed": 110,
+    "identity_pages_reparsed": 5,
+    "separate_identity_completion_snapshot_chains": 5,
+    "distinct_raw_or_UTC_at_completion_origin": 4,
+    "both_chains_game_over_and_regulation_score_verified": true,
+    "original_failed_one_to_one_assumption_preserved": true
+  },
+  "targets": [
+    {
+      "fixture_key": "j1_2026_2027:nagoya:yokohamafm",
+      "match_id": "102502",
+      "match_id_namespace": "jleague_match_page",
+      "match_page_id": "102502",
+      "data_site_match_id": "",
+      "season": "2026",
+      "round": "12",
+      "match_date": "2026-10-25",
+      "kickoff_time": "14:00",
+      "home_team_id": "team_0018",
+      "away_team_id": "team_0033",
+      "home_team": "名古屋",
+      "away_team": "横浜FM",
+      "status": "scheduled",
+      "home_score": "",
+      "away_score": "",
+      "result": "",
+      "source_revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+      "official_identity_URL": "https://www.jleague.jp/match/j1/2026/102502/",
+      "identity_witness": {
+        "raw_sha256": "b174d4c955eaeb0303b4f7f7108fbed55761f5052cef20728ddd30ad292e5a81",
+        "metadata_sha256": "233d0fdf2eefb9584aadea5ed78a2bcff0ee96c4d7e7a01060bb0d5d6d2a9d1a",
+        "request_started_at_utc": "2026-10-22T22:00:08.548193+00:00",
+        "fetched_at_utc": "2026-10-22T22:00:08.912791+00:00"
+      },
+      "saved_predictions": 0,
+      "completed_result": false
+    },
+    {
+      "fixture_key": "j1_2026_2027:cosaka:chiba",
+      "match_id": "102504",
+      "match_id_namespace": "jleague_match_page",
+      "match_page_id": "102504",
+      "data_site_match_id": "",
+      "season": "2026",
+      "round": "12",
+      "match_date": "2026-10-25",
+      "kickoff_time": "15:00",
+      "home_team_id": "team_0002",
+      "away_team_id": "team_0001",
+      "home_team": "Ｃ大阪",
+      "away_team": "千葉",
+      "status": "scheduled",
+      "home_score": "",
+      "away_score": "",
+      "result": "",
+      "source_revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+      "official_identity_URL": "https://www.jleague.jp/match/j1/2026/102504/",
+      "identity_witness": {
+        "raw_sha256": "0f5e5d1a223122adf0ec1e26275e63549b23a9ede0a6cb1fe77b6f9781957a47",
+        "metadata_sha256": "7ff2a0fc230940065fcc84d654e016a9a3daa529c429a722fdf30a5d003e7a78",
+        "request_started_at_utc": "2026-10-22T22:00:15.179540+00:00",
+        "fetched_at_utc": "2026-10-22T22:00:15.473471+00:00"
+      },
+      "saved_predictions": 0,
+      "completed_result": false
+    },
+    {
+      "fixture_key": "j1_2026_2027:urawa:nagasaki",
+      "match_id": "102503",
+      "match_id_namespace": "jleague_match_page",
+      "match_page_id": "102503",
+      "data_site_match_id": "",
+      "season": "2026",
+      "round": "12",
+      "match_date": "2026-10-25",
+      "kickoff_time": "15:00",
+      "home_team_id": "team_0030",
+      "away_team_id": "team_0017",
+      "home_team": "浦和",
+      "away_team": "長崎",
+      "status": "scheduled",
+      "home_score": "",
+      "away_score": "",
+      "result": "",
+      "source_revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+      "official_identity_URL": "https://www.jleague.jp/match/j1/2026/102503/",
+      "identity_witness": {
+        "raw_sha256": "47ad4769088db93b591f39dddd053743cc96e11a516bec48ba7d6526fd84c760",
+        "metadata_sha256": "9387d729d7288ebac732e2a9ccc5320efcf384932c6e1e704debc46359c9550b",
+        "request_started_at_utc": "2026-10-22T22:00:11.896119+00:00",
+        "fetched_at_utc": "2026-10-22T22:00:12.240213+00:00"
+      },
+      "saved_predictions": 0,
+      "completed_result": false
+    },
+    {
+      "fixture_key": "j1_2026_2027:ftokyo:mito",
+      "match_id": "102505",
+      "match_id_namespace": "jleague_match_page",
+      "match_page_id": "102505",
+      "data_site_match_id": "",
+      "season": "2026",
+      "round": "12",
+      "match_date": "2026-10-25",
+      "kickoff_time": "16:00",
+      "home_team_id": "team_0003",
+      "away_team_id": "team_0016",
+      "home_team": "FC東京",
+      "away_team": "水戸",
+      "status": "scheduled",
+      "home_score": "",
+      "away_score": "",
+      "result": "",
+      "source_revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+      "official_identity_URL": "https://www.jleague.jp/match/j1/2026/102505/",
+      "identity_witness": {
+        "raw_sha256": "4ffc944fa5ebfc47fa1aad74eb0e5ef6fdb517d89e6e5ac1764b4d2275ffc664",
+        "metadata_sha256": "2f02aa4b920d3bc60dcf77ab2614f9d96b04da52c17bd48e3ea238b7bc42ac28",
+        "request_started_at_utc": "2026-10-22T22:00:18.187450+00:00",
+        "fetched_at_utc": "2026-10-22T22:00:18.502194+00:00"
+      },
+      "saved_predictions": 0,
+      "completed_result": false
+    },
+    {
+      "fixture_key": "j1_2026_2027:kawasakif:okayama",
+      "match_id": "102506",
+      "match_id_namespace": "jleague_match_page",
+      "match_page_id": "102506",
+      "data_site_match_id": "",
+      "season": "2026",
+      "round": "12",
+      "match_date": "2026-10-25",
+      "kickoff_time": "16:00",
+      "home_team_id": "team_0010",
+      "away_team_id": "team_0021",
+      "home_team": "川崎Ｆ",
+      "away_team": "岡山",
+      "status": "scheduled",
+      "home_score": "",
+      "away_score": "",
+      "result": "",
+      "source_revision": "5678e72ddb61a08cc88eea58fa8b3e8833aa3f4bc8c714a59e2bc9f54c9f033f",
+      "official_identity_URL": "https://www.jleague.jp/match/j1/2026/102506/",
+      "identity_witness": {
+        "raw_sha256": "9d1dd68ea5417e1c7e2c0a79e2ad7da4f8bdd2e961a57cecb58e98e7678af47e",
+        "metadata_sha256": "305d622ba79a5803d6518340df8bdf5d0149bb248e5b5cb06050dd0e4ac91005",
+        "request_started_at_utc": "2026-10-22T22:00:21.491913+00:00",
+        "fetched_at_utc": "2026-10-22T22:00:21.798359+00:00"
+      },
+      "saved_predictions": 0,
+      "completed_result": false
+    }
+  ],
+  "changes": {
+    "saved_accepted_revisions_compared": 19,
+    "repeated_log_rows": 60,
+    "unique_events_by_ID": 20,
+    "unique_event_types": {
+      "identity_linked": 10,
+      "new_fixture": 10
+    },
+    "target_date_kickoff_status_constant_in_saved_rows": true,
+    "no_external_schedule_notice_absence_claim": true
+  },
+  "PIT": {
+    "identity": "PASS_AS_OF_SAVED_REVISION",
+    "history_completeness": "BLOCKED_5_SATURDAY_UNFINISHED",
+    "saved_target_overlap": 0,
+    "target_results_present": 0,
+    "earliest_kickoff_UTC": "2026-10-25T05:00:00+00:00",
+    "all_kickoffs_future_at_inspection": true,
+    "daily_policy_not_Friday_0700_snapshot": true,
+    "Saturday_result_use": "Only verified completed results acquired before actual prediction; no future or backdated evidence",
+    "execution_UTC": null,
+    "generation_UTC": null,
+    "commit_UTC": null,
+    "future_source_and_actual_times_require_revalidation": true,
+    "NN_BCD_and_weekend_publication_receipt_gates_resolved": false
+  },
+  "Champion_A": {
+    "model_revision": "operational_champion_20260922_v1",
+    "fixed_file_SHA256": {
+      "checksums.sha256": "2d2e50dbfc4d71ec2cdaf5fe1a6e48953c160c388f1740cfe538f29f593646d1",
+      "metadata.json": "bd1eb92c25bdb56a836ef7bfe3fcb13b0137a2ece01b6095e7d100e1f5afdd19",
+      "model.joblib": "60636e4652bce98b76c394310947b1b8923a8bf18a640d9e7976497989ed54be",
+      "scaler.joblib": "a8a5f176944049c6825071b580c5fe40f5a5fb28f504f8880d028deaf2494750",
+      "training_manifest.csv": "eea7498fabac6acc79a9c297468b470702288b61736b63d90214d741ab8fb32a"
+    },
+    "feature_contract": [
+      "elo_diff"
+    ],
+    "shape": "N x 1 float",
+    "scaler_operation": "transform only, never fit",
+    "estimator_operation": "predict_proba only after separate approval",
+    "class_order": {
+      "0": "Away",
+      "1": "Draw",
+      "2": "Home"
+    },
+    "Elo": {
+      "initial_rating": 1500.0,
+      "K": 30.0,
+      "home_advantage": 175.0,
+      "elo_diff": "home_rating - away_rating"
+    },
+    "metadata_environment": {
+      "python": "3.12.14",
+      "numpy": "2.5.3",
+      "pandas": "3.0.5",
+      "scikit_learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "training_rows": 3588,
+    "frozen_data_files_SHA_verified": 12,
+    "hyakunen_SHA_verified": true,
+    "load_or_inference_performed": false,
+    "actual_ABI_deserialization_numeric_compatibility_reverified": false
+  },
+  "entrypoint": {
+    "module": "scripts.update_champion_dashboard",
+    "CLI_flags": [
+      "--config",
+      "--slot"
+    ],
+    "slots": [
+      "morning",
+      "evening"
+    ],
+    "explicit_date_or_skip_collector_CLI": false,
+    "collector_before_prediction": true,
+    "predictor_in_same_process": true,
+    "morning_selection": "Earliest unsaved scheduled JST date within today through +2 days, complete date batch",
+    "evening_prediction_count": 0,
+    "current_config": {
+      "lookahead_days": 2,
+      "max_source_age_hours": 24,
+      "network_timeout_seconds": 30,
+      "max_evidence_pages": 20,
+      "discovery_enabled": true,
+      "max_discovery_pages": 6,
+      "max_acquisition_seconds": 600
+    },
+    "collector_logical_fetch_call_upper_bound": 27,
+    "strict_wire_GET_upper_bound": "NOT_ESTABLISHED_WITH_DEFAULT_REDIRECT_HANDLER",
+    "single_day_inference_not_five_URL_acquisition": true,
+    "retrospective_display_enabled_in_existing_config": true,
+    "exit_codes": {
+      "success": 0,
+      "caught_failure": 1,
+      "argparse": 2
+    }
+  },
+  "storage": {
+    "canonical_relative_root": "runtime/batches",
+    "native_columns": "CHAMPION_COLUMNS",
+    "manifest_keys": [
+      "predictions.csv",
+      "bindings.csv"
+    ],
+    "batch_identity": "SHA256(newline-joined sorted fixture_key set)",
+    "planned_batch_ID_NOT_CREATED": "6547bbbb641918b00e6c8691ba09bfa105d108200b8e7da48d8df8536b06d4b9",
+    "saved_total": 19,
+    "saved_by_date": {
+      "2026-10-09": 2,
+      "2026-10-18": 2,
+      "2026-10-21": 10,
+      "2026-10-24": 5
+    },
+    "target_saved": 0,
+    "duplicates": 0,
+    "new_prediction_UUID": "No; native match ID/namespace, fixture binding, model, generation UTC",
+    "atomic_visibility_boundary": "same-volume staging directory rename",
+    "caller_lock": "runtime/update.lock, exclusive create; PID marker only; never auto-reclaim stale lock",
+    "Owner_DACL_read": true,
+    "volume_filesystems": [
+      "NTFS",
+      "NTFS",
+      "NTFS"
+    ],
+    "ancestor_reparse_count": 0,
+    "pending_lock_or_transaction_count": 0,
+    "production_write_probe_performed": false,
+    "post_commit_feed_failure_keeps_batch": true,
+    "source_batch_feed_single_transaction": false,
+    "powerloss_guarantee": false,
+    "all_failed_attempts_preserved_by_native_worker": false
+  },
+  "GUI_plan": {
+    "read_saved_function": "scripts.weekend_display.read_saved_daily_projection",
+    "projection": "projection.payload + scripts.weekend_display.project_weekend(projection)",
+    "formats": [
+      "schema-v1",
+      "champion-weekend-display-v1"
+    ],
+    "weekend_sidecar_generation_CLI_exists": false,
+    "generic_feed_CLI_is_not_runtime_reader": true,
+    "same_pair_binding": "SHA digest of exact v1 payload",
+    "publication": "new immutable release directory and manifest, fsync/readback/independent copy",
+    "requires_formal_Stop_and_start_for_current_server": true,
+    "saved_batch_reprojection_inference_count": 0,
+    "rollback": "Restore prior display pair/shortcut only; retain immutable saved batch",
+    "implemented_or_executed_now": false
+  },
+  "recommendation": {
+    "preferred": "A_CONDITIONAL_EXISTING_DAILY_PATH",
+    "execute_current_CLI_now": false,
+    "B": "Separate adapter isolation design if native limits cannot be safely guarded; not implemented",
+    "C": "Future weekends only; this weekend is partially saved and cannot be retrofitted",
+    "exact_target_guard_driver": "Required for manually guaranteeing exactly these five; not currently implemented",
+    "next_step": "Read-only recheck after independently scheduled updates; then separately authorize evidence acquisition if necessary, guarded execution/save, and display preparation/lifecycle"
+  },
+  "tasks": [
+    {
+      "name": "J1AI-Champion-Morning",
+      "state": "Ready",
+      "last_JST": "2026-10-24T07:00:01.0000000+09:00",
+      "last_result": 1,
+      "next_JST": "2026-10-25T07:00:00.0000000+09:00"
+    },
+    {
+      "name": "J1AI-Champion-Evening",
+      "state": "Ready",
+      "last_JST": "2026-10-23T22:00:01.0000000+09:00",
+      "last_result": 0,
+      "next_JST": "2026-10-24T22:00:00.0000000+09:00"
+    }
+  ],
+  "tests": {
+    "new_contract": {
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "61e483fd868d28ea0a6c523166e9eea5aec3cc1676a8c050035da323c44bbd20",
+      "warnings_as_errors": true
+    },
+    "related_regression": {
+      "passed": 184,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "06652bedef14e6e5323d418ba9ee781f1e982829d11cf5576f521be8fed383d3",
+      "warnings_as_errors": true
+    },
+    "new_negative_controls": 19,
+    "total_executed_PASS": 212,
+    "FAIL": 0,
+    "skip": 0,
+    "deselected": 2,
+    "deselected_cases": [
+      "sidecar API socket bind",
+      "Node subprocess numeric binding"
+    ],
+    "actual_worker_module_imported": false,
+    "selected_AST_functions_only": [
+      "select_targets",
+      "require_complete_history",
+      "new_records",
+      "timestamp_aware"
+    ],
+    "past_GUI_evidence_not_recounted": {
+      "predeploy": 471,
+      "live": 22,
+      "static": 30
+    }
+  },
+  "protection": {
+    "at": "2026-10-24T07:03:57.627892+00:00",
+    "passed": true,
+    "protected_files": 66485,
+    "differences": [],
+    "worktrees_unchanged": 27,
+    "model_payloads_unchanged": 53,
+    "GUI_identity_and_endpoint_unchanged": true,
+    "GUI_server": {
+      "IP": "127.0.0.1",
+      "Port": 51502,
+      "PID": 556
+    },
+    "tasks_definitions_state_history_unchanged": true,
+    "main_unchanged": true
+  },
+  "prohibited_operations": {
+    "official_GET_HEAD": 0,
+    "actual_worker": 0,
+    "collector_run": 0,
+    "real_model_load_fit_predict": 0,
+    "new_prediction_save": 0,
+    "prediction_overwrite": 0,
+    "display_JSON_update": 0,
+    "new_source_snapshot": 0,
+    "GUI_Stop_restart": 0,
+    "task_change_or_run": 0,
+    "Desktop_change": 0,
+    "Weekend_Batch_enablement": 0,
+    "NN_evaluation_registration": 0,
+    "main_merge": 0
+  },
+  "remaining_execution_gates": [
+    "New verified Saturday completion source before Sunday inference",
+    "Source freshness, schedule and exact 5 target recheck under exclusive ownership",
+    "No prior or concurrent target batch; lock and task noncompetition",
+    "Review and separately approve minimal exact-target execution guard, not blind date-less CLI",
+    "Model deserialize/inference environment and immutable bundle checks at approved execution",
+    "Post-save readback and external receipt, no repeated inference",
+    "Separate GUI pair-generation and formal lifecycle approval",
+    "Historical missing request-start/publication-complete times stay UNKNOWN; no NN PIT admission claim"
+  ],
+  "code_SHA256": {
+    "champion-auto-update/scripts/update_champion_dashboard.py": "e06284d62769ea5a0a8b5316eea4dcc3b39ba94ea003b68e368d1fd900390e75",
+    "champion-auto-update/scripts/update_jleague_ongoing.py": "89c1335e216ac9fa37c15fcae2d7e2332fa9ffd04df8407d0ca7c84ab1330a95",
+    "champion-auto-update/src/modeling/champion_prediction.py": "6b7c2f5c3fc34ca061e5eeb2c25e685ca32063d224dc6cb3f5228e17380842ed",
+    "champion-auto-update/src/features/elo.py": "f5ae27723e603c81ab5757654522a1bc207f93d21c32c74c43ccf6022b0923c4",
+    "champion-auto-update/src/features/elo_history.py": "e9a66cb8e6d905780fcd8dc88867b21a3de16865eb3c1ef35e3ae0cc5cc1c86a",
+    "champion-auto-update/scripts/build_dashboard_feed.py": "b16a68a497d068e99304a954923f7ac29e337a29f36613551dac8cdd76e9ed00",
+    "ui-weekend-deployment/scripts/weekend_display.py": "e2a5bff11c8da4153521412e847d5354e2dd6e649c7aec9eaa6902a8426cd765",
+    "ui-weekend-deployment/scripts/serve_dashboard.py": "c40be7c362f42ef623cec691f7b51da817ab699907f4edb1d93ed01bc916ad82",
+    "ui-weekend-deployment/scripts/launch_dashboard.py": "68cb5ad6c4a72e9f99d9287a2fbcad8c9b19a08dc58c8cc80dd114e91b34062d",
+    "ui-weekend-deployment/scripts/build_dashboard_feed.py": "273091ddaf1a16cfcc4a62aa90b87bec2bed7ad7f7f5f12f6ca95211d9f32eb6"
+  },
+  "private_evidence_SHA256": {
+    "baseline.json": "db39a92eff30fda62d8b7c35ff06d03d01e535b4d98cf28acc4a3f0b46348162",
+    "input-inspection.json": "35a1452dc4358d3cc627d3d47c8cc8462cf48daeaf96a518416763303c29fbae",
+    "provenance-and-storage-inspection.json": "a2d3972a3528e41892c5970583172bd887b69637364e3de7114190e15fd98711",
+    "origin-evidence-comparison.json": "1de85aa72774e6ba7c3e95840092152d66a5db5c8262c2ea20b4aa7eea537e23",
+    "inspect_inputs.py": "48c6582db109722bece031ce15cf727a451c87826bbb3c3ca45961250aca8c61",
+    "inspect_provenance.py": "0890d81797a7ac0deba3f1b290ea9943e07d1b46dcd902f8dc6c10b31979f8c5",
+    "inspect_provenance_v2.py": "64a7b965b7225a5a487f5713840bd5836177dce269bf9361a63488fc220d48ca",
+    "protection-after-tests.json": "d4d63b96afeb4cf6c13a13fb0c02ab1e21c1112dd233475df464b0f4f79bbea2",
+    "new-contract-tests.xml": "61e483fd868d28ea0a6c523166e9eea5aec3cc1676a8c050035da323c44bbd20",
+    "regression-tests.xml": "06652bedef14e6e5323d418ba9ee781f1e982829d11cf5576f521be8fed383d3"
+  }
+}
