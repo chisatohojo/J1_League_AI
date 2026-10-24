@@ -2,7 +2,7 @@
   "kind": "NNV2_Q_OUTPUT_SHA256_V1",
   "scope": "Self excluded; SHA is integrity evidence, not approval or signature",
   "files": {
-    "docs/NN_V2_P0_ACCESS_EVIDENCE_REVIEW.md": "a3b7cb67469098aadf9e63fe6d472564c6a462ef9f10e05f0b551ad275ae5662",
+    "docs/NN_V2_P0_ACCESS_EVIDENCE_REVIEW.md": "3b836853805964aa3f19b36e229a933f63dd156b5cca54a50ba48aa96fe2d84e",
     "docs/NN_V2_P0_TO_G3_REVIEW_HANDOFF.md": "a8024f01039289ffd5f0e3de47835b3bd245100cc08f5df88dd687e19efab1dc",
     "research/nn_v2/phase2_5Q/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
     "research/nn_v2/phase2_5Q/access_evidence.py": "39d696b6a75b987208d1e28a871cc262d229bb1ca8a484dc40032bdbe79cfc8e",
@@ -11,7 +11,7 @@
     "research/nn_v2/phase2_5Q/INPUT_EVIDENCE.json": "da0ad31d650eea86e195d2c2caf5606840990b71fdcdd9cc6b6d18eb667aa277",
     "research/nn_v2/phase2_5Q/INVENTORY_SCHEMA.json": "ffb6468faeb054fe51d05a45a52160e6405a660ed8393314d164d4561f5c53d5",
     "research/nn_v2/phase2_5Q/NEGATIVE_CONTROLS.json": "9b2f310b3db5ac79c3537a2bcaf580058799126e2e0c041cec2fdbc82bd81298",
-    "research/nn_v2/phase2_5Q/OFFLINE_VALIDATION.json": "31b266a1899fc1f53d339421205adae9f89039e6fd74b818672f2445884501b3",
+    "research/nn_v2/phase2_5Q/OFFLINE_VALIDATION.json": "4fa5e8c8dafb5e3e4eb7f7dbea77e980b3b76ce69c26a6f9b4d10f3435ef3848",
     "research/nn_v2/phase2_5Q/P0_EVIDENCE_PRIORITY.json": "ace80ed3c76de7966e8248e9f1dab21bcdb698800d8f77b3fa76b0be25a30c49",
     "research/nn_v2/phase2_5Q/PRIORITY_SCHEMA.json": "fcfbf3b1bd0251261da3594a26130f17e36920f2c24844e7c5e3f65d22effbeb",
     "research/nn_v2/phase2_5Q/PROTECTION_VERIFICATION.json": "70194e128236c32b7f3c003b1c7ad57a7b32fc59c42f1a33b8917978347dcee5",

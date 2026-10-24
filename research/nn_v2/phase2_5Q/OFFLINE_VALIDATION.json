@@ -123,8 +123,10 @@
   "G3_review_authorized": false,
   "G4_authorized": false,
   "Git_transport": {
-    "status": "NOT_EXECUTED_OFFLINE_CONSTRAINT",
-    "reason": "Normal push requested, but HTTP/DNS/socket forbidden. Git-only exception queried; no exception received at finalization.",
+    "status": "INTENTIONALLY_HELD_PENDING_SEPARATE_APPROVAL",
+    "reason": "User explicitly selected complete offline operation. Push is intentionally held for later separate approval and is not a research validation failure.",
+    "validation_failure": false,
+    "prohibited_remote_operations": ["push", "fetch", "pull", "ls-remote"],
     "remote_verification": "NOT_PERFORMED",
     "network_operations": 0
   },

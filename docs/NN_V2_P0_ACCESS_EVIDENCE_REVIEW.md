@@ -87,6 +87,6 @@ P0-Bは条件原本・適用許可scope・鮮度方針。P1はアクセス条件
 
 保護開始baselineは118,770ファイル・32既存worktree。モデル53 payload、既存予測・公式原本、過去research raw・permit/evidence、GUI code/snapshot、定時タスク、mainを含めた。GUI/serverはlocal CIMとlistener表を読み取り、HTTP probeやsocket接続は行っていない。定時タスクは定義・状態・実行履歴時刻を読み取った。最終照合は [PROTECTION_VERIFICATION.json](../research/nn_v2/phase2_5Q/PROTECTION_VERIFICATION.json) を参照する。
 
-旧Gの1 GET・1 DNS・1 TCP接続は過去の取得記録である。Phase 2.5QのHTTP・DNS・socket、新規取得、transport、新permit、モデル実行、GUI／task／OS policy変更は0。Git pushは完全オフライン指示との競合があるため、Git通信だけの明示例外が得られなければ未実施とし、実remote一致も主張しない。
+旧Gの1 GET・1 DNS・1 TCP接続は過去の取得記録である。Phase 2.5QのHTTP・DNS・socket、新規取得、transport、新permit、モデル実行、GUI／task／OS policy変更は0。利用者の明示指示により完全オフラインを優先し、Git push・fetch・pull・ls-remoteを含むリモート通信を禁止する。push未実施は後日の別承認までの意図した保留であり、研究成果の検証失敗ではない。実remoteとの一致は未検証。ローカルcommit・remote設定表示・ローカル追跡ref確認だけが許可されている。
 
 B/C/D、HISTORY/PREDICTIONはHOLD、Phase AはBLOCKED、Phase BとG4はNOT_AUTHORIZEDを維持する。次工程の具体的条件は [G3への引継ぎ](NN_V2_P0_TO_G3_REVIEW_HANDOFF.md) に記す。
