@@ -1,0 +1,87 @@
+{
+  "kind": "NNV2_G1_OFFLINE_VALIDATION_V1",
+  "gate": "NN_V2_G1_UA_ADOPTED_OFFLINE_VERIFIED",
+  "UTC": "2026-10-24T08:39:35.046947+00:00",
+  "base_commit": "ce39d7e3f868b33a14d657f433feeeafc96a5c87",
+  "branch": "feature/nn-v2-g1-ua-adoption",
+  "tests": {
+    "new": {
+      "PASS": 68,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "explicit_negative_controls": 56,
+      "JUnit_SHA256": "7bc20312c898244677fbb1e03870e14ece2d1f44618177b0a09eefc715c6ba87",
+      "log_SHA256": "f50d9afb35585778102eec6ad3eb8cba28a2dec32c663f183bf3140c001a938d",
+      "boundary_SHA256": "8a89e17d9bf0f7a21191d6be1416c570098d919e0a2b7fda18eaf1d1310f39f6",
+      "JUnit_timestamp_as_recorded": "2026-10-24T17:36:27.670301+09:00"
+    },
+    "regression": {
+      "PASS": 1092,
+      "FAIL": 0,
+      "ERROR": 0,
+      "skip": 0,
+      "explicit_negative_controls": 371,
+      "JUnit_SHA256": "5a09f363088295351b8f47701cfc057f3b8de40e589015c932a8c2c058238f4c",
+      "log_SHA256": "2d40fe7537307495a75bf790ce8d3a163eb54d55f1681b79097835e9fdb28b06",
+      "boundary_SHA256": "8a89e17d9bf0f7a21191d6be1416c570098d919e0a2b7fda18eaf1d1310f39f6",
+      "JUnit_timestamp_as_recorded": "2026-10-24T17:36:33.283575+09:00"
+    }
+  },
+  "total_PASS_executed_now": 1160,
+  "warnings_as_errors": true,
+  "guard_SHA256": "468bfc8fbe301c9e1e11b2faa09c2a0a8366651b66d7e65708a9c80efd60fcd0",
+  "application_guard_only": true,
+  "OS_network_isolation_proven": false,
+  "negative_control_scope": "56 explicit new case invocations, including combined assertions in one case; regression 371 test_negative_ cases overlap in purpose but belong to old contracts",
+  "historical_M": {
+    "PASS": 1092,
+    "negative_controls": 87,
+    "static_PASS": 97,
+    "VALIDATION_SHA256": "8fe7ef43c3441e186b76efd0feee79e09287bd01685383f66e9c1760201da58f",
+    "JUnit_SHA256": "e94d6b4bc003d0d6e06f70d5559fea03463c06e9fcddaa095747d4bfe4a34a57",
+    "rerun_evidence_separate": true
+  },
+  "code_SHA256": {
+    "research/nn_v2/phase2_5N/ua_adoption.py": "06b1c443de35f79cd051b696735a80d4dce9237e3c6ed5749531995ff5721249",
+    "tests/test_nn_v2_g1_ua_adoption.py": "39851bda9e94f28973742c22fbe417bd5bfab375602d9594538e586cc59a1ec6"
+  },
+  "code_SHA_provenance": "Captured after tests; code mtime <= JUnit test start and no code edits between run and final audit. Does not claim independent trusted timestamp.",
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "E2": "UNKNOWN",
+  "E3": "UNKNOWN",
+  "G1_adopted": true,
+  "G2_connected": false,
+  "G3_issued": false,
+  "G4_execution_authorized": false,
+  "operations": {
+    "GET": 0,
+    "HEAD": 0,
+    "other_HTTP": 0,
+    "DNS_probe": 0,
+    "new_permits": 0,
+    "permit_updates": 0,
+    "old_run_reexecution": 0,
+    "real_adapter_connection": 0,
+    "operational_config_change": 0,
+    "model_load_fit_inference": 0,
+    "performance_evaluation": 0,
+    "T0": 0,
+    "history_prediction_registration": 0,
+    "task_operation": 0,
+    "cleanup": 0
+  },
+  "Git_transport": "Only separately authorized artifact commit/push; no evidence acquisition",
+  "protection": "PROTECTION_VERIFICATION.json",
+  "B": "HOLD",
+  "C": "HOLD",
+  "D": "HOLD",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED"
+}

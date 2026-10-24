@@ -1,0 +1,90 @@
+{
+  "UTC": "2026-10-24T08:34:09.915823+00:00",
+  "base_commit": "ce39d7e3f868b33a14d657f433feeeafc96a5c87",
+  "decision_instruction_SHA256": "3423d2106f2d34c229d37d35d3ec4ff026ad46054044aaf5e14d55fa37afa171",
+  "prior_public_KLM_SHA256": {
+    "research/nn_v2/phase2_5K/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5K/GROUP_SELECTION_VALIDATION.json": "aa17f835fbd12556e6f6e1957c174c6ec224b295451ad2ef9cdff214148f4185",
+    "research/nn_v2/phase2_5K/INPUT_EVIDENCE.json": "3e352933b10aa03b7b21b7b12f2ea09dcac86868326a9df4395c6ea50419f944",
+    "research/nn_v2/phase2_5K/PARSER_DIFF.json": "0d81a93af2c8458c77f4fb6ff22939da1ab4bc3936710c701bd29d0b885c5714",
+    "research/nn_v2/phase2_5K/PREEXISTING_OPERATIONAL_EVENT.json": "85d36ac0c150973c3f0947c9ece981590aeeaf54a43c62b1b86adcec3953a4d6",
+    "research/nn_v2/phase2_5K/product_token_groups.py": "ce8698385af3d4feb5c00bdacc0ae661389c5ca473fcb154e92ff1a1bcab31a6",
+    "research/nn_v2/phase2_5K/PRODUCT_TOKEN_REVIEW.md": "0220dd7003992f1abd1f5f6bc7a8dae178f995d2030ac0086f200959a145c95b",
+    "research/nn_v2/phase2_5K/PROTECTION_VERIFICATION.json": "da7d83c45338cdeb24221c0bc5d45098244bc56730a296b15ef712428fb1f4a3",
+    "research/nn_v2/phase2_5K/ROBOTS_REEVALUATION.json": "75dbcaae9b6747ab2894fe7c306c4e319d811433157f95519b94f04333d1d3b4",
+    "research/nn_v2/phase2_5K/USER_AGENT_INVENTORY.json": "d3ecbcc303d64ecdbe1e898993ddb5217220966251ce3df3c3c6860e72835eb0",
+    "research/nn_v2/phase2_5K/VALIDATION.json": "a676c73b6dc43ef9a563736f653df9a35ebb2a598ee6309fa41218ce9f3787b8",
+    "tests/test_nn_v2_product_token_groups.py": "32b078321968169d93b488c45a6a883ea46e4632b3792eb6fd079ff2c6c43d39",
+    "research/nn_v2/phase2_5L/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5L/A1_REEVALUATION.json": "92e7e562ca8db1bc20775e5bc7d6be3fc270228625136a351501ff504322828e",
+    "research/nn_v2/phase2_5L/EVIDENCE_LEVEL_MATRIX.json": "2324af84e8b3443ac63699e429583caa7d2357a8935e303cd5f82a1b4183d50f",
+    "research/nn_v2/phase2_5L/INPUT_EVIDENCE.json": "a224fcfefe4acba88a0a87c2cb9ab13477bd332c364f2360c60d15cb755feb35",
+    "research/nn_v2/phase2_5L/PROTECTION_VERIFICATION.json": "82856a8f4ac156f11aac4502c3ec926e37b22c1095297828a3e1d60bbaf8a944",
+    "research/nn_v2/phase2_5L/REQUEST_EVIDENCE_SCHEMA.json": "c643688edd9bca0da25d35dc5808cf81145fba87f0e5dbada231e4f8e898c6c5",
+    "research/nn_v2/phase2_5L/ua_evidence_contract.py": "30ca3ed3bdad3c190f552dc81fde16130ad9d6d3787f226145dd052a408afe00",
+    "research/nn_v2/phase2_5L/USER_AGENT_CANDIDATE.json": "abab599fdf54b2fc0e88e5bb62b3e261ecf1bb8fc326afca9c26417991a3f0af",
+    "research/nn_v2/phase2_5L/USER_AGENT_EVIDENCE_CONTRACT.md": "bee15fb1e9e04d90a482d393967f70b354362abbab839bdedb84905c7c111d92",
+    "research/nn_v2/phase2_5L/VALIDATION.json": "25cf15743aba85b00cd90f70d81004cb52b211cdf3c4a54694cf5d32185bbff3",
+    "tests/test_nn_v2_ua_evidence_contract.py": "49e7c6ce9c0afa90bbb975bb59a77ab3c3e371d179bf2e50586c713b1293ad3a",
+    "research/nn_v2/phase2_5M/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5M/APPROVAL_GATES.json": "879475141495d59c46149a588b0aa966696100dd6e785ba15caa05e581602d92",
+    "research/nn_v2/phase2_5M/impact_review.py": "b45d3f4150cf34936e5cc68ee3b47a8a83c4e8b69859d19f1819f329583ac278",
+    "research/nn_v2/phase2_5M/INPUT_EVIDENCE.json": "4f07adccf45b3341adf69783183ec13538c35b68c45f915bd29af34581959a60",
+    "research/nn_v2/phase2_5M/PROTECTION_VERIFICATION.json": "e29745ddc81e751ee142984c0d4de554c2e2840ffe7ed3042fac8a3514ed9c0a",
+    "research/nn_v2/phase2_5M/REVIEW_SCHEMAS.json": "d453ed97b5c76433248e083a6781ea3f7f61c1d6ff90c5cc1acc59fc3a22b4a9",
+    "research/nn_v2/phase2_5M/UNKNOWN_IMPACT_MATRIX.json": "d1b95cb8c2ea693838070bb33f19cb8f319e624f323c332d57fdfaaced34a2a0",
+    "research/nn_v2/phase2_5M/UNKNOWN_IMPACT_REVIEW.md": "18a8b04ad3d2687468d7ddbf864b236db4e4f5ff66b93e369cdf21179197f3dc",
+    "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json": "70a6d7a97fa84f865a5a634909cfe3e5f8d35c8dc2f19dbc4e95fa994fba8c87",
+    "research/nn_v2/phase2_5M/VALIDATION.json": "8fe7ef43c3441e186b76efd0feee79e09287bd01685383f66e9c1760201da58f",
+    "tests/test_nn_v2_unknown_impact_review.py": "b16345ceb321eb730e2f4451624f1b731b9851e76ee6b9c40f186646a47280dc"
+  },
+  "private_input_ledger_SHA256": "d4077cde63a708748383588c09fb79866d3bb764ce9ddecd834672acc0545fa2",
+  "original_I_files_verified": 28,
+  "original_G_files_verified": 15,
+  "A1_SHA256": "3f41d473ef69f00cd9eb1cd8f3e2c1f7a053bb21b75bef16a268cd3af242228c",
+  "sealed_A1_replay": [
+    {
+      "id": "A1",
+      "normative": "ALLOW",
+      "certificate_SHA256": "d9817aa52eac2d4d28dbd3c63fe672e183cba1f49c24b7a07c19c54012ca7da5",
+      "unchanged": true
+    },
+    {
+      "id": "A3",
+      "normative": "ALLOW",
+      "certificate_SHA256": "ada4b269a585c51efbda035a258c05a031ca5e5e13668cf9d2c47f660350493f",
+      "unchanged": true
+    },
+    {
+      "id": "A4",
+      "normative": "ALLOW",
+      "certificate_SHA256": "aaee7fd5d0427e2409a048eb68bf1e4f3e1956d7e22cfb73aadc46bd19b61e1b",
+      "unchanged": true
+    },
+    {
+      "id": "B1",
+      "normative": "ALLOW",
+      "certificate_SHA256": "77eef469aa74d3b36e530489acfdae23f15bff7f88682866aedb0c404eb02512",
+      "unchanged": true
+    },
+    {
+      "id": "A2",
+      "normative": "UNKNOWN",
+      "certificate_SHA256": "e8af3cef5f17943a71b56c0559da4b81ac5c1a7055f652b96c4086ecd8b25431",
+      "unchanged": true
+    },
+    {
+      "id": "B2",
+      "normative": "UNKNOWN",
+      "certificate_SHA256": "ba5793113dc9087b5e5a8b0211e0dd285829fd44a6ce80a8e7a03d4c0f4e1a73",
+      "unchanged": true
+    }
+  ],
+  "old_G_and_I_terminal_no_reuse_verified": true,
+  "adoption_manifest_file_SHA256": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78",
+  "canonical_manifest_SHA256": "796a201eb853ff50fe70f026dbc84ef15a430235e05b1732c66078d645c74420",
+  "new_HTTP_requests": 0,
+  "new_permits": 0,
+  "actual_adapter_connection": false,
+  "actual_outbound_UA": "UNKNOWN"
+}

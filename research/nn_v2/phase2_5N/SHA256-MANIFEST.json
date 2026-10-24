@@ -1,0 +1,18 @@
+{
+  "kind": "NNV2_G1_ARTIFACT_SHA256_V1",
+  "self_excluded": true,
+  "files": {
+    "docs/NN_V2_G1_TO_G2_HANDOFF.md": "8756f575e810fcfdcb34232a7ececd0f04dc2a8f1ccb1d059d74f11dc7a6e4b3",
+    "docs/NN_V2_G1_UA_ADOPTION.md": "fc89bedb83a2107800a93dcb0e5d32cfbe85c1c82d7021ba83f42af2bf5e3bbf",
+    "research/nn_v2/phase2_5N/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+    "research/nn_v2/phase2_5N/ADOPTION_SCHEMAS.json": "ace72dce9845f753d616f1c9232d76380d703c1f7c01175e7a67fff64c03839b",
+    "research/nn_v2/phase2_5N/INPUT_EVIDENCE.json": "cb9ced3649264eba8702383a92625b468c9bc270950c4fbe2c2b35d5ccbdaebe",
+    "research/nn_v2/phase2_5N/PROTECTION_VERIFICATION.json": "cf0f463b9c4fbc4d46f777c527dfacff151c6a5bcf07b88410c7cff98bcf950c",
+    "research/nn_v2/phase2_5N/STATIC_VALIDATION.json": "01d447b36f6e09350d55363217305f9cd37bedd8077f9af98419c1cad0bfea4b",
+    "research/nn_v2/phase2_5N/ua_adoption.py": "06b1c443de35f79cd051b696735a80d4dce9237e3c6ed5749531995ff5721249",
+    "research/nn_v2/phase2_5N/UA_ADOPTION_EVIDENCE.json": "8341e3d5553bee27733819a74105fe862e1ec0550e0048efc864d87b1b59f5d6",
+    "research/nn_v2/phase2_5N/UA_ADOPTION_MANIFEST.json": "ce88f2430954647e6f9cf0f3e92703867c23288c2e09ed16085b543848e58b78",
+    "research/nn_v2/phase2_5N/VALIDATION.json": "376470828fd99c3933a8f32919a1a781c2f8324c160e5faa02c6675d2e3213f6",
+    "tests/test_nn_v2_g1_ua_adoption.py": "39851bda9e94f28973742c22fbe417bd5bfab375602d9594538e586cc59a1ec6"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "NNV2_G1_UA_ADOPTION_V1",
+  "adoption_state": "G1_ADOPTED_OFFLINE_ONLY",
+  "scope": "NN_V2_RESEARCH_IDENTITY_ONLY",
+  "HTTP_USER_AGENT": "J1AI-Research-Timing-Pilot/1.0",
+  "ROBOTS_PRODUCT_TOKEN": "Research-Timing-Pilot",
+  "adopted_utc": "2026-10-24T08:34:09.894465+00:00",
+  "adoption_date_JST": "2026-10-24",
+  "decision_source": {
+    "kind": "EXPLICIT_USER_G1_INSTRUCTION",
+    "SHA256": "3423d2106f2d34c229d37d35d3ec4ff026ad46054044aaf5e14d55fa37afa171"
+  },
+  "base_commit": "ce39d7e3f868b33a14d657f433feeeafc96a5c87",
+  "prior_evidence_SHA256": {
+    "research/nn_v2/phase2_5L/USER_AGENT_CANDIDATE.json": "abab599fdf54b2fc0e88e5bb62b3e261ecf1bb8fc326afca9c26417991a3f0af",
+    "research/nn_v2/phase2_5L/REQUEST_EVIDENCE_SCHEMA.json": "c643688edd9bca0da25d35dc5808cf81145fba87f0e5dbada231e4f8e898c6c5",
+    "research/nn_v2/phase2_5M/URL_STOP_MATRIX.json": "70a6d7a97fa84f865a5a634909cfe3e5f8d35c8dc2f19dbc4e95fa994fba8c87",
+    "research/nn_v2/phase2_5M/UNKNOWN_IMPACT_MATRIX.json": "d1b95cb8c2ea693838070bb33f19cb8f319e624f323c332d57fdfaaced34a2a0",
+    "research/nn_v2/phase2_5M/APPROVAL_GATES.json": "879475141495d59c46149a588b0aa966696100dd6e785ba15caa05e581602d92"
+  },
+  "previous_state": "CANDIDATE_FROZEN_NOT_ACTIVATED",
+  "legacy_request_schema": "NNV2_UA_EVIDENCE_V1",
+  "applicable_phases": "Future separately approved NN v2 limited research acquisition planning",
+  "excluded_scopes": [
+    "Champion_A",
+    "Weekend_Batch",
+    "GUI",
+    "scheduled_workers",
+    "operational_configuration",
+    "live_transport",
+    "permit_issuance"
+  ],
+  "comparison_policy": "Exact ASCII bytes; no trim, case fold, extraction or normalization",
+  "robots_group_matching": "Existing K parser case-insensitive group comparison unchanged",
+  "roles": {
+    "HTTP_USER_AGENT": "Intended HTTP User-Agent header value only",
+    "ROBOTS_PRODUCT_TOKEN": "Explicit robots group-selection identifier only"
+  },
+  "change_policy": "Any value, role, scope or state change requires separate review and approval",
+  "unresolved_normative_ids": [
+    "agent_grammar",
+    "rule_grammar",
+    "longest_rule",
+    "reserved_octets",
+    "query",
+    "encoding_errors",
+    "parse_limits",
+    "standard_examples",
+    "sealed_A1_replay"
+  ],
+  "normative_counts": {
+    "PASS": 15,
+    "FAIL": 0,
+    "UNKNOWN": 9
+  },
+  "authorities": {
+    "G1_adopted": true,
+    "G2_connected": false,
+    "G3_permit_issued": false,
+    "G4_execution_authorized": false,
+    "current_requests": 0
+  },
+  "history_admission": false,
+  "B": "HOLD",
+  "C": "HOLD",
+  "D": "HOLD",
+  "HISTORY": "HOLD",
+  "PREDICTION": "HOLD",
+  "Phase_A": "BLOCKED",
+  "Phase_B": "NOT_AUTHORIZED",
+  "G2_prerequisites": [
+    "Separate explicit offline adapter qualification approval",
+    "Pinned code/config and final-header E0/E1 capture; no implicit collector",
+    "Attempt charging, finite limits, ownership, storage and STOP tests with mocks",
+    "Host-specific access conditions, freshness and bounded bootstrap review",
+    "E2/E4 capture qualification; explicit E3 requirement/method/privacy review",
+    "No live transport or new permit until separately approved G3/G4"
+  ]
+}
